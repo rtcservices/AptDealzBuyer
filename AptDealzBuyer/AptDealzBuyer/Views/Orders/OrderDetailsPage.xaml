@@ -1,0 +1,1045 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="AptDealzBuyer.Views.Orders.OrderDetailsPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:ext="clr-namespace:AptDealzBuyer.Extention"
+    xmlns:iOS="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+    xmlns:skiaRate="clr-namespace:SkiaRate;assembly=SkiaRate.Forms"
+    iOS:Page.UseSafeArea="True"
+    BackgroundColor="{StaticResource White}"
+    NavigationPage.HasNavigationBar="False">
+    <ContentPage.Content>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="80" />
+                </Grid.ColumnDefinitions>
+                <Image
+                    Grid.Column="0"
+                    Margin="20,0,0,0"
+                    HeightRequest="30"
+                    HorizontalOptions="StartAndExpand"
+                     Source="IconMenu.png" x:Name="ImgMenu"
+                    VerticalOptions="CenterAndExpand">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgMenu_Tapped" />
+                    </Image.GestureRecognizers>
+                </Image>
+
+                <Image
+                    Grid.Column="1"
+                    Margin="0"
+                    Aspect="AspectFill"
+                    HeightRequest="45"
+                    HorizontalOptions="CenterAndExpand"
+                    Source="iconHeaderLogo.png"
+                    VerticalOptions="CenterAndExpand"
+                    WidthRequest="45" />
+
+                <StackLayout
+                    Grid.Column="2"
+                    Margin="0,0,20,0"
+                    HorizontalOptions="EndAndExpand"
+                    Orientation="Horizontal">
+                    <Image
+                        Margin="0"
+                        HeightRequest="30"
+                        HorizontalOptions="CenterAndExpand"
+                        Source="iconNotification.png"
+                        VerticalOptions="CenterAndExpand">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgNotification_Tapped" />
+                        </Image.GestureRecognizers>
+                    </Image>
+
+                    <Image
+                        Margin="0"
+                        HeightRequest="30"
+                        HorizontalOptions="CenterAndExpand"
+                        Source="iconQuestion.png"
+                        VerticalOptions="CenterAndExpand">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgQuestion_Tapped" />
+                        </Image.GestureRecognizers>
+                    </Image>
+                </StackLayout>
+            </Grid>
+            <!--#endregion-->
+            <BoxView
+                Grid.Row="1"
+                BackgroundColor="{StaticResource LightGray}"
+                HeightRequest="1"
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="EndAndExpand" />
+
+            <Grid Grid.Row="2" Margin="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Grid
+                    Grid.Row="0"
+                    Margin="20,0"
+                    ColumnDefinitions="Auto,*,Auto"
+                    HorizontalOptions="FillAndExpand">
+                    <Image
+                        Margin="0"
+                        Aspect="AspectFit"
+                        HeightRequest="25"
+                        HorizontalOptions="StartAndExpand"
+                        Source="iconBackArrow.png" x:Name="ImgBack"
+                        VerticalOptions="CenterAndExpand"
+                        WidthRequest="25">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgBack_Tapped" />
+                        </Image.GestureRecognizers>
+                    </Image>
+
+                    <Label
+                        Grid.Column="1"
+                        Margin="5,0,0,0"
+                        FontFamily="Poppins SemiBold"
+                        FontSize="20"
+                        HorizontalOptions="StartAndExpand"
+                        Text="Order Details"
+                        TextColor="{StaticResource Black}"
+                        VerticalOptions="CenterAndExpand" />
+
+                </Grid>
+
+                <ScrollView
+                    Grid.Row="1"
+                    Margin="0,15,0,0"
+                    HorizontalScrollBarVisibility="Never"
+                    VerticalScrollBarVisibility="Never">
+
+                    <Grid Margin="0" RowDefinitions="*,Auto,Auto,Auto">
+
+                        <Grid
+                            Grid.Row="0"
+                            Margin="0"
+                            HorizontalOptions="FillAndExpand"
+                            RowSpacing="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <StackLayout Grid.Row="0">
+                                <StackLayout
+                                    Margin="20,5,20,0"
+                                    HorizontalOptions="FillAndExpand"
+                                    Orientation="Horizontal">
+
+                                    <Label
+                                        Margin="0"
+                                        FontFamily="Poppins"
+                                        FontSize="14"
+                                        HorizontalOptions="StartAndExpand"
+                                        Text="Requirement ID"
+                                        TextColor="{StaticResource Black}"
+                                        VerticalOptions="CenterAndExpand" />
+
+                                    <Label
+                                        x:Name="lblRequirementId"
+                                        Margin="0"
+                                        FontFamily="Poppins Medium"
+                                        FontSize="14"
+                                        HorizontalOptions="EndAndExpand"
+                                        Text="REQ#123"
+                                        TextColor="{StaticResource Green}"
+                                        VerticalOptions="CenterAndExpand" />
+
+                                </StackLayout>
+
+                                <BoxView
+                                    BackgroundColor="{StaticResource LightGray}"
+                                    HeightRequest="1"
+                                    HorizontalOptions="FillAndExpand"
+                                    VerticalOptions="EndAndExpand" />
+                            </StackLayout>
+
+                            <StackLayout Grid.Row="1">
+                                <StackLayout
+                                    Margin="20,0"
+                                    HorizontalOptions="FillAndExpand"
+                                    Orientation="Horizontal">
+
+                                    <Label
+                                        Margin="0"
+                                        FontFamily="Poppins"
+                                        FontSize="14"
+                                        HorizontalOptions="StartAndExpand"
+                                        Text="Quote Reference No"
+                                        TextColor="{StaticResource Black}"
+                                        VerticalOptions="CenterAndExpand" />
+
+                                    <Label
+                                        x:Name="lblQuoteRefNo"
+                                        Margin="0"
+                                        FontFamily="Poppins Medium"
+                                        FontSize="14"
+                                        HorizontalOptions="EndAndExpand"
+                                        Text="QUO#987"
+                                        TextColor="{StaticResource Green}"
+                                        VerticalOptions="CenterAndExpand" />
+
+                                </StackLayout>
+
+                                <BoxView
+                                    BackgroundColor="{StaticResource LightGray}"
+                                    HeightRequest="1"
+                                    HorizontalOptions="FillAndExpand"
+                                    VerticalOptions="EndAndExpand" />
+                            </StackLayout>
+
+                            <StackLayout Grid.Row="2">
+                                <StackLayout
+                                    Margin="20,0"
+                                    HorizontalOptions="FillAndExpand"
+                                    Orientation="Horizontal">
+
+                                    <Label
+                                        Margin="0"
+                                        FontFamily="Poppins"
+                                        FontSize="14"
+                                        HorizontalOptions="StartAndExpand"
+                                        Text="Buyer Name"
+                                        TextColor="{StaticResource Black}"
+                                        VerticalOptions="CenterAndExpand" />
+
+                                    <Label
+                                        x:Name="lblBuyerName"
+                                        Margin="0"
+                                        FontFamily="Poppins Medium"
+                                        FontSize="14"
+                                        HorizontalOptions="EndAndExpand"
+                                        Text="Benjamin"
+                                        TextColor="{StaticResource Black}"
+                                        VerticalOptions="CenterAndExpand" />
+
+                                </StackLayout>
+
+                                <BoxView
+                                    BackgroundColor="{StaticResource LightGray}"
+                                    HeightRequest="1"
+                                    HorizontalOptions="FillAndExpand"
+                                    VerticalOptions="EndAndExpand" />
+                            </StackLayout>
+
+                            <StackLayout Grid.Row="3">
+                                <StackLayout
+                                    Margin="20,0"
+                                    HorizontalOptions="FillAndExpand"
+                                    Orientation="Horizontal">
+
+                                    <Label
+                                        Margin="0"
+                                        FontFamily="Poppins"
+                                        FontSize="14"
+                                        HorizontalOptions="StartAndExpand"
+                                        Text="Seller Name"
+                                        TextColor="{StaticResource Black}"
+                                        VerticalOptions="CenterAndExpand" />
+
+                                    <Label
+                                        x:Name="lblSellerName"
+                                        Margin="0"
+                                        FontFamily="Poppins Medium"
+                                        FontSize="14"
+                                        HorizontalOptions="EndAndExpand"
+                                        Text="ABC Exports"
+                                        TextColor="{StaticResource Black}"
+                                        VerticalOptions="CenterAndExpand" />
+
+                                </StackLayout>
+
+                                <BoxView
+                                    BackgroundColor="{StaticResource LightGray}"
+                                    HeightRequest="1"
+                                    HorizontalOptions="FillAndExpand"
+                                    VerticalOptions="EndAndExpand" />
+                            </StackLayout>
+
+                            <StackLayout Grid.Row="4">
+                                <StackLayout
+                                    Margin="20,0"
+                                    HorizontalOptions="FillAndExpand"
+                                    Orientation="Horizontal">
+
+                                    <Label
+                                        Margin="0"
+                                        FontFamily="Poppins"
+                                        FontSize="14"
+                                        HorizontalOptions="StartAndExpand"
+                                        Text="Shipping PIN Code"
+                                        TextColor="{StaticResource Black}"
+                                        VerticalOptions="CenterAndExpand" />
+
+                                    <Label
+                                        x:Name="lblShippingPINCode"
+                                        Margin="0"
+                                        FontFamily="Poppins Medium"
+                                        FontSize="14"
+                                        HorizontalOptions="EndAndExpand"
+                                        Text="682017"
+                                        TextColor="{StaticResource Black}"
+                                        VerticalOptions="CenterAndExpand" />
+
+                                </StackLayout>
+
+                                <BoxView
+                                    BackgroundColor="{StaticResource LightGray}"
+                                    HeightRequest="1"
+                                    HorizontalOptions="FillAndExpand"
+                                    VerticalOptions="EndAndExpand" />
+                            </StackLayout>
+
+                            <StackLayout Grid.Row="5">
+                                <StackLayout
+                                    Margin="20,0"
+                                    HorizontalOptions="FillAndExpand"
+                                    Orientation="Horizontal">
+
+                                    <Label
+                                        Margin="0"
+                                        FontFamily="Poppins"
+                                        FontSize="14"
+                                        HorizontalOptions="StartAndExpand"
+                                        Text="Requested Quantity"
+                                        TextColor="{StaticResource Black}"
+                                        VerticalOptions="CenterAndExpand" />
+
+                                    <Label
+                                        x:Name="lblRequestedQuantity"
+                                        Margin="0"
+                                        FontFamily="Poppins Medium"
+                                        FontSize="14"
+                                        HorizontalOptions="EndAndExpand"
+                                        Text="100 Pieces"
+                                        TextColor="{StaticResource Black}"
+                                        VerticalOptions="CenterAndExpand" />
+
+                                </StackLayout>
+
+                                <BoxView
+                                    BackgroundColor="{StaticResource LightGray}"
+                                    HeightRequest="1"
+                                    HorizontalOptions="FillAndExpand"
+                                    VerticalOptions="EndAndExpand" />
+                            </StackLayout>
+
+                            <StackLayout Grid.Row="6">
+                                <StackLayout
+                                    Margin="20,0"
+                                    HorizontalOptions="FillAndExpand"
+                                    Orientation="Horizontal">
+
+                                    <Label
+                                        Margin="0"
+                                        FontFamily="Poppins"
+                                        FontSize="14"
+                                        HorizontalOptions="StartAndExpand"
+                                        Text="Unit Price"
+                                        TextColor="{StaticResource Black}"
+                                        VerticalOptions="CenterAndExpand" />
+
+                                    <Label
+                                        x:Name="lblUnitPrice"
+                                        Margin="0"
+                                        FontFamily="Poppins Medium"
+                                        FontSize="14"
+                                        HorizontalOptions="EndAndExpand"
+                                        Text="Rs 25"
+                                        TextColor="{StaticResource Black}"
+                                        VerticalOptions="CenterAndExpand" />
+
+                                </StackLayout>
+
+                                <BoxView
+                                    BackgroundColor="{StaticResource LightGray}"
+                                    HeightRequest="1"
+                                    HorizontalOptions="FillAndExpand"
+                                    VerticalOptions="EndAndExpand" />
+                            </StackLayout>
+
+                            <StackLayout Grid.Row="7">
+                                <StackLayout
+                                    Margin="20,0"
+                                    HorizontalOptions="FillAndExpand"
+                                    Orientation="Horizontal">
+
+                                    <Label
+                                        Margin="0"
+                                        FontFamily="Poppins"
+                                        FontSize="14"
+                                        HorizontalOptions="StartAndExpand"
+                                        Text="Net Amount"
+                                        TextColor="{StaticResource Black}"
+                                        VerticalOptions="CenterAndExpand" />
+
+                                    <Label
+                                        x:Name="lblNetAmount"
+                                        Margin="0"
+                                        FontFamily="Poppins Medium"
+                                        FontSize="14"
+                                        HorizontalOptions="EndAndExpand"
+                                        Text="Rs 2500"
+                                        TextColor="{StaticResource Black}"
+                                        VerticalOptions="CenterAndExpand" />
+
+                                </StackLayout>
+
+                                <BoxView
+                                    BackgroundColor="{StaticResource LightGray}"
+                                    HeightRequest="1"
+                                    HorizontalOptions="FillAndExpand"
+                                    VerticalOptions="EndAndExpand" />
+                            </StackLayout>
+
+                            <StackLayout Grid.Row="8">
+                                <StackLayout
+                                    Margin="20,0"
+                                    HorizontalOptions="FillAndExpand"
+                                    Orientation="Horizontal">
+
+                                    <Label
+                                        Margin="0"
+                                        FontFamily="Poppins"
+                                        FontSize="14"
+                                        HorizontalOptions="StartAndExpand"
+                                        Text="Handling Charges"
+                                        TextColor="{StaticResource Black}"
+                                        VerticalOptions="CenterAndExpand" />
+
+                                    <Label
+                                        x:Name="lblHandlingCharges"
+                                        Margin="0"
+                                        FontFamily="Poppins Medium"
+                                        FontSize="14"
+                                        HorizontalOptions="EndAndExpand"
+                                        Text="Rs 500"
+                                        TextColor="{StaticResource Black}"
+                                        VerticalOptions="CenterAndExpand" />
+
+                                </StackLayout>
+
+                                <BoxView
+                                    BackgroundColor="{StaticResource LightGray}"
+                                    HeightRequest="1"
+                                    HorizontalOptions="FillAndExpand"
+                                    VerticalOptions="EndAndExpand" />
+                            </StackLayout>
+
+                            <StackLayout Grid.Row="9">
+                                <StackLayout
+                                    Margin="20,0"
+                                    HorizontalOptions="FillAndExpand"
+                                    Orientation="Horizontal">
+
+                                    <Label
+                                        Margin="0"
+                                        FontFamily="Poppins"
+                                        FontSize="14"
+                                        HorizontalOptions="StartAndExpand"
+                                        Text="Shipping Charges"
+                                        TextColor="{StaticResource Black}"
+                                        VerticalOptions="CenterAndExpand" />
+
+                                    <Label
+                                        x:Name="lblShippingCharges"
+                                        Margin="0"
+                                        FontFamily="Poppins Medium"
+                                        FontSize="14"
+                                        HorizontalOptions="EndAndExpand"
+                                        Text="Rs 250"
+                                        TextColor="{StaticResource Black}"
+                                        VerticalOptions="CenterAndExpand" />
+
+                                </StackLayout>
+
+                                <BoxView
+                                    BackgroundColor="{StaticResource LightGray}"
+                                    HeightRequest="1"
+                                    HorizontalOptions="FillAndExpand"
+                                    VerticalOptions="EndAndExpand" />
+                            </StackLayout>
+
+                            <StackLayout Grid.Row="10">
+                                <StackLayout
+                                    Margin="20,0"
+                                    HorizontalOptions="FillAndExpand"
+                                    Orientation="Horizontal">
+
+                                    <Label
+                                        Margin="0"
+                                        FontFamily="Poppins"
+                                        FontSize="14"
+                                        HorizontalOptions="StartAndExpand"
+                                        Text="Insurance Charges "
+                                        TextColor="{StaticResource Black}"
+                                        VerticalOptions="CenterAndExpand" />
+
+                                    <Label
+                                        x:Name="lblInsuranceCharges"
+                                        Margin="0"
+                                        FontFamily="Poppins Medium"
+                                        FontSize="14"
+                                        HorizontalOptions="EndAndExpand"
+                                        Text="Rs 250"
+                                        TextColor="{StaticResource Black}"
+                                        VerticalOptions="CenterAndExpand" />
+
+                                </StackLayout>
+
+                                <BoxView
+                                    BackgroundColor="{StaticResource LightGray}"
+                                    HeightRequest="1"
+                                    HorizontalOptions="FillAndExpand"
+                                    VerticalOptions="EndAndExpand" />
+                            </StackLayout>
+
+                            <StackLayout Grid.Row="11">
+                                <StackLayout
+                                    Margin="20,0"
+                                    HorizontalOptions="FillAndExpand"
+                                    Orientation="Horizontal">
+
+                                    <Label
+                                        Margin="0"
+                                        FontFamily="Poppins"
+                                        FontSize="14"
+                                        HorizontalOptions="StartAndExpand"
+                                        Text="Origin of Products"
+                                        TextColor="{StaticResource Black}"
+                                        VerticalOptions="CenterAndExpand" />
+
+                                    <Label
+                                        x:Name="lblOriginProduct"
+                                        Margin="0"
+                                        FontFamily="Poppins Medium"
+                                        FontSize="14"
+                                        HorizontalOptions="EndAndExpand"
+                                        Text="India"
+                                        TextColor="{StaticResource Black}"
+                                        VerticalOptions="CenterAndExpand" />
+
+                                </StackLayout>
+
+                                <BoxView
+                                    BackgroundColor="{StaticResource LightGray}"
+                                    HeightRequest="1"
+                                    HorizontalOptions="FillAndExpand"
+                                    VerticalOptions="EndAndExpand" />
+                            </StackLayout>
+                        </Grid>
+
+                        <ext:CustomShadowFrame
+                            Grid.Row="1"
+                            Margin="20,40"
+                            Padding="0"
+                            BorderColor="{StaticResource LightGray}"
+                            CornerRadius="5"
+                            HasShadow="False"
+                            HorizontalOptions="FillAndExpand"
+                            VerticalOptions="CenterAndExpand">
+                            <Grid Margin="5,40" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto">
+
+                                <Grid
+                                    Grid.Row="0"
+                                    ColumnDefinitions="*,*"
+                                    HorizontalOptions="FillAndExpand"
+                                    VerticalOptions="CenterAndExpand">
+                                    <Label
+                                        Grid.Column="0"
+                                        Margin="10,5"
+                                        FontFamily="Poppins Medium"
+                                        FontSize="16"
+                                        HorizontalOptions="StartAndExpand"
+                                        LineBreakMode="WordWrap"
+                                        Text="Invoice Number"
+                                        TextColor="{StaticResource Black}"
+                                        VerticalOptions="CenterAndExpand" />
+                                    <Label
+                                        Grid.Column="1"
+                                        Margin="10,5"
+                                        FontFamily="Poppins Medium"
+                                        FontSize="16"
+                                        HorizontalOptions="StartAndExpand"
+                                        LineBreakMode="WordWrap"
+                                        Text="#INV67"
+                                        TextColor="{StaticResource Black}"
+                                        VerticalOptions="CenterAndExpand" />
+                                </Grid>
+
+                                <Grid
+                                    Grid.Row="1"
+                                    ColumnDefinitions="*,*"
+                                    HorizontalOptions="FillAndExpand"
+                                    VerticalOptions="CenterAndExpand">
+                                    <Label
+                                        Grid.Column="0"
+                                        Margin="10,5"
+                                        FontFamily="Poppins Medium"
+                                        FontSize="16"
+                                        HorizontalOptions="StartAndExpand"
+                                        LineBreakMode="WordWrap"
+                                        Text="Total Amount"
+                                        TextColor="{StaticResource Black}"
+                                        VerticalOptions="CenterAndExpand" />
+                                    <Label
+                                        Grid.Column="1"
+                                        Margin="10,5"
+                                        FontFamily="Poppins Medium"
+                                        FontSize="16"
+                                        HorizontalOptions="StartAndExpand"
+                                        LineBreakMode="WordWrap"
+                                        Text="Rs 3500"
+                                        TextColor="{StaticResource Black}"
+                                        VerticalOptions="CenterAndExpand" />
+                                </Grid>
+
+                                <Grid
+                                    Grid.Row="2"
+                                    ColumnDefinitions="*,*"
+                                    HorizontalOptions="FillAndExpand"
+                                    VerticalOptions="CenterAndExpand">
+                                    <Label
+                                        Grid.Column="0"
+                                        Margin="10,5"
+                                        FontFamily="Poppins Medium"
+                                        FontSize="16"
+                                        HorizontalOptions="StartAndExpand"
+                                        LineBreakMode="WordWrap"
+                                        Text="Expected Delivery"
+                                        TextColor="{StaticResource Black}"
+                                        VerticalOptions="CenterAndExpand" />
+                                    <Label
+                                        Grid.Column="1"
+                                        Margin="10,5"
+                                        FontFamily="Poppins Medium"
+                                        FontSize="16"
+                                        HorizontalOptions="StartAndExpand"
+                                        LineBreakMode="WordWrap"
+                                        Text="30-11-2020"
+                                        TextColor="{StaticResource Black}"
+                                        VerticalOptions="CenterAndExpand" />
+                                </Grid>
+
+                                <Grid
+                                    Grid.Row="3"
+                                    ColumnDefinitions="*,*"
+                                    HorizontalOptions="FillAndExpand"
+                                    VerticalOptions="CenterAndExpand">
+                                    <Label
+                                        Grid.Column="0"
+                                        Margin="10,5"
+                                        FontFamily="Poppins Medium"
+                                        FontSize="16"
+                                        HorizontalOptions="StartAndExpand"
+                                        LineBreakMode="WordWrap"
+                                        Text="Contact Seller"
+                                        TextColor="{StaticResource Black}"
+                                        VerticalOptions="CenterAndExpand" />
+
+                                    <Label
+                                        x:Name="lblContactSeller"
+                                        Grid.Column="1"
+                                        Margin="10,5"
+                                        FontFamily="Poppins Medium"
+                                        FontSize="16"
+                                        HorizontalOptions="StartAndExpand"
+                                        LineBreakMode="WordWrap"
+                                        Text="0484-32165498"
+                                        TextColor="{StaticResource Black}"
+                                        VerticalOptions="CenterAndExpand" />
+
+                                </Grid>
+
+                                <StackLayout
+                                    Grid.Row="4"
+                                    Margin="0,10,0,0"
+                                    HorizontalOptions="CenterAndExpand"
+                                    Orientation="Horizontal"
+                                    VerticalOptions="CenterAndExpand">
+                                    <Image
+                                        Aspect="AspectFit"
+                                        HeightRequest="25"
+                                        HorizontalOptions="EndAndExpand"
+                                        Source="iconTickRound.png"
+                                        VerticalOptions="CenterAndExpand"
+                                        WidthRequest="25" />
+
+                                    <Label
+                                        x:Name="lblOrderStatus"
+                                        Margin="0"
+                                        FontFamily="Poppins"
+                                        FontSize="16"
+                                        HorizontalOptions="StartAndExpand"
+                                        Text="Processing"
+                                        TextColor="{StaticResource Green}"
+                                        VerticalOptions="CenterAndExpand" />
+
+                                </StackLayout>
+
+                                <Grid
+                                    x:Name="grdTrackRaise"
+                                    Grid.Row="5"
+                                    Margin="10,30,10,0"
+                                    ColumnDefinitions="*,*"
+                                    ColumnSpacing="20"
+                                    HorizontalOptions="FillAndExpand"
+                                    VerticalOptions="CenterAndExpand">
+
+                                    <ext:CustomShadowFrame
+                                        Grid.Column="0"
+                                        Margin="0"
+                                        Padding="0"
+                                        BorderColor="{StaticResource Green}"
+                                        CornerRadius="5"
+                                        HasShadow="False"
+                                        HorizontalOptions="FillAndExpand"
+                                        VerticalOptions="CenterAndExpand">
+                                        <Label
+                                            Grid.Column="1"
+                                            Margin="0,5"
+                                            FontFamily="Poppins Medium"
+                                            FontSize="14"
+                                            HorizontalOptions="CenterAndExpand"
+                                            LineBreakMode="WordWrap"
+                                            Text="Track Order"
+                                            TextColor="{StaticResource Green}"
+                                            VerticalOptions="CenterAndExpand" />
+                                        <ext:CustomShadowFrame.GestureRecognizers>
+                                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmTrackOrder_Tapped" />
+                                        </ext:CustomShadowFrame.GestureRecognizers>
+                                    </ext:CustomShadowFrame>
+
+                                    <ext:CustomShadowFrame
+                                        Grid.Column="1"
+                                        Margin="0"
+                                        Padding="0"
+                                        BorderColor="{StaticResource Green}"
+                                        CornerRadius="5"
+                                        HasShadow="False"
+                                        HorizontalOptions="FillAndExpand"
+                                        VerticalOptions="CenterAndExpand">
+                                        <Label
+                                            Grid.Column="1"
+                                            Margin="0,5"
+                                            FontFamily="Poppins Medium"
+                                            FontSize="14"
+                                            HorizontalOptions="CenterAndExpand"
+                                            LineBreakMode="WordWrap"
+                                            Text="Raise Grievance"
+                                            TextColor="{StaticResource Green}"
+                                            VerticalOptions="CenterAndExpand" />
+                                        <ext:CustomShadowFrame.GestureRecognizers>
+                                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmRaiseGrievance_Tapped" />
+                                        </ext:CustomShadowFrame.GestureRecognizers>
+                                    </ext:CustomShadowFrame>
+                                </Grid>
+                            </Grid>
+                        </ext:CustomShadowFrame>
+
+                        <Grid Grid.Row="2" RowDefinitions="Auto,Auto">
+
+                            <ext:CustomShadowFrame
+                                Grid.Row="0"
+                                Margin="20,0"
+                                Padding="0"
+                                BackgroundColor="{StaticResource Green}"
+                                CornerRadius="5"
+                                HasShadow="False"
+                                HorizontalOptions="FillAndExpand"
+                                VerticalOptions="CenterAndExpand">
+                                <Label
+                                    Grid.Column="1"
+                                    Margin="20,10"
+                                    FontFamily="Poppins Medium"
+                                    FontSize="16"
+                                    HorizontalOptions="CenterAndExpand"
+                                    LineBreakMode="WordWrap"
+                                    Text="Cancel Order"
+                                    TextColor="{StaticResource White}"
+                                    VerticalOptions="CenterAndExpand" />
+                                <ext:CustomShadowFrame.GestureRecognizers>
+                                    <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmCancelOrder_Tapped" />
+                                </ext:CustomShadowFrame.GestureRecognizers>
+                            </ext:CustomShadowFrame>
+
+                            <Label
+                                Grid.Row="1"
+                                Margin="0,0,0,20"
+                                FontFamily="Poppins"
+                                FontSize="12"
+                                HorizontalOptions="CenterAndExpand"
+                                Text="(Visbile for 1 hr from payment)"
+                                TextColor="{StaticResource Black}"
+                                VerticalOptions="CenterAndExpand" />
+
+                        </Grid>
+
+                        <Grid
+                            Grid.Row="2"
+                            IsVisible="False"
+                            RowDefinitions="Auto,Auto">
+
+                            <Grid Grid.Row="0" RowDefinitions="Auto,Auto,Auto">
+
+                                <Grid
+                                    Grid.Row="0"
+                                    Margin="20,0"
+                                    ColumnDefinitions="*,150,*">
+
+                                    <Label
+                                        Grid.Column="0"
+                                        Margin="0"
+                                        FontFamily="Poppins"
+                                        FontSize="16"
+                                        HorizontalOptions="StartAndExpand"
+                                        Text="Rate Seller"
+                                        TextColor="{StaticResource Black}"
+                                        VerticalOptions="CenterAndExpand" />
+
+                                    <skiaRate:RatingView
+                                        x:Name="rvSeller"
+                                        Grid.Column="1"
+                                        ColorOn="{StaticResource Green}"
+                                        Count="5"
+                                        HorizontalOptions="FillAndExpand"
+                                        OutlineOffColor="{StaticResource Green}"
+                                        RatingType="Half"
+                                        VerticalOptions="FillAndExpand"
+                                        Value="0" />
+
+                                    <ext:CustomShadowFrame
+                                        Grid.Column="2"
+                                        Margin="0"
+                                        Padding="0"
+                                        BackgroundColor="Transparent"
+                                        BorderColor="{StaticResource Green}"
+                                        CornerRadius="5"
+                                        HasShadow="False"
+                                        HorizontalOptions="EndAndExpand"
+                                        VerticalOptions="CenterAndExpand">
+                                        <Label
+                                            Grid.Column="1"
+                                            Margin="10,5"
+                                            FontFamily="Poppins Medium"
+                                            FontSize="16"
+                                            HorizontalOptions="CenterAndExpand"
+                                            Text="Rate"
+                                            TextColor="{StaticResource Green}"
+                                            VerticalOptions="CenterAndExpand" />
+                                        <ext:CustomShadowFrame.GestureRecognizers>
+                                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmCancelOrder_Tapped" />
+                                        </ext:CustomShadowFrame.GestureRecognizers>
+                                    </ext:CustomShadowFrame>
+
+                                </Grid>
+
+                                <Grid
+                                    Grid.Row="1"
+                                    Margin="20,0"
+                                    ColumnDefinitions="*,150,*">
+
+                                    <Label
+                                        Grid.Column="0"
+                                        Margin="0"
+                                        FontFamily="Poppins"
+                                        FontSize="16"
+                                        HorizontalOptions="StartAndExpand"
+                                        Text="Rate Product"
+                                        TextColor="{StaticResource Black}"
+                                        VerticalOptions="CenterAndExpand" />
+
+                                    <skiaRate:RatingView
+                                        x:Name="rvProduct"
+                                        Grid.Column="1"
+                                        ColorOn="{StaticResource Green}"
+                                        Count="5"
+                                        HorizontalOptions="FillAndExpand"
+                                        OutlineOffColor="{StaticResource Green}"
+                                        RatingType="Half"
+                                        VerticalOptions="FillAndExpand"
+                                        Value="0" />
+
+                                    <ext:CustomShadowFrame
+                                        Grid.Column="2"
+                                        Margin="0"
+                                        Padding="0"
+                                        BackgroundColor="Transparent"
+                                        BorderColor="{StaticResource Green}"
+                                        CornerRadius="5"
+                                        HasShadow="False"
+                                        HorizontalOptions="EndAndExpand"
+                                        VerticalOptions="CenterAndExpand">
+                                        <Label
+                                            Grid.Column="1"
+                                            Margin="10,5"
+                                            FontFamily="Poppins Medium"
+                                            FontSize="16"
+                                            HorizontalOptions="CenterAndExpand"
+                                            Text="Rate"
+                                            TextColor="{StaticResource Green}"
+                                            VerticalOptions="CenterAndExpand" />
+                                        <ext:CustomShadowFrame.GestureRecognizers>
+                                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmCancelOrder_Tapped" />
+                                        </ext:CustomShadowFrame.GestureRecognizers>
+                                    </ext:CustomShadowFrame>
+
+                                </Grid>
+
+                                <Grid
+                                    Grid.Row="2"
+                                    Margin="20,0"
+                                    ColumnDefinitions="*,150,*">
+
+                                    <Label
+                                        Grid.Column="0"
+                                        Margin="0"
+                                        FontFamily="Poppins"
+                                        FontSize="16"
+                                        HorizontalOptions="StartAndExpand"
+                                        Text="Rate AptDealz"
+                                        TextColor="{StaticResource Black}"
+                                        VerticalOptions="CenterAndExpand" />
+
+                                    <skiaRate:RatingView
+                                        x:Name="rvAptDealz"
+                                        Grid.Column="1"
+                                        ColorOn="{StaticResource Green}"
+                                        Count="5"
+                                        HorizontalOptions="FillAndExpand"
+                                        OutlineOffColor="{StaticResource Green}"
+                                        RatingType="Half"
+                                        VerticalOptions="FillAndExpand"
+                                        Value="0" />
+
+                                    <ext:CustomShadowFrame
+                                        Grid.Column="2"
+                                        Margin="0"
+                                        Padding="0"
+                                        BackgroundColor="Transparent"
+                                        BorderColor="{StaticResource Green}"
+                                        CornerRadius="5"
+                                        HasShadow="False"
+                                        HorizontalOptions="EndAndExpand"
+                                        VerticalOptions="CenterAndExpand">
+                                        <Label
+                                            Grid.Column="1"
+                                            Margin="10,5"
+                                            FontFamily="Poppins Medium"
+                                            FontSize="16"
+                                            HorizontalOptions="CenterAndExpand"
+                                            Text="Rate"
+                                            TextColor="{StaticResource Green}"
+                                            VerticalOptions="CenterAndExpand" />
+                                        <ext:CustomShadowFrame.GestureRecognizers>
+                                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmCancelOrder_Tapped" />
+                                        </ext:CustomShadowFrame.GestureRecognizers>
+                                    </ext:CustomShadowFrame>
+
+                                </Grid>
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="1"
+                                Margin="30"
+                                ColumnDefinitions="*,*"
+                                ColumnSpacing="20"
+                                HorizontalOptions="FillAndExpand"
+                                VerticalOptions="FillAndExpand">
+                                <ext:CustomShadowFrame
+                                    Grid.Column="0"
+                                    Margin="0"
+                                    Padding="0"
+                                    BackgroundColor="{StaticResource Green}"
+                                    CornerRadius="5"
+                                    HasShadow="False"
+                                    HorizontalOptions="FillAndExpand"
+                                    VerticalOptions="StartAndExpand">
+                                    <Label
+                                        Grid.Column="1"
+                                        Margin="0,5"
+                                        FontFamily="Poppins Medium"
+                                        FontSize="14"
+                                        HorizontalOptions="CenterAndExpand"
+                                        LineBreakMode="WordWrap"
+                                        Text="Repost Reqt"
+                                        TextColor="{StaticResource White}"
+                                        VerticalOptions="CenterAndExpand" />
+                                    <ext:CustomShadowFrame.GestureRecognizers>
+                                        <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmTrackOrder_Tapped" />
+                                    </ext:CustomShadowFrame.GestureRecognizers>
+                                </ext:CustomShadowFrame>
+
+                                <StackLayout Grid.Column="1">
+
+                                    <ext:CustomShadowFrame
+                                        Grid.Column="1"
+                                        Margin="0"
+                                        Padding="0"
+                                        BackgroundColor="{StaticResource Green}"
+                                        CornerRadius="5"
+                                        HasShadow="False"
+                                        HorizontalOptions="FillAndExpand"
+                                        VerticalOptions="StartAndExpand">
+                                        <Label
+                                            Grid.Column="1"
+                                            Margin="0,5"
+                                            FontFamily="Poppins Medium"
+                                            FontSize="14"
+                                            HorizontalOptions="CenterAndExpand"
+                                            LineBreakMode="WordWrap"
+                                            Text="Raise Grievance"
+                                            TextColor="{StaticResource White}"
+                                            VerticalOptions="CenterAndExpand" />
+                                        <ext:CustomShadowFrame.GestureRecognizers>
+                                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmRaiseGrievance_Tapped" />
+                                        </ext:CustomShadowFrame.GestureRecognizers>
+                                    </ext:CustomShadowFrame>
+                                    <Label
+                                        Margin="0"
+                                        FontFamily="Poppins"
+                                        FontSize="12"
+                                        HorizontalOptions="CenterAndExpand"
+                                        Text="(Visible up to 48 hrs of delivery)"
+                                        TextColor="{StaticResource Black}"
+                                        VerticalOptions="CenterAndExpand" />
+                                </StackLayout>
+                            </Grid>
+
+                        </Grid>
+                    </Grid>
+
+                </ScrollView>
+
+            </Grid>
+        </Grid>
+
+    </ContentPage.Content>
+</ContentPage>

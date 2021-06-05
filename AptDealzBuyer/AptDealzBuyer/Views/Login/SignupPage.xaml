@@ -1,0 +1,212 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="AptDealzBuyer.Views.Login.SignupPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:ext="clr-namespace:AptDealzBuyer.Extention"
+    xmlns:iOS="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+    iOS:Page.UseSafeArea="True"
+    BackgroundColor="{StaticResource White}"
+    NavigationPage.HasNavigationBar="False">
+    <ContentPage.Content>
+        <Grid
+            HorizontalOptions="FillAndExpand"
+            RowSpacing="0"
+            VerticalOptions="FillAndExpand">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" ColumnDefinitions="60,*,60">
+                <Image
+                    x:Name="ImgBack"
+                    Grid.Column="0"
+                    HeightRequest="25"
+                    HorizontalOptions="CenterAndExpand"
+                    Source="iconBackArrow.png"
+                    VerticalOptions="CenterAndExpand">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgBack_Tapped" />
+                    </Image.GestureRecognizers>
+                </Image>
+            </Grid>
+
+            <Grid Grid.Row="1" RowSpacing="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <StackLayout
+                    Grid.Row="0"
+                    Margin="0,10,0,0"
+                    Spacing="5">
+                    <Image
+                        Aspect="AspectFill"
+                        HeightRequest="120"
+                        HorizontalOptions="CenterAndExpand"
+                        Source="iconLogo.png"
+                        VerticalOptions="CenterAndExpand" />
+
+                    <Label
+                        Margin="0"
+                        FontFamily="Poppins Medium"
+                        FontSize="18"
+                        HorizontalOptions="CenterAndExpand"
+                        Text="Create an Account"
+                        TextColor="{StaticResource Black}"
+                        VerticalOptions="CenterAndExpand" />
+
+                </StackLayout>
+
+                <Grid
+                    Grid.Row="1"
+                    HorizontalOptions="FillAndExpand"
+                    RowDefinitions="Auto,Auto,Auto"
+                    VerticalOptions="CenterAndExpand">
+
+                    <ext:CustomShadowFrame
+                        Grid.Row="0"
+                        Margin="30,10"
+                        Padding="0"
+                        BackgroundColor="{StaticResource LightGray}"
+                        CornerRadius="5"
+                        HasShadow="False">
+                        <ext:ExtEntry
+                            x:Name="txtFullName"
+                            Margin="20,0"
+                            FontFamily="Poppins"
+                            FontSize="16"
+                            HeightRequest="50"
+                            HorizontalOptions="FillAndExpand"
+                            Placeholder="Full Name"
+                            PlaceholderColor="{StaticResource Gray}"
+                            TextColor="{StaticResource Black}"
+                            VerticalOptions="FillAndExpand"
+                            VerticalTextAlignment="Center" />
+                    </ext:CustomShadowFrame>
+
+                    <ext:CustomShadowFrame
+                        Grid.Row="1"
+                        Margin="30,10"
+                        Padding="0"
+                        BackgroundColor="{StaticResource LightGray}"
+                        CornerRadius="5"
+                        HasShadow="False">
+                        <ext:ExtEntry
+                            x:Name="txtUserName"
+                            Margin="20,0"
+                            FontFamily="Poppins"
+                            FontSize="16"
+                            HeightRequest="50"
+                            HorizontalOptions="FillAndExpand"
+                            Keyboard="Text"
+                            Placeholder="Email / Phone Number"
+                            PlaceholderColor="{StaticResource Gray}"
+                            TextColor="{StaticResource Black}"
+                            VerticalOptions="CenterAndExpand"
+                            VerticalTextAlignment="Center" />
+                    </ext:CustomShadowFrame>
+
+                    <Grid
+                        Grid.Row="2"
+                        Margin="30,10,20,0"
+                        HorizontalOptions="StartAndExpand"
+                        VerticalOptions="CenterAndExpand">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Image
+                            x:Name="imgCheck"
+                            Grid.Column="0"
+                            HeightRequest="25"
+                            HorizontalOptions="StartAndExpand"
+                            Source="iconUnCheck.png"
+                            VerticalOptions="CenterAndExpand" />
+
+                        <Label
+                            Grid.Column="1"
+                            Margin="10,0,0,0"
+                            FontFamily="Poppins"
+                            FontSize="14"
+                            HorizontalOptions="StartAndExpand"
+                            Text="Agree"
+                            TextColor="{StaticResource Black}"
+                            VerticalOptions="CenterAndExpand" />
+
+                        <Label
+                            Grid.Column="2"
+                            Margin="0"
+                            FontFamily="Poppins"
+                            FontSize="14"
+                            HorizontalOptions="StartAndExpand"
+                            Text="Terms &amp; Condtions"
+                            TextColor="{StaticResource Green}"
+                            VerticalOptions="CenterAndExpand" />
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="StkAgreeTC_Tapped" />
+                        </Grid.GestureRecognizers>
+                    </Grid>
+                </Grid>
+
+                <ext:CustomShadowFrame
+                    x:Name="FrmGetOtp"
+                    Grid.Row="2"
+                    Margin="30,0"
+                    Padding="10,5"
+                    BackgroundColor="{StaticResource Green}"
+                    CornerRadius="5"
+                    HasShadow="False"
+                    HorizontalOptions="FillAndExpand"
+                    VerticalOptions="CenterAndExpand">
+                    <Label
+                        Margin="15,10"
+                        FontFamily="Poppins Medium"
+                        HorizontalOptions="CenterAndExpand"
+                        Text="Get OTP"
+                        TextColor="{StaticResource White}"
+                        VerticalOptions="CenterAndExpand" />
+                    <ext:CustomShadowFrame.GestureRecognizers>
+                        <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmGetOtp_Tapped" />
+                    </ext:CustomShadowFrame.GestureRecognizers>
+                </ext:CustomShadowFrame>
+
+                <StackLayout
+                    Grid.Row="3"
+                    Margin="20,20,20,30"
+                    HorizontalOptions="CenterAndExpand"
+                    Orientation="Horizontal"
+                    VerticalOptions="CenterAndExpand">
+
+                    <Label
+                        Margin="10,0,0,0"
+                        FontFamily="Poppins Medium"
+                        FontSize="16"
+                        HorizontalOptions="EndAndExpand"
+                        Text="Already have an account ?"
+                        TextColor="{StaticResource Black}"
+                        VerticalOptions="CenterAndExpand" />
+
+                    <Label
+                        Margin="10,0,0,0"
+                        FontFamily="Poppins Medium"
+                        FontSize="16"
+                        HorizontalOptions="StartAndExpand"
+                        Text="Login"
+                        TextColor="{StaticResource Green}"
+                        VerticalOptions="CenterAndExpand" />
+                    <StackLayout.GestureRecognizers>
+                        <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="StkLogin_Tapped" />
+                    </StackLayout.GestureRecognizers>
+                </StackLayout>
+
+            </Grid>
+
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

@@ -1,0 +1,186 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="AptDealzBuyer.Views.DashboardPages.NotificationPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:iOS="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+    iOS:Page.UseSafeArea="True"
+    BackgroundColor="{StaticResource White}"
+    NavigationPage.HasNavigationBar="False">
+    <ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="80" />
+                </Grid.ColumnDefinitions>
+                <Image
+                    x:Name="ImgMenu"
+                    Grid.Column="0"
+                    Margin="20,0,0,0"
+                    HeightRequest="30"
+                    HorizontalOptions="StartAndExpand"
+                    Source="IconMenu.png"
+                    VerticalOptions="CenterAndExpand">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgMenu_Tapped" />
+                    </Image.GestureRecognizers>
+                </Image>
+
+                <Image
+                    Grid.Column="1"
+                    Margin="0"
+                    Aspect="AspectFill"
+                    HeightRequest="45"
+                    HorizontalOptions="CenterAndExpand"
+                    Source="iconHeaderLogo.png"
+                    VerticalOptions="CenterAndExpand"
+                    WidthRequest="45" />
+
+                <StackLayout
+                    Grid.Column="2"
+                    Margin="0,0,20,0"
+                    HorizontalOptions="EndAndExpand"
+                    Orientation="Horizontal">
+                    <Image
+                        Margin="0"
+                        HeightRequest="30"
+                        HorizontalOptions="CenterAndExpand"
+                        Source="iconNotification.png"
+                        VerticalOptions="CenterAndExpand">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgNotification_Tapped" />
+                        </Image.GestureRecognizers>
+                    </Image>
+
+                    <Image
+                        Margin="0"
+                        HeightRequest="30"
+                        HorizontalOptions="CenterAndExpand"
+                        Source="iconQuestion.png"
+                        VerticalOptions="CenterAndExpand">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgQuestion_Tapped" />
+                        </Image.GestureRecognizers>
+                    </Image>
+                </StackLayout>
+            </Grid>
+            <!--#endregion-->
+            <BoxView
+                Grid.Row="1"
+                BackgroundColor="{StaticResource LightGray}"
+                HeightRequest="1"
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="EndAndExpand" />
+
+            <Grid Grid.Row="2" Margin="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <StackLayout
+                    Grid.Row="0"
+                    Margin="20,0,0,0"
+                    HorizontalOptions="StartAndExpand"
+                    Orientation="Horizontal">
+                    <Image
+                        Margin="0"
+                        Aspect="AspectFit"
+                        HeightRequest="25"
+                        HorizontalOptions="CenterAndExpand"
+                        Source="iconBackArrow.png" x:Name="ImgBack"
+                        VerticalOptions="CenterAndExpand"
+                        WidthRequest="25">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgBack_Tapped" />
+                        </Image.GestureRecognizers>
+                    </Image>
+
+                    <Label
+                        Grid.Row="0"
+                        Margin="5,0,0,0"
+                        FontFamily="Poppins SemiBold"
+                        FontSize="18"
+                        HorizontalOptions="StartAndExpand"
+                        Text="Notifications"
+                        TextColor="{StaticResource Black}"
+                        VerticalOptions="CenterAndExpand" />
+                </StackLayout>
+
+                <ListView
+                    x:Name="lstNotification"
+                    Grid.Row="1"
+                    Margin="0,20,0,0"
+                    HasUnevenRows="True"
+                    HorizontalOptions="FillAndExpand"
+                    HorizontalScrollBarVisibility="Never"
+                    VerticalScrollBarVisibility="Never">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Grid RowDefinitions="Auto,Auto" RowSpacing="10">
+
+                                    <Grid
+                                        Grid.Row="0"
+                                        Margin="20,10,20,0"
+                                        ColumnDefinitions="Auto,*,Auto"
+                                        HorizontalOptions="FillAndExpand">
+
+                                        <BoxView
+                                            Grid.Column="0"
+                                            BackgroundColor="{StaticResource Green}"
+                                            HorizontalOptions="EndAndExpand"
+                                            VerticalOptions="FillAndExpand"
+                                            WidthRequest="1" />
+
+                                        <Label
+                                            Grid.Column="1"
+                                            Margin="10,0,0,0"
+                                            FontFamily="Poppins"
+                                            FontSize="16"
+                                            HorizontalOptions="StartAndExpand"
+                                            LineBreakMode="WordWrap"
+                                            Text="{Binding NotificationTitle}"
+                                            TextColor="{StaticResource Black}"
+                                            VerticalOptions="CenterAndExpand" />
+
+                                        <Image
+                                            Grid.Column="2"
+                                            Margin="0"
+                                            HeightRequest="15"
+                                            HorizontalOptions="CenterAndExpand"
+                                            Source="iconClose.png"
+                                            VerticalOptions="CenterAndExpand">
+                                            <Image.GestureRecognizers>
+                                                <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgClose_Tapped" />
+                                            </Image.GestureRecognizers>
+                                        </Image>
+
+
+                                    </Grid>
+
+                                    <BoxView
+                                        Grid.Row="1"
+                                        BackgroundColor="{StaticResource LightGray}"
+                                        HeightRequest="1"
+                                        HorizontalOptions="FillAndExpand"
+                                        VerticalOptions="EndAndExpand" />
+
+                                </Grid>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+
+            </Grid>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

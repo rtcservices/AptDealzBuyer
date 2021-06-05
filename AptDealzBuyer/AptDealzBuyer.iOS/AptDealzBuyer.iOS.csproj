@@ -1,0 +1,411 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">iPhoneSimulator</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{323F3278-BE75-47DB-8FDD-FE170F8A6688}</ProjectGuid>
+    <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <TemplateGuid>{6143fdea-f3c2-4a09-aafa-6e230626515e}</TemplateGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>AptDealzBuyer.iOS</RootNamespace>
+    <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
+    <AssemblyName>AptDealzBuyer.iOS</AssemblyName>
+    <MtouchEnableSGenConc>true</MtouchEnableSGenConc>
+    <MtouchHttpClientHandler>NSUrlSessionHandler</MtouchHttpClientHandler>
+    <ProvisioningType>automatic</ProvisioningType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\iPhoneSimulator\Debug</OutputPath>
+    <DefineConstants>DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <MtouchArch>x86_64</MtouchArch>
+    <MtouchLink>SdkOnly</MtouchLink>
+    <MtouchDebug>true</MtouchDebug>
+    <MtouchSdkVersion>
+    </MtouchSdkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\iPhoneSimulator\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <MtouchLink>None</MtouchLink>
+    <MtouchArch>x86_64</MtouchArch>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\iPhone\Debug</OutputPath>
+    <DefineConstants>DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <MtouchArch>ARM64</MtouchArch>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <MtouchDebug>true</MtouchDebug>
+    <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+    <MtouchLink>None</MtouchLink>
+    <MtouchInterpreter>-all</MtouchInterpreter>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\iPhone\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <MtouchArch>ARM64</MtouchArch>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
+    <AppExtensionDebugBundleId />
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="CustomRenderers\CustomRenderer.cs" />
+    <Compile Include="Main.cs" />
+    <Compile Include="AppDelegate.cs" />
+    <None Include="Entitlements.plist" />
+    <None Include="Info.plist" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <BundleResource Include="Resources\Poppins Black.otf" />
+    <BundleResource Include="Resources\Poppins ExtraBold.otf" />
+    <BundleResource Include="Resources\Poppins Medium.otf" />
+    <BundleResource Include="Resources\Poppins SemiBold.otf" />
+    <BundleResource Include="Resources\Poppins Thin.otf" />
+    <BundleResource Include="Resources\Poppins.otf" />
+  </ItemGroup>
+  <ItemGroup>
+    <InterfaceDefinition Include="Resources\LaunchScreen.storyboard" />
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon1024.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon180.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon167.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon152.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon120.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon87.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon80.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon76.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon60.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon58.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon40.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon29.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon20.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="Xamarin.iOS" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="CarouselView.FormsPlugin">
+      <Version>6.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="DLToolkit.Forms.Controls.FlowListView">
+      <Version>2.0.11</Version>
+    </PackageReference>
+    <PackageReference Include="dotMorten.Xamarin.Forms.AutoSuggestBox">
+      <Version>1.1.1</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>13.0.1</Version>
+    </PackageReference>
+    <PackageReference Include="Plugin.FirebasePushNotification">
+      <Version>3.3.16-beta</Version>
+    </PackageReference>
+    <PackageReference Include="Plugin.Permissions">
+      <Version>6.0.1</Version>
+    </PackageReference>
+    <PackageReference Include="Rg.Plugins.Popup">
+      <Version>2.0.0.11</Version>
+    </PackageReference>
+    <PackageReference Include="SkiaRate.Forms">
+      <Version>0.5.2-pre</Version>
+    </PackageReference>
+    <PackageReference Include="SkiaSharp">
+      <Version>2.80.2</Version>
+    </PackageReference>
+    <PackageReference Include="Xam.Plugin.Connectivity">
+      <Version>3.2.0</Version>
+    </PackageReference>
+    <PackageReference Include="Xam.Plugin.Media">
+      <Version>5.0.1</Version>
+    </PackageReference>
+    <PackageReference Include="Xam.Plugins.Settings">
+      <Version>4.1.0-beta</Version>
+    </PackageReference>
+    <PackageReference Include="Xamarin.Firebase.iOS.Auth">
+      <Version>6.5.1</Version>
+    </PackageReference>
+    <PackageReference Include="Xamarin.Firebase.iOS.CloudFirestore">
+      <Version>1.12.0</Version>
+    </PackageReference>
+    <PackageReference Include="Xamarin.Firebase.iOS.Core">
+      <Version>6.6.6</Version>
+    </PackageReference>
+    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2012" />
+    <PackageReference Include="Xamarin.Essentials" Version="1.6.1" />
+    <PackageReference Include="Xamarin.Forms.InputKit">
+      <Version>3.7.2</Version>
+    </PackageReference>
+    <PackageReference Include="Xamarin.Forms.PancakeView">
+      <Version>2.3.0.763-beta</Version>
+    </PackageReference>
+    <PackageReference Include="Xamarin.Plugin.FilePicker">
+      <Version>2.1.41</Version>
+    </PackageReference>
+    <PackageReference Include="Xamarin.RisePlugin.AutoCompleteTextView">
+      <Version>1.0.9</Version>
+    </PackageReference>
+    <PackageReference Include="XLabs.Forms">
+      <Version>2.3.0-pre05</Version>
+    </PackageReference>
+    <PackageReference Include="ZXing.Net.Mobile">
+      <Version>2.4.1</Version>
+    </PackageReference>
+    <PackageReference Include="ZXing.Net.Mobile.Forms">
+      <Version>2.4.1</Version>
+    </PackageReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
+  <ItemGroup>
+    <ProjectReference Include="..\AptDealzBuyer\AptDealzBuyer.csproj">
+      <Project>{1B5D4EBA-85D2-4F4B-B062-EEA8AE695B82}</Project>
+      <Name>AptDealzBuyer</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Implementations\" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\imgWelcomeTwo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\imgWelcomeThree.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\imgWelcomeOne.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\SplashScreenLogo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconGreenCircle.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconGrayCircle.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconBackArrow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconHeaderLogo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconLogo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconCheck.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconUncheck.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconAccountActive.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconHome.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconHomeActive.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconRequirements.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconOrders.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconOrdersActive.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconAccount.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconRequirementsActive.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconQuestion.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\IconMenu.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconNotification.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\imgWeSupport.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\imgAboutAptDealz.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\imgActiveRequirements.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\imgContactSupport.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\imgFAQHelp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\imgGrievances.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\imgNotifications.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\imgOrderHistory.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\imgPostRequirements.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\imgPreviousRequirements.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\imgProfile.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\imgShippingDetails.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\imgTermsPolicies.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconDownArrow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\imgUploadImage.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconImageUpload.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconUpArrow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconSmile.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconSearch.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconSort.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconRightArrow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconDelete.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconRadioUnselect.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconRadioSelect.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconProductBanner.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconTick.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconClose.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconAdd.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconStatus.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconTickRound.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconUserGreen.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconUserAccount.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconCamera.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconEdit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconSwitchOff.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconSwitchOn.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\imgContact.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\imgBuyer.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\imgMakeInIndia.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconSkip.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconSend.png" />
+  </ItemGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties XamarinHotReloadWrongLinkerErrorInfoBarAptDealzBuyeriOSHideInfoBar="True" />
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

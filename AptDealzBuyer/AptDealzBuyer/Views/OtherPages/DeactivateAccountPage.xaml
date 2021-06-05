@@ -1,0 +1,191 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="AptDealzBuyer.Views.OtherPages.DeactivateAccountPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:ext="clr-namespace:AptDealzBuyer.Extention"
+    xmlns:iOS="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+    iOS:Page.UseSafeArea="True"
+    BackgroundColor="{StaticResource White}"
+    NavigationPage.HasNavigationBar="False">
+    <ContentPage.Content>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="80" />
+                </Grid.ColumnDefinitions>
+                <Image
+                    x:Name="ImgMenu"
+                    Grid.Column="0"
+                    Margin="20,0,0,0"
+                    HeightRequest="30"
+                    HorizontalOptions="StartAndExpand"
+                    Source="IconMenu.png"
+                    VerticalOptions="CenterAndExpand">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgMenu_Tapped" />
+                    </Image.GestureRecognizers>
+                </Image>
+
+                <Image
+                    Grid.Column="1"
+                    Margin="0"
+                    Aspect="AspectFill"
+                    HeightRequest="45"
+                    HorizontalOptions="CenterAndExpand"
+                    Source="iconHeaderLogo.png"
+                    VerticalOptions="CenterAndExpand"
+                    WidthRequest="45" />
+
+                <StackLayout
+                    Grid.Column="2"
+                    Margin="0,0,20,0"
+                    HorizontalOptions="EndAndExpand"
+                    Orientation="Horizontal">
+                    <Image
+                        Margin="0"
+                        HeightRequest="30"
+                        HorizontalOptions="CenterAndExpand"
+                        Source="iconNotification.png"
+                        VerticalOptions="CenterAndExpand">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgNotification_Tapped" />
+                        </Image.GestureRecognizers>
+                    </Image>
+
+                    <Image
+                        Margin="0"
+                        HeightRequest="30"
+                        HorizontalOptions="CenterAndExpand"
+                        Source="iconQuestion.png"
+                        VerticalOptions="CenterAndExpand">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgQuestion_Tapped" />
+                        </Image.GestureRecognizers>
+                    </Image>
+                </StackLayout>
+            </Grid>
+            <!--#endregion-->
+            <BoxView
+                Grid.Row="1"
+                BackgroundColor="{StaticResource LightGray}"
+                HeightRequest="1"
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="EndAndExpand" />
+
+            <Grid Grid.Row="2" Margin="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Grid
+                    Grid.Row="0"
+                    Margin="20,0"
+                    ColumnDefinitions="Auto,*,Auto"
+                    HorizontalOptions="FillAndExpand">
+                    <Image
+                        Margin="0"
+                        Aspect="AspectFit"
+                        HeightRequest="25"
+                        HorizontalOptions="StartAndExpand"
+                        Source="iconBackArrow.png" x:Name="ImgBack"
+                        VerticalOptions="CenterAndExpand"
+                        WidthRequest="25">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgBack_Tapped" />
+                        </Image.GestureRecognizers>
+                    </Image>
+
+                    <Label
+                        Grid.Column="1"
+                        Margin="5,0,0,0"
+                        FontFamily="Poppins SemiBold"
+                        FontSize="20"
+                        HorizontalOptions="StartAndExpand"
+                        Text="Deactivate Account"
+                        TextColor="{StaticResource Black}"
+                        VerticalOptions="CenterAndExpand" />
+
+                </Grid>
+
+                <ScrollView Grid.Row="1" Margin="0,15,0,0">
+
+                    <Grid Margin="0" RowDefinitions="Auto,*,Auto">
+
+                        <Label
+                            Grid.Row="0"
+                            Margin="20"
+                            FontFamily="Poppins"
+                            FontSize="14"
+                            HorizontalOptions="FillAndExpand"
+                            LineBreakMode="WordWrap"
+                            Text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged."
+                            TextColor="{StaticResource Black}"
+                            VerticalOptions="FillAndExpand" />
+
+                        <ext:CustomShadowFrame
+                            Grid.Row="1"
+                            Margin="20,0"
+                            Padding="0"
+                            BackgroundColor="Transparent"
+                            BorderColor="{StaticResource LightGray}"
+                            CornerRadius="5"
+                            HasShadow="False"
+                            HeightRequest="150"
+                            HorizontalOptions="FillAndExpand"
+                            VerticalOptions="FillAndExpand">
+                            <Editor
+                                x:Name="txtReason"
+                                Margin="10"
+                                FontFamily="Poppins"
+                                FontSize="14"
+                                HorizontalOptions="FillAndExpand"
+                                Placeholder="Reason for Deactivation:"
+                                PlaceholderColor="{StaticResource Gray}"
+                                TextColor="{StaticResource Black}"
+                                VerticalOptions="FillAndExpand" />
+                        </ext:CustomShadowFrame>
+
+                        <ext:CustomShadowFrame
+                            Grid.Row="2"
+                            Margin="20,20,20,40"
+                            Padding="0"
+                            BackgroundColor="{StaticResource Green}"
+                            CornerRadius="5"
+                            HasShadow="False"
+                            HorizontalOptions="FillAndExpand"
+                            VerticalOptions="CenterAndExpand">
+                            <Label
+                                Grid.Column="1"
+                                Margin="20,10"
+                                FontFamily="Poppins Medium"
+                                FontSize="16"
+                                HorizontalOptions="CenterAndExpand"
+                                LineBreakMode="WordWrap"
+                                Text="Confirm Account Deactivation"
+                                TextColor="{StaticResource White}"
+                                VerticalOptions="CenterAndExpand" />
+                            <ext:CustomShadowFrame.GestureRecognizers>
+                                <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmConfirmDeactivation_Tapped" />
+                            </ext:CustomShadowFrame.GestureRecognizers>
+                        </ext:CustomShadowFrame>
+
+                    </Grid>
+
+                </ScrollView>
+
+            </Grid>
+        </Grid>
+
+    </ContentPage.Content>
+</ContentPage>

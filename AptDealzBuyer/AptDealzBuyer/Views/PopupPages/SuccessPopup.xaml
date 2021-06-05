@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<popup:PopupPage
+    x:Class="AptDealzBuyer.Views.PopupPages.SuccessPopup"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:ext="clr-namespace:AptDealzBuyer.Extention"
+    xmlns:popup="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
+    BackgroundColor="{StaticResource White}"
+    NavigationPage.HasNavigationBar="False">
+
+    <ext:CustomShadowFrame
+        Margin="30,0"
+        Padding="0"
+        BackgroundColor="{StaticResource White}"
+        BorderColor="{StaticResource White}"
+        BorderWidth="1"
+        CornerRadius="10"
+        HasShadow="{OnPlatform Android=true,
+                               iOS=false}"
+        HeightRequest="350"
+        HorizontalOptions="FillAndExpand"
+        VerticalOptions="CenterAndExpand">
+
+        <Grid
+            Margin="0"
+            Padding="0"
+            RowDefinitions="Auto,Auto,*,Auto">
+
+            <Image
+                Grid.Row="0"
+                Margin="0,20,0,0"
+                HeightRequest="100"
+                HorizontalOptions="CenterAndExpand"
+                Source="iconSmile.png"
+                VerticalOptions="CenterAndExpand" />
+
+            <Label
+                Grid.Row="1"
+                Margin="0"
+                FontFamily="Poppins Medium"
+                FontSize="18"
+                HorizontalOptions="CenterAndExpand"
+                Text="Success"
+                TextColor="{StaticResource Green}"
+                VerticalOptions="CenterAndExpand" />
+
+            <Label
+                x:Name="lblMessage"
+                Grid.Row="2"
+                Margin="30,0"
+                FontFamily="Poppins"
+                FontSize="16"
+                HorizontalOptions="CenterAndExpand"
+                HorizontalTextAlignment="Center"
+                Text="New requirement #REQ1234 created successfully!"
+                TextColor="{StaticResource Green}"
+                VerticalOptions="CenterAndExpand" />
+
+            <ext:CustomShadowFrame
+                Grid.Row="3"
+                Margin="0,0,0,40"
+                Padding="0"
+                BackgroundColor="{StaticResource Green}"
+                CornerRadius="25"
+                HorizontalOptions="CenterAndExpand"
+                VerticalOptions="CenterAndExpand">
+                <Label
+                    Margin="35,7"
+                    FontFamily="Poppins Medium"
+                    FontSize="18"
+                    HorizontalOptions="CenterAndExpand"
+                    Text="Home"
+                    TextColor="{StaticResource White}"
+                    VerticalOptions="CenterAndExpand" />
+                <ext:CustomShadowFrame.GestureRecognizers>
+                    <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmHome_Tapped" />
+                </ext:CustomShadowFrame.GestureRecognizers>
+            </ext:CustomShadowFrame>
+
+        </Grid>
+
+    </ext:CustomShadowFrame>
+
+</popup:PopupPage>

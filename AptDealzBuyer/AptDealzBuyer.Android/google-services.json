@@ -1,0 +1,91 @@
+{
+  "project_info": {
+    "project_number": "50126607707",
+    "firebase_url": "https://aptdelaz.firebaseio.com",
+    "project_id": "aptdelaz",
+    "storage_bucket": "aptdelaz.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:50126607707:android:e9ed3293e14d9e328bb67e",
+        "android_client_info": {
+          "package_name": "com.zartek.aptdealz.buyer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "50126607707-9rb50eiq9svl03g4vufrrmfvbu07a4g7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJROLgstWLj8DUlepLNh4thzezXVwLhUE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "50126607707-9rb50eiq9svl03g4vufrrmfvbu07a4g7.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "50126607707-42lhcmb47jar0s0gnjg6c694rilrtnm1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.zartek.aptdealz"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:50126607707:android:32d10077bf8836ec8bb67e",
+        "android_client_info": {
+          "package_name": "com.zartek.aptdealz.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "50126607707-e8uksupct4jqaj8kbfcdne23uqvj7qr2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.zartek.aptdealz.debug",
+            "certificate_hash": "97eda6948da0f204491d0845ddc2c1e734f88c33"
+          }
+        },
+        {
+          "client_id": "50126607707-9rb50eiq9svl03g4vufrrmfvbu07a4g7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJROLgstWLj8DUlepLNh4thzezXVwLhUE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "50126607707-9rb50eiq9svl03g4vufrrmfvbu07a4g7.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "50126607707-42lhcmb47jar0s0gnjg6c694rilrtnm1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.zartek.aptdealz"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
