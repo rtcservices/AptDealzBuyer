@@ -12,10 +12,10 @@ namespace AptDealzBuyer.API
 {
     public class AuthenticationAPI
     {
-        #region [POST]
-        public async Task<Response> BuyerAuthPhone(Model.Request.Login mRequestLogin)
+        #region [ POST ]
+        public async Task<Response> BuyerAuthPhone(Login mRequestLogin)
         {
-            Response mResponseLogin = new Response();
+            Response mResponse = new Response();
             try
             {
                 if (CrossConnectivity.Current.IsConnected)
@@ -28,7 +28,7 @@ namespace AptDealzBuyer.API
                         var responseJson = await response.Content.ReadAsStringAsync();
                         if (response.IsSuccessStatusCode)
                         {
-                            mResponseLogin = JsonConvert.DeserializeObject<Response>(responseJson);
+                            mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
                         }
                         else if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
                         {
@@ -40,7 +40,7 @@ namespace AptDealzBuyer.API
                         }
                         else
                         {
-                            mResponseLogin = JsonConvert.DeserializeObject<Response>(responseJson);
+                            mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
                         }
                     }
                 }
@@ -54,16 +54,16 @@ namespace AptDealzBuyer.API
             }
             catch (Exception ex)
             {
-                mResponseLogin.Succeeded = false;
-                mResponseLogin.Errors = ex.Message;
+                mResponse.Succeeded = false;
+                mResponse.Errors = ex.Message;
                 Common.DisplayErrorMessage("AuthenticationAPI/BuyerAuthPhone: " + ex.Message);
             }
-            return mResponseLogin;
+            return mResponse;
         }
 
         public async Task<Response> BuyerAuthEmail(AuthenticateEmail mAuthenticateEmail)
         {
-            Response mResponseLogin = new Response();
+            Response mResponse = new Response();
             try
             {
                 if (CrossConnectivity.Current.IsConnected)
@@ -76,7 +76,7 @@ namespace AptDealzBuyer.API
                         var responseJson = await response.Content.ReadAsStringAsync();
                         if (response.IsSuccessStatusCode)
                         {
-                            mResponseLogin = JsonConvert.DeserializeObject<Response>(responseJson);
+                            mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
                         }
                         else if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
                         {
@@ -88,7 +88,7 @@ namespace AptDealzBuyer.API
                         }
                         else
                         {
-                            mResponseLogin = JsonConvert.DeserializeObject<Response>(responseJson);
+                            mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
                         }
                     }
                 }
@@ -102,16 +102,16 @@ namespace AptDealzBuyer.API
             }
             catch (Exception ex)
             {
-                mResponseLogin.Succeeded = false;
-                mResponseLogin.Errors = ex.Message;
+                mResponse.Succeeded = false;
+                mResponse.Errors = ex.Message;
                 Common.DisplayErrorMessage("AuthenticationAPI/BuyerAuthEmail: " + ex.Message);
             }
-            return mResponseLogin;
+            return mResponse;
         }
 
         public async Task<Response> SendOtpByEmail(string email)
         {
-            Response mResponseLogin = new Response();
+            Response mResponse = new Response();
             try
             {
                 if (CrossConnectivity.Current.IsConnected)
@@ -124,7 +124,7 @@ namespace AptDealzBuyer.API
                         var responseJson = await response.Content.ReadAsStringAsync();
                         if (response.IsSuccessStatusCode)
                         {
-                            mResponseLogin = JsonConvert.DeserializeObject<Response>(responseJson);
+                            mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
                         }
                         else if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
                         {
@@ -136,7 +136,7 @@ namespace AptDealzBuyer.API
                         }
                         else
                         {
-                            mResponseLogin = JsonConvert.DeserializeObject<Response>(responseJson);
+                            mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
                         }
                     }
                 }
@@ -150,11 +150,108 @@ namespace AptDealzBuyer.API
             }
             catch (Exception ex)
             {
-                mResponseLogin.Succeeded = false;
-                mResponseLogin.Errors = ex.Message;
+                mResponse.Succeeded = false;
+                mResponse.Errors = ex.Message;
                 Common.DisplayErrorMessage("AuthenticationAPI/SendOtpByEmail: " + ex.Message);
             }
-            return mResponseLogin;
+            return mResponse;
+        }
+
+        public async Task<Response> RefreshToken(string refreshToken)
+        {
+            Response mResponseToken = new Response();
+            try
+            {
+                if (CrossConnectivity.Current.IsConnected)
+                {
+                    string requestJson = "{\"refreshToken\":\"" + refreshToken + "\"}";
+
+                    using (var hcf = new HttpClientFactory(token: Common.Token))
+                    {
+                        string url = string.Format(EndPointURL.RefreshToken);
+                        var response = await hcf.PostAsync(url, requestJson);
+                        var responseJson = await response.Content.ReadAsStringAsync();
+                        if (response.IsSuccessStatusCode)
+                        {
+                            mResponseToken = JsonConvert.DeserializeObject<Response>(responseJson);
+                        }
+                        else if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                        {
+                            var errorString = JsonConvert.DeserializeObject<string>(responseJson);
+                            if (errorString == Constraints.Session_Expired)
+                            {
+                                App.Current.MainPage = new NavigationPage(new WelcomePage(true));
+                            }
+                        }
+                        else
+                        {
+                            mResponseToken = JsonConvert.DeserializeObject<Response>(responseJson);
+                        }
+                    }
+                }
+                else
+                {
+                    if (await Common.InternetConnection())
+                    {
+                        await RefreshToken(refreshToken);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                mResponseToken.Succeeded = false;
+                mResponseToken.Errors = ex.Message;
+                Common.DisplayErrorMessage("AuthenticationAPI/RefreshToken: " + ex.Message);
+            }
+            return mResponseToken;
+        }
+
+        public async Task<Response> Logout(string refreshToken, string loginTrackingKey)
+        {
+            Response mResponse = new Response();
+            try
+            {
+                if (CrossConnectivity.Current.IsConnected)
+                {
+                    string requestJson = "{\"refreshToken\":\"" + refreshToken + "\",\"loginTrackingKey\":\"" + loginTrackingKey + "\"}";
+                    using (var hcf = new HttpClientFactory(token: Common.Token))
+                    {
+                        string url = string.Format(EndPointURL.Logout);
+                        var response = await hcf.PostAsync(url, requestJson);
+                        var responseJson = await response.Content.ReadAsStringAsync();
+                        if (response.IsSuccessStatusCode)
+                        {
+                            mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
+                        }
+                        else if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                        {
+                            var errorString = JsonConvert.DeserializeObject<string>(responseJson);
+                            if (errorString == Constraints.Session_Expired)
+                            {
+                                App.Current.MainPage = new NavigationPage(new WelcomePage(true));
+                            }
+                        }
+                        else
+                        {
+                            mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
+                        }
+                    }
+                }
+                else
+                {
+                    if (await Common.InternetConnection())
+                    {
+                        await Logout(refreshToken, loginTrackingKey);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                mResponse.Succeeded = false;
+                mResponse.Errors = ex.Message;
+                Common.DisplayErrorMessage("AuthenticationAPI/Logout: " + ex.Message);
+            }
+            return mResponse;
         }
         #endregion
     }

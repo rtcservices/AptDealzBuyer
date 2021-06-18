@@ -1,5 +1,6 @@
 ﻿using AptDealzBuyer.Interfaces;
 using AptDealzBuyer.Model.Reponse;
+using AptDealzBuyer.Utility;
 using Firebase;
 using Firebase.Auth;
 using Firebase.Firestore;
@@ -14,7 +15,7 @@ namespace AptDealzBuyer.Droid.DependencService
     {
         const int OTP_TIMEOUT = 30; // seconds
         private TaskCompletionSource<bool> _phoneAuthTcs;
-        private string _verificationId;
+        public string _verificationId { get; set; }
 
         public Task<string> LoginAsync(string username, string password)
         {
@@ -46,6 +47,7 @@ namespace AptDealzBuyer.Droid.DependencService
         {
             System.Diagnostics.Debug.WriteLine("Verification Failed: " + exception.Message);
             _phoneAuthTcs?.TrySetResult(false);
+            Common.DisplayErrorMessage(exception.Message);
         }
 
         public override void OnCodeSent(string verificationId, PhoneAuthProvider.ForceResendingToken forceResendingToken)
@@ -57,6 +59,7 @@ namespace AptDealzBuyer.Droid.DependencService
 
         public Task<bool> SendOtpCodeAsync(string phoneNumber)
         {
+            phoneNumber = (string)App.Current.Resources["CountryCode"] + phoneNumber;
             _phoneAuthTcs = new TaskCompletionSource<bool>();
             PhoneAuthProvider.Instance.VerifyPhoneNumber(
                 phoneNumber,
@@ -66,6 +69,7 @@ namespace AptDealzBuyer.Droid.DependencService
                 this);
 
             var user = FirebaseAuth.Instance.CurrentUser;
+
             return _phoneAuthTcs.Task;
         }
 

@@ -71,14 +71,13 @@ namespace AptDealzBuyer.Views.SplashScreen
                 new CarousellImage{ImageName="imgWelcomeTwo.png"},
                 new CarousellImage{ImageName="imgWelcomeThree.png"},
             };
-            indicaters.ItemsSource = cvWelcome.ItemsSource = mCarousellImages.ToList();
+            Indicators.ItemsSource = cvWelcome.ItemsSource = mCarousellImages.ToList();
         }
         #endregion
 
         #region Events
         private void SkipTapped_Tapped(object sender, EventArgs e)
         {
-            //Navigation.PushAsync(new MainTabbedPages.MainTabbedPage("Home"));
             Navigation.PushAsync(new Login.LoginPage());
         }
 

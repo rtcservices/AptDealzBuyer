@@ -8,8 +8,7 @@ namespace AptDealzBuyer.Views.PopupPages
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class SuccessPopup : PopupPage
     {
-        #region Objects
-        // create objects here
+        #region Objects        
         public event EventHandler isRefresh;
         #endregion
 
@@ -21,11 +20,10 @@ namespace AptDealzBuyer.Views.PopupPages
         #endregion
 
         #region Methods
-        // write methods here
+
         #endregion
 
         #region Events
-        // create events here
         private void FrmHome_Tapped(object sender, EventArgs e)
         {
             isRefresh?.Invoke(true, EventArgs.Empty);

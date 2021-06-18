@@ -13,8 +13,12 @@
         public const string Switch_On = "iconSwitchOn.png";
 
         public const string Arrow_Right = "iconRightArrow.png";
+        public const string Arrow_Left = "iconLeftArrow.png";
         public const string Arrow_Down = "iconDownArrow.png";
         public const string Arrow_Up = "iconUpArrow.png";
+
+        public const string Sort_ASC = "iconSortASC.png";
+        public const string Sort_DSC = "iconSortDSC.png";
 
         public const string CheckBox_UnChecked = "iconUncheck.png";
         public const string CheckBox_Checked = "iconCheck.png";
@@ -42,8 +46,10 @@
 
         #region Alert Message
         public const string AreYouSureWantDeactivateAccount = "Are you sure want to deactivate account?";
-        public const string DoYouWantToExit = "Do you really want to exit?";
+        public const string AreYouSureWantDelete = "Are you sure want to delete?";
+        public const string AreYouSureWantCancel = "Are you sure want to cancel?";
         public const string AreYouSureWantLogout = "Are you sure want to logout?";
+        public const string DoYouWantToExit = "Do you really want to exit?";
 
         public const string NoInternetConnection = "No internet connection!";
         public const string NoCameraAwailable = "No camera awailable!";
@@ -55,9 +61,11 @@
         public const string PlsCheckInternetConncetion = "Please check internet connection to use App.";
 
         public const string Agree_T_C = "Please check box for Terms & Conditions.";
+
         public const string InValid_Email = "Please enter valid email address!";
         public const string InValid_PhoneNumber = "Please enter valid phone number!";
         public const string Required_Email_Phone = "Please enter email address or phone number!";
+        public const string Required_Email = "Please enter email address!";
         public const string Required_VerificationCode = "Please enter verification code!";
         public const string Required_FullName = "Please enter full name!";
         public const string Required_PhoneNumber = "Please enter phone number!";
@@ -67,6 +75,26 @@
         public const string Required_Nationality = "Please enter nationality!";
         public const string Required_PinCode = "Please enter pincode!";
         public const string Required_Landmark = "Please enter landmark!";
+
+        public const string Required_Title = "Please enter title!";
+        public const string Required_Category = "Please select category!";
+        public const string Required_SubCategory = "Please select sub category!";
+        public const string Required_Description = "Please enter description!";
+        public const string Required_Quantity = "Please enter quantity!";
+        public const string Required_Delivery_PinCode = "Please enter delivery location pin code!";
+
+        public const string Required_Billing_Name = "Please enter billing address name!";
+        public const string Required_Billing_Building = "Please enter billing address building!";
+        public const string Required_Billing_Street = "Please enter billing address street!";
+        public const string Required_Billing_City = "Please enter billing address city!";
+        public const string Required_Billing_PinCode = "Please enter billing address pin code!";
+
+        public const string Required_Shipping_Name = "Please enter shipping address name!";
+        public const string Required_Shipping_Building = "Please enter shipping address building!";
+        public const string Required_Shipping_Street = "Please enter shipping address street!";
+        public const string Required_Shipping_City = "Please enter shipping address city!";
+        public const string Required_Shipping_PinCode = "Please enter shipping address pin code!";
+        public const string Required_Shipping_Landmark = "Please enter shipping address landmark!";
         #endregion
     }
 }

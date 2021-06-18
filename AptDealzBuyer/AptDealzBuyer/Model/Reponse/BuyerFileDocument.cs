@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AptDealzBuyer.Model.Reponse
+﻿namespace AptDealzBuyer.Model.Reponse
 {
     public class BuyerFileDocument
     {

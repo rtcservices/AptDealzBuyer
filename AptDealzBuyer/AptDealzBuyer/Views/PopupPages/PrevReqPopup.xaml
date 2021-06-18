@@ -46,7 +46,7 @@
                     Grid.Row="0"
                     Margin="0"
                     FontFamily="Poppins"
-                    FontSize="16"
+                    FontSize="15"
                     HorizontalOptions="StartAndExpand"
                     TextColor="{StaticResource Black}"
                     VerticalOptions="CenterAndExpand" />
@@ -75,7 +75,7 @@
                     Grid.Row="0"
                     Margin="0"
                     FontFamily="Poppins"
-                    FontSize="16"
+                    FontSize="15"
                     HorizontalOptions="StartAndExpand"
                     TextColor="{StaticResource Black}"
                     VerticalOptions="CenterAndExpand" />

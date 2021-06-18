@@ -40,7 +40,10 @@ namespace AptDealzBuyer.Views.OtherPages
                     }
                     else
                     {
-                        Common.DisplayErrorMessage(mResponse.Message);
+                        if (mResponse != null)
+                            Common.DisplayErrorMessage(mResponse.Message);
+                        else
+                            Common.DisplayErrorMessage(Constraints.Something_Wrong);
                     }
                 }
             }
@@ -59,7 +62,7 @@ namespace AptDealzBuyer.Views.OtherPages
         private void ImgMenu_Tapped(object sender, EventArgs e)
         {
             Common.BindAnimation(image: ImgMenu);
-            Common.OpenMenu();
+            //Common.OpenMenu();
         }
 
         private void ImgNotification_Tapped(object sender, EventArgs e)

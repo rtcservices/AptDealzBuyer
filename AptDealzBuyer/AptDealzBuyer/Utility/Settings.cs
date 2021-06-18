@@ -67,6 +67,42 @@ namespace AptDealzBuyer.Utility
                 Settings.UserId = value;
             }
         }
+
+        public string phoneAuthToken;
+        public string PhoneAuthToken
+        {
+            get { return PhoneAuthToken; }
+            set
+            {
+                phoneAuthToken = value;
+                PropertyChanged(this, new PropertyChangedEventArgs("PhoneAuthToken"));
+                Settings.PhoneAuthToken = value;
+            }
+        }
+
+        public string refreshToken;
+        public string RefreshToken
+        {
+            get { return RefreshToken; }
+            set
+            {
+                refreshToken = value;
+                PropertyChanged(this, new PropertyChangedEventArgs("RefreshToken"));
+                Settings.RefreshToken = value;
+            }
+        }
+
+        public string loginTrackingKey;
+        public string LoginTrackingKey
+        {
+            get { return LoginTrackingKey; }
+            set
+            {
+                loginTrackingKey = value;
+                PropertyChanged(this, new PropertyChangedEventArgs("LoginTrackingKey"));
+                Settings.LoginTrackingKey = value;
+            }
+        }
     }
 
     public class Settings
@@ -81,6 +117,9 @@ namespace AptDealzBuyer.Utility
         private const string firebaseVerificationIdKey = "firebaseVerificationId_key";
         private const string UserTokenKey = "userToken_key";
         private const string UserIdKey = "userId_key";
+        private const string PhoneAuthTokenKey = "phoneAuthToken_key";
+        private const string RefreshTokenKey = "refreshToken_key";
+        private const string LoginTrackingKey_Key = "loginTrackingKey_key";
         private static readonly string SettingsDefault = string.Empty;
 
         public static string EmailAddress
@@ -111,6 +150,24 @@ namespace AptDealzBuyer.Utility
         {
             get { return AppSettings.GetValueOrDefault(UserIdKey, SettingsDefault); }
             set { AppSettings.AddOrUpdateValue(UserIdKey, value); }
+        }
+
+        public static string PhoneAuthToken
+        {
+            get { return AppSettings.GetValueOrDefault(PhoneAuthTokenKey, SettingsDefault); }
+            set { AppSettings.AddOrUpdateValue(PhoneAuthTokenKey, value); }
+        }
+
+        public static string RefreshToken
+        {
+            get { return AppSettings.GetValueOrDefault(RefreshTokenKey, SettingsDefault); }
+            set { AppSettings.AddOrUpdateValue(RefreshTokenKey, value); }
+        }
+
+        public static string LoginTrackingKey
+        {
+            get { return AppSettings.GetValueOrDefault(LoginTrackingKey_Key, SettingsDefault); }
+            set { AppSettings.AddOrUpdateValue(LoginTrackingKey_Key, value); }
         }
     }
 }

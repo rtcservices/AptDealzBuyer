@@ -8,7 +8,7 @@
     NavigationPage.HasNavigationBar="False">
     <ContentView.Content>
 
-        <Grid>
+       <Grid RowSpacing="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="50" />
                 <RowDefinition Height="Auto" />
@@ -165,7 +165,7 @@
                                     Grid.Row="1"
                                     Margin="5,0,0,0"
                                     FontFamily="Poppins"
-                                    FontSize="16"
+                                    FontSize="15"
                                     HorizontalOptions="StartAndExpand"
                                     Text="30, ABC, XYZ Road &#x0a;Kochi, Kerala, &#x0a;PIN - 682024"
                                     TextColor="{StaticResource Black}"
@@ -175,7 +175,7 @@
                                     Grid.Row="2"
                                     Margin="5,0,0,0"
                                     FontFamily="Poppins"
-                                    FontSize="16"
+                                    FontSize="15"
                                     HorizontalOptions="StartAndExpand"
                                     Text="Phone: +91 012345678"
                                     TextColor="{StaticResource Black}"

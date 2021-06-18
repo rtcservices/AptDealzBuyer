@@ -1,0 +1,219 @@
+﻿using AptDealzBuyer.Utility;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using Xamarin.Forms;
+
+namespace AptDealzBuyer.Model.Request
+{
+    public class Requirement : INotifyPropertyChanged
+    {
+        [JsonProperty("requirementId")]
+        public string RequirementId { get; set; }
+
+        [JsonProperty("userId")]
+        public string UserId { get; set; }
+
+        [JsonProperty("title")]
+        public string Title { get; set; }
+
+        [JsonProperty("category")]
+        public string Category { get; set; }
+
+        [JsonProperty("subCategories")]
+        public List<string> SubCategories { get; set; }
+
+        [JsonProperty("productImage")]
+        public string ProductImage { get; set; }
+
+        [JsonProperty("productDescription")]
+        public string ProductDescription { get; set; }
+
+        [JsonProperty("quantity")]
+        public int Quantity { get; set; }
+
+        [JsonProperty("totalPriceEstimation")]
+        public int TotalPriceEstimation { get; set; }
+
+        [JsonProperty("preferInIndiaProducts")]
+        public bool PreferInIndiaProducts { get; set; }
+
+        [JsonProperty("pickupProductDirectly")]
+        public bool PickupProductDirectly { get; set; }
+
+        [JsonProperty("deliveryLocationPinCode")]
+        public string DeliveryLocationPinCode { get; set; }
+
+        [JsonProperty("preferredSourceOfSupply")]
+        public string PreferredSourceOfSupply { get; set; }
+
+        [JsonProperty("expectedDeliveryDate")]
+        public DateTime ExpectedDeliveryDate { get; set; }
+
+        [JsonProperty("billingAddressName")]
+        public string BillingAddressName { get; set; }
+
+        [JsonProperty("billingAddressBuilding")]
+        public string BillingAddressBuilding { get; set; }
+
+        [JsonProperty("billingAddressStreet")]
+        public string BillingAddressStreet { get; set; }
+
+        [JsonProperty("billingAddressCity")]
+        public string BillingAddressCity { get; set; }
+
+        [JsonProperty("billingAddressPinCode")]
+        public string BillingAddressPinCode { get; set; }
+
+        [JsonProperty("shippingAddressName")]
+        public string ShippingAddressName { get; set; }
+
+        [JsonProperty("shippingAddressBuilding")]
+        public string ShippingAddressBuilding { get; set; }
+
+        [JsonProperty("shippingAddressStreet")]
+        public string ShippingAddressStreet { get; set; }
+
+        [JsonProperty("shippingAddressCity")]
+        public string ShippingAddressCity { get; set; }
+
+        [JsonProperty("shippingAddressPinCode")]
+        public string ShippingAddressPinCode { get; set; }
+
+        [JsonProperty("shippingAddressLandmark")]
+        public string ShippingAddressLandmark { get; set; }
+
+        [JsonProperty("needInsuranceCoverage")]
+        public bool NeedInsuranceCoverage { get; set; }
+
+        [JsonProperty("userProfile")]
+        public object UserProfile { get; set; }
+
+        [JsonProperty("requirementCategories")]
+        public object RequirementCategories { get; set; }
+
+        [JsonProperty("createdBy")]
+        public object CreatedBy { get; set; }
+
+        [JsonProperty("created")]
+        public DateTime Created { get; set; }
+
+        [JsonProperty("lastModifiedBy")]
+        public object LastModifiedBy { get; set; }
+
+        [JsonProperty("lastModified")]
+        public object LastModified { get; set; }
+
+        [JsonProperty("isDeleted")]
+        public bool IsDeleted { get; set; }
+
+        [JsonProperty("requirementNo")]
+        public string RequirementNo { get; set; }
+
+        [JsonProperty("status")]
+        public string Status { get; set; }
+
+        [JsonProperty("createdDate")]
+        public DateTime CreatedDate { get; set; }
+
+        [JsonProperty("quotes")]
+        public int Quotes { get; set; }
+
+        //Extra Properties
+        [JsonIgnore]
+        private string _ArrowImage { get; set; } = Constraints.Arrow_Right;
+
+        [JsonIgnore]
+        public string ArrowImage
+        {
+            get { return _ArrowImage; }
+            set { _ArrowImage = value; PropertyChangedEventArgs("ArrowImage"); }
+        }
+        
+        [JsonIgnore]
+        private double _NameFont { get; set; } = 13;
+        [JsonIgnore]
+        public double NameFont
+        {
+            get { return _NameFont; }
+            set { _NameFont = value; PropertyChangedEventArgs("NameFont"); }
+        }
+
+        [JsonIgnore]
+        private bool _MoreDetail { get; set; } = false;
+        [JsonIgnore]
+        public bool MoreDetail
+        {
+            get { return _MoreDetail; }
+            set { _MoreDetail = value; PropertyChangedEventArgs("MoreDetail"); }
+        }
+
+        [JsonIgnore]
+        private bool _HideDetail { get; set; } = true;
+        [JsonIgnore]
+        public bool HideDetail
+        {
+            get { return _HideDetail; }
+            set { _HideDetail = value; PropertyChangedEventArgs("HideDetail"); }
+        }
+
+        [JsonIgnore]
+        private Color _GridBg { get; set; } = Color.Transparent;
+        [JsonIgnore]
+        public Color GridBg
+        {
+            get { return _GridBg; }
+            set { _GridBg = value; PropertyChangedEventArgs("GridBg"); }
+        }
+
+        [JsonIgnore]
+        public string TotalQuotes
+        {
+            get
+            {
+                string quotes;
+                if (Quotes > 1)
+                {
+                    quotes = Quotes + " Quotes";
+                }
+                else
+                {
+                    quotes = Quotes + " Quote";
+                }
+                return quotes;
+            }
+        }
+
+        public Color StatusColor
+        {
+            get
+            {
+                if (Status == RequirementStatus.Completed.ToString())
+                {
+                    return (Color)App.Current.Resources["Green"];
+                }
+                else if (Status == RequirementStatus.Rejected.ToString())
+                {
+                    return (Color)App.Current.Resources["Red"];
+                }
+                else if (Status == RequirementStatus.Inactive.ToString())
+                {
+                    return (Color)App.Current.Resources["Orange"];
+                }
+                else
+                {
+                    return (Color)App.Current.Resources["Black"];
+                }
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void PropertyChangedEventArgs(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
+
+}

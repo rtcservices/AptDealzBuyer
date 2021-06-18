@@ -8,7 +8,7 @@
     BackgroundColor="{StaticResource White}"
     NavigationPage.HasNavigationBar="False">
     <ContentPage.Content>
-        <Grid>
+       <Grid RowSpacing="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="50" />
                 <RowDefinition Height="Auto" />
@@ -92,11 +92,12 @@
                     HorizontalOptions="StartAndExpand"
                     Orientation="Horizontal">
                     <Image
+                        x:Name="ImgBack"
                         Margin="0"
                         Aspect="AspectFit"
                         HeightRequest="25"
                         HorizontalOptions="CenterAndExpand"
-                        Source="iconBackArrow.png" x:Name="ImgBack"
+                        Source="iconBackArrow.png"
                         VerticalOptions="CenterAndExpand"
                         WidthRequest="25">
                         <Image.GestureRecognizers>
@@ -145,7 +146,7 @@
                                             Grid.Column="1"
                                             Margin="10,0,0,0"
                                             FontFamily="Poppins"
-                                            FontSize="16"
+                                            FontSize="15"
                                             HorizontalOptions="StartAndExpand"
                                             LineBreakMode="WordWrap"
                                             Text="{Binding NotificationTitle}"

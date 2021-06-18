@@ -5,8 +5,8 @@ using AptDealzBuyer.Model.Reponse;
 using AptDealzBuyer.Model.Request;
 using AptDealzBuyer.Utility;
 using AptDealzBuyer.Views.MasterData;
+using AptDealzBuyer.Views.SplashScreen;
 using System;
-
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -16,20 +16,49 @@ namespace AptDealzBuyer.Views.Login
     public partial class EnterOtpPage : ContentPage
     {
         #region Objects
-        private string emailAddress;
+        private string UserAuth;
         private bool isEmail;
         private bool IsKeepLogin;
+        private bool IsRegister;
+        private string OTPString;
+        private Register mRegister;
         #endregion
 
         #region Constructor
-        public EnterOtpPage(string EmailAddress, bool isEmail = true, bool IsKeepLogin = false)
+        public EnterOtpPage(string UserAuth, bool isEmail = true, bool IsKeepLogin = false)
         {
             InitializeComponent();
-            emailAddress = EmailAddress;
+            this.UserAuth = UserAuth;
             this.isEmail = isEmail;
             this.IsKeepLogin = IsKeepLogin;
+            ResendButtonEnable();
         }
 
+        void ResendButtonEnable()
+        {
+            BtnResentOtp.IsEnabled = false;
+            int i = 120;
+
+            Device.StartTimer(TimeSpan.FromSeconds(1), () =>
+            {
+                BtnResentOtp.Text = i + " sec";
+                if (i == 0)
+                {
+                    BtnResentOtp.IsEnabled = true;
+                    BtnResentOtp.Text = "Resend OTP";
+                    return false;
+                }
+                i--;
+                return true;
+            });
+        }
+
+        public EnterOtpPage(Register register)
+        {
+            InitializeComponent();
+            mRegister = register;
+            this.IsRegister = true;
+        }
         #endregion
 
         #region Methods        
@@ -64,29 +93,72 @@ namespace AptDealzBuyer.Views.Login
             return isValid;
         }
 
-        void NavigateToDashboard(Response mResponse)
+        async void RegisterBuyer()
         {
-            if (mResponse != null && mResponse.Succeeded)
+            try
             {
-                var jObject = (Newtonsoft.Json.Linq.JObject)mResponse.Data;
-                if (jObject != null)
+                mRegister.FirebaseVerificationId = Settings.PhoneAuthToken;
+                RegisterAPI registerAPI = new RegisterAPI();
+                var mResponse = await registerAPI.Register(mRegister);
+                if (mResponse != null && mResponse.Succeeded)
                 {
-                    var mBuyer = jObject.ToObject<Model.Request.Buyer>();
-                    if (mBuyer != null)
-                    {
-                        Settings.UserId = mBuyer.Id;
-                        Common.Token = mBuyer.JwToken;
-                        Common.RefreshToken = mBuyer.RefreshToken;
-
-                        if (this.IsKeepLogin)
-                            Settings.UserToken = mBuyer.JwToken;
-                        App.Current.MainPage = new MasterDataPage();
-                    }
+                    App.Current.MainPage = new NavigationPage(new WelcomePage(true));
+                }
+                else
+                {
+                    if (mResponse != null)
+                        Common.DisplayErrorMessage(mResponse.Message);
+                    else
+                        Common.DisplayErrorMessage(Constraints.Something_Wrong);
                 }
             }
-            else
+            catch (Exception ex)
             {
-                Common.DisplayErrorMessage(mResponse.Message);
+                Common.DisplayErrorMessage("EnterOtpPage/Validations: " + ex.Message);
+            }
+        }
+
+        void NavigateToDashboard(Response mResponse)
+        {
+            try
+            {
+                if (mResponse != null && mResponse.Succeeded)
+                {
+                    var jObject = (Newtonsoft.Json.Linq.JObject)mResponse.Data;
+                    if (jObject != null)
+                    {
+                        var mBuyer = jObject.ToObject<Model.Request.Buyer>();
+                        if (mBuyer != null)
+                        {
+                            Settings.UserId = mBuyer.Id;
+                            Settings.RefreshToken = mBuyer.RefreshToken;
+                            Settings.LoginTrackingKey = mBuyer.LoginTrackingKey == "00000000-0000-0000-0000-000000000000" ? Settings.LoginTrackingKey : mBuyer.LoginTrackingKey;
+                            Common.Token = mBuyer.JwToken;
+
+                            if (this.IsKeepLogin)
+                            {
+                                Settings.UserToken = mBuyer.JwToken;
+                            }
+                            else
+                            {
+                                Settings.UserToken = string.Empty;
+                            }
+
+                            App.Current.MainPage = new MasterDataPage();
+                        }
+                    }
+                }
+                else
+                {
+                    if (mResponse != null)
+                        Common.DisplayErrorMessage(mResponse.Message);
+                    else
+                        Common.DisplayErrorMessage(Constraints.Something_Wrong);
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("EnterOtpPage/NavigateToDashboard: " + ex.Message);
             }
         }
 
@@ -95,11 +167,14 @@ namespace AptDealzBuyer.Views.Login
             Model.Request.Login mLogin = new Model.Request.Login();
             try
             {
-                mLogin.PhoneNumber = emailAddress;
-                if (Common.EmptyFiels(Settings.fcm_token) && Common.EmptyFiels(Settings.firebaseVerificationId))
+                mLogin.PhoneNumber = UserAuth;
+                if (!Common.EmptyFiels(Settings.fcm_token))
                 {
                     mLogin.FcmToken = Settings.fcm_token;
-                    mLogin.FirebaseVerificationId = Settings.firebaseVerificationId;
+                }
+                if (!Common.EmptyFiels(Settings.firebaseVerificationId))
+                {
+                    mLogin.FirebaseVerificationId = Settings.PhoneAuthToken;
                 }
                 else
                 {
@@ -114,15 +189,7 @@ namespace AptDealzBuyer.Views.Login
             return mLogin;
         }
 
-        #endregion
-
-        #region Events
-        private void ImgBack_Tapped(object sender, EventArgs e)
-        {
-            Navigation.PopAsync();
-        }
-
-        private async void FrmSubmit_Tapped(object sender, EventArgs e)
+        async void SubmitOTP()
         {
             try
             {
@@ -132,23 +199,41 @@ namespace AptDealzBuyer.Views.Login
 
                     AuthenticationAPI authenticationAPI = new AuthenticationAPI();
                     AuthenticateEmail mAuthenticateEmail = new AuthenticateEmail();
-                    mAuthenticateEmail.Email = emailAddress;
-                    var OTPString = TxtOtpOne.Text + TxtOtpTwo.Text + TxtOtpThree.Text + TxtOtpFour.Text + TxtOtpFive.Text + TxtOtpSix.Text;
+                    mAuthenticateEmail.Email = UserAuth;
+
+                    OTPString = TxtOtpOne.Text + TxtOtpTwo.Text + TxtOtpThree.Text + TxtOtpFour.Text + TxtOtpFive.Text + TxtOtpSix.Text;
                     mAuthenticateEmail.Otp = OTPString;
+
+                    Response mResponse = new Response();
                     if (!this.isEmail)
                     {
                         var token = await Xamarin.Forms.DependencyService.Get<IFirebaseAuthenticator>().VerifyOtpCodeAsync(OTPString);
                         if (!Common.EmptyFiels(token))
                         {
-                            var mLogin = FillLogin();
-                            var mResponse = await authenticationAPI.BuyerAuthPhone(mLogin);
-                            NavigateToDashboard(mResponse);
+                            Settings.PhoneAuthToken = token;
+                            if (IsRegister)
+                            {
+                                RegisterBuyer();
+                            }
+                            else
+                            {
+                                var mLogin = FillLogin();
+                                mResponse = await authenticationAPI.BuyerAuthPhone(mLogin);
+                                NavigateToDashboard(mResponse);
+                            }
                         }
                     }
                     else
                     {
-                        var mResponse = await authenticationAPI.BuyerAuthEmail(mAuthenticateEmail);
-                        NavigateToDashboard(mResponse);
+                        if (IsRegister)
+                        {
+                            RegisterBuyer();
+                        }
+                        else
+                        {
+                            mResponse = await authenticationAPI.BuyerAuthEmail(mAuthenticateEmail);
+                            NavigateToDashboard(mResponse);
+                        }
                     }
                 }
                 else
@@ -166,24 +251,37 @@ namespace AptDealzBuyer.Views.Login
             }
         }
 
-        private async void BtnResentOtp_Tapped(object sender, EventArgs e)
+        async void ResentOTP()
         {
             try
             {
-                UserDialogs.Instance.ShowLoading(Constraints.Loading);
-
                 AuthenticationAPI authenticationAPI = new AuthenticationAPI();
                 UserDialogs.Instance.ShowLoading(Constraints.Loading);
-                var mResponse = await authenticationAPI.SendOtpByEmail(emailAddress);
-                if (mResponse != null && mResponse.Succeeded)
+                if (this.isEmail)
                 {
-                    Common.DisplaySuccessMessage(mResponse.Message);
+                    var mResponse = await authenticationAPI.SendOtpByEmail(UserAuth);
+                    if (mResponse != null && mResponse.Succeeded)
+                    {
+                        Common.DisplaySuccessMessage(mResponse.Message);
+                    }
+                    else
+                    {
+                        if (mResponse != null)
+                            Common.DisplayErrorMessage(mResponse.Message);
+                        else
+                            Common.DisplayErrorMessage(Constraints.Something_Wrong);
+                    }
                 }
                 else
                 {
-                    Common.DisplayErrorMessage(mResponse.Message);
+                    var result = await Xamarin.Forms.DependencyService.Get<IFirebaseAuthenticator>().SendOtpCodeAsync(UserAuth);
+                    if (!result)
+                    {
+                        Common.DisplayErrorMessage("Could not send Verification Code to the given number!");
+                    }
                 }
 
+                ResendButtonEnable();
             }
             catch (Exception ex)
             {
@@ -193,6 +291,23 @@ namespace AptDealzBuyer.Views.Login
             {
                 UserDialogs.Instance.HideLoading();
             }
+        }
+        #endregion
+
+        #region Events
+        private void ImgBack_Tapped(object sender, EventArgs e)
+        {
+            Navigation.PopAsync();
+        }
+
+        private void FrmSubmit_Tapped(object sender, EventArgs e)
+        {
+            SubmitOTP();
+        }
+
+        private void BtnResentOtp_Tapped(object sender, EventArgs e)
+        {
+            ResentOTP();
         }
 
         private void TxtOtpOne_TextChanged(object sender, TextChangedEventArgs e)

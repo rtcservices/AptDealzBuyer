@@ -40,6 +40,11 @@
     <JavaMaximumHeapSize>
     </JavaMaximumHeapSize>
     <AndroidSupportedAbis />
+    <AndroidKeyStore>true</AndroidKeyStore>
+    <AndroidSigningKeyStore>..\AptDealzBuyer.Android\KeyStore\AptDealzBuyer.keystore</AndroidSigningKeyStore>
+    <AndroidSigningStorePass>test123</AndroidSigningStorePass>
+    <AndroidSigningKeyPass>test123</AndroidSigningKeyPass>
+    <AndroidSigningKeyAlias>AptDealzBuyer</AndroidSigningKeyAlias>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -54,6 +59,11 @@
     <EnableLLVM>false</EnableLLVM>
     <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
     <BundleAssemblies>false</BundleAssemblies>
+    <AndroidKeyStore>true</AndroidKeyStore>
+    <AndroidSigningKeyStore>..\AptDealzBuyer.Android\KeyStore\AptDealzBuyer.keystore</AndroidSigningKeyStore>
+    <AndroidSigningKeyAlias>AptDealzBuyer</AndroidSigningKeyAlias>
+    <AndroidSigningStorePass>test123</AndroidSigningStorePass>
+    <AndroidSigningKeyPass>test123</AndroidSigningKeyPass>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Android" />
@@ -104,6 +114,12 @@
     <PackageReference Include="Xam.Plugins.Settings">
       <Version>4.1.0-beta</Version>
     </PackageReference>
+    <PackageReference Include="Xamarin.FFImageLoading">
+      <Version>2.4.11.982</Version>
+    </PackageReference>
+    <PackageReference Include="Xamarin.FFImageLoading.Forms">
+      <Version>2.4.11.982</Version>
+    </PackageReference>
     <PackageReference Include="Xamarin.Firebase.Auth">
       <Version>71.1605.4</Version>
     </PackageReference>
@@ -115,9 +131,6 @@
     </PackageReference>
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.2012" />
     <PackageReference Include="Xamarin.Essentials" Version="1.6.1" />
-    <PackageReference Include="Xamarin.Forms.InputKit">
-      <Version>3.7.2</Version>
-    </PackageReference>
     <PackageReference Include="Xamarin.Forms.PancakeView">
       <Version>2.3.0.763-beta</Version>
     </PackageReference>
@@ -126,12 +139,6 @@
     </PackageReference>
     <PackageReference Include="Xamarin.Plugin.FilePicker">
       <Version>2.1.41</Version>
-    </PackageReference>
-    <PackageReference Include="Xamarin.RisePlugin.AutoCompleteTextView">
-      <Version>1.0.9</Version>
-    </PackageReference>
-    <PackageReference Include="XLabs.Forms">
-      <Version>2.3.0-pre05</Version>
     </PackageReference>
     <PackageReference Include="ZXing.Net.Mobile">
       <Version>2.4.1</Version>
@@ -166,6 +173,7 @@
     <GoogleServicesJson Include="google-services.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </GoogleServicesJson>
+    <None Include="KeyStore\AptDealzBuyer.keystore" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
     <None Include="Properties\AndroidManifest.xml" />
@@ -384,10 +392,28 @@
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\iconSend.png" />
   </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\iconLeftArrow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\iconFilter.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\iconSortASC.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\iconSortDSC.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\iconHide.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties XamarinHotReloadUnhandledDeviceExceptionAptDealzBuyerAndroidHideInfoBar="True" XamarinHotReloadDebuggerTimeoutExceptionAptDealzBuyerAndroidHideInfoBar="True" />
+      <UserProperties XamarinHotReloadDebuggerTimeoutExceptionAptDealzBuyerAndroidHideInfoBar="True" XamarinHotReloadUnhandledDeviceExceptionAptDealzBuyerAndroidHideInfoBar="True" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

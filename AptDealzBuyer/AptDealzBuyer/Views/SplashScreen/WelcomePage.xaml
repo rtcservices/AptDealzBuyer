@@ -3,7 +3,6 @@
     x:Class="AptDealzBuyer.Views.SplashScreen.WelcomePage"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:carousel="clr-namespace:CarouselView.FormsPlugin.Abstractions;assembly=CarouselView.FormsPlugin.Abstractions"
     xmlns:ext="clr-namespace:AptDealzBuyer.Extention"
     xmlns:iOS="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
     Title="Onboarding"
@@ -55,78 +54,78 @@
                 </Frame>
             </Grid>
 
+            <!--  Carousal  -->
             <Grid
                 Grid.Row="1"
-                Margin="0,0,0,20"
                 Padding="0"
-                HorizontalOptions="FillAndExpand">
+                RowSpacing="25"
+                VerticalOptions="CenterAndExpand">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <carousel:CarouselViewControl
+                <CarouselView
                     x:Name="cvWelcome"
                     Grid.Row="0"
-                    CurrentPageIndicatorTintColor="#05548C"
-                    HeightRequest="{OnPlatform Android=120,
+                    HeightRequest="{OnPlatform Android=320,
                                                iOS=370}"
-                    InterPageSpacing="20"
+                    HorizontalScrollBarVisibility="Never"
+                    IndicatorView="Indicators"
                     IsSwipeEnabled="True"
-                    ShowIndicators="False">
-                    <carousel:CarouselViewControl.ItemTemplate>
+                    VerticalScrollBarVisibility="Never"
+                    WidthRequest="{OnPlatform Android=400,
+                                              iOS=420}">
+                    <CarouselView.ItemTemplate>
                         <DataTemplate>
                             <StackLayout Margin="0" Padding="0">
-
                                 <Image
                                     Aspect="AspectFit"
-                                    HeightRequest="{OnPlatform Android='120',
-                                                               iOS='370'}"
                                     HorizontalOptions="FillAndExpand"
                                     Source="{Binding ImageName}"
                                     VerticalOptions="FillAndExpand" />
-
                             </StackLayout>
                         </DataTemplate>
-                    </carousel:CarouselViewControl.ItemTemplate>
-                </carousel:CarouselViewControl>
+                    </CarouselView.ItemTemplate>
+                </CarouselView>
 
                 <StackLayout
                     Grid.Row="1"
-                    Margin="40,0"
+                    Margin="20,0"
                     HorizontalOptions="CenterAndExpand"
+                    Spacing="10"
                     VerticalOptions="CenterAndExpand">
                     <Label
-                        Margin="15,10"
                         FontFamily="Poppins SemiBold"
+                        FontSize="17"
                         HorizontalOptions="CenterAndExpand"
+                        HorizontalTextAlignment="Center"
                         Text="What is Lorem Ipsum"
                         TextColor="{StaticResource Black}"
                         VerticalOptions="CenterAndExpand" />
 
                     <Label
-                        Margin="15,10"
                         FontFamily="Poppins"
                         HorizontalOptions="CenterAndExpand"
                         HorizontalTextAlignment="Center"
                         Text="Lorem Ipsum is simply dummy text of the printing and typesetting industry."
-                        TextColor="{StaticResource DarkGray}"
+                        TextColor="{StaticResource Black}"
                         VerticalOptions="CenterAndExpand" />
                 </StackLayout>
 
-
-                <ext:CarouselIndicators
-                    x:Name="indicaters"
+                <IndicatorView
+                    x:Name="Indicators"
                     Grid.Row="2"
-                    IndicatorHeight="15"
-                    IndicatorWidth="15"
+                    Margin="{OnPlatform Android='0',
+                                        iOS='20'}"
+                    HeightRequest="30"
+                    IndicatorColor="{StaticResource DarkGray}"
+                    IndicatorSize="15"
                     Position="{Binding Source={x:Reference cvWelcome}, Path=Position}"
-                    SelectedIndicator="iconGreenCircle.png"
-                    UnselectedIndicator="iconGrayCircle.png"
-                    VerticalOptions="CenterAndExpand" />
-
-
+                    SelectedIndicatorColor="{StaticResource Green}"
+                    VerticalOptions="CenterAndExpand"
+                    WidthRequest="30" />
             </Grid>
 
             <ext:CustomShadowFrame

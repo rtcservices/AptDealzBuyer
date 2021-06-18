@@ -1,12 +1,15 @@
-﻿using AptDealzBuyer.Model;
+﻿using Acr.UserDialogs;
+using AptDealzBuyer.API;
+using AptDealzBuyer.Model.Request;
+using AptDealzBuyer.Repository;
 using AptDealzBuyer.Utility;
 using AptDealzBuyer.Views.MasterData;
 using AptDealzBuyer.Views.PopupPages;
+using Newtonsoft.Json.Linq;
 using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -16,59 +19,118 @@ namespace AptDealzBuyer.Views.MainTabbedPages
 
     public partial class ActiveRequirementView : ContentView
     {
-        #region Objects
-        // create objects here
-        public event EventHandler isRefresh;
-        public List<RequirementM> RequirementMs = new List<RequirementM>();
+        #region Objects      
+        private List<Requirement> mRequirements;
+        private string filterBy = Utility.RequirementSortBy.ID.ToString();
+        private bool sortBy = true;
+        private readonly int pageSize = 10;
+        private int pageNo;
         #endregion
 
         #region Constructor
         public ActiveRequirementView()
         {
             InitializeComponent();
-            BindRequirements();
+            mRequirements = new List<Requirement>();
+            pageNo = 1;
+            GetActiveRequirements(filterBy, sortBy);
         }
         #endregion
 
         #region Methods
-        // write methods here
-        public void BindRequirements()
+        public async void GetActiveRequirements(string FilterBy, bool SortBy)
         {
-            lstRequirements.ItemsSource = null;
-            string reqdesc = "Lorem Ipsum is simply dummy text.";
-            string catdesc = "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old.";
-            RequirementMs = new List<RequirementM>()
-            {
-                new RequirementM{ RequirementNo="REQ#123", RequirementDes=reqdesc, CatDescription=catdesc, ReqDate="02-05-2021", QuoteCount=2 },
-                new RequirementM{ RequirementNo="REQ#128", RequirementDes=reqdesc, CatDescription=catdesc, ReqDate="10-05-2021", QuoteCount=5 },
-                new RequirementM{ RequirementNo="REQ#132", RequirementDes=reqdesc, CatDescription=catdesc, ReqDate="18-05-2021", QuoteCount=1 },
-                new RequirementM{ RequirementNo="REQ#141", RequirementDes=reqdesc, CatDescription=catdesc, ReqDate="22-05-2021", QuoteCount=6 },
-                new RequirementM{ RequirementNo="REQ#149", RequirementDes=reqdesc, CatDescription=catdesc, ReqDate="27-05-2021", QuoteCount=4 },
-                new RequirementM{ RequirementNo="REQ#155", RequirementDes=reqdesc, CatDescription=catdesc, ReqDate="03-06-2021", QuoteCount=3 },
-                new RequirementM{ RequirementNo="REQ#163", RequirementDes=reqdesc, CatDescription=catdesc, ReqDate="11-06-2021", QuoteCount=2 },
-            };
-
-            lstRequirements.ItemsSource = RequirementMs.ToList();
-        }
-        #endregion
-
-        #region Events
-        // create events here
-        private void ImgMenu_Tapped(object sender, EventArgs e)
-        {
-            Common.BindAnimation(image: ImgMenu);
             try
             {
-                if (Common.MasterData != null)
+                RequirementAPI requirementAPI = new RequirementAPI();
+                UserDialogs.Instance.ShowLoading(Constraints.Loading);
+                var mResponse = await requirementAPI.GetAllMyActiveRequirements(FilterBy, SortBy, pageNo, pageSize);
+                if (mResponse != null && mResponse.Succeeded)
                 {
-                    Common.MasterData.IsGestureEnabled = true;
-                    Common.MasterData.IsPresented = true;
+                    JArray result = (JArray)mResponse.Data;
+                    var requirements = result.ToObject<List<Requirement>>();
+                    if (pageNo == 1)
+                    {
+                        mRequirements.Clear();
+                    }
+
+                    foreach (var mRequirement in requirements)
+                    {
+                        if (mRequirements.Where(x => x.RequirementId == mRequirement.RequirementId).Count() == 0)
+                            mRequirements.Add(mRequirement);
+                    }
+                    BindList();
+                }
+                else
+                {
+                    lstRequirements.IsVisible = false;
+                    FrmSortBy.IsVisible = false;
+                    FrmFilterBy.IsVisible = false;
+                    FrmSearchBy.IsVisible = false;
+                    lblNoRecord.IsVisible = true;
+                    lblNoRecord.Text = mResponse.Message;
+                    //Common.DisplayErrorMessage(mResponse.Message);
                 }
             }
             catch (Exception ex)
             {
-                //Common.DisplayErrorMessage("HomeView/ImgMenu_Tapped: " + ex.Message);
+                Common.DisplayErrorMessage("ActiveRequirementView/GetRequirements: " + ex.Message);
             }
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
+            }
+        }
+
+        void BindList()
+        {
+            if (mRequirements != null && mRequirements.Count > 0)
+            {
+                lstRequirements.IsVisible = true;
+                FrmSortBy.IsVisible = true;
+                FrmFilterBy.IsVisible = true;
+                FrmSearchBy.IsVisible = true;
+                lblNoRecord.IsVisible = false;
+                lstRequirements.ItemsSource = mRequirements.ToList();
+            }
+            else
+            {
+                lstRequirements.IsVisible = false;
+                FrmFilterBy.IsVisible = false;
+                FrmSearchBy.IsVisible = false;
+                FrmSortBy.IsVisible = false;
+                lblNoRecord.IsVisible = true;
+            }
+        }
+
+        async void DeleteRequirement(string requirmentId)
+        {
+            try
+            {
+                var isDelete = await DependencyService.Get<IDeleteRepository>().DeleteRequirement(requirmentId);
+                if (isDelete)
+                {
+                    pageNo = 1;
+                    mRequirements.Clear();
+                    GetActiveRequirements(filterBy, sortBy);
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("ActiveRequirementView/DeleteRequirement: " + ex.Message);
+            }
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
+            }
+        }
+        #endregion
+
+        #region Events
+        private void ImgMenu_Tapped(object sender, EventArgs e)
+        {
+            Common.BindAnimation(image: ImgMenu);
+            //Common.OpenMenu();
         }
 
         private void ImgNotification_Tapped(object sender, EventArgs e)
@@ -87,50 +149,207 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             App.Current.MainPage = new MasterDataPage();
         }
 
-        private void ImgSearch_Tapped(object sender, EventArgs e)
-        {
-            PopupNavigation.Instance.PushAsync(new PopupPages.SearchPopup());
-        }
+        //private void ImgSearch_Tapped(object sender, EventArgs e)
+        //{
+        //    //PopupNavigation.Instance.PushAsync(new PopupPages.SearchPopup());
+        //    FrmSearchBy.IsVisible = true;
+
+        //}
 
         private void FrmSortBy_Tapped(object sender, EventArgs e)
         {
-            var sortby = new SortByPopup("ID", "Date", "No of Quotes");
-            sortby.isRefresh += (s1, e1) =>
-              {
-                  //get result from popup
-              };
-            PopupNavigation.Instance.PushAsync(sortby);
+            try
+            {
+                if (ImgSort.Source.ToString().Replace("File: ", "") == Constraints.Sort_ASC)
+                {
+                    ImgSort.Source = Constraints.Sort_DSC;
+                    sortBy = false;
+                }
+                else
+                {
+                    ImgSort.Source = Constraints.Sort_ASC;
+                    sortBy = true;
+                }
+
+                pageNo = 1;
+                GetActiveRequirements(filterBy, sortBy);
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("ActiveRequirementView/FrmSortBy_Tapped: " + ex.Message);
+            }
+
+
         }
 
         private void ImgExpand_Tapped(object sender, EventArgs e)
         {
-            var imgExp = (Image)sender;
-            var viewCell = (ViewCell)imgExp.Parent.Parent.Parent.Parent;
-            if (viewCell != null)
+            try
             {
-                viewCell.ForceUpdateSize();
+                var imgExp = (ImageButton)sender;
+                var viewCell = (ViewCell)imgExp.Parent.Parent.Parent.Parent.Parent;
+                if (viewCell != null)
+                {
+                    viewCell.ForceUpdateSize();
+                }
+
+                var mRequirement = imgExp.BindingContext as Requirement;
+                if (mRequirement != null && mRequirement.ArrowImage == Constraints.Arrow_Right)
+                {
+                    mRequirement.ArrowImage = Constraints.Arrow_Down;
+                    mRequirement.GridBg = (Color)App.Current.Resources["LightGray"];
+                    mRequirement.MoreDetail = true;
+                    mRequirement.HideDetail = false;
+                    mRequirement.NameFont = 15;
+                }
+                else
+                {
+                    mRequirement.ArrowImage = Constraints.Arrow_Right;
+                    mRequirement.GridBg = Color.Transparent;
+                    mRequirement.MoreDetail = false;
+                    mRequirement.HideDetail = true;
+                    mRequirement.NameFont = 13;
+                }
             }
-            var reqModel = imgExp.BindingContext as RequirementM;
-            if (reqModel != null && reqModel.ArrowImage == Constraints.Arrow_Right)
+            catch (Exception ex)
             {
-                reqModel.ArrowImage = Constraints.Arrow_Down;
-                reqModel.Layout = LayoutOptions.StartAndExpand;
-                reqModel.ShowDelete = false;
-                reqModel.ShowCategory = true;
-            }
-            else
-            {
-                reqModel.ArrowImage = Constraints.Arrow_Right;
-                reqModel.Layout = LayoutOptions.CenterAndExpand;
-                reqModel.ShowDelete = true;
-                reqModel.ShowCategory = false;
+                Common.DisplayErrorMessage("ActiveRequirementView/ImgExpand_Tapped: " + ex.Message);
             }
         }
 
         private void GrdViewRequirement_Tapped(object sender, EventArgs e)
         {
-            Navigation.PushAsync(new DashboardPages.ViewRequirememntPage("active"));
+            var GridExp = (Grid)sender;
+            var mRequirement = GridExp.BindingContext as Requirement;
+            Navigation.PushAsync(new DashboardPages.ViewRequirememntPage("active", mRequirement.RequirementId));
         }
         #endregion
+
+        private void ImgDelete_Tapped(object sender, EventArgs e)
+        {
+            var imgExp = (Image)sender;
+            var mRequirement = imgExp.BindingContext as Requirement;
+            DeleteRequirement(mRequirement.RequirementId);
+        }
+
+        private void FrmDelete_Tapped(object sender, EventArgs e)
+        {
+            var imgExp = (Frame)sender;
+            var mRequirement = imgExp.BindingContext as Requirement;
+            DeleteRequirement(mRequirement.RequirementId);
+        }
+
+        private void lstRequirements_ItemAppearing(object sender, ItemVisibilityEventArgs e)
+        {
+            try
+            {
+                if (this.mRequirements.Count < 10)
+                    return;
+                if (this.mRequirements.Count == 0)
+                    return;
+
+                var lastrequirement = this.mRequirements[this.mRequirements.Count - 1];
+                var lastAppearing = (Requirement)e.Item;
+                if (lastAppearing != null)
+                {
+                    if (lastrequirement == lastAppearing)
+                    {
+                        var totalAspectedRow = pageSize * pageNo;
+                        pageNo += 1;
+
+                        if (this.mRequirements.Count() >= totalAspectedRow)
+                        {
+                            GetActiveRequirements(filterBy, sortBy);
+                        }
+                    }
+                    else
+                    {
+                        UserDialogs.Instance.HideLoading();
+                    }
+                }
+                else
+                {
+                    UserDialogs.Instance.HideLoading();
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("ActiveRequirementView/ItemAppearing: " + ex.Message);
+                UserDialogs.Instance.HideLoading();
+            }
+        }
+
+        private void lstRequirements_Refreshing(object sender, EventArgs e)
+        {
+            lstRequirements.IsRefreshing = true;
+            pageNo = 1;
+            mRequirements.Clear();
+            GetActiveRequirements(filterBy, sortBy);
+            lstRequirements.IsRefreshing = false;
+        }
+
+        private void entrSearch_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                if (!Common.EmptyFiels(entrSearch.Text))
+                {
+                    var ReqSearch = mRequirements.Where(x =>
+                                                        x.RequirementNo.ToLower().Contains(entrSearch.Text.ToLower()) ||
+                                                        x.Title.ToLower().Contains(entrSearch.Text.ToLower())).ToList();
+                    if (ReqSearch != null && ReqSearch.Count > 0)
+                    {
+                        lstRequirements.IsVisible = true;
+                        FrmSortBy.IsVisible = true;
+                        lblNoRecord.IsVisible = false;
+                        lstRequirements.ItemsSource = ReqSearch.ToList();
+                    }
+                    else
+                    {
+                        lstRequirements.IsVisible = false;
+                        FrmSortBy.IsVisible = false;
+                        lblNoRecord.IsVisible = true;
+                    }
+                }
+                else
+                {
+                    BindList();
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("ActiveRequirementView/CustomEntry_Unfocused: " + ex.Message);
+            }
+        }
+
+        private void BtnClose_Clicked(object sender, EventArgs e)
+        {
+            entrSearch.Text = string.Empty;
+            //FrmSearchBy.IsVisible = false;
+            BindList();
+        }
+
+        private void FrmFilterBy_Tapped(object sender, EventArgs e)
+        {
+            try
+            {
+                var sortby = new SortByPopup(filterBy, "Active");
+                sortby.isRefresh += (s1, e1) =>
+                {
+                    string result = s1.ToString();
+                    if (!string.IsNullOrEmpty(result))
+                    {
+                        pageNo = 1;
+                        filterBy = result;
+                        GetActiveRequirements(filterBy, sortBy);
+                    }
+                };
+                PopupNavigation.Instance.PushAsync(sortby);
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("ActiveRequirementView/CustomEntry_Unfocused: " + ex.Message);
+            }
+        }
     }
 }

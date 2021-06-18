@@ -1,6 +1,10 @@
-﻿using DLToolkit.Forms.Controls;
+﻿using AptDealzBuyer.Interfaces;
+using AptDealzBuyer.iOS.Service;
+using DLToolkit.Forms.Controls;
+using FFImageLoading.Forms.Platform;
 using Foundation;
 using UIKit;
+using Xamarin.Forms;
 
 namespace AptDealzBuyer.iOS
 {
@@ -10,11 +14,15 @@ namespace AptDealzBuyer.iOS
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
             global::Xamarin.Forms.Forms.Init();
+
+            CachedImageRenderer.Init();
             FlowListView.Init();
             ZXing.Net.Mobile.Forms.iOS.Platform.Init();
             Rg.Plugins.Popup.Popup.Init();
             CarouselView.FormsPlugin.iOS.CarouselViewRenderer.Init();
+            Firebase.Core.App.Configure();
             LoadApplication(new App());
+            DependencyService.Register<IFirebaseAuthenticator, FirebaseAuthenticator>();
 
             return base.FinishedLaunching(app, options);
         }

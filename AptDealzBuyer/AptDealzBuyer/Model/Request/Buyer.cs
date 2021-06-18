@@ -50,5 +50,8 @@ namespace AptDealzBuyer.Model.Request
 
         [JsonProperty("refreshToken")]
         public string RefreshToken { get; set; }
+
+        [JsonProperty("loginTrackingKey")]
+        public string LoginTrackingKey { get; set; }
     }
 }

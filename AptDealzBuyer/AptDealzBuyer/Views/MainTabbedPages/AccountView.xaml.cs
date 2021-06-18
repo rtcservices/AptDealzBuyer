@@ -2,25 +2,51 @@
 using AptDealzBuyer.API;
 using AptDealzBuyer.Model.Reponse;
 using AptDealzBuyer.Model.Request;
+using AptDealzBuyer.Repository;
 using AptDealzBuyer.Utility;
 using AptDealzBuyer.Views.MasterData;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 namespace AptDealzBuyer.Views.MainTabbedPages
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class AccountView : ContentView
+    public partial class AccountView : ContentView, INotifyPropertyChanged
     {
+        #region Properties
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+
+        private ObservableCollection<string> _mCountriesData;
+        public ObservableCollection<string> mCountriesData
+        {
+            get { return _mCountriesData; }
+            set
+            {
+                _mCountriesData = value;
+                OnPropertyChanged("mCountriesData");
+            }
+        }
+        #endregion
+
         #region Objects          
-        ProfileAPI profileAPI;
-        List<Country> countries;
-        BuyerDetails mBuyerDetail;
+        private ProfileAPI profileAPI;
+        private List<Country> countries;
+        private BuyerDetails mBuyerDetail;
+        private string relativePath;
+        bool isFirstLoad = true;
         #endregion
 
         #region Constructor
@@ -39,17 +65,16 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             {
                 profileAPI = new ProfileAPI();
                 UserDialogs.Instance.ShowLoading(Constraints.Loading);
-                countries = App.countries;
 
                 if (countries == null || countries.Count == 0)
                     await GetCountries();
 
-                pkNationality.ItemsSource = countries.Select(x => x.Name).ToList();
+                //pkNationality.ItemsSource = countries.Select(x => x.Name).ToList();
                 await GetProfile();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Common.DisplayErrorMessage("AccountView/BindProperties: " + ex.Message);
+                //Common.DisplayErrorMessage("AccountView/BindProperties: " + ex.Message);
             }
             finally
             {
@@ -61,16 +86,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         {
             try
             {
-                var mResponse = await profileAPI.GetCountry((int)App.Current.Resources["PageNumber"], (int)App.Current.Resources["PageSize"]);
-                if (mResponse != null && mResponse.Succeeded)
-                {
-                    JArray result = (JArray)mResponse.Data;
-                    countries = result.ToObject<List<Country>>();
-                }
-                else
-                {
-                    Common.DisplayErrorMessage(mResponse.Message);
-                }
+                countries = await profileAPI.GetCountry();
             }
             catch (Exception ex)
             {
@@ -92,12 +108,18 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                         if (mBuyerDetail != null)
                         {
                             BindProfileDetails(mBuyerDetail);
+                            //txtFullName.Focus();
+                            //pkNationality.Unfocus();
+                            //pkNationality.IsSuggestionListOpen = false;
                         }
                     }
                 }
                 else
                 {
-                    Common.DisplayErrorMessage(mResponse.Message);
+                    if (mResponse != null)
+                        Common.DisplayErrorMessage(mResponse.Message);
+                    else
+                        Common.DisplayErrorMessage(Constraints.Something_Wrong);
                 }
             }
             catch (Exception ex)
@@ -115,6 +137,8 @@ namespace AptDealzBuyer.Views.MainTabbedPages
 
                 if (!Common.EmptyFiels(mBuyerDetails.ProfilePhoto))
                 {
+                    string baseURL = (string)App.Current.Resources["BaseURL"];
+                    mBuyerDetails.ProfilePhoto = baseURL + mBuyerDetails.ProfilePhoto.Replace(baseURL, "");
                     imgUser.Source = mBuyerDetails.ProfilePhoto;
                 }
                 else
@@ -143,7 +167,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 }
                 if (mBuyerDetails.CountryId > 0 && countries != null && countries.Count() > 0)
                 {
-                    pkNationality.SelectedItem = countries.Where(x => x.CountryId == mBuyerDetails.CountryId).FirstOrDefault().Name;
+                    pkNationality.Text = countries.Where(x => x.CountryId == mBuyerDetails.CountryId).FirstOrDefault().Name;
                 }
             }
             catch (Exception ex)
@@ -156,9 +180,14 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         {
             mBuyerDetail.UserId = mBuyerDetail.BuyerId;
             mBuyerDetail.FullName = txtFullName.Text;
-            mBuyerDetail.ProfilePhoto = Common.RelativePath;
             mBuyerDetail.PhoneNumber = txtPhoneNumber.Text;
 
+            if (!Common.EmptyFiels(relativePath))
+            {
+                string baseURL = (string)App.Current.Resources["BaseURL"];
+                mBuyerDetail.ProfilePhoto = relativePath.Replace(baseURL, "");
+                //mBuyerDetail.ProfilePhoto = relativePath;
+            }
             if (!Common.EmptyFiels(txtBuildingNumber.Text))
             {
                 mBuyerDetail.Building = txtBuildingNumber.Text;
@@ -171,9 +200,9 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             {
                 mBuyerDetail.City = txtCity.Text;
             }
-            if (pkNationality.SelectedIndex > -1)
+            if (!Common.EmptyFiels(pkNationality.Text))
             {
-                mBuyerDetail.CountryId = countries.Where(x => x.Name == pkNationality.SelectedItem.ToString()).FirstOrDefault()?.CountryId;
+                mBuyerDetail.CountryId = countries.Where(x => x.Name == pkNationality.Text.ToString()).FirstOrDefault()?.CountryId;
             }
             if (!Common.EmptyFiels(txtLandmark.Text))
             {
@@ -203,7 +232,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 {
                     Common.DisplayErrorMessage(Constraints.InValid_PhoneNumber);
                 }
-                else if (pkNationality.SelectedIndex == -1)
+                else if (Common.EmptyFiels(pkNationality.Text))
                 {
                     Common.DisplayErrorMessage(Constraints.Required_Nationality);
                 }
@@ -217,50 +246,6 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 Common.DisplayErrorMessage("AccountView/Validations: " + ex.Message);
             }
             return result;
-        }
-
-        async void UplodeFile()
-        {
-            try
-            {
-                var base64String = Convert.ToBase64String(ImageConvertion.ProfileImageByte);
-                var fileName = Guid.NewGuid().ToString() + ".png";
-
-                UserDialogs.Instance.ShowLoading(Constraints.Loading);
-                FileUpload mFileUpload = new FileUpload();
-                mFileUpload.FileUploadCategory = (int)Common.FileUploadCategory.ProfilePicture;
-                mFileUpload.Base64String = base64String;
-                mFileUpload.FileName = fileName;
-
-                var mResponse = await profileAPI.FileUpload(mFileUpload);
-                if (mResponse != null && mResponse.Succeeded)
-                {
-                    var jObject = (Newtonsoft.Json.Linq.JObject)mResponse.Data;
-                    if (jObject != null)
-                    {
-                        var mBuyerFile = jObject.ToObject<Model.Reponse.BuyerFileDocument>();
-                        if (mBuyerFile != null)
-                        {
-                            Common.FileUri = mBuyerFile.fileUri;
-                            Common.RelativePath = mBuyerFile.relativePath;
-
-                            //Common.DisplaySuccessMessage(mResponse.Message);
-                        }
-                    }
-                }
-                else
-                {
-                    Common.DisplayErrorMessage(mResponse.Message);
-                }
-            }
-            catch (Exception ex)
-            {
-                Common.DisplayErrorMessage("AccountView/UplodeFile: " + ex.Message);
-            }
-            finally
-            {
-                UserDialogs.Instance.HideLoading();
-            }
         }
 
         async void UpdateProfile()
@@ -283,6 +268,9 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                     }
                     else
                     {
+                        if (mResponse == null)
+                            return;
+
                         Common.DisplayErrorMessage(mResponse.Message);
                     }
                 }
@@ -296,13 +284,46 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 UserDialogs.Instance.HideLoading();
             }
         }
+
+        async void DoLogout()
+        {
+            try
+            {
+                var isClose = await App.Current.MainPage.DisplayAlert(Constraints.Logout, Constraints.AreYouSureWantLogout, Constraints.Yes, Constraints.No);
+                if (isClose)
+                {
+                    AuthenticationAPI authenticationAPI = new AuthenticationAPI();
+                    var mResponse = await authenticationAPI.Logout(Settings.RefreshToken, Settings.LoginTrackingKey);
+                    if (mResponse != null && mResponse.Succeeded)
+                    {
+                        Common.DisplaySuccessMessage(mResponse.Message);
+                    }
+                    else
+                    {
+                        if (mResponse != null && !mResponse.Message.Contains("TrackingKey"))
+                            Common.DisplayErrorMessage(mResponse.Message);
+                    }
+
+                    Settings.EmailAddress = string.Empty;
+                    Settings.UserToken = string.Empty;
+                    Settings.RefreshToken = string.Empty;
+                    Settings.LoginTrackingKey = string.Empty;
+
+                    App.Current.MainPage = new NavigationPage(new SplashScreen.WelcomePage(true));
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("AccountView/DoLogout: " + ex.Message);
+            }
+        }
         #endregion
 
         #region Events       
         private void ImgMenu_Tapped(object sender, EventArgs e)
         {
             Common.BindAnimation(image: ImgMenu);
-            Common.OpenMenu();
+            //Common.OpenMenu();
         }
 
         private void ImgNotification_Tapped(object sender, EventArgs e)
@@ -334,16 +355,74 @@ namespace AptDealzBuyer.Views.MainTabbedPages
 
         private async void ImgCamera_Tapped(object sender, EventArgs e)
         {
-            Common.BindAnimation(image: ImgCamera);
-            ImageConvertion.BuyerProfileImage = imgUser;
-            await ImageConvertion.SelectImage();
-
-            if (ImageConvertion.ProfileImageByte != null)
+            try
             {
-                UplodeFile();
+                Common.BindAnimation(image: ImgCamera);
+                ImageConvertion.SelectedImagePath = imgUser;
+                ImageConvertion.SetNullSource((int)FileUploadCategory.ProfilePicture);
+                await ImageConvertion.SelectImage();
+
+                if (ImageConvertion.SelectedImageByte != null)
+                {
+                    relativePath = await DependencyService.Get<IFileUploadRepository>().UploadFile((int)FileUploadCategory.ProfilePicture);
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("AccountView/ImgCamera_Tapped: " + ex.Message);
             }
         }
-        #endregion
 
+        private void Logout_Tapped(object sender, EventArgs e)
+        {
+            DoLogout();
+        }
+
+        int i = 0;
+        private void AutoSuggestBox_TextChanged(object sender, dotMorten.Xamarin.Forms.AutoSuggestBoxTextChangedEventArgs e)
+        {
+            if (DeviceInfo.Platform == DevicePlatform.iOS)
+            {
+                if (isFirstLoad || i < 2)
+                {
+                    isFirstLoad = false;
+                    pkNationality.IsSuggestionListOpen = false;
+                    i++;
+                    return;
+                }
+            }
+
+            if (mCountriesData == null)
+                mCountriesData = new ObservableCollection<string>();
+
+            mCountriesData.Clear();
+            if (!string.IsNullOrEmpty(pkNationality.Text))
+            {
+                mCountriesData = new ObservableCollection<string>(countries.Where(x => x.Name.ToLower().Contains(pkNationality.Text.ToLower())).Select(x => x.Name));
+            }
+            else
+            {
+                mCountriesData = new ObservableCollection<string>(countries.Select(x => x.Name));
+            }
+        }
+
+        private void AutoSuggestBox_QuerySubmitted(object sender, dotMorten.Xamarin.Forms.AutoSuggestBoxQuerySubmittedEventArgs e)
+        {
+            if (e.ChosenSuggestion != null)
+            {
+                pkNationality.Text = e.ChosenSuggestion.ToString();
+            }
+            else
+            {
+                // User hit Enter from the search box. Use args.QueryText to determine what to do.
+                pkNationality.Unfocus();
+            }
+        }
+
+        private void AutoSuggestBox_SuggestionChosen(object sender, dotMorten.Xamarin.Forms.AutoSuggestBoxSuggestionChosenEventArgs e)
+        {
+            pkNationality.Text = e.SelectedItem.ToString();
+        }
+        #endregion
     }
 }

@@ -4,12 +4,13 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:ext="clr-namespace:AptDealzBuyer.Extention"
+    xmlns:ffImage="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
     xmlns:panCake="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
+    x:Name="page1"
     BackgroundColor="{StaticResource White}"
     NavigationPage.HasNavigationBar="False">
     <ContentView.Content>
-
-        <Grid>
+        <Grid RowSpacing="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="50" />
                 <RowDefinition Height="Auto" />
@@ -73,7 +74,7 @@
                     </Image>
                 </StackLayout>
             </Grid>
-            <!--#endregion-->
+
             <BoxView
                 Grid.Row="1"
                 BackgroundColor="{StaticResource LightGray}"
@@ -89,7 +90,7 @@
 
                 <Grid
                     Grid.Row="0"
-                    Margin="20,0"
+                    Margin="15,15,0,0"
                     ColumnDefinitions="Auto,*,Auto"
                     HorizontalOptions="FillAndExpand">
                     <Image
@@ -115,46 +116,51 @@
                         Text="Account"
                         TextColor="{StaticResource Black}"
                         VerticalOptions="CenterAndExpand" />
-
                 </Grid>
 
                 <ScrollView
                     Grid.Row="1"
-                    Margin="0,15,0,0"
+                    Margin="0,0,0,0"
                     HorizontalScrollBarVisibility="Never"
                     VerticalScrollBarVisibility="Never">
 
-                    <Grid Margin="0" RowDefinitions="Auto,Auto,Auto,Auto">
+                    <Grid Margin="0" RowDefinitions="Auto,Auto,*">
 
-                        <ext:CustomShadowFrame
+                        <Frame
                             Grid.Row="0"
                             Margin="20"
                             Padding="0"
                             BackgroundColor="Transparent"
                             BorderColor="{StaticResource LightGray}"
                             CornerRadius="10"
-                            HasShadow="False">
+                            HasShadow="False"
+                            IsClippedToBounds="True">
                             <Grid
                                 HeightRequest="150"
                                 HorizontalOptions="FillAndExpand"
                                 VerticalOptions="FillAndExpand">
                                 <Grid HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
-                                    <Image
-                                        x:Name="imgUser"
+                                    <Frame
                                         Margin="0"
-                                        Aspect="Fill"
+                                        Padding="0"
+                                        BackgroundColor="Transparent"
+                                        BorderColor="Transparent"
+                                        CornerRadius="50"
+                                        HasShadow="False"
                                         HeightRequest="100"
-                                        HorizontalOptions="CenterAndExpand"
-                                        Source="iconUserAccount.png"
-                                        VerticalOptions="CenterAndExpand"
+                                        IsClippedToBounds="True"
                                         WidthRequest="100">
-                                        <Image.Clip>
-                                            <EllipseGeometry
-                                                Center="50,50"
-                                                RadiusX="50"
-                                                RadiusY="50" />
-                                        </Image.Clip>
-                                    </Image>
+                                        <ffImage:CachedImage
+                                            x:Name="imgUser"
+                                            Margin="0"
+                                            Aspect="Fill"
+                                            ErrorPlaceholder="iconUserAccount.png"
+                                            HeightRequest="100"
+                                            HorizontalOptions="CenterAndExpand"
+                                            LoadingPlaceholder="iconUserAccount.png"
+                                            VerticalOptions="CenterAndExpand"
+                                            WidthRequest="100" />
+                                    </Frame>
                                     <Image
                                         x:Name="ImgCamera"
                                         Margin="0"
@@ -186,13 +192,15 @@
                                 </panCake:PancakeView>
 
                             </Grid>
-                        </ext:CustomShadowFrame>
+                        </Frame>
 
                         <Grid
                             Grid.Row="1"
                             Margin="0"
+                            Padding="20,0"
                             HorizontalOptions="FillAndExpand"
-                            RowSpacing="10">
+                            RowSpacing="{OnPlatform Android=10,
+                                                    iOS=15}">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
@@ -204,15 +212,12 @@
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
-                            <StackLayout
-                                Grid.Row="0"
-                                Margin="20,5,20,0"
-                                HorizontalOptions="FillAndExpand">
+                            <StackLayout Grid.Row="0" Spacing="{OnPlatform Android=0, iOS=5}">
 
                                 <Label
                                     Margin="0"
                                     FontFamily="Poppins"
-                                    FontSize="12"
+                                    FontSize="13"
                                     HorizontalOptions="StartAndExpand"
                                     Text="Full Name"
                                     TextColor="{StaticResource Gray}"
@@ -222,7 +227,7 @@
                                     x:Name="txtFullName"
                                     Margin="0"
                                     FontFamily="Poppins"
-                                    FontSize="16"
+                                    FontSize="15"
                                     HorizontalOptions="FillAndExpand"
                                     Keyboard="Text"
                                     Placeholder="Full Name"
@@ -237,15 +242,12 @@
                                     VerticalOptions="EndAndExpand" />
                             </StackLayout>
 
-                            <StackLayout
-                                Grid.Row="1"
-                                Margin="20,5,20,0"
-                                HorizontalOptions="FillAndExpand">
+                            <StackLayout Grid.Row="1" Spacing="{OnPlatform Android=0, iOS=5}">
 
                                 <Label
                                     Margin="0"
                                     FontFamily="Poppins"
-                                    FontSize="12"
+                                    FontSize="13"
                                     HorizontalOptions="StartAndExpand"
                                     Text="Phone Number"
                                     TextColor="{StaticResource Gray}"
@@ -255,7 +257,7 @@
                                     x:Name="txtPhoneNumber"
                                     Margin="0"
                                     FontFamily="Poppins"
-                                    FontSize="16"
+                                    FontSize="15"
                                     HorizontalOptions="FillAndExpand"
                                     Keyboard="Telephone"
                                     Placeholder="e.g. +91 1231231234"
@@ -270,15 +272,12 @@
                                     VerticalOptions="EndAndExpand" />
                             </StackLayout>
 
-                            <StackLayout
-                                Grid.Row="2"
-                                Margin="20,5,20,0"
-                                HorizontalOptions="FillAndExpand">
+                            <StackLayout Grid.Row="2" Spacing="{OnPlatform Android=0, iOS=5}">
 
                                 <Label
                                     Margin="0"
                                     FontFamily="Poppins"
-                                    FontSize="12"
+                                    FontSize="13"
                                     HorizontalOptions="StartAndExpand"
                                     Text="Building Number"
                                     TextColor="{StaticResource Gray}"
@@ -288,7 +287,7 @@
                                     x:Name="txtBuildingNumber"
                                     Margin="0"
                                     FontFamily="Poppins"
-                                    FontSize="16"
+                                    FontSize="15"
                                     HorizontalOptions="FillAndExpand"
                                     Placeholder="Building Number"
                                     PlaceholderColor="{StaticResource Gray}"
@@ -302,15 +301,12 @@
                                     VerticalOptions="EndAndExpand" />
                             </StackLayout>
 
-                            <StackLayout
-                                Grid.Row="3"
-                                Margin="20,5,20,0"
-                                HorizontalOptions="FillAndExpand">
+                            <StackLayout Grid.Row="3" Spacing="{OnPlatform Android=0, iOS=5}">
 
                                 <Label
                                     Margin="0"
                                     FontFamily="Poppins"
-                                    FontSize="12"
+                                    FontSize="13"
                                     HorizontalOptions="StartAndExpand"
                                     Text="Street"
                                     TextColor="{StaticResource Gray}"
@@ -320,7 +316,7 @@
                                     x:Name="txtStreet"
                                     Margin="0"
                                     FontFamily="Poppins"
-                                    FontSize="16"
+                                    FontSize="15"
                                     HorizontalOptions="FillAndExpand"
                                     Placeholder="Street"
                                     PlaceholderColor="{StaticResource Gray}"
@@ -334,15 +330,12 @@
                                     VerticalOptions="EndAndExpand" />
                             </StackLayout>
 
-                            <StackLayout
-                                Grid.Row="4"
-                                Margin="20,5,20,0"
-                                HorizontalOptions="FillAndExpand">
+                            <StackLayout Grid.Row="4" Spacing="{OnPlatform Android=0, iOS=5}">
 
                                 <Label
                                     Margin="0"
                                     FontFamily="Poppins"
-                                    FontSize="12"
+                                    FontSize="13"
                                     HorizontalOptions="StartAndExpand"
                                     Text="City"
                                     TextColor="{StaticResource Gray}"
@@ -352,7 +345,7 @@
                                     x:Name="txtCity"
                                     Margin="0"
                                     FontFamily="Poppins"
-                                    FontSize="16"
+                                    FontSize="15"
                                     HorizontalOptions="FillAndExpand"
                                     Placeholder="City"
                                     PlaceholderColor="{StaticResource Gray}"
@@ -366,63 +359,35 @@
                                     VerticalOptions="EndAndExpand" />
                             </StackLayout>
 
-                            <StackLayout
-                                x:Name="StkNationality"
-                                Grid.Row="5"
-                                Margin="20,5,20,0"
-                                HorizontalOptions="FillAndExpand">
+                            <StackLayout Grid.Row="5" Spacing="{OnPlatform Android=0, iOS=5}">
                                 <Label
                                     Margin="0"
                                     FontFamily="Poppins"
-                                    FontSize="12"
+                                    FontSize="13"
                                     HorizontalOptions="StartAndExpand"
                                     Text="Nationality"
                                     TextColor="{StaticResource Gray}"
                                     VerticalOptions="CenterAndExpand" />
-                                <!--<rise:AutoCompleteTextView
-                                    x:Name="pkNationality"
-                                    Margin="10"
-                                    BackgroundColor="#505050"
-                                    BorderColor="#CC8E1C"
-                                    BorderThickness="2"
-                                    FontAttribute="Bold"
-                                    FontSize="18"
-                                    HeightRequest="50"
-                                    ItemsSource="{Binding pkNationality}"
-                                    NamePath="Name"
-                                    PlaceHolder="Ara"
-                                    PlaceHolderColor="#80CC8E1C"
-                                    RowHeight="75"
-                                    SameItemControl="True"
-                                    SelectAfterText="Clear"
-                                    SelectionMode="Multiple"
-                                    SeparatorColor="#333333"
-                                    SeparatorThickness="2"
-                                    TextBackGroundColor="Transparent"
-                                    TextChange="AutoSuggestBox_TextChanged"
-                                    TextColor="#80FFFFFF"
-                                    VerticalOptions="EndAndExpand" />
 
-                                -->
-                                <!--<input:AutoCompleteEntry
-                                    x:Name="pkNationality"
-                                    Margin="0"
-                                    Padding="0"
-                                    BackgroundColor="Transparent"
-                                    BorderColor="Transparent"
-                                    FontFamily="Poppins"
-                                    HorizontalOptions="FillAndExpand"
-                                    ItemsSource="{Binding pkNationality}"
-                                    Placeholder="Nationality"
-                                    TextColor="{StaticResource Black}"
-                                    TextFontSize="16"
-                                    TitleColor="{StaticResource Gray}"
-                                    VerticalOptions="FillAndExpand" />-->
-                                <Picker
+                                <!--<Picker
                                     x:Name="pkNationality"
                                     Title="Nationality"
+                                    Margin="0,10"
                                     FontFamily="Poppins"
-                                    FontSize="16"
+                                    FontSize="15"
+                                    TextColor="{StaticResource Black}"
+                                    VerticalOptions="CenterAndExpand" />-->
+
+                                <ext:CustomAutoSuggestBox
+                                    x:Name="pkNationality"
+                                    HorizontalOptions="FillAndExpand"
+                                    ItemsSource="{Binding mCountriesData, Mode=TwoWay, Source={x:Reference page1}}"
+                                    PlaceholderText="Nationality"
+                                    PlaceholderTextColor="{StaticResource Gray}"
+                                    QuerySubmitted="AutoSuggestBox_QuerySubmitted"
+                                    SuggestionChosen="AutoSuggestBox_SuggestionChosen"
+                                    Text="{Binding countryText, Source={x:Reference page1}}"
+                                    TextChanged="AutoSuggestBox_TextChanged"
                                     TextColor="{StaticResource Black}" />
 
 
@@ -433,15 +398,11 @@
                                     VerticalOptions="EndAndExpand" />
                             </StackLayout>
 
-                            <StackLayout
-                                Grid.Row="6"
-                                Margin="20,5,20,0"
-                                HorizontalOptions="FillAndExpand">
-
+                            <StackLayout Grid.Row="6" Spacing="{OnPlatform Android=0, iOS=5}">
                                 <Label
                                     Margin="0"
                                     FontFamily="Poppins"
-                                    FontSize="12"
+                                    FontSize="13"
                                     HorizontalOptions="StartAndExpand"
                                     Text="PIN Code"
                                     TextColor="{StaticResource Gray}"
@@ -451,7 +412,7 @@
                                     x:Name="txtPinCode"
                                     Margin="0"
                                     FontFamily="Poppins"
-                                    FontSize="16"
+                                    FontSize="15"
                                     HorizontalOptions="FillAndExpand"
                                     Placeholder="PIN Code"
                                     PlaceholderColor="{StaticResource Gray}"
@@ -465,15 +426,12 @@
                                     VerticalOptions="EndAndExpand" />
                             </StackLayout>
 
-                            <StackLayout
-                                Grid.Row="7"
-                                Margin="20,5,20,0"
-                                HorizontalOptions="FillAndExpand">
+                            <StackLayout Grid.Row="7" Spacing="{OnPlatform Android=0, iOS=5}">
 
                                 <Label
                                     Margin="0"
                                     FontFamily="Poppins"
-                                    FontSize="12"
+                                    FontSize="13"
                                     HorizontalOptions="StartAndExpand"
                                     Text="Landmark"
                                     TextColor="{StaticResource Gray}"
@@ -483,7 +441,7 @@
                                     x:Name="txtLandmark"
                                     Margin="0"
                                     FontFamily="Poppins"
-                                    FontSize="16"
+                                    FontSize="15"
                                     HorizontalOptions="FillAndExpand"
                                     Placeholder="Landmark"
                                     PlaceholderColor="{StaticResource Gray}"
@@ -496,63 +454,75 @@
                                     HorizontalOptions="FillAndExpand"
                                     VerticalOptions="EndAndExpand" />
                             </StackLayout>
-
                         </Grid>
 
-                        <ext:CustomShadowFrame
-                            x:Name="FrmUpdate"
-                            Grid.Row="3"
-                            Margin="20,20,20,10"
-                            Padding="0"
-                            BackgroundColor="{StaticResource Green}"
-                            CornerRadius="5"
-                            HasShadow="False"
-                            HorizontalOptions="FillAndExpand"
-                            VerticalOptions="CenterAndExpand">
-                            <Label
-                                Grid.Column="1"
-                                Margin="20,10"
-                                FontFamily="Poppins Medium"
-                                FontSize="16"
-                                HorizontalOptions="CenterAndExpand"
-                                LineBreakMode="WordWrap"
-                                Text="Update"
-                                TextColor="{StaticResource White}"
-                                VerticalOptions="CenterAndExpand" />
-                            <ext:CustomShadowFrame.GestureRecognizers>
-                                <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmUpdate_Tapped" />
-                            </ext:CustomShadowFrame.GestureRecognizers>
-                        </ext:CustomShadowFrame>
+                        <Grid
+                            Grid.Row="2"
+                            Padding="20"
+                            RowSpacing="0"
+                            VerticalOptions="EndAndExpand">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
 
-                        <ext:CustomShadowFrame
-                            Grid.Row="4"
-                            Margin="20,0,20,20"
-                            Padding="0"
-                            BackgroundColor="Transparent"
-                            BorderColor="Transparent"
-                            CornerRadius="5"
-                            HasShadow="False"
-                            HorizontalOptions="FillAndExpand"
-                            VerticalOptions="CenterAndExpand">
-                            <Label
-                                Grid.Column="1"
-                                Margin="20,10"
+                            <Frame
+                                x:Name="FrmUpdate"
+                                Grid.Row="0"
+                                Margin="0"
+                                Padding="0"
+                                BackgroundColor="{StaticResource Green}"
+                                CornerRadius="5"
+                                HasShadow="False"
+                                HeightRequest="50"
+                                HorizontalOptions="FillAndExpand"
+                                VerticalOptions="CenterAndExpand">
+                                <Label
+                                    Grid.Column="1"
+                                    Margin="0"
+                                    FontFamily="Poppins Medium"
+                                    FontSize="15"
+                                    HorizontalOptions="CenterAndExpand"
+                                    LineBreakMode="WordWrap"
+                                    Text="Update"
+                                    TextColor="{StaticResource White}"
+                                    VerticalOptions="CenterAndExpand" />
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmUpdate_Tapped" />
+                                </Frame.GestureRecognizers>
+                            </Frame>
+
+                            <Button
+                                x:Name="BtnLogout"
+                                Grid.Row="1"
+                                Margin="0"
+                                Padding="10"
+                                BackgroundColor="Transparent"
+                                Clicked="Logout_Tapped"
                                 FontFamily="Poppins Medium"
-                                FontSize="16"
+                                FontSize="15"
                                 HorizontalOptions="CenterAndExpand"
-                                LineBreakMode="WordWrap"
+                                Text="Logout"
+                                TextColor="{StaticResource Black}"
+                                VerticalOptions="CenterAndExpand" />
+
+                            <Button
+                                x:Name="FrmDeactivate"
+                                Grid.Row="2"
+                                Margin="0"
+                                Padding="10"
+                                BackgroundColor="Transparent"
+                                Clicked="FrmDeactivate_Tapped"
+                                FontFamily="Poppins Medium"
+                                FontSize="15"
+                                HorizontalOptions="CenterAndExpand"
                                 Text="Deactivate Account"
                                 TextColor="{StaticResource Black}"
                                 VerticalOptions="CenterAndExpand" />
-                            <ext:CustomShadowFrame.GestureRecognizers>
-                                <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmDeactivate_Tapped" />
-                            </ext:CustomShadowFrame.GestureRecognizers>
-                        </ext:CustomShadowFrame>
-
+                        </Grid>
                     </Grid>
-
                 </ScrollView>
-
             </Grid>
         </Grid>
 

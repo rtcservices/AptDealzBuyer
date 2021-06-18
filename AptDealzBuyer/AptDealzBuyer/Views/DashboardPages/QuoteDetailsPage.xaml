@@ -10,7 +10,7 @@
     NavigationPage.HasNavigationBar="False">
     <ContentPage.Content>
 
-        <Grid>
+       <Grid RowSpacing="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="50" />
                 <RowDefinition Height="Auto" />
@@ -94,11 +94,12 @@
                     ColumnDefinitions="Auto,*,Auto"
                     HorizontalOptions="FillAndExpand">
                     <Image
+                        x:Name="ImgBack"
                         Margin="0"
                         Aspect="AspectFit"
                         HeightRequest="25"
                         HorizontalOptions="StartAndExpand"
-                        Source="iconBackArrow.png" x:Name="ImgBack"
+                        Source="iconBackArrow.png"
                         VerticalOptions="CenterAndExpand"
                         WidthRequest="25">
                         <Image.GestureRecognizers>
@@ -733,7 +734,7 @@
                                 Grid.Column="1"
                                 Margin="20,10"
                                 FontFamily="Poppins Medium"
-                                FontSize="16"
+                                FontSize="15"
                                 HorizontalOptions="CenterAndExpand"
                                 LineBreakMode="WordWrap"
                                 Text="Back to Quotes"

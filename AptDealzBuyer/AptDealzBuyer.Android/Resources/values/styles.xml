@@ -3,11 +3,16 @@
 
 	<style name="MainTheme" parent="MainTheme.Base" >
 		<item name="colorPrimary">#2196F3</item>
-		<item name="colorPrimaryDark">#1976D2</item>
+		<item name="colorPrimaryDark">#006027</item>
 		<item name="colorAccent">#006027</item>
+		<item name="android:datePickerDialogTheme">@style/AppCompatDialogStyle</item>
 	</style>
 
 	<style name="Theme.AppCompat.DayNight" parent="Theme.AppCompat.Light">
+		<item name="colorAccent">#006027</item>
+	</style>	
 
+	<style name="AppCompatDialogStyle" parent="Theme.AppCompat.Light.Dialog">
+		<item name="colorAccent">#006027</item>
 	</style>
 </resources>

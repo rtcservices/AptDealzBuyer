@@ -15,5 +15,7 @@ namespace AptDealzBuyer.Interfaces
         Task<AuthenticatedUser> GetUserAsync();
 
         Task<bool> Signout();
+
+        string _verificationId { get; set; }
     }
 }

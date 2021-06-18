@@ -1,12 +1,8 @@
 ﻿using Acr.UserDialogs;
 using AptDealzBuyer.API;
 using AptDealzBuyer.Interfaces;
-using AptDealzBuyer.Model.Reponse;
 using AptDealzBuyer.Utility;
-using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -24,7 +20,7 @@ namespace AptDealzBuyer.Views.Login
         public LoginPage()
         {
             InitializeComponent();
-            txtEmailAddress.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeNone);
+            txtUserAuth.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeNone);
         }
         #endregion
 
@@ -45,7 +41,7 @@ namespace AptDealzBuyer.Views.Login
                     imgCheck.Source = Constraints.CheckBox_UnChecked;
 
                 if (!Common.EmptyFiels(Settings.EmailAddress))
-                    txtEmailAddress.Text = Settings.EmailAddress;
+                    txtUserAuth.Text = Settings.EmailAddress;
             }
             catch (Exception ex)
             {
@@ -58,13 +54,13 @@ namespace AptDealzBuyer.Views.Login
             bool result = false;
             try
             {
-                if (Common.EmptyFiels(txtEmailAddress.Text))
+                if (Common.EmptyFiels(txtUserAuth.Text))
                 {
                     Common.DisplayErrorMessage(Constraints.Required_Email_Phone);
                 }
-                else if (txtEmailAddress.Text.Contains("@") || txtEmailAddress.Text.Contains("."))
+                else if (txtUserAuth.Text.Contains("@") || txtUserAuth.Text.Contains("."))
                 {
-                    if (!txtEmailAddress.Text.IsValidEmail())
+                    if (!txtUserAuth.Text.IsValidEmail())
                     {
                         Common.DisplayErrorMessage(Constraints.InValid_Email);
                     }
@@ -74,7 +70,7 @@ namespace AptDealzBuyer.Views.Login
                         result = true;
                     }
                 }
-                else if (!txtEmailAddress.Text.IsValidPhone())
+                else if (!txtUserAuth.Text.IsValidPhone())
                 {
                     Common.DisplayErrorMessage(Constraints.InValid_PhoneNumber);
                 }
@@ -101,44 +97,45 @@ namespace AptDealzBuyer.Views.Login
                     if (isEmail)
                     {
                         UserDialogs.Instance.ShowLoading(Constraints.Loading);
-                        var mResponse = await authenticationAPI.SendOtpByEmail(txtEmailAddress.Text);
+                        var mResponse = await authenticationAPI.SendOtpByEmail(txtUserAuth.Text);
                         if (mResponse != null && mResponse.Succeeded)
                         {
                             if (isChecked)
                             {
-                                Settings.EmailAddress = txtEmailAddress.Text;
+                                Settings.EmailAddress = txtUserAuth.Text;
                             }
 
                             Common.DisplaySuccessMessage(mResponse.Message);
 
-                            await Navigation.PushAsync(new Views.Login.EnterOtpPage(txtEmailAddress.Text, IsKeepLogin: isChecked));
+                            await Navigation.PushAsync(new Views.Login.EnterOtpPage(txtUserAuth.Text, IsKeepLogin: isChecked));
 
-                            txtEmailAddress.Text = string.Empty;
+                            txtUserAuth.Text = string.Empty;
                             isChecked = false;
                             imgCheck.Source = Constraints.CheckBox_UnChecked;
 
                         }
                         else
                         {
-                            Common.DisplayErrorMessage(mResponse.Message);
+                            if (mResponse != null)
+                                Common.DisplayErrorMessage(mResponse.Message);
+                            else
+                                Common.DisplayErrorMessage(Constraints.Something_Wrong);
                         }
-                        //}
-                        //}
                     }
                     else
                     {
-                        var result = await Xamarin.Forms.DependencyService.Get<IFirebaseAuthenticator>().SendOtpCodeAsync(txtEmailAddress.Text);
+                        var result = await Xamarin.Forms.DependencyService.Get<IFirebaseAuthenticator>().SendOtpCodeAsync(txtUserAuth.Text);
+
                         if (result)
                         {
-                            await Navigation.PushAsync(new Views.Login.EnterOtpPage(txtEmailAddress.Text, false, isChecked));
-
-                            txtEmailAddress.Text = string.Empty;
+                            await Navigation.PushAsync(new Views.Login.EnterOtpPage(txtUserAuth.Text, false, isChecked));
+                            txtUserAuth.Text = string.Empty;
                             isChecked = false;
                             imgCheck.Source = Constraints.CheckBox_UnChecked;
                         }
                         else
                         {
-                            Common.DisplayErrorMessage("Could not send Verification Code to the given number");
+                            Common.DisplayErrorMessage("Could not send Verification Code to the given number!");
                         }
                     }
                 }

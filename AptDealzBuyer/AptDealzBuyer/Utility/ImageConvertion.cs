@@ -1,30 +1,29 @@
 ﻿using Acr.UserDialogs;
-using AptDealzBuyer.Model.Reponse;
-using AptDealzBuyer.Utility;
 using Plugin.Media;
 using Plugin.Media.Abstractions;
 using Plugin.Permissions;
 using Plugin.Permissions.Abstractions;
 using SkiaSharp;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
 
 namespace AptDealzBuyer.Utility
 {
     public class ImageConvertion
     {
+        #region Properties
         public static string profileImageBase64 { get; set; }
+        public static FFImageLoading.Forms.CachedImage SelectedImagePath { get; set; }
+        public static string NullImagePath { get; set; }
 
-        public static Image BuyerProfileImage { get; set; }
+        public static byte[] SelectedImageByte = null;
+        #endregion
 
-        public static byte[] ProfileImageByte = null;
-
+        #region Methods
         public static byte[] CompressImage(byte[] imgBytes)
         {
             byte[] CompressimageBytes = null;
@@ -34,7 +33,7 @@ namespace AptDealzBuyer.Utility
                 var data = image.Encode(SKEncodedImageFormat.Jpeg, 30);
                 CompressimageBytes = data.ToArray();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //DisplayErrorMessage("ImageConvertion/CompressImage : " + ex.Message);
             }
@@ -75,7 +74,7 @@ namespace AptDealzBuyer.Utility
                 stream.Close();
                 response.Close();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 buf = null;
                 //DisplayErrorMessage("ImageConvertion/GetImage : " + ex.Message);
@@ -100,14 +99,14 @@ namespace AptDealzBuyer.Utility
                 memoryStream.Dispose();
                 Device.BeginInvokeOnMainThread(() =>
                 {
-                    BuyerProfileImage.Source = ImageSource.FromStream(() =>
+                    SelectedImagePath.Source = ImageSource.FromStream(() =>
                     {
                         var stream = file.GetStream();
                         return stream;
                     });
                 });
 
-                ProfileImageByte = ImageBytes;
+                SelectedImageByte = ImageBytes;
 
             }
             catch (Exception ex)
@@ -117,6 +116,18 @@ namespace AptDealzBuyer.Utility
 
             finally { UserDialogs.Instance.HideLoading(); }
             return ImageBytes;
+        }
+
+        public static void SetNullSource(int fileUploadCategory)
+        {
+            if (fileUploadCategory == 0)
+            {
+                ImageConvertion.NullImagePath = "iconUserAccount.png";
+            }
+            else
+            {
+                ImageConvertion.NullImagePath = "imgUploadImage.png";
+            }
         }
 
         public static async Task SelectImage()
@@ -220,16 +231,16 @@ namespace AptDealzBuyer.Utility
                     }
                     finally { UserDialogs.Instance.HideLoading(); }
                 }
-                else if (BuyerProfileImage.Source == null)
+                else if (SelectedImagePath.Source == null)
                 {
-                    BuyerProfileImage.Source = "iconUserAccount.png";
+                    SelectedImagePath.Source = NullImagePath;
                 }
 
                 try
                 {
                     if (file != null)
                     {
-                        ProfileImageByte = TakeCameraAsync(file);
+                        SelectedImageByte = TakeCameraAsync(file);
                     }
                 }
                 catch (Exception ex)
@@ -245,5 +256,6 @@ namespace AptDealzBuyer.Utility
             finally { UserDialogs.Instance.HideLoading(); }
 #pragma warning restore CS0618 // Type or member is obsolete
         }
+        #endregion
     }
 }

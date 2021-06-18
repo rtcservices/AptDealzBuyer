@@ -4,6 +4,12 @@ namespace AptDealzBuyer.Model.Reponse
 {
     public class Response
     {
+        [JsonProperty("pageNumber")]
+        public int PageNumber { get; set; }
+
+        [JsonProperty("pageSize")]
+        public int PageSize { get; set; }
+
         [JsonProperty("succeeded")]
         public bool Succeeded { get; set; }
 

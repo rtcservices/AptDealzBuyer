@@ -13,10 +13,9 @@ namespace AptDealzBuyer.Utility
         #region Properties
         public static MasterDataPage MasterData { get; set; }
         public static string Token { get; set; }
-        public static string RefreshToken { get; set; }
-        public static string FileUri { get; set; }
-        public static string RelativePath { get; set; }
+        //public static string RefreshToken { get; set; }
         private static Regex PhoneNumber { get; set; } = new Regex(@"^[0-9]{10}$");
+        private static Regex RegexPassword { get; set; } = new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{8,}$");
         #endregion
 
         #region DisplayMessages
@@ -125,6 +124,11 @@ namespace AptDealzBuyer.Utility
             }
         }
 
+        public static bool IsValidPassword(this string value)
+        {
+            return (RegexPassword.IsMatch($"{value}"));
+        }
+
         public static bool EmptyFiels(string extEntry)
         {
             if (string.IsNullOrEmpty(extEntry) || string.IsNullOrWhiteSpace(extEntry))
@@ -155,15 +159,37 @@ namespace AptDealzBuyer.Utility
                 Common.DisplayErrorMessage("Common/OpenMenu: " + ex.Message);
             }
         }
-
         #endregion
 
-        #region Enum   
-        public enum FileUploadCategory
-        {
-            ProfilePicture = 0,
-            ProfileDocuments = 1
-        }
-        #endregion
     }
+
+    #region Enum   
+    public enum FileUploadCategory
+    {
+        ProfilePicture = 0,
+        ProfileDocuments = 1,
+        RequirementImages = 2
+    }
+
+    public enum RequirementStatus
+    {
+        Active = 1,
+        Completed = 2,
+        Rejected = 3,
+        Inactive = 4,
+        Cancelled = 5
+    }
+
+    public enum RequirementSortBy
+    {
+        ID = 1,
+        Date = 2,
+        Quotes = 3,
+        quotationId = 4,
+        amount = 5,
+        validity = 6,
+        ASC = 7,
+        DSC = 8
+    }
+    #endregion
 }

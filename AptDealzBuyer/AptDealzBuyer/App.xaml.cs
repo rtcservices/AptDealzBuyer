@@ -1,11 +1,14 @@
 ﻿using AptDealzBuyer.API;
 using AptDealzBuyer.Model.Reponse;
+using AptDealzBuyer.Repository;
+using AptDealzBuyer.Services;
 using AptDealzBuyer.Utility;
 using Newtonsoft.Json.Linq;
 using Plugin.FirebasePushNotification;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
@@ -13,10 +16,12 @@ namespace AptDealzBuyer
 {
     public partial class App : Application
     {
-        public static double latitude = 0;
-        public static double longitude = 0;
-        public static List<Country> countries;
+        #region Objects
+        public static int latitude = 0;
+        public static int longitude = 0;
+        #endregion
 
+        #region Constructor
         public App()
         {
             try
@@ -28,17 +33,11 @@ namespace AptDealzBuyer
                 });
 
                 InitializeComponent();
-
-                GetCurrentLocation();
-                BindCrossFirebasePushNotification();
                 Application.Current.UserAppTheme = OSAppTheme.Light;
 
-                BackgroundWorker backgroundWorker = new BackgroundWorker();
-                backgroundWorker.DoWork += delegate
-                  {
-                      GetCountries();
-                  };
-                backgroundWorker.RunWorkerAsync();
+                RegisterDependencies();
+                GetCurrentLocation();
+                BindCrossFirebasePushNotification();
 
                 MainPage = new Views.SplashScreen.Spalshscreen();
             }
@@ -47,27 +46,14 @@ namespace AptDealzBuyer
                 Common.DisplayErrorMessage("App/Constructor: " + ex.Message);
             }
         }
+        #endregion
 
-        async void GetCountries()
+        #region Methods
+        public static void RegisterDependencies()
         {
-            try
-            {
-                ProfileAPI profileAPI = new ProfileAPI();
-                var mResponse = await profileAPI.GetCountry((int)App.Current.Resources["PageNumber"], (int)App.Current.Resources["PageSize"]);
-                if (mResponse != null && mResponse.Succeeded)
-                {
-                    JArray result = (JArray)mResponse.Data;
-                    countries = result.ToObject<List<Country>>();
-                }
-                else
-                {
-                    Common.DisplayErrorMessage(mResponse.Message);
-                }
-            }
-            catch (Exception ex)
-            {
-                Common.DisplayErrorMessage("App/GetCountries: " + ex.Message);
-            }
+            Xamarin.Forms.DependencyService.Register<IFileUploadRepository, FileUploadRepository>();
+            Xamarin.Forms.DependencyService.Register<IDeleteRepository, DeleteRepository>();
+            Xamarin.Forms.DependencyService.Register<ICategoryRepository, CategoryRepository>();
         }
 
         public async void GetCurrentLocation()
@@ -77,8 +63,8 @@ namespace AptDealzBuyer
                 var location = await Geolocation.GetLastKnownLocationAsync();
                 if (location != null)
                 {
-                    latitude = location.Latitude;
-                    longitude = location.Longitude;
+                    latitude = (int)location.Latitude;
+                    longitude = (int)location.Longitude;
                 }
             }
             catch (Exception ex)
@@ -87,7 +73,7 @@ namespace AptDealzBuyer
             }
         }
 
-        void BindCrossFirebasePushNotification()
+        private void BindCrossFirebasePushNotification()
         {
             try
             {
@@ -146,5 +132,6 @@ namespace AptDealzBuyer
         protected override void OnResume()
         {
         }
+        #endregion
     }
 }

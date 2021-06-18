@@ -53,19 +53,8 @@ namespace AptDealzBuyer.Views.DashboardPages
         // create events here
         private void ImgMenu_Tapped(object sender, EventArgs e)
         {
-            //Common.BindAnimation(image: ImgMenu);
-            try
-            {
-                if (Common.MasterData != null)
-                {
-                    Common.MasterData.IsGestureEnabled = true;
-                    Common.MasterData.IsPresented = true;
-                }
-            }
-            catch (Exception ex)
-            {
-                //Common.DisplayErrorMessage("HomeView/ImgMenu_Tapped: " + ex.Message);
-            }
+            Common.BindAnimation(image: ImgMenu);
+            //Common.OpenMenu();
         }
 
         private void ImgNotification_Tapped(object sender, EventArgs e)

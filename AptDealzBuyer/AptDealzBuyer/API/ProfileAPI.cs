@@ -5,6 +5,7 @@ using AptDealzBuyer.Views.SplashScreen;
 using Newtonsoft.Json;
 using Plugin.Connectivity;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -67,21 +68,21 @@ namespace AptDealzBuyer.API
             return mResponse;
         }
 
-        public async Task<Response> GetCountry(int PageNumber, int PageSize)
+        public async Task<List<Country>> GetCountry()
         {
-            Response mResponse = new Response();
+            List<Country> mCountries = new List<Country>();
             try
             {
                 if (CrossConnectivity.Current.IsConnected)
                 {
-                    using (var hcf = new HttpClientFactory())
+                    using (var hcf = new HttpClientFactory(token: Common.Token))
                     {
-                        string url = string.Format(EndPointURL.Country, (int)App.Current.Resources["Version"], PageNumber, PageSize);
+                        string url = string.Format(EndPointURL.Country, (int)App.Current.Resources["Version"]);
                         var response = await hcf.GetAsync(url);
                         var responseJson = await response.Content.ReadAsStringAsync();
                         if (response.IsSuccessStatusCode)
                         {
-                            mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
+                            mCountries = JsonConvert.DeserializeObject<List<Country>>(responseJson);
                         }
                         else if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
                         {
@@ -93,7 +94,15 @@ namespace AptDealzBuyer.API
                         }
                         else
                         {
-                            mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
+                            if (responseJson.Contains("TokenExpired"))
+                            {
+                                Common.DisplayErrorMessage(Constraints.Session_Expired);
+                                App.Current.MainPage = new NavigationPage(new WelcomePage(true));
+                            }
+                            else
+                            {
+                                mCountries = null;
+                            }
                         }
                     }
                 }
@@ -101,7 +110,7 @@ namespace AptDealzBuyer.API
                 {
                     if (await Common.InternetConnection())
                     {
-                        await GetCountry(PageNumber, PageSize);
+                        await GetCountry();
                     }
                 }
             }
@@ -109,7 +118,7 @@ namespace AptDealzBuyer.API
             {
                 Common.DisplayErrorMessage("ProfileAPI/GetCountry: " + ex.Message);
             }
-            return mResponse;
+            return mCountries;
         }
         #endregion
 
@@ -122,7 +131,7 @@ namespace AptDealzBuyer.API
                 if (CrossConnectivity.Current.IsConnected)
                 {
                     string requestJson = "{\"userId\":\"" + userId + "\"}";
-                    using (var hcf = new HttpClientFactory())
+                    using (var hcf = new HttpClientFactory(token: Common.Token))
                     {
                         string url = EndPointURL.DeactivateUser; //sent UserId
                         var mResponseMessage = await hcf.PostAsync(url, requestJson);
@@ -141,7 +150,15 @@ namespace AptDealzBuyer.API
                         }
                         else
                         {
-                            mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
+                            if (responseJson.Contains("TokenExpired"))
+                            {
+                                Common.DisplayErrorMessage(Constraints.Session_Expired);
+                                App.Current.MainPage = new NavigationPage(new WelcomePage(true));
+                            }
+                            else
+                            {
+                                mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
+                            }
                         }
                     }
                 }
@@ -170,7 +187,7 @@ namespace AptDealzBuyer.API
                 if (CrossConnectivity.Current.IsConnected)
                 {
                     var requestJson = JsonConvert.SerializeObject(mFileUpload);
-                    using (var hcf = new HttpClientFactory())
+                    using (var hcf = new HttpClientFactory(token: Common.Token))
                     {
                         string url = EndPointURL.FileUpload;
                         var mResponseMessage = await hcf.PostAsync(url, requestJson);
@@ -189,7 +206,15 @@ namespace AptDealzBuyer.API
                         }
                         else
                         {
-                            mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
+                            if (responseJson.Contains("TokenExpired"))
+                            {
+                                Common.DisplayErrorMessage(Constraints.Session_Expired);
+                                App.Current.MainPage = new NavigationPage(new WelcomePage(true));
+                            }
+                            else
+                            {
+                                mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
+                            }
                         }
                     }
                 }
@@ -219,7 +244,7 @@ namespace AptDealzBuyer.API
                 {
                     string requestJson = "{\"email\":\"" + email + "\"}";
 
-                    using (var hcf = new HttpClientFactory())
+                    using (var hcf = new HttpClientFactory(token: Common.Token))
                     {
                         string url = EndPointURL.GetUserProfileByEmail;
                         var mResponseMessage = await hcf.PostAsync(url, requestJson);
@@ -238,8 +263,15 @@ namespace AptDealzBuyer.API
                         }
                         else
                         {
-                            mResponse.Succeeded = false;
-                            mResponse.Errors = responseJson;
+                            if (responseJson.Contains("TokenExpired"))
+                            {
+                                Common.DisplayErrorMessage(Constraints.Session_Expired);
+                                App.Current.MainPage = new NavigationPage(new WelcomePage(true));
+                            }
+                            else
+                            {
+                                mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
+                            }
                         }
                     }
                 }
@@ -270,9 +302,9 @@ namespace AptDealzBuyer.API
                 if (CrossConnectivity.Current.IsConnected)
                 {
                     var requestJson = JsonConvert.SerializeObject(mBuyerDetails);
-                    using (var hcf = new HttpClientFactory())
+                    using (var hcf = new HttpClientFactory(token: Common.Token))
                     {
-                        string url = string.Format(EndPointURL.SaveProfile, (int)App.Current.Resources["Version"], Settings.UserId);
+                        string url = string.Format(EndPointURL.SaveProfile, (int)App.Current.Resources["Version"]);
                         var mResponseMessage = await hcf.PutAsync(url, requestJson);
                         var responseJson = await mResponseMessage.Content.ReadAsStringAsync();
                         if (mResponseMessage.IsSuccessStatusCode)
@@ -289,7 +321,15 @@ namespace AptDealzBuyer.API
                         }
                         else
                         {
-                            mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
+                            if (responseJson.Contains("TokenExpired"))
+                            {
+                                Common.DisplayErrorMessage(Constraints.Session_Expired);
+                                App.Current.MainPage = new NavigationPage(new WelcomePage(true));
+                            }
+                            else
+                            {
+                                mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
+                            }
                         }
                     }
                 }

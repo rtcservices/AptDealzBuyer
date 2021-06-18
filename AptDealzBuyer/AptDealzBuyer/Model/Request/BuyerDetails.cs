@@ -45,6 +45,9 @@ namespace AptDealzBuyer.Model.Request
         [JsonProperty("buyerId")]
         public string BuyerId { get; set; }
 
+        [JsonProperty("buyerNo")]
+        public string BuyerNo { get; set; }
+
         [JsonProperty("registeredOn")]
         public DateTime RegisteredOn { get; set; }
 

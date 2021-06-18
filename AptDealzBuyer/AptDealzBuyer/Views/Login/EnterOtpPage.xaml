@@ -91,7 +91,7 @@
                         <ext:ExtEntry
                             x:Name="TxtOtpOne"
                             FontFamily="Poppins"
-                            FontSize="16"
+                            FontSize="15"
                             HorizontalOptions="FillAndExpand"
                             HorizontalTextAlignment="Center"
                             IsPassword="True"
@@ -116,7 +116,7 @@
                         <ext:ExtEntry
                             x:Name="TxtOtpTwo"
                             FontFamily="Poppins"
-                            FontSize="16"
+                            FontSize="15"
                             HorizontalOptions="FillAndExpand"
                             HorizontalTextAlignment="Center"
                             IsPassword="True"
@@ -141,7 +141,7 @@
                         <ext:ExtEntry
                             x:Name="TxtOtpThree"
                             FontFamily="Poppins"
-                            FontSize="16"
+                            FontSize="15"
                             HorizontalOptions="FillAndExpand"
                             HorizontalTextAlignment="Center"
                             IsPassword="True"
@@ -166,7 +166,7 @@
                         <ext:ExtEntry
                             x:Name="TxtOtpFour"
                             FontFamily="Poppins"
-                            FontSize="16"
+                            FontSize="15"
                             HorizontalOptions="FillAndExpand"
                             HorizontalTextAlignment="Center"
                             IsPassword="True"
@@ -191,7 +191,7 @@
                         <ext:ExtEntry
                             x:Name="TxtOtpFive"
                             FontFamily="Poppins"
-                            FontSize="16"
+                            FontSize="15"
                             HorizontalOptions="FillAndExpand"
                             HorizontalTextAlignment="Center"
                             IsPassword="True"
@@ -218,7 +218,7 @@
                         <ext:ExtEntry
                             x:Name="TxtOtpSix"
                             FontFamily="Poppins"
-                            FontSize="16"
+                            FontSize="15"
                             HorizontalOptions="FillAndExpand"
                             HorizontalTextAlignment="Center"
                             IsPassword="True"
@@ -256,27 +256,19 @@
                     </Frame.GestureRecognizers>
                 </Frame>
 
-                <Grid
+                <Button
+                    x:Name="BtnResentOtp"
                     Grid.Row="3"
+                    Margin="0"
                     Padding="15"
                     BackgroundColor="Transparent"
+                    Clicked="BtnResentOtp_Tapped"
+                    FontFamily="Poppins Medium"
+                    FontSize="15"
                     HorizontalOptions="CenterAndExpand"
-                    VerticalOptions="CenterAndExpand">
-                    <Label
-                        FontFamily="Poppins Medium"
-                        FontSize="17"
-                        HorizontalOptions="CenterAndExpand"
-                        Text="Resend  OTP"
-                        TextColor="{StaticResource Black}"
-                        TextDecorations="Underline"
-                        VerticalOptions="CenterAndExpand" />
-                    <Grid.GestureRecognizers>
-                        <TapGestureRecognizer
-                            x:Name="BtnResentOtp"
-                            NumberOfTapsRequired="1"
-                            Tapped="BtnResentOtp_Tapped" />
-                    </Grid.GestureRecognizers>
-                </Grid>
+                    Text="Resend OTP"
+                    TextColor="{StaticResource Black}"
+                    VerticalOptions="CenterAndExpand" />
             </Grid>
 
         </Grid>

@@ -2,14 +2,17 @@
 <Application
     x:Class="AptDealzBuyer.App"
     xmlns="http://xamarin.com/schemas/2014/forms"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:ext="clr-namespace:AptDealzBuyer.Extention">
     <Application.Resources>
 
+        <x:String x:Key="CountryCode">+91</x:String>
         <x:String x:Key="BaseURL">https://aptdealzapidev.azurewebsites.net/</x:String>
         <x:Int32 x:Key="Version">1</x:Int32>
         <x:Int32 x:Key="PageNumber">1</x:Int32>
         <x:Int32 x:Key="PageSize">300</x:Int32>
 
+        <!--#region [ COLOR ]-->
         <Color x:Key="White">#ffffff</Color>
         <Color x:Key="ErrorBackground">#ff4d4f</Color>
         <Color x:Key="SuccessBackground">#52c41a</Color>
@@ -22,6 +25,55 @@
         <Color x:Key="DarkGray">#8C8B8B</Color>
         <Color x:Key="Orange">#FC9200</Color>
         <Color x:Key="Red">#E50019</Color>
+        <!--#endregion-->
+
+        <!--#region [ FRAME ]-->
+        <Style x:Key="frmEntry" TargetType="Frame">
+            <Setter Property="Padding" Value="15,0" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="BackgroundColor" Value="Transparent" />
+            <Setter Property="BorderColor" Value="{StaticResource LightGray}" />
+            <Setter Property="CornerRadius" Value="5" />
+            <Setter Property="HasShadow" Value="False" />
+            <Setter Property="HeightRequest" Value="50" />
+            <Setter Property="IsClippedToBounds" Value="True" />
+            <Setter Property="VerticalOptions" Value="CenterAndExpand" />
+        </Style>
+
+        <Style x:Key="frmEntryGray" TargetType="Frame">
+            <Setter Property="Padding" Value="15,0" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="BackgroundColor" Value="{StaticResource LightGray}" />
+            <Setter Property="BorderColor" Value="{StaticResource LightGray}" />
+            <Setter Property="CornerRadius" Value="5" />
+            <Setter Property="HasShadow" Value="False" />
+            <Setter Property="HeightRequest" Value="50" />
+            <Setter Property="IsClippedToBounds" Value="True" />
+            <Setter Property="VerticalOptions" Value="CenterAndExpand" />
+        </Style>
+        <!--#endregion-->
+
+        <!--#region [ Extentions ]-->
+        <Style x:Key="entrPrimary" TargetType="ext:ExtEntry">
+            <Setter Property="TextColor" Value="{StaticResource Black}" />
+            <Setter Property="PlaceholderColor" Value="{StaticResource DarkGray}" />
+            <Setter Property="VerticalOptions" Value="FillAndExpand" />
+            <Setter Property="VerticalTextAlignment" Value="Center" />
+            <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="FontFamily" Value="Poppins" />
+        </Style>
+
+        <Style x:Key="entrGray" TargetType="ext:ExtEntry">
+            <Setter Property="TextColor" Value="{StaticResource Black}" />
+            <Setter Property="PlaceholderColor" Value="{StaticResource Gray}" />
+            <Setter Property="VerticalOptions" Value="FillAndExpand" />
+            <Setter Property="VerticalTextAlignment" Value="Center" />
+            <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="FontFamily" Value="Poppins" />
+        </Style>
+        <!--#endregion-->
 
     </Application.Resources>
 </Application>

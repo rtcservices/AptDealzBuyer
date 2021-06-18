@@ -41,6 +41,7 @@ namespace AptDealzBuyer.Model
             get { return _ArrowImage; }
             set { _ArrowImage = value; PropertyChangedEventArgs("ArrowImage"); }
         }
+
         private bool _ShowCategory { get; set; } = false;
         public bool ShowCategory
         {

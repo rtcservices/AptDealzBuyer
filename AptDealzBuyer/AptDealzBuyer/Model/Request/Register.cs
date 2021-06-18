@@ -7,14 +7,20 @@ namespace AptDealzBuyer.Model.Request
         [JsonProperty("fullName")]
         public string FullName { get; set; }
 
-        [JsonProperty("userName")]
-        public string UserName { get; set; }
+        [JsonProperty("email")]
+        public string Email { get; set; }
+
+        [JsonProperty("phoneNumber")]
+        public string PhoneNumber { get; set; }
+
+        [JsonProperty("firebaseVerificationId")]
+        public string FirebaseVerificationId { get; set; }
 
         [JsonProperty("latitude")]
-        public double Latitude { get; set; }
+        public int Latitude { get; set; }
 
         [JsonProperty("longitude")]
-        public double Longitude { get; set; }
+        public int Longitude { get; set; }
     }
 
 }

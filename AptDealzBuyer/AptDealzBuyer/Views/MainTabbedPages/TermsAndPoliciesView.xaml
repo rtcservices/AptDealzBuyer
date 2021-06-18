@@ -8,7 +8,7 @@
     NavigationPage.HasNavigationBar="False">
     <ContentView.Content>
 
-        <Grid>
+       <Grid RowSpacing="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="50" />
                 <RowDefinition Height="Auto" />
@@ -22,11 +22,12 @@
                     <ColumnDefinition Width="80" />
                 </Grid.ColumnDefinitions>
                 <Image
+                    x:Name="ImgMenu"
                     Grid.Column="0"
                     Margin="20,0,0,0"
                     HeightRequest="30"
                     HorizontalOptions="StartAndExpand"
-                     Source="IconMenu.png" x:Name="ImgMenu"
+                    Source="IconMenu.png"
                     VerticalOptions="CenterAndExpand">
                     <Image.GestureRecognizers>
                         <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgMenu_Tapped" />
@@ -91,11 +92,12 @@
                     ColumnDefinitions="Auto,*,Auto"
                     HorizontalOptions="FillAndExpand">
                     <Image
+                        x:Name="ImgBack"
                         Margin="0"
                         Aspect="AspectFit"
                         HeightRequest="25"
                         HorizontalOptions="StartAndExpand"
-                        Source="iconBackArrow.png" x:Name="ImgBack"
+                        Source="iconBackArrow.png"
                         VerticalOptions="CenterAndExpand"
                         WidthRequest="25">
                         <Image.GestureRecognizers>
@@ -124,7 +126,7 @@
                                 Grid.Row="0"
                                 Margin="5,0,0,0"
                                 FontFamily="Poppins SemiBold"
-                                FontSize="16"
+                                FontSize="15"
                                 HorizontalOptions="StartAndExpand"
                                 Text="Terms and Conditions"
                                 TextColor="{StaticResource Black}"
@@ -147,7 +149,7 @@
                                 Grid.Row="0"
                                 Margin="5,0,0,0"
                                 FontFamily="Poppins SemiBold"
-                                FontSize="16"
+                                FontSize="15"
                                 HorizontalOptions="StartAndExpand"
                                 Text="Privacy Policy"
                                 TextColor="{StaticResource Black}"

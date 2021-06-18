@@ -1,6 +1,11 @@
-﻿using AptDealzBuyer.Model;
+﻿using Acr.UserDialogs;
+using AptDealzBuyer.API;
+using AptDealzBuyer.Model;
+using AptDealzBuyer.Model.Reponse;
+using AptDealzBuyer.Model.Request;
 using AptDealzBuyer.Utility;
 using AptDealzBuyer.Views.PopupPages;
+using Newtonsoft.Json.Linq;
 using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
@@ -15,16 +20,21 @@ namespace AptDealzBuyer.Views.DashboardPages
     public partial class ViewRequirememntPage : ContentPage
     {
         #region Objects
-        // create objects here
-        public List<ReceivedQuote> ReceivedQuotes = new List<ReceivedQuote>();
-        string ReqType = string.Empty;
+        private List<ReceivedQuote> ReceivedQuotes = new List<ReceivedQuote>();
+        private string ReqType = string.Empty;
+        private string ReqId;
+        Requirement mRequirement;
+        string filterBy = Utility.RequirementSortBy.quotationId.ToString();
+        private List<string> subcaregories;
         #endregion
 
         #region Constructor
-        public ViewRequirememntPage(string ReqType)
+        public ViewRequirememntPage(string ReqType, string ReqId)
         {
             InitializeComponent();
             this.ReqType = ReqType;
+            this.ReqId = ReqId;
+            mRequirement = new Requirement();
         }
         #endregion
 
@@ -43,9 +53,10 @@ namespace AptDealzBuyer.Views.DashboardPages
                 grdActiveReq.IsVisible = false;
                 grdPrevReq.IsVisible = true;
             }
+            GetRequirementsById();
         }
 
-        public void BindReceivedQuote()
+        void BindReceivedQuote()
         {
             lstQoutes.ItemsSource = null;
             ReceivedQuotes = new List<ReceivedQuote>()
@@ -61,6 +72,161 @@ namespace AptDealzBuyer.Views.DashboardPages
             };
             lstQoutes.ItemsSource = ReceivedQuotes.ToList();
             lstQoutes.HeightRequest = 4 * 100;
+        }
+
+        public async void GetRequirementsById()
+        {
+            try
+            {
+                RequirementAPI requirementAPI = new RequirementAPI();
+                UserDialogs.Instance.ShowLoading(Constraints.Loading);
+
+                var mResponse = await requirementAPI.GetRequirementById(ReqId);
+                if (mResponse != null && mResponse.Succeeded)
+                {
+                    var jObject = (JObject)mResponse.Data;
+                    if (jObject != null)
+                    {
+                        mRequirement = jObject.ToObject<Requirement>();
+                        if (mRequirement != null)
+                        {
+                            BindProperties(mRequirement);
+                        }
+                    }
+                }
+                else
+                {
+                    if (mResponse != null)
+                        Common.DisplayErrorMessage(mResponse.Message);
+                    else
+                        Common.DisplayErrorMessage(Constraints.Something_Wrong);
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("ViewRequirememntPage/GetRequirementsById: " + ex.Message);
+            }
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
+            }
+        }
+
+        void BindProperties(Requirement mRequirement)
+        {
+            if (!Common.EmptyFiels(mRequirement.ProductImage))
+            {
+                imgProductImage.Source = App.Current.Resources["BaseURL"].ToString() + mRequirement.ProductImage;
+            }
+            else
+            {
+                imgProductImage.Source = "iconProductBanner.png";
+            }
+
+            if (!Common.EmptyFiels(mRequirement.Title))
+            {
+                lblTitle.Text = mRequirement.Title;
+            }
+            if (!Common.EmptyFiels(mRequirement.RequirementNo))
+            {
+                lblRequirementId.Text = mRequirement.RequirementNo;
+            }
+            if (!Common.EmptyFiels(mRequirement.Category))
+            {
+                lblCategory.Text = mRequirement.Category;
+            }
+            if (mRequirement.SubCategories != null)
+            {
+                subcaregories = mRequirement.SubCategories;
+                lblSubCategory.Text = string.Join(",", subcaregories);
+            }
+            if (!Common.EmptyFiels(mRequirement.Quantity.ToString()))
+            {
+                lblQuantity.Text = mRequirement.Quantity.ToString();
+            }
+            if (!Common.EmptyFiels(mRequirement.TotalPriceEstimation.ToString()))
+            {
+                lblEstimatePrice.Text = "RS " + mRequirement.TotalPriceEstimation.ToString();
+            }
+            if (!Common.EmptyFiels(mRequirement.ExpectedDeliveryDate.ToString()))
+            {
+                lblDeliveryDate.Text = mRequirement.ExpectedDeliveryDate.Date.ToString("dd.MM.yyyy");
+            }
+            if (!Common.EmptyFiels(mRequirement.DeliveryLocationPinCode))
+            {
+                lblLocPinCode.Text = mRequirement.DeliveryLocationPinCode;
+            }
+            if (!Common.EmptyFiels(mRequirement.PreferredSourceOfSupply))
+            {
+                lblPreferredSource.Text = mRequirement.PreferredSourceOfSupply;
+            }
+
+            if (!Common.EmptyFiels(mRequirement.Quotes.ToString()))
+            {
+                lblQuoteNo.Text = mRequirement.Quotes.ToString();
+            }
+            else
+            {
+                lblQuoteNo.Text = "0 Quote";
+            }
+
+            if (mRequirement.NeedInsuranceCoverage)
+            {
+                lblNeedInsurance.Text = "✓";
+            }
+            else
+            {
+                lblNeedInsurance.Text = "✕";
+            }
+
+            if (mRequirement.PreferInIndiaProducts)
+            {
+                lblPreferInIndiaProducts.Text = "✓";
+            }
+            else
+            {
+                lblPreferInIndiaProducts.Text = "✕";
+            }
+
+            //Address
+            lblBillingAddress.Text = mRequirement.BillingAddressName + " " + mRequirement.BillingAddressBuilding + "\n" + mRequirement.BillingAddressStreet + "\n" + mRequirement.BillingAddressCity + "-" + mRequirement.BillingAddressPinCode;
+            lblShippingAddress.Text = mRequirement.ShippingAddressName + " " + mRequirement.ShippingAddressBuilding + "\n" + mRequirement.ShippingAddressStreet + "\n" + mRequirement.ShippingAddressCity + "-" + mRequirement.ShippingAddressPinCode + "\n" + mRequirement.ShippingAddressLandmark;
+        }
+
+        async void CancelRequirement()
+        {
+            try
+            {
+                var isCancel = await App.Current.MainPage.DisplayAlert(Constraints.Alert, Constraints.AreYouSureWantCancel, Constraints.Yes, Constraints.No);
+                if (isCancel)
+                {
+                    RequirementAPI requirementAPI = new RequirementAPI();
+                    UserDialogs.Instance.ShowLoading(Constraints.Loading);
+
+                    //var mResponse = await requirementAPI.UpdateStatusRequirement(mRequirement.RequirementId, (int)RequirementStatus.Cancelled);
+                    var mResponse = await requirementAPI.CancelRequirement(mRequirement.RequirementId);
+                    if (mResponse != null && mResponse.Succeeded)
+                    {
+                        Common.DisplaySuccessMessage(mResponse.Message);
+                        await Navigation.PushAsync(new MainTabbedPages.MainTabbedPage("ActiveRequirements"));
+                    }
+                    else
+                    {
+                        if (mResponse != null)
+                            Common.DisplayErrorMessage(mResponse.Message);
+                        else
+                            Common.DisplayErrorMessage(Constraints.Something_Wrong);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("ViewRequirememntPage/CancelRequirement: " + ex.Message);
+            }
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
+            }
         }
         #endregion
 
@@ -83,31 +249,26 @@ namespace AptDealzBuyer.Views.DashboardPages
         private void ImgMenu_Tapped(object sender, EventArgs e)
         {
             Common.BindAnimation(image: ImgMenu);
-            try
-            {
-                if (Common.MasterData != null)
-                {
-                    Common.MasterData.IsGestureEnabled = true;
-                    Common.MasterData.IsPresented = true;
-                }
-            }
-            catch (Exception ex)
-            {
-                //Common.DisplayErrorMessage("HomeView/ImgMenu_Tapped: " + ex.Message);
-            }
+            //Common.OpenMenu();
         }
 
         private void FrmCancelRequirement_Tapped(object sender, EventArgs e)
         {
-
+            Common.BindAnimation(frame: FrmCancelRequirement);
+            CancelRequirement();
         }
 
         private void FrmSortBy_Tapped(object sender, EventArgs e)
         {
-            var sortby = new SortByPopup("ID", "Amount", "Validity");
+            var sortby = new SortByPopup(filterBy, "ViewReq");
             sortby.isRefresh += (s1, e1) =>
             {
-                //get result from popup
+                string result = s1.ToString();
+                if (!string.IsNullOrEmpty(result))
+                {
+                    filterBy = result;
+                    //Bind Quotes List
+                }
             };
             PopupNavigation.Instance.PushAsync(sortby);
         }

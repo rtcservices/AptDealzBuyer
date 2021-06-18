@@ -47,7 +47,7 @@ namespace AptDealzBuyer.Views.OtherPages
         private void ImgMenu_Tapped(object sender, EventArgs e)
         {
             Common.BindAnimation(image: ImgMenu);
-            Common.OpenMenu();
+            //Common.OpenMenu();
         }
 
         private void ImgNotification_Tapped(object sender, EventArgs e)

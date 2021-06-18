@@ -1,8 +1,13 @@
 ﻿using AptDealzBuyer.Extention;
 using AptDealzBuyer.iOS.CustomRenderers;
 using CoreGraphics;
+using dotMorten.Xamarin.Forms;
+using dotMorten.Xamarin.Forms.Platform.iOS;
 using Foundation;
 using System;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Runtime.Remoting.Contexts;
 using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
@@ -14,6 +19,8 @@ using Xamarin.Forms.Platform.iOS;
 [assembly: ExportRenderer(typeof(Picker), typeof(PickerCustomRenderer))]
 [assembly: ExportRenderer(typeof(Editor), typeof(EditorCustomRenderer))]
 [assembly: ExportRenderer(typeof(ExtKeyboard), typeof(KeyboardViewRenderer))]
+[assembly: ExportRenderer(typeof(ExtDatePicker), typeof(CustomeDatePickerRenderer))]
+[assembly: ExportRenderer(typeof(CustomAutoSuggestBox), typeof(AutoSuggestBoxCustomRenderer))]
 
 namespace AptDealzBuyer.iOS.CustomRenderers
 {
@@ -66,6 +73,30 @@ namespace AptDealzBuyer.iOS.CustomRenderers
             }
         }
     }
+
+    public class AutoSuggestBoxCustomRenderer : AutoSuggestBoxRenderer
+    {
+        protected override void OnElementChanged(ElementChangedEventArgs<AutoSuggestBox> e)
+        {
+            base.OnElementChanged(e);
+            try
+            {
+                if (Control != null)
+                {
+                    Control.Layer.BackgroundColor = Color.Transparent.ToCGColor();
+                    Control.Layer.BorderColor = Color.Transparent.ToCGColor();
+                    Control.Layer.CornerRadius = (nfloat)0.0;
+                    Control.IsSuggestionListOpen = false;
+                    Control.ShowBottomBorder = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                var _ = ex.Message;
+            }
+        }
+    }
+
 
     public class EntryCenterCustomRenderer : EntryRenderer
     {
@@ -199,6 +230,25 @@ namespace AptDealzBuyer.iOS.CustomRenderers
             {
                 _keyboardHideObserver.Dispose();
                 _keyboardHideObserver = null;
+            }
+        }
+    }
+
+    public class CustomeDatePickerRenderer : DatePickerRenderer
+    {
+        public static void Init() { }
+        protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            try
+            {
+                base.OnElementPropertyChanged(sender, e);
+
+                Control.Layer.BorderWidth = 0;
+                Control.BorderStyle = UITextBorderStyle.None;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error: {ex.Message}");
             }
         }
     }

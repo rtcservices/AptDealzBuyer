@@ -4,9 +4,7 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:ext="clr-namespace:AptDealzBuyer.Extention"
-    xmlns:popup="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
-    BackgroundColor="{StaticResource White}"
-    NavigationPage.HasNavigationBar="False">
+    xmlns:popup="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup">
 
     <ext:CustomShadowFrame
         Margin="30,0"
@@ -49,10 +47,10 @@
                 Grid.Row="2"
                 Margin="30,0"
                 FontFamily="Poppins"
-                FontSize="16"
+                FontSize="15"
                 HorizontalOptions="CenterAndExpand"
                 HorizontalTextAlignment="Center"
-                Text="New requirement #REQ1234 created successfully!"
+                Text="New requirement created successfully!"
                 TextColor="{StaticResource Green}"
                 VerticalOptions="CenterAndExpand" />
 
@@ -61,11 +59,12 @@
                 Margin="0,0,0,40"
                 Padding="0"
                 BackgroundColor="{StaticResource Green}"
-                CornerRadius="25"
+                CornerRadius="23"
+                HeightRequest="46"
                 HorizontalOptions="CenterAndExpand"
-                VerticalOptions="CenterAndExpand">
+                VerticalOptions="CenterAndExpand"
+                WidthRequest="120">
                 <Label
-                    Margin="35,7"
                     FontFamily="Poppins Medium"
                     FontSize="18"
                     HorizontalOptions="CenterAndExpand"

@@ -16,7 +16,6 @@ namespace AptDealzBuyer.Views.Login
     {
         #region Objects
         private bool isChecked = false;
-        private bool isEmail = false;
         #endregion
 
         #region Constructor
@@ -24,7 +23,7 @@ namespace AptDealzBuyer.Views.Login
         {
             InitializeComponent();
             txtFullName.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
-            txtUserName.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeNone);
+            //txtEmailAddress.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeNone);
         }
         #endregion
 
@@ -48,30 +47,19 @@ namespace AptDealzBuyer.Views.Login
                 {
                     Common.DisplayErrorMessage(Constraints.Required_FullName);
                 }
-                else if (Common.EmptyFiels(txtUserName.Text))
+                else if (Common.EmptyFiels(txtEmailAddress.Text))
                 {
-                    Common.DisplayErrorMessage(Constraints.Required_Email_Phone);
+                    Common.DisplayErrorMessage(Constraints.Required_Email);
                 }
-                else if (txtUserName.Text.Contains("@") || txtUserName.Text.Contains("."))
+                else if (!txtEmailAddress.Text.IsValidEmail())
                 {
-                    if (!txtUserName.Text.IsValidEmail())
-                    {
-                        Common.DisplayErrorMessage(Constraints.InValid_Email);
-                    }
-                    else
-                    {
-                        if (!isChecked)
-                        {
-                            Common.DisplayErrorMessage(Constraints.Agree_T_C);
-                        }
-                        else
-                        {
-                            isEmail = true;
-                            result = true;
-                        }
-                    }
+                    Common.DisplayErrorMessage(Constraints.InValid_Email);
                 }
-                else if (!txtUserName.Text.IsValidPhone())
+                else if (Common.EmptyFiels(txtPhoneNumber.Text))
+                {
+                    Common.DisplayErrorMessage(Constraints.Required_PhoneNumber);
+                }
+                else if (!txtPhoneNumber.Text.IsValidPhone())
                 {
                     Common.DisplayErrorMessage(Constraints.InValid_PhoneNumber);
                 }
@@ -97,7 +85,9 @@ namespace AptDealzBuyer.Views.Login
             try
             {
                 mRegister.FullName = txtFullName.Text;
-                mRegister.UserName = txtUserName.Text;
+                mRegister.Email = txtEmailAddress.Text;
+                mRegister.PhoneNumber = txtPhoneNumber.Text;
+                mRegister.FirebaseVerificationId = Settings.firebaseVerificationId;
                 mRegister.Latitude = App.latitude;
                 mRegister.Longitude = App.longitude;
             }
@@ -117,73 +107,54 @@ namespace AptDealzBuyer.Views.Login
                 {
                     RegisterAPI registerAPI = new RegisterAPI();
                     UniquePhoneNumber mUniquePhoneNumber = new UniquePhoneNumber();
-                    mUniquePhoneNumber.PhoneNumber = txtUserName.Text;
+                    mUniquePhoneNumber.PhoneNumber = txtPhoneNumber.Text;
 
                     UniqueEmail mUniqueEmail = new UniqueEmail();
-                    mUniqueEmail.Email = txtUserName.Text;
+                    mUniqueEmail.Email = txtEmailAddress.Text;
 
                     var mRegister = FillRegister();
                     UserDialogs.Instance.ShowLoading(Constraints.Loading);
                     Response mResponse = new Response();
-                    if (isEmail)
-                    {
-                        mResponse = await registerAPI.IsUniqueEmail(mUniqueEmail);
-                    }
-                    else
-                    {
-                        mResponse = await registerAPI.IsUniquePhoneNumber(mUniquePhoneNumber);
-                    }
+                    mResponse = await registerAPI.IsUniqueEmail(mUniqueEmail);
 
                     if (mResponse != null && mResponse.Succeeded)
                     {
-                        var result = (bool)mResponse.Data;
-                        if (result)
+                        var UniqueEmail = (bool)mResponse.Data;
+                        if (UniqueEmail)
                         {
-                            mResponse = await registerAPI.Register(mRegister);
-                            if (mResponse != null && mResponse.Succeeded)
+                            mResponse = await registerAPI.IsUniquePhoneNumber(mUniquePhoneNumber);
+                            var UniquePhone = (bool)mResponse.Data;
+                            if (UniquePhone)
                             {
-                                var registerId = mResponse.Data;
-                                Settings.UserId = registerId.ToString();
-                                if (!isEmail)
+                                var isSent = await SendOTP(mRegister.PhoneNumber);
+                                if (isSent)
                                 {
-                                    var isSent = await SendOTP(mRegister.UserName);
-                                    if (isSent)
-                                    {
-                                        await Navigation.PushAsync(new Views.Login.EnterOtpPage(txtUserName.Text, false));
-                                    }
+                                    var _verificationId = Xamarin.Forms.DependencyService.Get<IFirebaseAuthenticator>()._verificationId;
+                                    await Navigation.PushAsync(new Views.Login.EnterOtpPage(mRegister));
                                 }
-                                else
-                                {
-                                    mResponse = await registerAPI.SendOtp(registerId.ToString());
-                                    if (mResponse != null && mResponse.Succeeded)
-                                    {
-                                        Common.DisplaySuccessMessage(mResponse.Message);
-                                        await Navigation.PushAsync(new Views.Login.EnterOtpPage(txtUserName.Text));
-                                    }
-                                    else
-                                    {
-                                        Common.DisplayErrorMessage(mResponse.Message);
-                                        Navigation.PopAsync();
-                                    }
-                                }
-                                txtFullName.Text = string.Empty;
-                                txtUserName.Text = string.Empty;
-                                isChecked = false;
-                                imgCheck.Source = Constraints.CheckBox_UnChecked;
                             }
                             else
                             {
-                                Common.DisplayErrorMessage(mResponse.Message);
+                                if (mResponse != null)
+                                    Common.DisplayErrorMessage(mResponse.Message);
+                                else
+                                    Common.DisplayErrorMessage(Constraints.Something_Wrong);
                             }
                         }
                         else
                         {
-                            Common.DisplayErrorMessage(mResponse.Message);
+                            if (mResponse != null)
+                                Common.DisplayErrorMessage(mResponse.Message);
+                            else
+                                Common.DisplayErrorMessage(Constraints.Something_Wrong);
                         }
                     }
                     else
                     {
-                        Common.DisplayErrorMessage(mResponse.Message);
+                        if (mResponse != null)
+                            Common.DisplayErrorMessage(mResponse.Message);
+                        else
+                            Common.DisplayErrorMessage(Constraints.Something_Wrong);
                     }
                 }
             }
@@ -199,19 +170,27 @@ namespace AptDealzBuyer.Views.Login
 
         async Task<bool> SendOTP(string phoneNumber)
         {
-            var result = await Xamarin.Forms.DependencyService.Get<IFirebaseAuthenticator>().SendOtpCodeAsync(phoneNumber);
-            if (!result)
+            try
             {
-                var isTryAgain = await UserDialogs.Instance.ConfirmAsync("Could not send Verification Code to the given number", "Verification", "Try Again", "Goto Login");
-                if (isTryAgain)
-                    return await SendOTP(phoneNumber);
+                var result = await Xamarin.Forms.DependencyService.Get<IFirebaseAuthenticator>().SendOtpCodeAsync(phoneNumber);
+                if (!result)
+                {
+                    var isTryAgain = await UserDialogs.Instance.ConfirmAsync("Could not send Verification Code to the given number", "Verification", "Try Again", "Goto Login");
+                    if (isTryAgain)
+                        return await SendOTP(phoneNumber);
+                    else
+                        return false;
+                }
                 else
-                    return false;
+                {
+                    await DisplayAlert("OTP", "OTP send to your Phone number " + phoneNumber, "Ok");
+                    return true;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                await DisplayAlert("OTP", "OTP send to your Phone number " + phoneNumber, "Ok");
-                return true;
+                Common.DisplayErrorMessage("SignupPage/SendOTP: " + ex.Message);
+                return false;
             }
         }
         #endregion

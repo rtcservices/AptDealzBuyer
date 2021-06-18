@@ -1,6 +1,5 @@
 ﻿using AptDealzBuyer.Model;
 using AptDealzBuyer.Utility;
-using AptDealzBuyer.Views.MasterData;
 using AptDealzBuyer.Views.PopupPages;
 using Rg.Plugins.Popup.Services;
 using System;
@@ -54,19 +53,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         // create events here
         private void ImgMenu_Tapped(object sender, EventArgs e)
         {
-            Common.BindAnimation(image: ImgMenu);
-            try
-            {
-                if (Common.MasterData != null)
-                {
-                    Common.MasterData.IsGestureEnabled = true;
-                    Common.MasterData.IsPresented = true;
-                }
-            }
-            catch (Exception ex)
-            {
-                //Common.DisplayErrorMessage("HomeView/ImgMenu_Tapped: " + ex.Message);
-            }
+
         }
 
         private void ImgNotification_Tapped(object sender, EventArgs e)
@@ -81,8 +68,8 @@ namespace AptDealzBuyer.Views.MainTabbedPages
 
         private void ImgBack_Tapped(object sender, EventArgs e)
         {
-            Common.BindAnimation(image: ImgBack);
-            App.Current.MainPage = new MasterDataPage();
+            isRefresh?.Invoke(true, EventArgs.Empty);
+            Navigation.PopAsync();
         }
 
         private void ImgSearch_Tapped(object sender, EventArgs e)
@@ -137,7 +124,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
 
         private void GrdViewPrevRequirement_Tapped(object sender, EventArgs e)
         {
-            Navigation.PushAsync(new DashboardPages.ViewRequirememntPage("previous"));
+            //Navigation.PushAsync(new DashboardPages.ViewRequirememntPage("previous"));
         }
         #endregion
     }

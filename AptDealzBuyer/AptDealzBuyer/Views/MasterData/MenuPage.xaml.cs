@@ -1,7 +1,4 @@
-﻿using AptDealzBuyer.Utility;
-using AptDealzBuyer.Views.SplashScreen;
-using System;
-using Xamarin.Forms;
+﻿using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 namespace AptDealzBuyer.Views.MasterData
@@ -14,15 +11,15 @@ namespace AptDealzBuyer.Views.MasterData
             InitializeComponent();
         }
 
-        private async void Logout_Tapped(object sender, EventArgs e)
-        {
-            var isClose = await DisplayAlert(Constraints.Logout, Constraints.AreYouSureWantLogout, Constraints.Yes, Constraints.No);
-            if (isClose)
-            {
-                Settings.EmailAddress = string.Empty;
-                Settings.UserToken = string.Empty;
-                App.Current.MainPage = new NavigationPage(new WelcomePage(true));
-            }
-        }
+        //private async void Logout_Tapped(object sender, EventArgs e)
+        //{
+        //    var isClose = await DisplayAlert(Constraints.Logout, Constraints.AreYouSureWantLogout, Constraints.Yes, Constraints.No);
+        //    if (isClose)
+        //    {
+        //        Settings.EmailAddress = string.Empty;
+        //        Settings.UserToken = string.Empty;
+        //        App.Current.MainPage = new NavigationPage(new SplashScreen.WelcomePage(true));
+        //    }
+        //}
     }
 }

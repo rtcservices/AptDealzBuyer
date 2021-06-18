@@ -7,8 +7,10 @@ using Android.Runtime;
 using AndroidX.AppCompat.App;
 using AptDealzBuyer.Constants;
 using AptDealzBuyer.Droid.DependencService;
+using AptDealzBuyer.Interfaces;
 using AptDealzBuyer.Utility;
 using DLToolkit.Forms.Controls;
+using FFImageLoading.Forms.Platform;
 using Firebase;
 using Plugin.FirebasePushNotification;
 using Plugin.Permissions;
@@ -34,14 +36,15 @@ namespace AptDealzBuyer.Droid
 
             FirebasePushNotificationManager.ProcessIntent(this, Intent);
             CreateNotificationFromIntent(Intent);
+            Xamarin.Forms.DependencyService.Register<IFirebaseAuthenticator, FirebaseAuthenticator>();
 
+            CachedImageRenderer.Init(true);
             FlowListView.Init();
             UserDialogs.Init(this);
             ZXing.Net.Mobile.Forms.Android.Platform.Init();
             Rg.Plugins.Popup.Popup.Init(this);
 
             LoadApplication(new App());
-            //FirebasePushNotificationManager.ProcessIntent(this, Intent);
         }
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)

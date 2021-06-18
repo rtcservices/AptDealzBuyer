@@ -9,7 +9,7 @@
     NavigationPage.HasNavigationBar="False">
     <ContentPage.Content>
         <StackLayout Padding="20" VerticalOptions="StartAndExpand">
-            <Label
+            <!--<Label
                 x:Name="lblLogout"
                 HorizontalOptions="StartAndExpand"
                 Text="Logout"
@@ -17,7 +17,7 @@
                 VerticalOptions="CenterAndExpand" />
             <StackLayout.GestureRecognizers>
                 <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="Logout_Tapped" />
-            </StackLayout.GestureRecognizers>
+            </StackLayout.GestureRecognizers>-->
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
