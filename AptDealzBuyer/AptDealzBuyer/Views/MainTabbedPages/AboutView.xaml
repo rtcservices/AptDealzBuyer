@@ -3,15 +3,13 @@
     x:Class="AptDealzBuyer.Views.MainTabbedPages.AboutView"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:ext="clr-namespace:AptDealzBuyer.Extention"
     BackgroundColor="{StaticResource White}"
     NavigationPage.HasNavigationBar="False">
     <ContentView.Content>
 
-       <Grid RowSpacing="0">
+        <Grid RowSpacing="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="50" />
-                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
@@ -34,15 +32,7 @@
                     </Image.GestureRecognizers>
                 </Image>
 
-                <Image
-                    Grid.Column="1"
-                    Margin="0"
-                    Aspect="AspectFill"
-                    HeightRequest="45"
-                    HorizontalOptions="CenterAndExpand"
-                    Source="iconHeaderLogo.png"
-                    VerticalOptions="CenterAndExpand"
-                    WidthRequest="45" />
+                <Image Grid.Column="1" Style="{StaticResource imgLogo}" />
 
                 <StackLayout
                     Grid.Column="2"
@@ -71,99 +61,71 @@
                         </Image.GestureRecognizers>
                     </Image>
                 </StackLayout>
+                <BoxView Grid.ColumnSpan="3" Style="{StaticResource boxHorizontal}" />
             </Grid>
-            <!--#endregion-->
-            <BoxView
-                Grid.Row="1"
-                BackgroundColor="{StaticResource LightGray}"
-                HeightRequest="1"
-                HorizontalOptions="FillAndExpand"
-                VerticalOptions="EndAndExpand" />
 
-            <Grid Grid.Row="2" Margin="0">
+
+            <Grid Grid.Row="1" Margin="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-
                 <Grid
                     Grid.Row="0"
-                    Margin="20,0"
-                    ColumnDefinitions="Auto,*,Auto"
-                    HorizontalOptions="FillAndExpand">
-                    <Image
+                    Margin="5,5,5,0"
+                    ColumnDefinitions="Auto,*"
+                    ColumnSpacing="0">
+                    <ImageButton
                         x:Name="ImgBack"
-                        Margin="0"
-                        Aspect="AspectFit"
-                        HeightRequest="25"
-                        HorizontalOptions="StartAndExpand"
+                        Grid.Column="0"
+                        Clicked="ImgBack_Tapped"
                         Source="iconBackArrow.png"
-                        VerticalOptions="CenterAndExpand"
-                        WidthRequest="25">
-                        <Image.GestureRecognizers>
-                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgBack_Tapped" />
-                        </Image.GestureRecognizers>
-                    </Image>
-
+                        Style="{StaticResource ImgBtnPrimary}" />
                     <Label
                         Grid.Column="1"
-                        Margin="5,0,0,0"
-                        FontFamily="Poppins SemiBold"
-                        FontSize="20"
-                        HorizontalOptions="StartAndExpand"
-                        Text="About AptDealz"
-                        TextColor="{StaticResource Black}"
-                        VerticalOptions="CenterAndExpand" />
-
+                        Style="{StaticResource lblHeader}"
+                        Text="About AptDealz" />
                 </Grid>
 
-                <ScrollView
-                    Grid.Row="1"
-                    Margin="0,15,0,0"
-                    HorizontalScrollBarVisibility="Never"
-                    VerticalScrollBarVisibility="Never">
+                <ScrollView Grid.Row="1" Style="{StaticResource scrPrimary}">
 
-                    <Grid Margin="0" RowDefinitions="*,Auto">
-
+                    <Grid
+                        Padding="20,0,20,20"
+                        RowDefinitions="Auto,Auto"
+                        RowSpacing="20">
                         <Label
                             Grid.Row="0"
-                            Margin="20"
                             FontFamily="Poppins"
                             FontSize="14"
                             HorizontalOptions="FillAndExpand"
                             LineBreakMode="WordWrap"
                             Text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
                             TextColor="{StaticResource Black}"
-                            VerticalOptions="FillAndExpand" />
+                            VerticalOptions="StartAndExpand" />
 
-                        <ext:CustomShadowFrame
+                        <Frame
                             Grid.Row="1"
-                            Margin="20"
-                            Padding="0"
+                            Margin="0"
+                            Padding="15"
                             BackgroundColor="Transparent"
                             BorderColor="{StaticResource LightGray}"
                             CornerRadius="5"
                             HasShadow="False"
                             HorizontalOptions="FillAndExpand"
-                            VerticalOptions="CenterAndExpand">
-                            <Grid
-                                Margin="5,20"
-                                RowDefinitions="Auto,Auto,Auto"
-                                RowSpacing="20">
+                            VerticalOptions="StartAndExpand">
+                            <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="10">
 
                                 <Label
                                     Grid.Row="0"
-                                    Margin="5,0,0,0"
-                                    FontFamily="Poppins SemiBold"
+                                    FontFamily="Poppins Medium"
                                     FontSize="20"
                                     HorizontalOptions="StartAndExpand"
-                                    Text="About AptDealz"
+                                    Text="Contact Info"
                                     TextColor="{StaticResource Black}"
                                     VerticalOptions="CenterAndExpand" />
 
                                 <Label
                                     Grid.Row="1"
-                                    Margin="5,0,0,0"
                                     FontFamily="Poppins"
                                     FontSize="15"
                                     HorizontalOptions="StartAndExpand"
@@ -173,7 +135,6 @@
 
                                 <Label
                                     Grid.Row="2"
-                                    Margin="5,0,0,0"
                                     FontFamily="Poppins"
                                     FontSize="15"
                                     HorizontalOptions="StartAndExpand"
@@ -182,10 +143,8 @@
                                     VerticalOptions="CenterAndExpand" />
 
                             </Grid>
-                        </ext:CustomShadowFrame>
-
+                        </Frame>
                     </Grid>
-
                 </ScrollView>
 
             </Grid>

@@ -13,9 +13,10 @@ namespace AptDealzBuyer.Views.PopupPages
         #endregion
 
         #region Constructor
-        public SuccessPopup()
+        public SuccessPopup(string ReqMessage)
         {
             InitializeComponent();
+            lblMessage.Text = ReqMessage;
         }
         #endregion
 

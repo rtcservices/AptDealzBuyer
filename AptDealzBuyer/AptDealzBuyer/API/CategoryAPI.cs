@@ -39,7 +39,7 @@ namespace AptDealzBuyer.API
                         }
                         else
                         {
-                            mCategory = JsonConvert.DeserializeObject<List<Category>>(responseJson);
+                            mCategory = null;
                         }
                     }
                 }
@@ -84,7 +84,7 @@ namespace AptDealzBuyer.API
                         }
                         else
                         {
-                            mSubCategory = JsonConvert.DeserializeObject<List<SubCategory>>(responseJson);
+                            mSubCategory = null;
                         }
                     }
                 }

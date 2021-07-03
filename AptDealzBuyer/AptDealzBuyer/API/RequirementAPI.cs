@@ -1,4 +1,5 @@
 ﻿using AptDealzBuyer.Model.Reponse;
+using AptDealzBuyer.Repository;
 using AptDealzBuyer.Utility;
 using AptDealzBuyer.Views.SplashScreen;
 using Newtonsoft.Json;
@@ -14,6 +15,7 @@ namespace AptDealzBuyer.API
     public class RequirementAPI
     {
         #region [ GET ]
+        int getRequirement = 0;
         public async Task<Response> GetRequirement(int PageNumber, int PageSize)
         {
             Response mResponse = new Response();
@@ -43,8 +45,17 @@ namespace AptDealzBuyer.API
                         {
                             if (responseJson.Contains("TokenExpired"))
                             {
-                                Common.DisplayErrorMessage(Constraints.Session_Expired);
-                                App.Current.MainPage = new NavigationPage(new WelcomePage(true));
+                                var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
+                                if (!isRefresh && getRequirement == 3)
+                                {
+                                    Common.DisplayErrorMessage(Constraints.Session_Expired);
+                                    App.Current.MainPage = new NavigationPage(new WelcomePage(true));
+                                }
+                                else
+                                {
+                                    await GetRequirement(PageNumber, PageSize);
+                                }
+                                getRequirement++;
                             }
                             else
                             {
@@ -68,6 +79,7 @@ namespace AptDealzBuyer.API
             return mResponse;
         }
 
+        int getRequirementById = 0;
         public async Task<Response> GetRequirementById(string RequirmentId)
         {
             Response mResponse = new Response();
@@ -97,8 +109,17 @@ namespace AptDealzBuyer.API
                         {
                             if (responseJson.Contains("TokenExpired"))
                             {
-                                Common.DisplayErrorMessage(Constraints.Session_Expired);
-                                App.Current.MainPage = new NavigationPage(new WelcomePage(true));
+                                var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
+                                if (!isRefresh && getRequirementById == 3)
+                                {
+                                    Common.DisplayErrorMessage(Constraints.Session_Expired);
+                                    App.Current.MainPage = new NavigationPage(new WelcomePage(true));
+                                }
+                                else
+                                {
+                                    await GetRequirementById(RequirmentId);
+                                }
+                                getRequirementById++;
                             }
                             else
                             {
@@ -122,6 +143,7 @@ namespace AptDealzBuyer.API
             return mResponse;
         }
 
+        int getAllMyActiveRequirements = 0;
         public async Task<Response> GetAllMyActiveRequirements(string SortBy = "", bool? IsAscending = null, int PageNumber = 1, int PageSize = 10)
         {
             Response mResponse = new Response();
@@ -160,8 +182,17 @@ namespace AptDealzBuyer.API
                         {
                             if (responseJson.Contains("TokenExpired"))
                             {
-                                Common.DisplayErrorMessage(Constraints.Session_Expired);
-                                App.Current.MainPage = new NavigationPage(new WelcomePage(true));
+                                var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
+                                if (!isRefresh && getAllMyActiveRequirements == 3)
+                                {
+                                    Common.DisplayErrorMessage(Constraints.Session_Expired);
+                                    App.Current.MainPage = new NavigationPage(new WelcomePage(true));
+                                }
+                                else
+                                {
+                                    await GetAllMyActiveRequirements(RequirementSortBy.ID.ToString(), null, PageNumber, PageSize);
+                                }
+                                getAllMyActiveRequirements++;
                             }
                             else
                             {
@@ -185,6 +216,7 @@ namespace AptDealzBuyer.API
             return mResponse;
         }
 
+        int getMyPreviousRequirements = 0;
         public async Task<Response> GetMyPreviousRequirements(string SortBy = "", bool? IsAscending = null, int PageNumber = 1, int PageSize = 10)
         {
             Response mResponse = new Response();
@@ -223,8 +255,17 @@ namespace AptDealzBuyer.API
                         {
                             if (responseJson.Contains("TokenExpired"))
                             {
-                                Common.DisplayErrorMessage(Constraints.Session_Expired);
-                                App.Current.MainPage = new NavigationPage(new WelcomePage(true));
+                                var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
+                                if (!isRefresh && getMyPreviousRequirements == 3)
+                                {
+                                    Common.DisplayErrorMessage(Constraints.Session_Expired);
+                                    App.Current.MainPage = new NavigationPage(new WelcomePage(true));
+                                }
+                                else
+                                {
+                                    await GetMyPreviousRequirements("", null, PageNumber, PageSize);
+                                }
+                                getMyPreviousRequirements++;
                             }
                             else
                             {
@@ -250,6 +291,8 @@ namespace AptDealzBuyer.API
         #endregion
 
         #region [ POST ]
+
+        int createRequirement = 0;
         public async Task<Response> CreateRequirement(Model.Request.Requirement mRequirement)
         {
             Response mResponse = new Response();
@@ -279,8 +322,17 @@ namespace AptDealzBuyer.API
                         {
                             if (responseJson.Contains("TokenExpired"))
                             {
-                                Common.DisplayErrorMessage(Constraints.Session_Expired);
-                                App.Current.MainPage = new NavigationPage(new WelcomePage(true));
+                                var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
+                                if (!isRefresh && createRequirement == 3)
+                                {
+                                    Common.DisplayErrorMessage(Constraints.Session_Expired);
+                                    App.Current.MainPage = new NavigationPage(new WelcomePage(true));
+                                }
+                                else
+                                {
+                                    await CreateRequirement(mRequirement);
+                                }
+                                createRequirement++;
                             }
                             else
                             {
@@ -306,6 +358,7 @@ namespace AptDealzBuyer.API
             return mResponse;
         }
 
+        int cancelRequirement = 0;
         public async Task<Response> CancelRequirement(string requirementId)
         {
             Response mResponse = new Response();
@@ -316,7 +369,7 @@ namespace AptDealzBuyer.API
                     string requestJson = "{\"requirementId\":\"" + requirementId + "\"}";
                     using (var hcf = new HttpClientFactory(token: Common.Token))
                     {
-                        string url = string.Format(EndPointURL.CancelRequirement, (int)App.Current.Resources["Version"]);
+                        string url = string.Format(EndPointURL.CancelRequirement, (int)App.Current.Resources["Version"], requirementId);
                         var response = await hcf.PostAsync(url, requestJson);
                         var responseJson = await response.Content.ReadAsStringAsync();
                         if (response.IsSuccessStatusCode)
@@ -335,8 +388,17 @@ namespace AptDealzBuyer.API
                         {
                             if (responseJson.Contains("TokenExpired"))
                             {
-                                Common.DisplayErrorMessage(Constraints.Session_Expired);
-                                App.Current.MainPage = new NavigationPage(new WelcomePage(true));
+                                var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
+                                if (!isRefresh && cancelRequirement == 3)
+                                {
+                                    Common.DisplayErrorMessage(Constraints.Session_Expired);
+                                    App.Current.MainPage = new NavigationPage(new WelcomePage(true));
+                                }
+                                else
+                                {
+                                    await CancelRequirement(requirementId);
+                                }
+                                cancelRequirement++;
                             }
                             else
                             {
@@ -364,6 +426,8 @@ namespace AptDealzBuyer.API
         #endregion
 
         #region [ DELETE ]
+
+        int deleteRequirement = 0;
         public async Task<Response> DeleteRequirement(string id)
         {
             Response mResponse = new Response();
@@ -392,8 +456,17 @@ namespace AptDealzBuyer.API
                         {
                             if (responseJson.Contains("TokenExpired"))
                             {
-                                Common.DisplayErrorMessage(Constraints.Session_Expired);
-                                App.Current.MainPage = new NavigationPage(new WelcomePage(true));
+                                var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
+                                if (!isRefresh && deleteRequirement == 3)
+                                {
+                                    Common.DisplayErrorMessage(Constraints.Session_Expired);
+                                    App.Current.MainPage = new NavigationPage(new WelcomePage(true));
+                                }
+                                else
+                                {
+                                    await DeleteRequirement(id);
+                                }
+                                deleteRequirement++;
                             }
                             else
                             {
@@ -421,6 +494,8 @@ namespace AptDealzBuyer.API
         #endregion
 
         #region [ PUT ]
+
+        int updateStatusRequirement = 0;
         public async Task<Response> UpdateStatusRequirement(string requirementId, int status)
         {
             Response mResponse = new Response();
@@ -450,8 +525,17 @@ namespace AptDealzBuyer.API
                         {
                             if (responseJson.Contains("TokenExpired"))
                             {
-                                Common.DisplayErrorMessage(Constraints.Session_Expired);
-                                App.Current.MainPage = new NavigationPage(new WelcomePage(true));
+                                var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
+                                if (!isRefresh && updateStatusRequirement == 3)
+                                {
+                                    Common.DisplayErrorMessage(Constraints.Session_Expired);
+                                    App.Current.MainPage = new NavigationPage(new WelcomePage(true));
+                                }
+                                else
+                                {
+                                    await UpdateStatusRequirement(requirementId, status);
+                                }
+                                updateStatusRequirement++;
                             }
                             else
                             {

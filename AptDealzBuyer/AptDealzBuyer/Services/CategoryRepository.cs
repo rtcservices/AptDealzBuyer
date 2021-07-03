@@ -2,7 +2,6 @@
 using AptDealzBuyer.Model.Reponse;
 using AptDealzBuyer.Repository;
 using AptDealzBuyer.Utility;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

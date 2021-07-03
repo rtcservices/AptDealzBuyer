@@ -36,7 +36,7 @@
             <!--  Main Grid  -->
             <Grid
                 Grid.Row="1"
-                Padding="20"
+                Padding="0"
                 RowSpacing="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -54,24 +54,19 @@
                         VerticalOptions="CenterAndExpand" />
 
                     <Label
-                        Margin="0"
-                        FontFamily="Poppins Medium"
-                        FontSize="18"
-                        HorizontalOptions="CenterAndExpand"
-                        Text="Create an Account"
-                        TextColor="{StaticResource Black}"
-                        VerticalOptions="CenterAndExpand" />
+                        FontSize="24"
+                        Style="{StaticResource lblBoldHeader}"
+                        Text="Create an Account" />
                 </StackLayout>
 
                 <!--  Entrys  -->
-                <ScrollView
-                    Grid.Row="1"
-                    HorizontalScrollBarVisibility="Never"
-                    VerticalScrollBarVisibility="Never">
+                <ScrollView Grid.Row="1" Style="{StaticResource scrPrimary}">
                     <Grid
+                        Padding="20,0"
+                        BackgroundColor="Transparent"
                         HorizontalOptions="FillAndExpand"
                         RowDefinitions="Auto,*"
-                        RowSpacing="0"
+                        RowSpacing="20"
                         VerticalOptions="CenterAndExpand">
 
                         <Grid
@@ -81,29 +76,38 @@
                             RowSpacing="20"
                             VerticalOptions="CenterAndExpand">
 
-                            <Frame Grid.Row="0" Style="{StaticResource frmEntryGray}">
+                            <StackLayout Grid.Row="0" Spacing="{OnPlatform Android=0, iOS=5}">
+                                <Label Style="{StaticResource lblPrimary13}" Text="Full Name" />
                                 <ext:ExtEntry
                                     x:Name="txtFullName"
+                                    ClassId="FullName"
                                     Keyboard="Text"
-                                    Placeholder="Full Name"
-                                    Style="{StaticResource entrGray}" />
-                            </Frame>
+                                    Style="{StaticResource entrGray}"
+                                    Unfocused="Entry_Unfocused" />
+                                <BoxView x:Name="BoxFullName" Style="{StaticResource boxHorizontal}" />
+                            </StackLayout>
 
-                            <Frame Grid.Row="1" Style="{StaticResource frmEntryGray}">
+                            <StackLayout Grid.Row="1" Spacing="{OnPlatform Android=0, iOS=5}">
+                                <Label Style="{StaticResource lblPrimary13}" Text="Email Address" />
                                 <ext:ExtEntry
                                     x:Name="txtEmailAddress"
+                                    ClassId="Email"
                                     Keyboard="Email"
-                                    Placeholder="Email Address"
-                                    Style="{StaticResource entrGray}" />
-                            </Frame>
+                                    Style="{StaticResource entrGray}"
+                                    Unfocused="Entry_Unfocused" />
+                                <BoxView x:Name="BoxEmailAddress" Style="{StaticResource boxHorizontal}" />
+                            </StackLayout>
 
-                            <Frame Grid.Row="2" Style="{StaticResource frmEntryGray}">
+                            <StackLayout Grid.Row="2" Spacing="{OnPlatform Android=0, iOS=5}">
+                                <Label Style="{StaticResource lblPrimary13}" Text="Phone Number" />
                                 <ext:ExtEntry
                                     x:Name="txtPhoneNumber"
+                                    ClassId="PhoneNumber"
                                     Keyboard="Numeric"
-                                    Placeholder="Phone Number"
-                                    Style="{StaticResource entrGray}" />
-                            </Frame>
+                                    Style="{StaticResource entrGray}"
+                                    Unfocused="Entry_Unfocused" />
+                                <BoxView x:Name="BoxPhoneNumber" Style="{StaticResource boxHorizontal}" />
+                            </StackLayout>
 
                             <Grid
                                 Grid.Row="3"
@@ -139,7 +143,7 @@
                                     FontFamily="Poppins"
                                     FontSize="14"
                                     HorizontalOptions="StartAndExpand"
-                                    Text="Terms &amp; Condtions"
+                                    Text="Terms &amp; Conditions"
                                     TextColor="{StaticResource Green}"
                                     VerticalOptions="CenterAndExpand" />
                                 <Grid.GestureRecognizers>
@@ -148,38 +152,23 @@
                             </Grid>
                         </Grid>
 
-                        <Frame
-                            x:Name="FrmGetOtp"
+                        <Button
+                            x:Name="BtnGetOtp"
                             Grid.Row="1"
-                            Margin="0,30"
-                            Padding="0"
-                            BackgroundColor="{StaticResource Green}"
-                            CornerRadius="5"
-                            HasShadow="False"
-                            HeightRequest="50"
-                            HorizontalOptions="FillAndExpand"
-                            VerticalOptions="EndAndExpand">
-                            <Label
-                                Margin="0"
-                                FontFamily="Poppins Medium"
-                                HorizontalOptions="CenterAndExpand"
-                                Text="Get OTP"
-                                TextColor="{StaticResource White}"
-                                VerticalOptions="CenterAndExpand" />
-                            <Frame.GestureRecognizers>
-                                <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmGetOtp_Tapped" />
-                            </Frame.GestureRecognizers>
-                        </Frame>
+                            Margin="0"
+                            Clicked="BtnGetOtp_Clicked"
+                            Style="{StaticResource btnPrimary}"
+                            Text="Get OTP" />
                     </Grid>
                 </ScrollView>
 
                 <!--  HaveAnAccount  -->
                 <StackLayout
                     Grid.Row="2"
-                    Margin="0,20,0,10"
+                    Padding="0,20"
                     HorizontalOptions="CenterAndExpand"
                     Orientation="Horizontal"
-                    VerticalOptions="CenterAndExpand">
+                    VerticalOptions="EndAndExpand">
 
                     <Label
                         Margin="10,0,0,0"

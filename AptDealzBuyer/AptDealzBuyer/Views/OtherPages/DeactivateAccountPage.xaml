@@ -10,10 +10,9 @@
     NavigationPage.HasNavigationBar="False">
     <ContentPage.Content>
 
-       <Grid RowSpacing="0">
+        <Grid RowSpacing="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="50" />
-                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
@@ -36,15 +35,7 @@
                     </Image.GestureRecognizers>
                 </Image>
 
-                <Image
-                    Grid.Column="1"
-                    Margin="0"
-                    Aspect="AspectFill"
-                    HeightRequest="45"
-                    HorizontalOptions="CenterAndExpand"
-                    Source="iconHeaderLogo.png"
-                    VerticalOptions="CenterAndExpand"
-                    WidthRequest="45" />
+                <Image Grid.Column="1" Style="{StaticResource imgLogo}" />
 
                 <StackLayout
                     Grid.Column="2"
@@ -73,16 +64,11 @@
                         </Image.GestureRecognizers>
                     </Image>
                 </StackLayout>
+                <BoxView Grid.ColumnSpan="3" Style="{StaticResource boxHorizontal}" />
             </Grid>
-            <!--#endregion-->
-            <BoxView
-                Grid.Row="1"
-                BackgroundColor="{StaticResource LightGray}"
-                HeightRequest="1"
-                HorizontalOptions="FillAndExpand"
-                VerticalOptions="EndAndExpand" />
 
-            <Grid Grid.Row="2" Margin="0">
+
+            <Grid Grid.Row="1" Margin="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
@@ -90,42 +76,30 @@
 
                 <Grid
                     Grid.Row="0"
-                    Margin="20,0"
-                    ColumnDefinitions="Auto,*,Auto"
-                    HorizontalOptions="FillAndExpand">
-                    <Image
+                    Margin="5,5,5,0"
+                    ColumnDefinitions="Auto,*"
+                    ColumnSpacing="0">
+                    <ImageButton
                         x:Name="ImgBack"
-                        Margin="0"
-                        Aspect="AspectFit"
-                        HeightRequest="25"
-                        HorizontalOptions="StartAndExpand"
+                        Grid.Column="0"
+                        Clicked="ImgBack_Tapped"
                         Source="iconBackArrow.png"
-                        VerticalOptions="CenterAndExpand"
-                        WidthRequest="25">
-                        <Image.GestureRecognizers>
-                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgBack_Tapped" />
-                        </Image.GestureRecognizers>
-                    </Image>
-
+                        Style="{StaticResource ImgBtnPrimary}" />
                     <Label
                         Grid.Column="1"
-                        Margin="5,0,0,0"
-                        FontFamily="Poppins SemiBold"
-                        FontSize="20"
-                        HorizontalOptions="StartAndExpand"
-                        Text="Deactivate Account"
-                        TextColor="{StaticResource Black}"
-                        VerticalOptions="CenterAndExpand" />
-
+                        Style="{StaticResource lblHeader}"
+                        Text="Deactivate Account" />
                 </Grid>
 
-                <ScrollView Grid.Row="1" Margin="0,15,0,0">
+                <ScrollView Grid.Row="1" Style="{StaticResource scrPrimary}">
 
-                    <Grid Margin="0" RowDefinitions="Auto,*,Auto">
+                    <Grid
+                        Padding="20,0,20,20"
+                        RowDefinitions="Auto,Auto,*"
+                        RowSpacing="15">
 
                         <Label
                             Grid.Row="0"
-                            Margin="20"
                             FontFamily="Poppins"
                             FontSize="14"
                             HorizontalOptions="FillAndExpand"
@@ -134,10 +108,10 @@
                             TextColor="{StaticResource Black}"
                             VerticalOptions="FillAndExpand" />
 
-                        <ext:CustomShadowFrame
+                        <Frame
                             Grid.Row="1"
-                            Margin="20,0"
-                            Padding="0"
+                            Margin="0"
+                            Padding="10"
                             BackgroundColor="Transparent"
                             BorderColor="{StaticResource LightGray}"
                             CornerRadius="5"
@@ -147,39 +121,16 @@
                             VerticalOptions="FillAndExpand">
                             <Editor
                                 x:Name="txtReason"
-                                Margin="10"
-                                FontFamily="Poppins"
-                                FontSize="14"
-                                HorizontalOptions="FillAndExpand"
                                 Placeholder="Reason for Deactivation:"
-                                PlaceholderColor="{StaticResource Gray}"
-                                TextColor="{StaticResource Black}"
-                                VerticalOptions="FillAndExpand" />
-                        </ext:CustomShadowFrame>
+                                Style="{StaticResource edPrimary}" />
+                        </Frame>
 
-                        <ext:CustomShadowFrame
+                        <Button
                             Grid.Row="2"
-                            Margin="20,20,20,40"
-                            Padding="0"
-                            BackgroundColor="{StaticResource Green}"
-                            CornerRadius="5"
-                            HasShadow="False"
-                            HorizontalOptions="FillAndExpand"
-                            VerticalOptions="CenterAndExpand">
-                            <Label
-                                Grid.Column="1"
-                                Margin="20,10"
-                                FontFamily="Poppins Medium"
-                                FontSize="15"
-                                HorizontalOptions="CenterAndExpand"
-                                LineBreakMode="WordWrap"
-                                Text="Confirm Account Deactivation"
-                                TextColor="{StaticResource White}"
-                                VerticalOptions="CenterAndExpand" />
-                            <ext:CustomShadowFrame.GestureRecognizers>
-                                <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmConfirmDeactivation_Tapped" />
-                            </ext:CustomShadowFrame.GestureRecognizers>
-                        </ext:CustomShadowFrame>
+                            Clicked="FrmConfirmDeactivation_Tapped"
+                            Style="{StaticResource btnPrimary}"
+                            Text="Confirm Account Deactivation"
+                            VerticalOptions="EndAndExpand" />
 
                     </Grid>
 

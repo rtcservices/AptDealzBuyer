@@ -14,12 +14,12 @@ using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 
 [assembly: ExportRenderer(typeof(Label), typeof(CustomLabelRenderer))]
+[assembly: ExportRenderer(typeof(ExtEntry), typeof(CustomEntryRenderer))]
 [assembly: ExportRenderer(typeof(Picker), typeof(CustomPickerRenderer))]
 [assembly: ExportRenderer(typeof(Editor), typeof(CustomEditorRenderer))]
 [assembly: ExportRenderer(typeof(ExtDatePicker), typeof(CustomDatePickerRender))]
 [assembly: ExportRenderer(typeof(Xamarin.Forms.Button), typeof(CustomButtonRender))]
-[assembly: ExportRenderer(typeof(ExtEntry), typeof(CustomEntryRenderer))]
-[assembly: ExportRenderer(typeof(CustomAutoSuggestBox), typeof(AutoSuggestBoxCustomRenderer))]
+[assembly: ExportRenderer(typeof(ExtAutoSuggestBox), typeof(CustomeAutoSuggestBoxRenderer))]
 
 namespace AptDealzBuyer.Droid.CustomRenderers
 {
@@ -28,13 +28,20 @@ namespace AptDealzBuyer.Droid.CustomRenderers
     {
         protected override void OnElementChanged(ElementChangedEventArgs<Label> e)
         {
-            base.OnElementChanged(e);
-            string fontFamily = e.NewElement?.FontFamily;
-            if (!string.IsNullOrEmpty(fontFamily))
+            try
             {
-                var label = (TextView)Control; // for example
-                Typeface font = Typeface.CreateFromAsset(Forms.Context.Assets, fontFamily + ".otf");
-                label.Typeface = font;
+                base.OnElementChanged(e);
+                string fontFamily = e.NewElement?.FontFamily;
+                if (!string.IsNullOrEmpty(fontFamily))
+                {
+                    var label = (TextView)Control; // for example
+                    Typeface font = Typeface.CreateFromAsset(Forms.Context.Assets, fontFamily + ".otf");
+                    label.Typeface = font;
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("Droid/CustomLabelRenderer: " + ex.Message);
             }
         }
     }
@@ -43,29 +50,36 @@ namespace AptDealzBuyer.Droid.CustomRenderers
     {
         protected override void OnElementChanged(ElementChangedEventArgs<Entry> e)
         {
-            base.OnElementChanged(e);
-            string fontFamily = e.NewElement?.FontFamily;
-            if (!string.IsNullOrEmpty(fontFamily))
+            try
             {
-                var textbox = (TextView)Control; // for example
-                Typeface font = Typeface.CreateFromAsset(Forms.Context.Assets, fontFamily + ".otf");
-                textbox.Typeface = font;
-            }
+                base.OnElementChanged(e);
+                string fontFamily = e.NewElement?.FontFamily;
+                if (!string.IsNullOrEmpty(fontFamily))
+                {
+                    var textbox = (TextView)Control; // for example
+                    Typeface font = Typeface.CreateFromAsset(Forms.Context.Assets, fontFamily + ".otf");
+                    textbox.Typeface = font;
+                }
 
-            var editText = (Android.Widget.EditText)this.Control;
-            GradientDrawable gd = new GradientDrawable();
-            gd.SetCornerRadius(0);
-            gd.SetColor(Android.Graphics.Color.Transparent);
-            editText.Background = gd;
+                var editText = (Android.Widget.EditText)this.Control;
+                GradientDrawable gd = new GradientDrawable();
+                gd.SetCornerRadius(0);
+                gd.SetColor(Android.Graphics.Color.Transparent);
+                editText.Background = gd;
 
-            var maxLenght = e.NewElement?.MaxLength;
-            if (maxLenght == 1)
-            {
-                Control.Gravity = Android.Views.GravityFlags.Center;
+                var maxLenght = e.NewElement?.MaxLength;
+                if (maxLenght == 1)
+                {
+                    Control.Gravity = Android.Views.GravityFlags.Center;
+                }
+                else
+                {
+                    Control.Gravity = Android.Views.GravityFlags.CenterVertical;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                Control.Gravity = Android.Views.GravityFlags.CenterVertical;
+                Common.DisplayErrorMessage("Droid/CustomEntryRenderer: " + ex.Message);
             }
         }
     }
@@ -74,23 +88,30 @@ namespace AptDealzBuyer.Droid.CustomRenderers
     {
         protected override void OnElementChanged(ElementChangedEventArgs<Picker> e)
         {
-            base.OnElementChanged(e);
-            string fontFamily = e.NewElement?.FontFamily;
-            if (!string.IsNullOrEmpty(fontFamily))
+            try
             {
-                var label = (TextView)Control; // for example
-                Typeface font = Typeface.CreateFromAsset(Forms.Context.Assets, fontFamily + ".otf");
-                label.Typeface = font;
+                base.OnElementChanged(e);
+                string fontFamily = e.NewElement?.FontFamily;
+                if (!string.IsNullOrEmpty(fontFamily))
+                {
+                    var label = (TextView)Control; // for example
+                    Typeface font = Typeface.CreateFromAsset(Forms.Context.Assets, fontFamily + ".otf");
+                    label.Typeface = font;
+                }
+
+                var nativeedittextfield = (Android.Widget.EditText)this.Control;
+                GradientDrawable gd = new GradientDrawable();
+                gd.SetCornerRadius(0);
+                gd.SetColor(Android.Graphics.Color.Transparent);
+                nativeedittextfield.Background = gd;
+
+                Control.SetPadding(0, 0, 0, 0);
+                Control.Gravity = Android.Views.GravityFlags.CenterVertical;
             }
-
-            var nativeedittextfield = (Android.Widget.EditText)this.Control;
-            GradientDrawable gd = new GradientDrawable();
-            gd.SetCornerRadius(0);
-            gd.SetColor(Android.Graphics.Color.Transparent);
-            nativeedittextfield.Background = gd;
-
-            Control.SetPadding(0, 0, 0, 0);
-            Control.Gravity = Android.Views.GravityFlags.CenterVertical;
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("Droid/CustomPickerRenderer: " + ex.Message);
+            }
         }
     }
 
@@ -98,23 +119,30 @@ namespace AptDealzBuyer.Droid.CustomRenderers
     {
         protected override void OnElementChanged(ElementChangedEventArgs<Editor> e)
         {
-            base.OnElementChanged(e);
-            string fontFamily = e.NewElement?.FontFamily;
-            if (!string.IsNullOrEmpty(fontFamily))
+            try
             {
-                var label = (TextView)Control; // for example
-                Typeface font = Typeface.CreateFromAsset(Forms.Context.Assets, fontFamily + ".otf");
-                label.Typeface = font;
+                base.OnElementChanged(e);
+                string fontFamily = e.NewElement?.FontFamily;
+                if (!string.IsNullOrEmpty(fontFamily))
+                {
+                    var label = (TextView)Control; // for example
+                    Typeface font = Typeface.CreateFromAsset(Forms.Context.Assets, fontFamily + ".otf");
+                    label.Typeface = font;
+                }
+
+                var nativeedittextfield = (Android.Widget.EditText)Control;
+                GradientDrawable gd = new GradientDrawable();
+                gd.SetCornerRadius(0);
+                gd.SetColor(Android.Graphics.Color.Transparent);
+                nativeedittextfield.Background = gd;
+
+                Control.SetPadding(0, 0, 0, 0);
+                Control.Gravity = Android.Views.GravityFlags.Start;
             }
-
-            var nativeedittextfield = (Android.Widget.EditText)Control;
-            GradientDrawable gd = new GradientDrawable();
-            gd.SetCornerRadius(0);
-            gd.SetColor(Android.Graphics.Color.Transparent);
-            nativeedittextfield.Background = gd;
-
-            Control.SetPadding(0, 0, 0, 0);
-            Control.Gravity = Android.Views.GravityFlags.Start;
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("Droid/CustomEditorRenderer: " + ex.Message);
+            }
         }
     }
 
@@ -135,19 +163,26 @@ namespace AptDealzBuyer.Droid.CustomRenderers
 
         protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            base.OnElementPropertyChanged(sender, e);
-
-            if (Control == null)
+            try
             {
-                return;
+                base.OnElementPropertyChanged(sender, e);
+
+                if (Control == null)
+                {
+                    return;
+                }
+
+                var nativeEditTextField = Control;
+                GradientDrawable gd = new GradientDrawable();
+                gd.SetCornerRadius(0);
+
+                nativeEditTextField.Background = gd;
+                Control.SetPadding(0, 0, 0, 0);
             }
-
-            var nativeEditTextField = Control;
-            GradientDrawable gd = new GradientDrawable();
-            gd.SetCornerRadius(0);
-
-            nativeEditTextField.Background = gd;
-            Control.SetPadding(0, 0, 0, 0);
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("Droid/CustomDatePickerRender: " + ex.Message);
+            }
         }
     }
 
@@ -166,9 +201,7 @@ namespace AptDealzBuyer.Droid.CustomRenderers
 
                 if (!string.IsNullOrEmpty(e.NewElement?.FontFamily))
                 {
-#pragma warning disable CS0618 // Type or member is obsolete
                     var font = Typeface.CreateFromAsset(Forms.Context.ApplicationContext.Assets, e.NewElement.FontFamily + ".otf");
-#pragma warning restore CS0618 // Type or member is obsolete
                     Control.Typeface = font;
                 }
             }
@@ -178,9 +211,10 @@ namespace AptDealzBuyer.Droid.CustomRenderers
             }
         }
     }
-    public class AutoSuggestBoxCustomRenderer : AutoSuggestBoxRenderer
+
+    public class CustomeAutoSuggestBoxRenderer : AutoSuggestBoxRenderer
     {
-        public AutoSuggestBoxCustomRenderer(Context context) : base(context)
+        public CustomeAutoSuggestBoxRenderer(Context context) : base(context)
         {
 
         }

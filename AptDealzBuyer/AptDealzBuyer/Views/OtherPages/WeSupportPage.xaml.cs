@@ -3,7 +3,6 @@ using AptDealzBuyer.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -12,8 +11,7 @@ namespace AptDealzBuyer.Views.OtherPages
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class WeSupportPage : ContentPage
     {
-        #region Objecst
-        // create objects here
+        #region Objecst      
         public List<CarousellImage> mCarousellImages = new List<CarousellImage>();
         #endregion
 
@@ -24,8 +22,7 @@ namespace AptDealzBuyer.Views.OtherPages
         }
         #endregion
 
-        #region Methods
-        // write methods here
+        #region Methods      
         protected override void OnAppearing()
         {
             base.OnAppearing();
@@ -40,7 +37,7 @@ namespace AptDealzBuyer.Views.OtherPages
                 new CarousellImage{ImageName="imgMakeInIndia.png"},
                 new CarousellImage{ImageName="imgMakeInIndia.png"},
             };
-            indicaters.ItemsSource = cvWelcome.ItemsSource = mCarousellImages.ToList();
+            Indicators.ItemsSource = cvWelcome.ItemsSource = mCarousellImages.ToList();
         }
         #endregion
 

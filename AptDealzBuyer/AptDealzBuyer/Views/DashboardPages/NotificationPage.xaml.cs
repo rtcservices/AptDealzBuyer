@@ -49,8 +49,7 @@ namespace AptDealzBuyer.Views.DashboardPages
         }
         #endregion
 
-        #region Events
-        // create events here
+        #region Events      
         private void ImgMenu_Tapped(object sender, EventArgs e)
         {
             Common.BindAnimation(image: ImgMenu);
@@ -69,12 +68,18 @@ namespace AptDealzBuyer.Views.DashboardPages
 
         private void ImgBack_Tapped(object sender, EventArgs e)
         {
+            Common.BindAnimation(imageButton: ImgBack);
             Navigation.PopAsync();
         }
 
         private void ImgClose_Tapped(object sender, EventArgs e)
         {
 
+        }
+
+        private void lstNotification_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+        {
+            lstNotification.SelectedItem = null;
         }
         #endregion
     }

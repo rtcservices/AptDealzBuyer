@@ -17,6 +17,10 @@ namespace AptDealzBuyer.Views.DashboardPages
         #region Objects
         // create objects here
         public List<GrievanceM> GrievanceMs = new List<GrievanceM>();
+        private string filterBy = Utility.RequirementSortBy.ID.ToString();
+        private bool sortBy = true;
+        private readonly int pageSize = 10;
+        private int pageNo;
         #endregion
 
         #region Constructor
@@ -31,10 +35,10 @@ namespace AptDealzBuyer.Views.DashboardPages
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            BindGrievance();
+            GetGrievance();
         }
 
-        public void BindGrievance()
+        public void GetGrievance()
         {
             lstGrievance.ItemsSource = null;
             GrievanceMs = new List<GrievanceM>()
@@ -68,6 +72,7 @@ namespace AptDealzBuyer.Views.DashboardPages
 
         private void ImgBack_Tapped(object sender, EventArgs e)
         {
+            Common.BindAnimation(imageButton: ImgBack);
             Navigation.PopAsync();
         }
 
@@ -78,12 +83,33 @@ namespace AptDealzBuyer.Views.DashboardPages
 
         private void FrmSortBy_Tapped(object sender, EventArgs e)
         {
-            var sortby = new PrevReqPopup("Sort By", "ID", "Quotes");
-            sortby.isRefresh += (s1, e1) =>
+            //var sortby = new PrevReqPopup("Sort By", "ID", "Quotes");
+            //sortby.isRefresh += (s1, e1) =>
+            //{
+            //    //get result from popup
+            //};
+            //PopupNavigation.Instance.PushAsync(sortby);
+            try
             {
-                //get result from popup
-            };
-            PopupNavigation.Instance.PushAsync(sortby);
+                if (ImgSort.Source.ToString().Replace("File: ", "") == Constraints.Sort_ASC)
+                {
+                    ImgSort.Source = Constraints.Sort_DSC;
+                    sortBy = false;
+                }
+                else
+                {
+                    ImgSort.Source = Constraints.Sort_ASC;
+                    sortBy = true;
+                }
+
+                pageNo = 1;
+                GetGrievance();
+                //GetGrievance(filterBy, sortBy);
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("GrievancesPage/FrmSortBy_Tapped: " + ex.Message);
+            }
         }
 
         private void FrmAdd_Tapped(object sender, EventArgs e)
@@ -104,6 +130,30 @@ namespace AptDealzBuyer.Views.DashboardPages
         private void GrdViewGrievances_Tapped(object sender, EventArgs e)
         {
             Navigation.PushAsync(new DashboardPages.GrievanceDetailsPage());
+        }
+
+        private void FrmFilterBy_Tapped(object sender, EventArgs e)
+        {
+            try
+            {
+                var sortby = new SortByPopup(filterBy, "Active");
+                sortby.isRefresh += (s1, e1) =>
+                {
+                    string result = s1.ToString();
+                    if (!string.IsNullOrEmpty(result))
+                    {
+                        pageNo = 1;
+                        filterBy = result;
+                        GetGrievance();
+                        //GetGrievance(filterBy, sortBy);
+                    }
+                };
+                PopupNavigation.Instance.PushAsync(sortby);
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("GrievancesPage/CustomEntry_Unfocused: " + ex.Message);
+            }
         }
         #endregion
     }

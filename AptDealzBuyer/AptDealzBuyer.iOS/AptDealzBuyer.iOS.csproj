@@ -435,6 +435,36 @@
   <ItemGroup>
     <BundleResource Include="Resources\iconHide.png" />
   </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconCurrentlyShip.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconFiles.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconQuotes.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconQuotesActive.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconReports.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconSupplying.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconTandP.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconUplode.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconGreenUpArrow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconGreenDownArrow.png" />
+  </ItemGroup>
   <ProjectExtensions>
     <VisualStudio>
       <UserProperties XamarinHotReloadWrongLinkerErrorInfoBarAptDealzBuyeriOSHideInfoBar="True" />

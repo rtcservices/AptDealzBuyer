@@ -1,14 +1,8 @@
-﻿using AptDealzBuyer.API;
-using AptDealzBuyer.Model.Reponse;
-using AptDealzBuyer.Repository;
+﻿using AptDealzBuyer.Repository;
 using AptDealzBuyer.Services;
 using AptDealzBuyer.Utility;
-using Newtonsoft.Json.Linq;
 using Plugin.FirebasePushNotification;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
@@ -54,6 +48,8 @@ namespace AptDealzBuyer
             Xamarin.Forms.DependencyService.Register<IFileUploadRepository, FileUploadRepository>();
             Xamarin.Forms.DependencyService.Register<IDeleteRepository, DeleteRepository>();
             Xamarin.Forms.DependencyService.Register<ICategoryRepository, CategoryRepository>();
+            Xamarin.Forms.DependencyService.Register<IProfileRepository, ProfileRepository>();
+            Xamarin.Forms.DependencyService.Register<IAuthenticationRepository, AuthenticationRepository>();
         }
 
         public async void GetCurrentLocation()

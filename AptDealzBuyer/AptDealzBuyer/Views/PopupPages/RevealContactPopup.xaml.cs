@@ -6,7 +6,7 @@ using Xamarin.Forms.Xaml;
 namespace AptDealzBuyer.Views.PopupPages
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class RevealContactPopup : PopupPage
+    public partial class PaymentPopup : PopupPage
     {
         #region Objects
         // create objects here
@@ -14,19 +14,19 @@ namespace AptDealzBuyer.Views.PopupPages
         #endregion
 
         #region Constructor
-        public RevealContactPopup()
+        public PaymentPopup(string Amount)
         {
             InitializeComponent();
+            lblMessage.Text = "Make a payment of Rs " + Amount + " to reveal the Seller contacts";
             this.CloseWhenBackgroundIsClicked = false;
         }
         #endregion
 
         #region Methods
-        // write methods here
+
         #endregion
 
-        #region Events
-        //create events here
+        #region Events        
         private void FrmPay_Tapped(object sender, EventArgs e)
         {
             isRefresh?.Invoke(true, EventArgs.Empty);

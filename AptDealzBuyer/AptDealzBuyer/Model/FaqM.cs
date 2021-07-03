@@ -8,7 +8,7 @@ namespace AptDealzBuyer.Model
         public string FaqTitle { get; set; }
         public string FaqDesc { get; set; }
 
-        private string _ArrowImage { get; set; } = Constraints.Arrow_Down;
+        private string _ArrowImage { get; set; } = Constraints.GreenArrow_Down;
         public string ArrowImage
         {
             get { return _ArrowImage; }

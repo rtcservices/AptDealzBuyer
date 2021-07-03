@@ -1,36 +1,33 @@
 ﻿using AptDealzBuyer.Extention;
 using AptDealzBuyer.iOS.CustomRenderers;
+using AptDealzBuyer.Utility;
 using CoreGraphics;
 using dotMorten.Xamarin.Forms;
 using dotMorten.Xamarin.Forms.Platform.iOS;
 using Foundation;
 using System;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.Runtime.Remoting.Contexts;
 using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 
-
-[assembly: ExportRenderer(typeof(Label), typeof(LabelCustomRenderer))]
-[assembly: ExportRenderer(typeof(ExtEntry), typeof(EntryCustomRenderer))]
-[assembly: ExportRenderer(typeof(ExtEntryCenter), typeof(EntryCenterCustomRenderer))]
-[assembly: ExportRenderer(typeof(Picker), typeof(PickerCustomRenderer))]
-[assembly: ExportRenderer(typeof(Editor), typeof(EditorCustomRenderer))]
-[assembly: ExportRenderer(typeof(ExtKeyboard), typeof(KeyboardViewRenderer))]
+[assembly: ExportRenderer(typeof(Label), typeof(CustomLabelRenderer))]
+[assembly: ExportRenderer(typeof(ExtEntry), typeof(CustomEntryRenderer))]
+[assembly: ExportRenderer(typeof(Picker), typeof(CustomPickerRenderer))]
+[assembly: ExportRenderer(typeof(Editor), typeof(CustomEditorRenderer))]
 [assembly: ExportRenderer(typeof(ExtDatePicker), typeof(CustomeDatePickerRenderer))]
-[assembly: ExportRenderer(typeof(CustomAutoSuggestBox), typeof(AutoSuggestBoxCustomRenderer))]
+[assembly: ExportRenderer(typeof(ExtAutoSuggestBox), typeof(ExtAutoSuggestBoxRenderer))]
+[assembly: ExportRenderer(typeof(ExtKeyboard), typeof(KeyboardViewRenderer))]
 
 namespace AptDealzBuyer.iOS.CustomRenderers
 {
-    public class LabelCustomRenderer : LabelRenderer
+    public class CustomLabelRenderer : LabelRenderer
     {
         protected override void OnElementChanged(ElementChangedEventArgs<Label> e)
         {
-            base.OnElementChanged(e);
             try
             {
+                base.OnElementChanged(e);
                 if (Control != null)
                 {
                     if (e.NewElement != null)
@@ -42,12 +39,12 @@ namespace AptDealzBuyer.iOS.CustomRenderers
             }
             catch (Exception ex)
             {
-                _ = ex.Message;
+                Common.DisplayErrorMessage("iOS/CustomLabelRenderer: " + ex.Message);
             }
         }
     }
 
-    public class EntryCustomRenderer : EntryRenderer
+    public class CustomEntryRenderer : EntryRenderer
     {
         protected override void OnElementChanged(ElementChangedEventArgs<Entry> e)
         {
@@ -69,63 +66,12 @@ namespace AptDealzBuyer.iOS.CustomRenderers
             }
             catch (Exception ex)
             {
-                var _ = ex.Message;
+                Common.DisplayErrorMessage("iOS/CustomEntryRenderer: " + ex.Message);
             }
         }
     }
 
-    public class AutoSuggestBoxCustomRenderer : AutoSuggestBoxRenderer
-    {
-        protected override void OnElementChanged(ElementChangedEventArgs<AutoSuggestBox> e)
-        {
-            base.OnElementChanged(e);
-            try
-            {
-                if (Control != null)
-                {
-                    Control.Layer.BackgroundColor = Color.Transparent.ToCGColor();
-                    Control.Layer.BorderColor = Color.Transparent.ToCGColor();
-                    Control.Layer.CornerRadius = (nfloat)0.0;
-                    Control.IsSuggestionListOpen = false;
-                    Control.ShowBottomBorder = false;
-                }
-            }
-            catch (Exception ex)
-            {
-                var _ = ex.Message;
-            }
-        }
-    }
-
-
-    public class EntryCenterCustomRenderer : EntryRenderer
-    {
-        protected override void OnElementChanged(ElementChangedEventArgs<Entry> e)
-        {
-            base.OnElementChanged(e);
-            try
-            {
-                if (Control != null)
-                {
-                    Control.BorderStyle = UITextBorderStyle.None;
-
-                    Control.Layer.BackgroundColor = Color.Transparent.ToCGColor();
-                    Control.Layer.BorderColor = Color.Transparent.ToCGColor();
-                    Control.Layer.CornerRadius = (nfloat)0.0;
-                    Control.LeftView = new UIView(new CGRect(0, 0, 0, 0));
-                    Control.LeftViewMode = UITextFieldViewMode.Always;
-                    Control.RightView = new UIView(new CGRect(0, 0, 0, 0));
-                    Control.RightViewMode = UITextFieldViewMode.Always;
-                }
-            }
-            catch (Exception ex)
-            {
-                var _ = ex.Message;
-            }
-        }
-    }
-
-    public class PickerCustomRenderer : PickerRenderer
+    public class CustomPickerRenderer : PickerRenderer
     {
         protected override void OnElementChanged(ElementChangedEventArgs<Picker> e)
         {
@@ -145,12 +91,12 @@ namespace AptDealzBuyer.iOS.CustomRenderers
             }
             catch (Exception ex)
             {
-                var errorr = ex.Message;
+                Common.DisplayErrorMessage("iOS/CustomPickerRenderer: " + ex.Message);
             }
         }
     }
 
-    public class EditorCustomRenderer : EditorRenderer
+    public class CustomEditorRenderer : EditorRenderer
     {
         protected override void OnElementChanged(ElementChangedEventArgs<Editor> e)
         {
@@ -165,7 +111,52 @@ namespace AptDealzBuyer.iOS.CustomRenderers
             }
             catch (Exception ex)
             {
-                var errorr = ex.Message;
+                Common.DisplayErrorMessage("iOS/CustomEditorRenderer: " + ex.Message);
+            }
+        }
+    }
+
+    public class CustomeDatePickerRenderer : DatePickerRenderer
+    {
+        public static void Init() { }
+        protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            try
+            {
+                base.OnElementPropertyChanged(sender, e);
+
+                if (Control != null)
+                {
+                    Control.Layer.BorderWidth = 0;
+                    Control.BorderStyle = UITextBorderStyle.None; 
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("iOS/CustomeDatePickerRenderer: " + ex.Message);
+            }
+        }
+    }
+
+    public class ExtAutoSuggestBoxRenderer : AutoSuggestBoxRenderer
+    {
+        protected override void OnElementChanged(ElementChangedEventArgs<AutoSuggestBox> e)
+        {
+            base.OnElementChanged(e);
+            try
+            {
+                if (Control != null)
+                {
+                    Control.Layer.BackgroundColor = Color.Transparent.ToCGColor();
+                    Control.Layer.BorderColor = Color.Transparent.ToCGColor();
+                    Control.Layer.CornerRadius = (nfloat)0.0;
+                    Control.IsSuggestionListOpen = false;
+                    Control.ShowBottomBorder = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("iOS/ExtAutoSuggestBoxRenderer: " + ex.Message);
             }
         }
     }
@@ -230,25 +221,6 @@ namespace AptDealzBuyer.iOS.CustomRenderers
             {
                 _keyboardHideObserver.Dispose();
                 _keyboardHideObserver = null;
-            }
-        }
-    }
-
-    public class CustomeDatePickerRenderer : DatePickerRenderer
-    {
-        public static void Init() { }
-        protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            try
-            {
-                base.OnElementPropertyChanged(sender, e);
-
-                Control.Layer.BorderWidth = 0;
-                Control.BorderStyle = UITextBorderStyle.None;
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Error: {ex.Message}");
             }
         }
     }

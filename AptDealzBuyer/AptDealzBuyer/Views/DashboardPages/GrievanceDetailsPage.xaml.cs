@@ -45,7 +45,7 @@ namespace AptDealzBuyer.Views.DashboardPages
 
         private void ImgBack_Tapped(object sender, EventArgs e)
         {
-            Common.BindAnimation(image: ImgBack);
+            Common.BindAnimation(imageButton: ImgBack);
             Navigation.PopAsync();
         }
 

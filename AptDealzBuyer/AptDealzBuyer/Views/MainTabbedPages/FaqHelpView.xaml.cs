@@ -61,8 +61,9 @@ namespace AptDealzBuyer.Views.MainTabbedPages
 
         private void ImgBack_Tapped(object sender, EventArgs e)
         {
-            Common.BindAnimation(image: ImgBack);
-            App.Current.MainPage = new MasterDataPage();
+            Common.BindAnimation(imageButton: ImgBack);
+            //App.Current.MainPage = new MasterDataPage();
+            Navigation.PopAsync();
         }
 
         private void ImgExpand_Tapped(object sender, EventArgs e)
@@ -74,14 +75,14 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 viewCell.ForceUpdateSize();
             }
             var faqModel = imgExp.BindingContext as FaqM;
-            if (faqModel != null && faqModel.ArrowImage == Constraints.Arrow_Down)
+            if (faqModel != null && faqModel.ArrowImage == Constraints.GreenArrow_Down)
             {
-                faqModel.ArrowImage = Constraints.Arrow_Up;
+                faqModel.ArrowImage = Constraints.GreenArrow_Up;
                 faqModel.ShowFaqDesc = true;
             }
             else
             {
-                faqModel.ArrowImage = Constraints.Arrow_Down;
+                faqModel.ArrowImage = Constraints.GreenArrow_Down;
                 faqModel.ShowFaqDesc = false;
             }
         }

@@ -1,8 +1,11 @@
 ﻿using Acr.UserDialogs;
 using AptDealzBuyer.API;
 using AptDealzBuyer.Interfaces;
+using AptDealzBuyer.Model.Reponse;
 using AptDealzBuyer.Utility;
+using AptDealzBuyer.Views.MasterData;
 using System;
+using System.Linq;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -12,7 +15,7 @@ namespace AptDealzBuyer.Views.Login
     public partial class LoginPage : ContentPage
     {
         #region Objects
-        private bool isChecked = false;
+        //private bool isChecked = false;
         private bool isEmail = false;
         #endregion
 
@@ -20,7 +23,7 @@ namespace AptDealzBuyer.Views.Login
         public LoginPage()
         {
             InitializeComponent();
-            txtUserAuth.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeNone);
+            //txtUserAuth.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeNone);
         }
         #endregion
 
@@ -35,27 +38,28 @@ namespace AptDealzBuyer.Views.Login
         {
             try
             {
-                if (isChecked)
-                    imgCheck.Source = Constraints.CheckBox_Checked;
-                else
-                    imgCheck.Source = Constraints.CheckBox_UnChecked;
+                //if (isChecked)
+                //    imgCheck.Source = Constraints.CheckBox_Checked;
+                //else
+                //    imgCheck.Source = Constraints.CheckBox_UnChecked;
 
                 if (!Common.EmptyFiels(Settings.EmailAddress))
                     txtUserAuth.Text = Settings.EmailAddress;
             }
             catch (Exception ex)
             {
-
+                Common.DisplayErrorMessage("LoginPage/BindProperties: " + ex.Message);
             }
         }
 
         bool Validations()
         {
-            bool result = false;
+            bool isValid = false;
             try
             {
                 if (Common.EmptyFiels(txtUserAuth.Text))
                 {
+                    BoxUserAuth.BackgroundColor = (Color)App.Current.Resources["LightRed"];
                     Common.DisplayErrorMessage(Constraints.Required_Email_Phone);
                 }
                 else if (txtUserAuth.Text.Contains("@") || txtUserAuth.Text.Contains("."))
@@ -67,7 +71,7 @@ namespace AptDealzBuyer.Views.Login
                     else
                     {
                         isEmail = true;
-                        result = true;
+                        isValid = true;
                     }
                 }
                 else if (!txtUserAuth.Text.IsValidPhone())
@@ -77,14 +81,19 @@ namespace AptDealzBuyer.Views.Login
                 else
                 {
                     isEmail = false;
-                    result = true;
+                    isValid = true;
                 }
             }
             catch (Exception ex)
             {
                 Common.DisplayErrorMessage("LoginPage/Validations: " + ex.Message);
             }
-            return result;
+            return isValid;
+        }
+
+        void FieldsTrim()
+        {
+            txtUserAuth.Text = txtUserAuth.Text.Trim();
         }
 
         async void LoginUserByEmail()
@@ -93,6 +102,7 @@ namespace AptDealzBuyer.Views.Login
             {
                 if (Validations())
                 {
+                    FieldsTrim();
                     AuthenticationAPI authenticationAPI = new AuthenticationAPI();
                     if (isEmail)
                     {
@@ -100,18 +110,18 @@ namespace AptDealzBuyer.Views.Login
                         var mResponse = await authenticationAPI.SendOtpByEmail(txtUserAuth.Text);
                         if (mResponse != null && mResponse.Succeeded)
                         {
-                            if (isChecked)
-                            {
-                                Settings.EmailAddress = txtUserAuth.Text;
-                            }
+                            //if (isChecked)
+                            //{
+                            //    Settings.EmailAddress = txtUserAuth.Text;
+                            //}
 
                             Common.DisplaySuccessMessage(mResponse.Message);
 
-                            await Navigation.PushAsync(new Views.Login.EnterOtpPage(txtUserAuth.Text, IsKeepLogin: isChecked));
+                            await Navigation.PushAsync(new Views.Login.EnterOtpPage(txtUserAuth.Text));
 
                             txtUserAuth.Text = string.Empty;
-                            isChecked = false;
-                            imgCheck.Source = Constraints.CheckBox_UnChecked;
+                            //isChecked = false;
+                            //imgCheck.Source = Constraints.CheckBox_UnChecked;
 
                         }
                         else
@@ -124,18 +134,46 @@ namespace AptDealzBuyer.Views.Login
                     }
                     else
                     {
-                        var result = await Xamarin.Forms.DependencyService.Get<IFirebaseAuthenticator>().SendOtpCodeAsync(txtUserAuth.Text);
-
-                        if (result)
+                        UserDialogs.Instance.ShowLoading(Constraints.Loading);
+                        var mResponse = await authenticationAPI.CheckPhoneNumber(txtUserAuth.Text);
+                        bool isValidNumber = (bool)mResponse.Data;
+                        if (isValidNumber && mResponse != null)
                         {
-                            await Navigation.PushAsync(new Views.Login.EnterOtpPage(txtUserAuth.Text, false, isChecked));
-                            txtUserAuth.Text = string.Empty;
-                            isChecked = false;
-                            imgCheck.Source = Constraints.CheckBox_UnChecked;
+                            var result = await Xamarin.Forms.DependencyService.Get<IFirebaseAuthenticator>().SendOtpCodeAsync(txtUserAuth.Text);
+                            var keyValue = result.FirstOrDefault();
+
+                            if (keyValue.Key)
+                            {
+                                if (keyValue.Value == Constraints.OTPSent)
+                                {
+                                    await Navigation.PushAsync(new Views.Login.EnterOtpPage(txtUserAuth.Text, false));
+                                    txtUserAuth.Text = string.Empty;
+                                }
+                                else
+                                {
+                                    Settings.firebaseVerificationId = keyValue.Value;
+                                    Settings.PhoneAuthToken = keyValue.Value;
+
+                                    var mLogin = FillLogin();
+                                    mResponse = await authenticationAPI.BuyerAuthPhone(mLogin);
+                                    NavigateToDashboard(mResponse);
+                                }
+                            }
+                            else if (!string.IsNullOrEmpty(keyValue.Value))
+                            {
+                                Common.DisplayErrorMessage(keyValue.Value);
+                            }
+                            else
+                            {
+                                Common.DisplayErrorMessage(Constraints.CouldNotSentOTP);
+                            }
                         }
                         else
                         {
-                            Common.DisplayErrorMessage("Could not send Verification Code to the given number!");
+                            if (mResponse != null)
+                                Common.DisplayErrorMessage(mResponse.Message);
+                            else
+                                Common.DisplayErrorMessage(Constraints.Something_Wrong);
                         }
                     }
                 }
@@ -150,18 +188,65 @@ namespace AptDealzBuyer.Views.Login
             }
         }
 
-        async void SendOTP(string phoneNumber)
+        Model.Request.Login FillLogin()
         {
-            var result = await Xamarin.Forms.DependencyService.Get<IFirebaseAuthenticator>().SendOtpCodeAsync(phoneNumber);
-            if (!result)
+            Model.Request.Login mLogin = new Model.Request.Login();
+            try
             {
-                var isTryAgain = await UserDialogs.Instance.ConfirmAsync("Could not send Verification Code to the given number", "Verification", "Try Again", "Goto Login");
-                if (isTryAgain)
-                    SendOTP(phoneNumber);
+                mLogin.PhoneNumber = txtUserAuth.Text;
+                if (!Common.EmptyFiels(Settings.fcm_token))
+                {
+                    mLogin.FcmToken = Settings.fcm_token;
+                }
+                if (!Common.EmptyFiels(Settings.firebaseVerificationId))
+                {
+                    mLogin.FirebaseVerificationId = Settings.PhoneAuthToken;
+                }
+                else
+                {
+                    Common.DisplayErrorMessage(Constraints.Something_Wrong);
+                    return null;
+                }
             }
-            else
+            catch (Exception)
             {
-                await DisplayAlert("OTP", "OTP send to your Phone number " + phoneNumber, "Ok");
+                return null;
+            }
+            return mLogin;
+        }
+
+        void NavigateToDashboard(Response mResponse)
+        {
+            try
+            {
+                if (mResponse != null && mResponse.Succeeded)
+                {
+                    var jObject = (Newtonsoft.Json.Linq.JObject)mResponse.Data;
+                    if (jObject != null)
+                    {
+                        var mBuyer = jObject.ToObject<Model.Request.Buyer>();
+                        if (mBuyer != null)
+                        {
+                            Settings.UserId = mBuyer.Id;
+                            Settings.RefreshToken = mBuyer.RefreshToken;
+                            Settings.LoginTrackingKey = mBuyer.LoginTrackingKey == "00000000-0000-0000-0000-000000000000" ? Settings.LoginTrackingKey : mBuyer.LoginTrackingKey;
+                            Common.Token = mBuyer.JwToken;
+
+                            App.Current.MainPage = new MasterDataPage();
+                        }
+                    }
+                }
+                else
+                {
+                    if (mResponse != null)
+                        Common.DisplayErrorMessage(mResponse.Message);
+                    else
+                        Common.DisplayErrorMessage(Constraints.Something_Wrong);
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("LoginPage/NavigateToDashboard: " + ex.Message);
             }
         }
         #endregion
@@ -172,39 +257,25 @@ namespace AptDealzBuyer.Views.Login
             Navigation.PushAsync(new SplashScreen.WelcomePage());
         }
 
-        private void StkRemember_Tapped(object sender, EventArgs e)
-        {
-            try
-            {
-                if (imgCheck.Source.ToString().Replace("File: ", "") == Constraints.CheckBox_Checked)
-                {
-                    isChecked = false;
-                    imgCheck.Source = Constraints.CheckBox_UnChecked;
-                }
-                else
-                {
-                    isChecked = true;
-                    imgCheck.Source = Constraints.CheckBox_Checked;
-                }
-            }
-            catch (Exception ex)
-            {
-                Common.DisplayErrorMessage("LoginPage/StkRemember_Tapped: " + ex.Message);
-            }
-        }
-
         private void StkSignup_Tapped(object sender, EventArgs e)
         {
             Navigation.PushAsync(new Login.SignupPage());
         }
 
-        private void FrmGetOtp_Tapped(object sender, EventArgs e)
+        private void BtnGetOtp_Clicked(object sender, EventArgs e)
         {
-            Common.BindAnimation(frame: FrmGetOtp);
-            //LoginUser();
+            Common.BindAnimation(button: BtnGetOtp);
             LoginUserByEmail();
         }
 
+        private void txtUserAuth_Unfocused(object sender, FocusEventArgs e)
+        {
+            var entry = (Extention.ExtEntry)sender;
+            if (!Common.EmptyFiels(entry.Text))
+            {
+                BoxUserAuth.BackgroundColor = (Color)App.Current.Resources["LightGray"];
+            }
+        }
         #endregion
     }
 }

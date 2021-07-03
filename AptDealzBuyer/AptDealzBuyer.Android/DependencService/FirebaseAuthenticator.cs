@@ -6,6 +6,7 @@ using Firebase.Auth;
 using Firebase.Firestore;
 using Java.Util.Concurrent;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 
@@ -14,7 +15,9 @@ namespace AptDealzBuyer.Droid.DependencService
     public class FirebaseAuthenticator : PhoneAuthProvider.OnVerificationStateChangedCallbacks, IFirebaseAuthenticator
     {
         const int OTP_TIMEOUT = 30; // seconds
-        private TaskCompletionSource<bool> _phoneAuthTcs;
+                                    //private TaskCompletionSource<bool> _phoneAuthTcs;
+        TaskCompletionSource<Dictionary<bool, string>> keyValuePairs;
+
         public string _verificationId { get; set; }
 
         public Task<string> LoginAsync(string username, string password)
@@ -25,7 +28,7 @@ namespace AptDealzBuyer.Droid.DependencService
             return tcs.Task;
         }
 
-        public override void OnVerificationCompleted(PhoneAuthCredential credential)
+        public override async void OnVerificationCompleted(PhoneAuthCredential credential)
         {
             // This callback will be invoked in two situations:
             // 1 - Instant verification. In some cases the phone number can be instantly
@@ -36,41 +39,75 @@ namespace AptDealzBuyer.Droid.DependencService
             if (credential.SmsCode == null && credential.SignInMethod?.ToLower() == "phone")
             {
                 // 1 - Instant verification.  -> In case of instant verification and to ensure sms is always send, try to singout the instance and try again with another request
-                FirebaseAuth.Instance.SignInWithCredential(credential);
-                FirebaseAuth.Instance.SignOut();
-                _phoneAuthTcs?.TrySetResult(false);
+
+
+                //FirebaseAuth.Instance.SignInWithCredential(credential);
+                //FirebaseAuth.Instance.SignOut();
+                // _phoneAuthTcs?.TrySetResult(false);
+                //SignInWithCredential(credential);
+
+                var tcs = new TaskCompletionSource<string>();
+                FirebaseAuth.Instance.SignInWithCredentialAsync(credential).ContinueWith((task) => OnAuthCompleted(task, tcs));
+
+                var t1 = tcs.Task;
+                var token = await t1;
+
+                Dictionary<bool, string> keyValues = new Dictionary<bool, string>();
+                if (!Common.EmptyFiels(token))
+                    keyValues.Add(true, token);
+                else
+                    keyValues.Add(false, Constraints.CouldNotSentOTP);
+
+                keyValuePairs?.TrySetResult(keyValues);
             }
             System.Diagnostics.Debug.WriteLine("PhoneAuthCredential created Automatically");
+        }
+
+        public void SignInWithCredential(PhoneAuthCredential credential)
+        {
+            var tcs = new TaskCompletionSource<AuthenticatedUser>();
+            FirebaseAuth.Instance.SignInWithCredential(credential)
+                .AddOnCompleteListener(new OnCompleteListener(tcs));
         }
 
         public override void OnVerificationFailed(FirebaseException exception)
         {
             System.Diagnostics.Debug.WriteLine("Verification Failed: " + exception.Message);
-            _phoneAuthTcs?.TrySetResult(false);
+            //  _phoneAuthTcs?.TrySetResult(false);
             Common.DisplayErrorMessage(exception.Message);
+
+            Dictionary<bool, string> keyValues = new Dictionary<bool, string>();
+            keyValues.Add(false, Constraints.CouldNotSentOTP);
+            keyValuePairs?.TrySetResult(keyValues);
         }
 
         public override void OnCodeSent(string verificationId, PhoneAuthProvider.ForceResendingToken forceResendingToken)
         {
             base.OnCodeSent(verificationId, forceResendingToken);
             _verificationId = verificationId;
-            _phoneAuthTcs?.TrySetResult(true);
+            //   _phoneAuthTcs?.TrySetResult(true);
+
+            Dictionary<bool, string> keyValues = new Dictionary<bool, string>();
+            keyValues.Add(true, Constraints.OTPSent);
+            keyValuePairs?.TrySetResult(keyValues);
         }
 
-        public Task<bool> SendOtpCodeAsync(string phoneNumber)
+        public Task<Dictionary<bool, string>> SendOtpCodeAsync(string phoneNumber)
         {
+
             phoneNumber = (string)App.Current.Resources["CountryCode"] + phoneNumber;
-            _phoneAuthTcs = new TaskCompletionSource<bool>();
+            // _phoneAuthTcs = new TaskCompletionSource<bool>();
             PhoneAuthProvider.Instance.VerifyPhoneNumber(
                 phoneNumber,
                 OTP_TIMEOUT,
                 TimeUnit.Seconds,
                 Platform.CurrentActivity,
                 this);
-
             var user = FirebaseAuth.Instance.CurrentUser;
 
-            return _phoneAuthTcs.Task;
+            keyValuePairs = new TaskCompletionSource<Dictionary<bool, string>>();
+
+            return keyValuePairs.Task;
         }
 
         private async void OnAuthCompleted(Task<Firebase.Auth.IAuthResult> task, TaskCompletionSource<string> tcs)
@@ -130,7 +167,6 @@ namespace AptDealzBuyer.Droid.DependencService
             return tcs.Task;
         }
     }
-
 
     internal class OnCompleteListener : Java.Lang.Object, Android.Gms.Tasks.IOnCompleteListener
     {

@@ -8,49 +8,36 @@
 
     <Grid
         BackgroundColor="{StaticResource White}"
-        HorizontalOptions="FillAndExpand"
         RowDefinitions="Auto,Auto,Auto"
+        RowSpacing="0"
         VerticalOptions="EndAndExpand">
 
         <Label
             x:Name="lblTitle"
             Grid.Row="0"
-            Margin="25,10,25,0"
-            FontFamily="Poppins SemiBold"
-            FontSize="18"
-            HorizontalOptions="StartAndExpand"
-            Text="Sort By"
-            TextColor="{StaticResource Black}"
-            VerticalOptions="CenterAndExpand" />
+            Margin="20,10"
+            FontSize="17"
+            Style="{StaticResource lblLight}"
+            Text="Sort By" />
 
-        <BoxView
-            Grid.Row="1"
-            BackgroundColor="{StaticResource LightGray}"
-            HeightRequest="1"
-            HorizontalOptions="FillAndExpand"
-            VerticalOptions="EndAndExpand" />
+        <BoxView Grid.Row="1" Style="{StaticResource boxHorizontal}" />
 
         <Grid
             Grid.Row="2"
-            Margin="25,0,25,30"
+            Margin="20"
             RowDefinitions="Auto,Auto,Auto"
-            RowSpacing="10">
+            RowSpacing="0">
 
             <StackLayout
                 Grid.Row="0"
-                Margin="0"
+                Margin="0,0,0,10"
                 HorizontalOptions="FillAndExpand"
                 Orientation="Horizontal"
                 VerticalOptions="CenterAndExpand">
                 <Label
                     x:Name="lblFirstType"
-                    Grid.Row="0"
-                    Margin="0"
-                    FontFamily="Poppins"
                     FontSize="15"
-                    HorizontalOptions="StartAndExpand"
-                    TextColor="{StaticResource Black}"
-                    VerticalOptions="CenterAndExpand" />
+                    Style="{StaticResource lblLight}" />
                 <Image
                     x:Name="imgFirstType"
                     Margin="0"
@@ -66,23 +53,18 @@
             </StackLayout>
 
             <StackLayout
+                x:Name="StkSecondType"
                 Grid.Row="1"
-                Margin="0"
+                Margin="0,0,0,10"
                 HorizontalOptions="FillAndExpand"
                 Orientation="Horizontal"
                 VerticalOptions="CenterAndExpand">
                 <Label
                     x:Name="lblSecondType"
-                    Grid.Row="0"
-                    Margin="0"
-                    FontFamily="Poppins"
                     FontSize="15"
-                    HorizontalOptions="StartAndExpand"
-                    TextColor="{StaticResource Black}"
-                    VerticalOptions="CenterAndExpand" />
+                    Style="{StaticResource lblLight}" />
                 <Image
                     x:Name="imgSecondType"
-                    Margin="0"
                     Aspect="Fill"
                     HeightRequest="20"
                     HorizontalOptions="EndAndExpand"
@@ -97,19 +79,14 @@
             <StackLayout
                 x:Name="StkThirdType"
                 Grid.Row="2"
-                Margin="0"
+                Margin="0,0,0,0"
                 HorizontalOptions="FillAndExpand"
                 Orientation="Horizontal"
                 VerticalOptions="CenterAndExpand">
                 <Label
                     x:Name="lblThirdType"
-                    Grid.Row="0"
-                    Margin="0"
-                    FontFamily="Poppins"
                     FontSize="15"
-                    HorizontalOptions="StartAndExpand"
-                    TextColor="{StaticResource Black}"
-                    VerticalOptions="CenterAndExpand" />
+                    Style="{StaticResource lblLight}" />
                 <Image
                     x:Name="imgThirdType"
                     Margin="0"
@@ -123,7 +100,6 @@
                     <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="StkThirdType_Tapped" />
                 </StackLayout.GestureRecognizers>
             </StackLayout>
-
         </Grid>
     </Grid>
 

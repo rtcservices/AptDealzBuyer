@@ -9,10 +9,9 @@
     BackgroundColor="{StaticResource White}"
     NavigationPage.HasNavigationBar="False">
     <ContentPage.Content>
-       <Grid RowSpacing="0">
+        <Grid RowSpacing="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="50" />
-                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
@@ -35,15 +34,7 @@
                     </Image.GestureRecognizers>
                 </Image>
 
-                <Image
-                    Grid.Column="1"
-                    Margin="0"
-                    Aspect="AspectFill"
-                    HeightRequest="45"
-                    HorizontalOptions="CenterAndExpand"
-                    Source="iconHeaderLogo.png"
-                    VerticalOptions="CenterAndExpand"
-                    WidthRequest="45" />
+                <Image Grid.Column="1" Style="{StaticResource imgLogo}" />
 
                 <StackLayout
                     Grid.Column="2"
@@ -72,74 +63,41 @@
                         </Image.GestureRecognizers>
                     </Image>
                 </StackLayout>
+                <BoxView Grid.ColumnSpan="3" Style="{StaticResource boxHorizontal}" />
             </Grid>
-            <!--#endregion-->
-            <BoxView
-                Grid.Row="1"
-                BackgroundColor="{StaticResource LightGray}"
-                HeightRequest="1"
-                HorizontalOptions="FillAndExpand"
-                VerticalOptions="EndAndExpand" />
 
-            <Grid Grid.Row="2" Margin="0">
+
+            <Grid Grid.Row="1" Margin="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-
                 <Grid
                     Grid.Row="0"
-                    Margin="20,0"
-                    ColumnDefinitions="Auto,*,Auto"
-                    HorizontalOptions="FillAndExpand">
-                    <Image
+                    Margin="5,5,5,0"
+                    ColumnDefinitions="Auto,*"
+                    ColumnSpacing="0">
+                    <ImageButton
                         x:Name="ImgBack"
-                        Margin="0"
-                        Aspect="AspectFit"
-                        HeightRequest="25"
-                        HorizontalOptions="StartAndExpand"
+                        Grid.Column="0"
+                        Clicked="ImgBack_Tapped"
                         Source="iconBackArrow.png"
-                        VerticalOptions="CenterAndExpand"
-                        WidthRequest="25">
-                        <Image.GestureRecognizers>
-                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgBack_Tapped" />
-                        </Image.GestureRecognizers>
-                    </Image>
-
+                        Style="{StaticResource ImgBtnPrimary}" />
                     <Label
                         Grid.Column="1"
-                        Margin="5,0,0,0"
-                        FontFamily="Poppins SemiBold"
-                        FontSize="20"
-                        HorizontalOptions="StartAndExpand"
-                        Text="Grievances"
-                        TextColor="{StaticResource Black}"
-                        VerticalOptions="CenterAndExpand" />
-
-                    <Image
-                        Grid.Column="2"
-                        Margin="0"
-                        Aspect="AspectFit"
-                        HeightRequest="25"
-                        HorizontalOptions="EndAndExpand"
-                        Source="iconSearch.png"
-                        VerticalOptions="CenterAndExpand"
-                        WidthRequest="25">
-                        <Image.GestureRecognizers>
-                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgSearch_Tapped" />
-                        </Image.GestureRecognizers>
-                    </Image>
+                        Style="{StaticResource lblHeader}"
+                        Text="Grievances" />
                 </Grid>
 
                 <Grid
                     Grid.Row="1"
-                    Margin="20,0"
-                    ColumnDefinitions="*,Auto,Auto">
+                    Margin="15,0"
+                    ColumnDefinitions="*,Auto,Auto,Auto">
 
-                    <ext:CustomShadowFrame
+                    <Frame
                         Grid.Column="0"
-                        Margin="0,10"
+                        Margin="0"
                         Padding="0"
                         BackgroundColor="Transparent"
                         BorderColor="{StaticResource LightGray}"
@@ -147,7 +105,7 @@
                         HasShadow="False"
                         HorizontalOptions="StartAndExpand">
                         <Grid
-                            Margin="5"
+                            Margin="7,0"
                             ColumnDefinitions="Auto,*"
                             ColumnSpacing="0">
                             <Image
@@ -161,7 +119,7 @@
 
                             <Label
                                 Grid.Column="1"
-                                Margin="5,0,0,0"
+                                Margin="5,3,0,0"
                                 FontFamily="Poppins"
                                 FontSize="13"
                                 HorizontalOptions="CenterAndExpand"
@@ -169,52 +127,88 @@
                                 TextColor="{StaticResource Black}"
                                 VerticalOptions="CenterAndExpand" />
                         </Grid>
-                        <ext:CustomShadowFrame.GestureRecognizers>
+                        <Frame.GestureRecognizers>
                             <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmAdd_Tapped" />
-                        </ext:CustomShadowFrame.GestureRecognizers>
-                    </ext:CustomShadowFrame>
-
-                    <ext:CustomShadowFrame
+                        </Frame.GestureRecognizers>
+                    </Frame>
+                    <Frame
+                        x:Name="FrmSortBy"
                         Grid.Column="1"
-                        Margin="0,10,10,10"
+                        Margin="0"
                         Padding="0"
                         BackgroundColor="Transparent"
                         BorderColor="{StaticResource LightGray}"
                         CornerRadius="5"
                         HasShadow="False"
-                        HorizontalOptions="EndAndExpand">
+                        HorizontalOptions="EndAndExpand"
+                        IsClippedToBounds="True">
                         <Grid
                             Margin="5"
                             ColumnDefinitions="Auto,*"
-                            ColumnSpacing="0"
-                            VerticalOptions="CenterAndExpand">
+                            ColumnSpacing="0">
                             <Image
+                                x:Name="ImgSort"
                                 Grid.Column="0"
                                 Margin="0"
-                                Aspect="AspectFit"
                                 HeightRequest="20"
                                 HorizontalOptions="CenterAndExpand"
-                                Source="iconSort.png"
+                                Source="iconSortASC.png"
                                 VerticalOptions="CenterAndExpand" />
 
                             <Label
                                 Grid.Column="1"
-                                Margin="5,0,0,0"
+                                Margin="0,5,0,0"
                                 FontFamily="Poppins"
-                                FontSize="13"
+                                FontSize="12"
                                 HorizontalOptions="CenterAndExpand"
                                 Text="Sort by"
                                 TextColor="{StaticResource Black}"
                                 VerticalOptions="CenterAndExpand" />
                         </Grid>
-                        <ext:CustomShadowFrame.GestureRecognizers>
+                        <Frame.GestureRecognizers>
                             <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmSortBy_Tapped" />
-                        </ext:CustomShadowFrame.GestureRecognizers>
-                    </ext:CustomShadowFrame>
-
-                    <ext:CustomShadowFrame
+                        </Frame.GestureRecognizers>
+                    </Frame>
+                    <Frame
+                        x:Name="FrmFilterBy"
                         Grid.Column="2"
-                        Margin="0,10"
+                        Margin="0"
+                        Padding="0"
+                        BackgroundColor="Transparent"
+                        BorderColor="{StaticResource LightGray}"
+                        CornerRadius="5"
+                        HasShadow="False"
+                        HorizontalOptions="EndAndExpand"
+                        IsClippedToBounds="True">
+                        <Grid
+                            Margin="5"
+                            ColumnDefinitions="Auto,*"
+                            ColumnSpacing="0">
+                            <Image
+                                Grid.Column="0"
+                                Margin="0"
+                                HeightRequest="20"
+                                HorizontalOptions="CenterAndExpand"
+                                Source="iconFilter.png"
+                                VerticalOptions="CenterAndExpand" />
+
+                            <Label
+                                Grid.Column="1"
+                                Margin="0,5,0,0"
+                                FontFamily="Poppins"
+                                FontSize="12"
+                                HorizontalOptions="CenterAndExpand"
+                                Text="Filter by"
+                                TextColor="{StaticResource Black}"
+                                VerticalOptions="CenterAndExpand" />
+                        </Grid>
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmFilterBy_Tapped" />
+                        </Frame.GestureRecognizers>
+                    </Frame>
+                    <Frame
+                        Grid.Column="3"
+                        Margin="0"
                         Padding="0"
                         BackgroundColor="Transparent"
                         BorderColor="{StaticResource LightGray}"
@@ -222,7 +216,7 @@
                         HasShadow="False"
                         HorizontalOptions="EndAndExpand">
                         <Grid
-                            Margin="5"
+                            Margin="5,0"
                             ColumnDefinitions="Auto,*"
                             ColumnSpacing="0">
                             <Image
@@ -236,7 +230,7 @@
 
                             <Label
                                 Grid.Column="1"
-                                Margin="5,0,0,0"
+                                Margin="5,3,0,0"
                                 FontFamily="Poppins"
                                 FontSize="13"
                                 HorizontalOptions="CenterAndExpand"
@@ -244,21 +238,16 @@
                                 TextColor="{StaticResource Black}"
                                 VerticalOptions="CenterAndExpand" />
                         </Grid>
-                        <ext:CustomShadowFrame.GestureRecognizers>
+                        <Frame.GestureRecognizers>
                             <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmStatus_Tapped" />
-                        </ext:CustomShadowFrame.GestureRecognizers>
-                    </ext:CustomShadowFrame>
+                        </Frame.GestureRecognizers>
+                    </Frame>
                 </Grid>
 
                 <ListView
                     x:Name="lstGrievance"
                     Grid.Row="2"
-                    HasUnevenRows="True"
-                    HorizontalOptions="FillAndExpand"
-                    HorizontalScrollBarVisibility="Never"
-                    SeparatorVisibility="None"
-                    VerticalOptions="FillAndExpand"
-                    VerticalScrollBarVisibility="Never">
+                    Style="{StaticResource lstPrimary}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
@@ -300,7 +289,7 @@
                                                 VerticalOptions="CenterAndExpand" />
                                         </Grid>
 
-                                        <ext:CustomShadowFrame
+                                        <Frame
                                             Grid.Column="1"
                                             Margin="0"
                                             Padding="0"
@@ -321,7 +310,7 @@
                                                 Text="{Binding GrStatus}"
                                                 TextColor="{StaticResource Green}"
                                                 VerticalOptions="CenterAndExpand" />
-                                        </ext:CustomShadowFrame>
+                                        </Frame>
 
                                     </Grid>
 

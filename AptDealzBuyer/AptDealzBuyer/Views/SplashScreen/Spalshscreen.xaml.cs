@@ -1,4 +1,5 @@
-﻿using AptDealzBuyer.API;
+﻿using Acr.UserDialogs;
+using AptDealzBuyer.API;
 using AptDealzBuyer.Utility;
 using AptDealzBuyer.Views.MasterData;
 using System.Threading.Tasks;
@@ -26,52 +27,8 @@ namespace AptDealzBuyer.Views.SplashScreen
 
         async void BindNavigation()
         {
-            try
-            {
-                await Task.Delay(5 * 1000);
-
-                if (Common.EmptyFiels(Settings.UserToken))
-                {
-                    App.Current.MainPage = new NavigationPage(new WelcomePage());
-                }
-                else
-                {
-                    Common.Token = Settings.UserToken;
-
-                    AuthenticationAPI authenticationAPI = new AuthenticationAPI();
-                    var mResponse = await authenticationAPI.RefreshToken(Settings.RefreshToken);
-                    if (mResponse != null && mResponse.Succeeded)
-                    {
-                        var jObject = (Newtonsoft.Json.Linq.JObject)mResponse.Data;
-                        if (jObject != null)
-                        {
-                            var mBuyer = jObject.ToObject<Model.Request.Buyer>();
-                            if (mBuyer != null)
-                            {
-                                Settings.UserId = mBuyer.Id;
-                                Settings.UserToken = mBuyer.JwToken;
-                                Common.Token = mBuyer.JwToken;
-                                Settings.RefreshToken = mBuyer.RefreshToken;
-                                Settings.LoginTrackingKey = mBuyer.LoginTrackingKey == "00000000-0000-0000-0000-000000000000" ? Settings.LoginTrackingKey : mBuyer.LoginTrackingKey;
-                                App.Current.MainPage = new MasterDataPage();
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (mResponse != null)
-                            Common.DisplayErrorMessage(mResponse.Message);
-                        else
-                            Common.DisplayErrorMessage(Constraints.Something_Wrong);
-
-                        App.Current.MainPage = new NavigationPage(new WelcomePage());
-                    }
-                }
-            }
-            catch (System.Exception ex)
-            {
-                Common.DisplayErrorMessage("Spalshscreen/BindNavigation: " + ex.Message);
-            }
+            await Task.Delay(5 * 1000);
+            App.Current.MainPage = new NavigationPage(new Views.SplashScreen.WelcomePage());
         }
         #endregion
     }

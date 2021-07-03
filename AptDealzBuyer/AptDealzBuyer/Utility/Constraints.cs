@@ -22,6 +22,9 @@
 
         public const string CheckBox_UnChecked = "iconUncheck.png";
         public const string CheckBox_Checked = "iconCheck.png";
+
+        public const string GreenArrow_Down = "iconGreenDownArrow.png";
+        public const string GreenArrow_Up = "iconGreenUpArrow.png";
         #endregion
 
         #region Error Message
@@ -45,6 +48,7 @@
         #endregion
 
         #region Alert Message
+        public const string CouldNotSentOTP = "Could not send Verification Code to the given number!";
         public const string AreYouSureWantDeactivateAccount = "Are you sure want to deactivate account?";
         public const string AreYouSureWantDelete = "Are you sure want to delete?";
         public const string AreYouSureWantCancel = "Are you sure want to cancel?";
@@ -64,6 +68,11 @@
 
         public const string InValid_Email = "Please enter valid email address!";
         public const string InValid_PhoneNumber = "Please enter valid phone number!";
+        public const string InValid_Pincode = "Please enter valid pincode!";
+        public const string InValid_OTP = "Verification code is invalid! Try again!";
+        public const string InValid_Nationality = "Please enter valid nationality!";
+
+        public const string Required_All = "Selected fields are required!";
         public const string Required_Email_Phone = "Please enter email address or phone number!";
         public const string Required_Email = "Please enter email address!";
         public const string Required_VerificationCode = "Please enter verification code!";
@@ -79,9 +88,11 @@
         public const string Required_Title = "Please enter title!";
         public const string Required_Category = "Please select category!";
         public const string Required_SubCategory = "Please select sub category!";
+        public const string Required_QuantityUnits = "Please select quantity unit!";
         public const string Required_Description = "Please enter description!";
         public const string Required_Quantity = "Please enter quantity!";
-        public const string Required_Delivery_PinCode = "Please enter delivery location pin code!";
+        public const string Required_PriceEstimation = "Please enter total price estimation!";
+        public const string Required_Delivery_PinCode = "Please enter location pin code!";
 
         public const string Required_Billing_Name = "Please enter billing address name!";
         public const string Required_Billing_Building = "Please enter billing address building!";
@@ -95,6 +106,11 @@
         public const string Required_Shipping_City = "Please enter shipping address city!";
         public const string Required_Shipping_PinCode = "Please enter shipping address pin code!";
         public const string Required_Shipping_Landmark = "Please enter shipping address landmark!";
+        #endregion
+
+        #region Success
+        public const string OTPSent = "OTP Verification Code Sent Successfully";
+        public const string InstantVerification = "you don't get any code, it is instant verification. Please try to login with email address";
         #endregion
     }
 }

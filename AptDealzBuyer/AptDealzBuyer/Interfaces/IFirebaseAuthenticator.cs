@@ -1,4 +1,5 @@
 ﻿using AptDealzBuyer.Model.Reponse;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 
@@ -8,7 +9,7 @@ namespace AptDealzBuyer.Interfaces
     {
         Task<string> LoginAsync(string username, string password);
 
-        Task<bool> SendOtpCodeAsync(string phoneNumber);
+        Task<Dictionary<bool, string>> SendOtpCodeAsync(string phoneNumber);
 
         Task<string> VerifyOtpCodeAsync(string code);
 

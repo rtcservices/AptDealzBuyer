@@ -26,14 +26,13 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         #endregion
 
         #region Methods
-        // write methods here
         public void BindMenus()
         {
             List<HomeMenu> HomeMenus;
             HomeMenus = new List<HomeMenu>()
             {
                 new HomeMenu{ MenuId=1, MenuImage="imgActiveRequirements.png", UiName="Active\nRequirements", MenuName="ActiveRequirements"},
-                new HomeMenu{ MenuId=2, MenuImage="imgPostRequirements.png", UiName="Post New\nRequirements", MenuName="PostNewRequirements"},
+                new HomeMenu{ MenuId=2, MenuImage="imgPostRequirements.png", UiName="Post New\nRequirement", MenuName="PostNewRequirements"},
                 new HomeMenu { MenuId = 3, MenuImage = "imgPreviousRequirements.png", UiName = "Previous\nRequirements", MenuName = "PreviousRequirements" },
                 new HomeMenu { MenuId = 4, MenuImage = "imgOrderHistory.png", UiName = "Order\nHistory", MenuName = "OrderHistory" },
                 new HomeMenu { MenuId = 5, MenuImage = "imgShippingDetails.png", UiName = "Shipping\nDetails", MenuName = "ShippingDetails" },
@@ -42,7 +41,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 new HomeMenu { MenuId = 8, MenuImage = "imgGrievances.png", UiName = "Grievances", MenuName = "Grievances" },
                 new HomeMenu { MenuId = 9, MenuImage = "imgContactSupport.png", UiName = "Contact\nSupport", MenuName = "ContactSupport" },
                 new HomeMenu { MenuId = 10, MenuImage = "imgAboutAptDealz.png", UiName = "About\nAptDealz", MenuName = "AboutAptDealz" },
-                new HomeMenu { MenuId = 11, MenuImage = "imgTermsPolicies.png", UiName = "Terms & Policies", MenuName = "TermsPolicies" },
+                new HomeMenu { MenuId = 11, MenuImage = "iconTandP.png", UiName = "Terms & Policies", MenuName = "TermsPolicies" },
                 new HomeMenu { MenuId = 12, MenuImage = "imgFAQHelp.png", UiName = "FAQ & Help", MenuName = "FAQHelp" },
                 new HomeMenu { MenuId = 13, MenuImage = "imgWeSupport.png", UiName = "We Support", MenuName = "WeSupport" },
             };
@@ -72,7 +71,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         {
             try
             {
-                var stk = (Extention.CustomShadowFrame)sender;
+                var stk = (Extention.ExtShadowFrame)sender;
                 var menuName = stk.BindingContext as HomeMenu;
 
                 if (menuName != null && menuName.MenuName == "PostNewRequirements")

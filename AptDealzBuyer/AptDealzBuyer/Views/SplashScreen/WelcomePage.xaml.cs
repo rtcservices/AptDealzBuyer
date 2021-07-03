@@ -29,7 +29,6 @@ namespace AptDealzBuyer.Views.SplashScreen
             InitializeComponent();
             Navigation.PushAsync(new Login.LoginPage());
         }
-
         #endregion
 
         #region Methods       
@@ -81,11 +80,11 @@ namespace AptDealzBuyer.Views.SplashScreen
             Navigation.PushAsync(new Login.LoginPage());
         }
 
-        private void FrmLogin_Tapped(object sender, EventArgs e)
+        private void BtnLogin_Clicked(object sender, EventArgs e)
         {
-            Common.BindAnimation(frame: FrmLogin);
+            Common.BindAnimation(button: BtnLogin);
             Navigation.PushAsync(new Login.LoginPage());
         }
-        #endregion       
+        #endregion
     }
 }

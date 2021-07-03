@@ -3,17 +3,15 @@
     x:Class="AptDealzBuyer.Views.DashboardPages.GrievanceDetailsPage"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:ext="clr-namespace:AptDealzBuyer.Extention"
     xmlns:iOS="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
     iOS:Page.UseSafeArea="True"
     BackgroundColor="{StaticResource White}"
     NavigationPage.HasNavigationBar="False">
     <ContentPage.Content>
 
-       <Grid RowSpacing="0">
+        <Grid RowSpacing="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="50" />
-                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
@@ -36,15 +34,7 @@
                     </Image.GestureRecognizers>
                 </Image>
 
-                <Image
-                    Grid.Column="1"
-                    Margin="0"
-                    Aspect="AspectFill"
-                    HeightRequest="45"
-                    HorizontalOptions="CenterAndExpand"
-                    Source="iconHeaderLogo.png"
-                    VerticalOptions="CenterAndExpand"
-                    WidthRequest="45" />
+                <Image Grid.Column="1" Style="{StaticResource imgLogo}" />
 
                 <StackLayout
                     Grid.Column="2"
@@ -73,16 +63,10 @@
                         </Image.GestureRecognizers>
                     </Image>
                 </StackLayout>
+                <BoxView Grid.ColumnSpan="3" Style="{StaticResource boxHorizontal}" />
             </Grid>
-            <!--#endregion-->
-            <BoxView
-                Grid.Row="1"
-                BackgroundColor="{StaticResource LightGray}"
-                HeightRequest="1"
-                HorizontalOptions="FillAndExpand"
-                VerticalOptions="EndAndExpand" />
 
-            <Grid Grid.Row="2" Margin="0">
+            <Grid Grid.Row="1" Margin="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
@@ -90,38 +74,23 @@
 
                 <Grid
                     Grid.Row="0"
-                    Margin="20,0"
-                    ColumnDefinitions="Auto,*,Auto"
-                    HorizontalOptions="FillAndExpand">
-                    <Image
+                    Margin="5,5,5,0"
+                    ColumnDefinitions="Auto,*"
+                    ColumnSpacing="0">
+                    <ImageButton
                         x:Name="ImgBack"
-                        Margin="0"
-                        Aspect="AspectFit"
-                        HeightRequest="25"
-                        HorizontalOptions="StartAndExpand"
+                        Grid.Column="0"
+                        Clicked="ImgBack_Tapped"
                         Source="iconBackArrow.png"
-                        VerticalOptions="CenterAndExpand"
-                        WidthRequest="25">
-                        <Image.GestureRecognizers>
-                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgBack_Tapped" />
-                        </Image.GestureRecognizers>
-                    </Image>
-
+                        Style="{StaticResource ImgBtnPrimary}" />
                     <Label
                         Grid.Column="1"
-                        Margin="5,0,0,0"
-                        FontFamily="Poppins SemiBold"
-                        FontSize="20"
-                        HorizontalOptions="StartAndExpand"
-                        Text="Grievance Details"
-                        TextColor="{StaticResource Black}"
-                        VerticalOptions="CenterAndExpand" />
-
+                        Style="{StaticResource lblHeader}"
+                        Text="Grievance Details" />
                 </Grid>
 
-                <ScrollView Grid.Row="1" Margin="0,15,0,0">
-
-                    <Grid Margin="0" RowDefinitions="*,Auto,Auto,Auto,Auto">
+                <ScrollView Grid.Row="1" Style="{StaticResource scrPrimary}">
+                    <Grid RowDefinitions="Auto,Auto" RowSpacing="0">
 
                         <Grid
                             Grid.Row="0"
@@ -129,10 +98,6 @@
                             HorizontalOptions="FillAndExpand"
                             RowSpacing="10">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
@@ -416,184 +381,146 @@
                             </StackLayout>
                         </Grid>
 
-                        <ext:CustomShadowFrame
-                            Grid.Row="1"
-                            Margin="20"
-                            Padding="0"
-                            BackgroundColor="Transparent"
-                            BorderColor="{StaticResource LightGray}"
-                            CornerRadius="5"
-                            HasShadow="False"
-                            HeightRequest="100"
-                            HorizontalOptions="FillAndExpand"
-                            VerticalOptions="CenterAndExpand">
-                            <Editor
-                                Margin="10"
-                                FontFamily="Poppins"
-                                FontSize="14"
-                                HorizontalOptions="FillAndExpand"
-                                Text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text."
-                                TextColor="{StaticResource Black}"
-                                VerticalOptions="CenterAndExpand" />
-                        </ext:CustomShadowFrame>
-
                         <Grid
-                            Grid.Row="2"
-                            Margin="20,10"
-                            RowDefinitions="Auto,Auto"
-                            RowSpacing="40">
-
-                            <Grid
+                            Grid.Row="1"
+                            Padding="20"
+                            RowSpacing="20">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Frame
                                 Grid.Row="0"
-                                ColumnDefinitions="Auto,*"
-                                ColumnSpacing="10">
-
-                                <StackLayout
-                                    Grid.Column="0"
-                                    HorizontalOptions="CenterAndExpand"
-                                    Spacing="0"
-                                    VerticalOptions="CenterAndExpand">
-                                    <Image
-                                        Margin="0"
-                                        Aspect="Fill"
-                                        HeightRequest="50"
-                                        HorizontalOptions="CenterAndExpand"
-                                        Source="iconUserGreen.png"
-                                        VerticalOptions="CenterAndExpand"
-                                        WidthRequest="50" />
-
-                                    <Label
-                                        Margin="0"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="15"
-                                        HorizontalOptions="CenterAndExpand"
-                                        Text="Admin"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
-
-                                </StackLayout>
-
-                                <ext:CustomShadowFrame
-                                    Grid.Column="1"
-                                    Margin="0"
-                                    Padding="0"
-                                    BackgroundColor="Transparent"
-                                    BorderColor="{StaticResource LightGray}"
-                                    CornerRadius="5"
-                                    HasShadow="False">
-                                    <Editor
-                                        x:Name="txtAdminResponse"
-                                        Margin="10"
-                                        FontFamily="Poppins"
-                                        FontSize="14"
-                                        HorizontalOptions="FillAndExpand"
-                                        Placeholder="Response"
-                                        PlaceholderColor="{StaticResource Gray}"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="FillAndExpand" />
-                                </ext:CustomShadowFrame>
-
-                            </Grid>
+                                Margin="0"
+                                Padding="10"
+                                BackgroundColor="Transparent"
+                                BorderColor="{StaticResource LightGray}"
+                                CornerRadius="5"
+                                HasShadow="False"
+                                HorizontalOptions="FillAndExpand"
+                                VerticalOptions="CenterAndExpand">
+                                <Editor
+                                    Margin="10"
+                                    Style="{StaticResource edPrimary}"
+                                    Text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text." />
+                            </Frame>
 
                             <Grid
                                 Grid.Row="1"
-                                ColumnDefinitions="Auto,*"
-                                ColumnSpacing="10">
+                                RowDefinitions="Auto,Auto"
+                                RowSpacing="20">
 
-                                <StackLayout
-                                    Grid.Column="0"
-                                    HorizontalOptions="CenterAndExpand"
-                                    Spacing="0"
-                                    VerticalOptions="CenterAndExpand">
-                                    <Image
-                                        Margin="0"
-                                        Aspect="Fill"
-                                        HeightRequest="50"
+                                <Grid
+                                    Grid.Row="0"
+                                    ColumnDefinitions="Auto,*"
+                                    ColumnSpacing="10">
+
+                                    <StackLayout
+                                        Grid.Column="0"
                                         HorizontalOptions="CenterAndExpand"
-                                        Source="iconUserGreen.png"
-                                        VerticalOptions="CenterAndExpand"
-                                        WidthRequest="50" />
+                                        Spacing="0"
+                                        VerticalOptions="CenterAndExpand">
+                                        <Image
+                                            Margin="0"
+                                            Aspect="Fill"
+                                            HeightRequest="50"
+                                            HorizontalOptions="CenterAndExpand"
+                                            Source="iconUserGreen.png"
+                                            VerticalOptions="CenterAndExpand"
+                                            WidthRequest="50" />
 
-                                    <Label
+                                        <Label
+                                            Margin="0"
+                                            FontFamily="Poppins Medium"
+                                            FontSize="15"
+                                            HorizontalOptions="CenterAndExpand"
+                                            Text="Admin"
+                                            TextColor="{StaticResource Black}"
+                                            VerticalOptions="CenterAndExpand" />
+
+                                    </StackLayout>
+
+                                    <Frame
+                                        Grid.Column="1"
                                         Margin="0"
-                                        FontFamily="Poppins"
-                                        FontSize="15"
+                                        Padding="0"
+                                        BackgroundColor="Transparent"
+                                        BorderColor="{StaticResource LightGray}"
+                                        CornerRadius="5"
+                                        HasShadow="False">
+                                        <Editor
+                                            x:Name="txtAdminResponse"
+                                            Margin="10"
+                                            Placeholder="Response"
+                                            Style="{StaticResource edPrimary}" />
+                                    </Frame>
+                                </Grid>
+
+                                <Grid
+                                    Grid.Row="1"
+                                    ColumnDefinitions="Auto,*"
+                                    ColumnSpacing="10">
+
+                                    <StackLayout
+                                        Grid.Column="0"
                                         HorizontalOptions="CenterAndExpand"
-                                        Text="Buyer"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Spacing="0"
+                                        VerticalOptions="CenterAndExpand">
+                                        <Image
+                                            Margin="0"
+                                            Aspect="Fill"
+                                            HeightRequest="50"
+                                            HorizontalOptions="CenterAndExpand"
+                                            Source="iconUserGreen.png"
+                                            VerticalOptions="CenterAndExpand"
+                                            WidthRequest="50" />
 
-                                </StackLayout>
+                                        <Label
+                                            Margin="0"
+                                            FontFamily="Poppins Medium"
+                                            FontSize="15"
+                                            HorizontalOptions="CenterAndExpand"
+                                            Text="Buyer"
+                                            TextColor="{StaticResource Black}"
+                                            VerticalOptions="CenterAndExpand" />
 
-                                <ext:CustomShadowFrame
-                                    Grid.Column="1"
-                                    Margin="0"
-                                    Padding="0"
-                                    BackgroundColor="Transparent"
-                                    BorderColor="{StaticResource LightGray}"
-                                    CornerRadius="5"
-                                    HasShadow="False">
-                                    <Editor
-                                        x:Name="txtBuyerResponse"
-                                        Margin="10"
-                                        FontFamily="Poppins"
-                                        FontSize="14"
-                                        HorizontalOptions="FillAndExpand"
-                                        Placeholder="Response"
-                                        PlaceholderColor="{StaticResource Gray}"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="FillAndExpand" />
-                                </ext:CustomShadowFrame>
+                                    </StackLayout>
 
+                                    <Frame
+                                        Grid.Column="1"
+                                        Margin="0"
+                                        Padding="0"
+                                        BackgroundColor="Transparent"
+                                        BorderColor="{StaticResource LightGray}"
+                                        CornerRadius="5"
+                                        HasShadow="False">
+                                        <Editor
+                                            x:Name="txtBuyerResponse"
+                                            Margin="10"
+                                            Placeholder="Response"
+                                            Style="{StaticResource edPrimary}" />
+                                    </Frame>
+                                </Grid>
                             </Grid>
 
+                            <StackLayout Grid.Row="2" Spacing="{OnPlatform Android=0, iOS=5}">
+                                <Label Style="{StaticResource lblPrimary13}" Text="Enter your message" />
+                                <Editor
+                                    x:Name="txtMessage"
+                                    Margin="10"
+                                    HeightRequest="100"
+                                    Style="{StaticResource edPrimary}" />
+                                <BoxView Style="{StaticResource boxHorizontal}" />
+                            </StackLayout>
+
+                            <Button
+                                Grid.Row="3"
+                                Clicked="FrmSubmit_Tapped"
+                                Style="{StaticResource btnPrimary}"
+                                Text="Submit" />
                         </Grid>
-
-                        <ext:CustomShadowFrame
-                            Grid.Row="3"
-                            Margin="20,40"
-                            Padding="0"
-                            BackgroundColor="Transparent"
-                            BorderColor="{StaticResource LightGray}"
-                            CornerRadius="5"
-                            HasShadow="False"
-                            HeightRequest="140">
-                            <Editor
-                                x:Name="txtMessage"
-                                Margin="10"
-                                FontFamily="Poppins"
-                                FontSize="14"
-                                HorizontalOptions="FillAndExpand"
-                                Placeholder="Enter your message"
-                                PlaceholderColor="{StaticResource Gray}"
-                                TextColor="{StaticResource Black}"
-                                VerticalOptions="FillAndExpand" />
-                        </ext:CustomShadowFrame>
-
-                        <ext:CustomShadowFrame
-                            Grid.Row="4"
-                            Margin="20,0,20,40"
-                            Padding="0"
-                            BackgroundColor="{StaticResource Green}"
-                            CornerRadius="5"
-                            HasShadow="False"
-                            HorizontalOptions="FillAndExpand"
-                            VerticalOptions="CenterAndExpand">
-                            <Label
-                                Grid.Column="1"
-                                Margin="20,10"
-                                FontFamily="Poppins Medium"
-                                FontSize="15"
-                                HorizontalOptions="CenterAndExpand"
-                                LineBreakMode="WordWrap"
-                                Text="Submit"
-                                TextColor="{StaticResource White}"
-                                VerticalOptions="CenterAndExpand" />
-                            <ext:CustomShadowFrame.GestureRecognizers>
-                                <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmSubmit_Tapped" />
-                            </ext:CustomShadowFrame.GestureRecognizers>
-                        </ext:CustomShadowFrame>
-
                     </Grid>
 
                 </ScrollView>

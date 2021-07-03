@@ -39,7 +39,7 @@ namespace AptDealzBuyer.Views.OtherPages
             mMessageList.Add(new MessageList()
             {
                 Message = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                MessageMargin = new Thickness(30, 30, 0, 0),
+                MessageMargin = new Thickness(20, 20, 0, 0),
                 MessagePosition = LayoutOptions.EndAndExpand,
                 UserName = "Michal Beven",
                 Time = "10:57 am",
@@ -48,7 +48,7 @@ namespace AptDealzBuyer.Views.OtherPages
             mMessageList.Add(new MessageList()
             {
                 Message = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                MessageMargin = new Thickness(0, 30, 30, 0),
+                MessageMargin = new Thickness(0, 20, 20, 0),
                 MessagePosition = LayoutOptions.StartAndExpand,
                 UserName = "Customer Support",
                 Time = "10:57 am",
@@ -57,7 +57,7 @@ namespace AptDealzBuyer.Views.OtherPages
             mMessageList.Add(new MessageList()
             {
                 Message = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                MessageMargin = new Thickness(30, 30, 0, 0),
+                MessageMargin = new Thickness(20, 20, 0, 0),
                 MessagePosition = LayoutOptions.EndAndExpand,
                 UserName = "Michal Beven",
                 Time = "10:57 am",
@@ -66,7 +66,7 @@ namespace AptDealzBuyer.Views.OtherPages
             mMessageList.Add(new MessageList()
             {
                 Message = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                MessageMargin = new Thickness(0, 30, 30, 0),
+                MessageMargin = new Thickness(0, 20, 20, 0),
                 MessagePosition = LayoutOptions.StartAndExpand,
                 UserName = "Customer Support",
                 Time = "10:57 am",
@@ -75,7 +75,7 @@ namespace AptDealzBuyer.Views.OtherPages
             mMessageList.Add(new MessageList()
             {
                 Message = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                MessageMargin = new Thickness(30, 30, 0, 0),
+                MessageMargin = new Thickness(20, 20, 0, 0),
                 MessagePosition = LayoutOptions.EndAndExpand,
                 UserName = "Michal Beven",
                 Time = "10:57 am",
@@ -84,7 +84,7 @@ namespace AptDealzBuyer.Views.OtherPages
             mMessageList.Add(new MessageList()
             {
                 Message = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                MessageMargin = new Thickness(0, 30, 30, 0),
+                MessageMargin = new Thickness(0, 20, 20, 0),
                 MessagePosition = LayoutOptions.StartAndExpand,
                 UserName = "Customer Support",
                 Time = "10:57 am",
@@ -113,8 +113,9 @@ namespace AptDealzBuyer.Views.OtherPages
 
         private void ImgBack_Tapped(object sender, EventArgs e)
         {
-            Common.BindAnimation(image: ImgBack);
-            App.Current.MainPage = new MasterDataPage();
+            Common.BindAnimation(imageButton: ImgBack);
+            //App.Current.MainPage = new MasterDataPage();
+            Navigation.PopAsync();
         }
 
         private void ImgSend_Tapped(object sender, EventArgs e)

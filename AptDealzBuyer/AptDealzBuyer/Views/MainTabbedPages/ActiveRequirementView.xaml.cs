@@ -69,7 +69,6 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                     FrmSearchBy.IsVisible = false;
                     lblNoRecord.IsVisible = true;
                     lblNoRecord.Text = mResponse.Message;
-                    //Common.DisplayErrorMessage(mResponse.Message);
                 }
             }
             catch (Exception ex)
@@ -145,16 +144,9 @@ namespace AptDealzBuyer.Views.MainTabbedPages
 
         private void ImgBack_Tapped(object sender, EventArgs e)
         {
-            Common.BindAnimation(image: ImgBack);
+            Common.BindAnimation(imageButton: ImgBack);
             App.Current.MainPage = new MasterDataPage();
         }
-
-        //private void ImgSearch_Tapped(object sender, EventArgs e)
-        //{
-        //    //PopupNavigation.Instance.PushAsync(new PopupPages.SearchPopup());
-        //    FrmSearchBy.IsVisible = true;
-
-        //}
 
         private void FrmSortBy_Tapped(object sender, EventArgs e)
         {
@@ -178,8 +170,6 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             {
                 Common.DisplayErrorMessage("ActiveRequirementView/FrmSortBy_Tapped: " + ex.Message);
             }
-
-
         }
 
         private void ImgExpand_Tapped(object sender, EventArgs e)
@@ -223,7 +213,6 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             var mRequirement = GridExp.BindingContext as Requirement;
             Navigation.PushAsync(new DashboardPages.ViewRequirememntPage("active", mRequirement.RequirementId));
         }
-        #endregion
 
         private void ImgDelete_Tapped(object sender, EventArgs e)
         {
@@ -300,6 +289,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                     if (ReqSearch != null && ReqSearch.Count > 0)
                     {
                         lstRequirements.IsVisible = true;
+                        FrmFilterBy.IsVisible = true;
                         FrmSortBy.IsVisible = true;
                         lblNoRecord.IsVisible = false;
                         lstRequirements.ItemsSource = ReqSearch.ToList();
@@ -307,6 +297,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                     else
                     {
                         lstRequirements.IsVisible = false;
+                        FrmFilterBy.IsVisible = false;
                         FrmSortBy.IsVisible = false;
                         lblNoRecord.IsVisible = true;
                     }
@@ -325,7 +316,6 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         private void BtnClose_Clicked(object sender, EventArgs e)
         {
             entrSearch.Text = string.Empty;
-            //FrmSearchBy.IsVisible = false;
             BindList();
         }
 
@@ -351,5 +341,6 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 Common.DisplayErrorMessage("ActiveRequirementView/CustomEntry_Unfocused: " + ex.Message);
             }
         }
+        #endregion
     }
 }

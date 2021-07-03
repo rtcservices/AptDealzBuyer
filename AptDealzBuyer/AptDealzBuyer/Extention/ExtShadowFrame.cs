@@ -2,25 +2,25 @@
 
 namespace AptDealzBuyer.Extention
 {
-    public class CustomShadowFrame : Frame
+    public class ExtShadowFrame : Frame
     {
         public static readonly BindableProperty RadiusProperty =
-           BindableProperty.Create(nameof(Radius), typeof(float), typeof(CustomShadowFrame), 0f, BindingMode.Default);
+           BindableProperty.Create(nameof(Radius), typeof(float), typeof(ExtShadowFrame), 0f, BindingMode.Default);
 
         public static readonly BindableProperty CustomBorderColorProperty =
-            BindableProperty.Create(nameof(CustomBorderColor), typeof(Color), typeof(CustomShadowFrame), default(Color), BindingMode.Default);
+            BindableProperty.Create(nameof(CustomBorderColor), typeof(Color), typeof(ExtShadowFrame), default(Color), BindingMode.Default);
 
         public static readonly BindableProperty BorderWidthProperty =
-            BindableProperty.Create(nameof(BorderWidth), typeof(int), typeof(CustomShadowFrame), default(int), BindingMode.Default);
+            BindableProperty.Create(nameof(BorderWidth), typeof(int), typeof(ExtShadowFrame), default(int), BindingMode.Default);
 
         public static readonly BindableProperty ShadowOpacityProperty =
-            BindableProperty.Create(nameof(ShadowOpacity), typeof(float), typeof(CustomShadowFrame), 1F, BindingMode.Default);
+            BindableProperty.Create(nameof(ShadowOpacity), typeof(float), typeof(ExtShadowFrame), 1F, BindingMode.Default);
 
         public static readonly BindableProperty ShadowOffsetWidthProperty =
-            BindableProperty.Create(nameof(ShadowOffsetWidth), typeof(float), typeof(CustomShadowFrame), 0f, BindingMode.Default);
+            BindableProperty.Create(nameof(ShadowOffsetWidth), typeof(float), typeof(ExtShadowFrame), 0f, BindingMode.Default);
 
         public static readonly BindableProperty ShadowOffSetHeightProperty =
-            BindableProperty.Create(nameof(ShadowOffSetHeight), typeof(float), typeof(CustomShadowFrame), 4f, BindingMode.Default);
+            BindableProperty.Create(nameof(ShadowOffSetHeight), typeof(float), typeof(ExtShadowFrame), 4f, BindingMode.Default);
 
         // Gets or sets the radius of the Frame corners.
         public float Radius

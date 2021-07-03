@@ -11,10 +11,11 @@
         <Grid RowSpacing="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="50" />
-                <RowDefinition Height="Auto" />
+
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
+            <!--  Header  -->
             <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="80" />
@@ -34,15 +35,7 @@
                     </Image.GestureRecognizers>
                 </Image>
 
-                <Image
-                    Grid.Column="1"
-                    Margin="0"
-                    Aspect="AspectFill"
-                    HeightRequest="45"
-                    HorizontalOptions="CenterAndExpand"
-                    Source="iconHeaderLogo.png"
-                    VerticalOptions="CenterAndExpand"
-                    WidthRequest="45" />
+                <Image Grid.Column="1" Style="{StaticResource imgLogo}" />
 
                 <StackLayout
                     Grid.Column="2"
@@ -71,30 +64,19 @@
                         </Image.GestureRecognizers>
                     </Image>
                 </StackLayout>
+                <BoxView Grid.ColumnSpan="3" Style="{StaticResource boxHorizontal}" />
             </Grid>
 
-            <BoxView
-                Grid.Row="1"
-                BackgroundColor="{StaticResource LightGray}"
-                HeightRequest="1"
-                HorizontalOptions="FillAndExpand"
-                VerticalOptions="EndAndExpand" />
-
-            <Grid Grid.Row="2" Margin="0">
+            <!--  Main Grid  -->
+            <Grid Grid.Row="1" RowSpacing="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <Label
-                    Grid.Row="0"
-                    Margin="15,15,0,0"
-                    FontFamily="Poppins SemiBold"
-                    FontSize="18"
-                    HorizontalOptions="StartAndExpand"
-                    Text="Dashboard"
-                    TextColor="{StaticResource Black}"
-                    VerticalOptions="EndAndExpand" />
+                <StackLayout Grid.Row="0" Padding="20,15">
+                    <Label Style="{StaticResource lblHeader}" Text="Dashboard" />
+                </StackLayout>
 
                 <flv:FlowListView
                     x:Name="flvMenus"
@@ -107,8 +89,8 @@
                     VerticalScrollBarVisibility="Never">
                     <flv:FlowListView.FlowColumnTemplate>
                         <DataTemplate>
-                            <ext:CustomShadowFrame
-                                Margin="6"
+                            <ext:ExtShadowFrame
+                                Margin="6,0,6,12"
                                 Padding="0"
                                 BackgroundColor="{StaticResource LightGray}"
                                 BorderColor="{StaticResource Gray}"
@@ -147,13 +129,13 @@
                                         TextColor="{StaticResource Black}"
                                         VerticalOptions="CenterAndExpand" />
                                 </Grid>
-                                <ext:CustomShadowFrame.GestureRecognizers>
+                                <ext:ExtShadowFrame.GestureRecognizers>
                                     <TapGestureRecognizer
                                         x:Name="btnDivision"
                                         NumberOfTapsRequired="1"
                                         Tapped="BtnMenu_Tapped" />
-                                </ext:CustomShadowFrame.GestureRecognizers>
-                            </ext:CustomShadowFrame>
+                                </ext:ExtShadowFrame.GestureRecognizers>
+                            </ext:ExtShadowFrame>
                         </DataTemplate>
                     </flv:FlowListView.FlowColumnTemplate>
                 </flv:FlowListView>

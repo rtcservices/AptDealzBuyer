@@ -1,4 +1,5 @@
-﻿using AptDealzBuyer.Utility;
+﻿using AptDealzBuyer.Model.Reponse;
+using AptDealzBuyer.Utility;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -12,17 +13,20 @@ namespace AptDealzBuyer.Model.Request
         [JsonProperty("requirementId")]
         public string RequirementId { get; set; }
 
+        [JsonProperty("requirementNo")]
+        public string RequirementNo { get; set; }
+
         [JsonProperty("userId")]
         public string UserId { get; set; }
 
         [JsonProperty("title")]
         public string Title { get; set; }
 
-        [JsonProperty("category")]
-        public string Category { get; set; }
+        [JsonProperty("buyerName")]
+        public string BuyerName { get; set; }
 
-        [JsonProperty("subCategories")]
-        public List<string> SubCategories { get; set; }
+        [JsonProperty("buyerNo")]
+        public string BuyerNo { get; set; }
 
         [JsonProperty("productImage")]
         public string ProductImage { get; set; }
@@ -33,8 +37,14 @@ namespace AptDealzBuyer.Model.Request
         [JsonProperty("quantity")]
         public int Quantity { get; set; }
 
+        [JsonProperty("unit")]
+        public string Unit { get; set; }
+
+        [JsonProperty("status")]
+        public string Status { get; set; }
+
         [JsonProperty("totalPriceEstimation")]
-        public int TotalPriceEstimation { get; set; }
+        public decimal TotalPriceEstimation { get; set; }
 
         [JsonProperty("preferInIndiaProducts")]
         public bool PreferInIndiaProducts { get; set; }
@@ -87,6 +97,33 @@ namespace AptDealzBuyer.Model.Request
         [JsonProperty("needInsuranceCoverage")]
         public bool NeedInsuranceCoverage { get; set; }
 
+        [JsonProperty("category")]
+        public string Category { get; set; }
+
+        [JsonProperty("subCategories")]
+        public List<string> SubCategories { get; set; }
+
+        [JsonProperty("statusEnum")]
+        public int StatusEnum { get; set; }
+
+        [JsonProperty("isDeleted")]
+        public bool IsDeleted { get; set; }
+
+        [JsonProperty("createdDate")]
+        public DateTime CreatedDate { get; set; }
+
+        [JsonProperty("canRevealContact")]
+        public bool CanRevealContact { get; set; }
+
+        [JsonProperty("receivedQuotes")]
+        public object ReceivedQuotes { get; set; }
+
+        [JsonProperty("buyerContact")]
+        public object BuyerContact { get; set; }
+
+        [JsonProperty("isBuyerContactRevealed")]
+        public bool IsBuyerContactRevealed { get; set; }
+
         [JsonProperty("userProfile")]
         public object UserProfile { get; set; }
 
@@ -105,22 +142,10 @@ namespace AptDealzBuyer.Model.Request
         [JsonProperty("lastModified")]
         public object LastModified { get; set; }
 
-        [JsonProperty("isDeleted")]
-        public bool IsDeleted { get; set; }
-
-        [JsonProperty("requirementNo")]
-        public string RequirementNo { get; set; }
-
-        [JsonProperty("status")]
-        public string Status { get; set; }
-
-        [JsonProperty("createdDate")]
-        public DateTime CreatedDate { get; set; }
-
         [JsonProperty("quotes")]
         public int Quotes { get; set; }
 
-        //Extra Properties
+        #region [ Extra Properties ]
         [JsonIgnore]
         private string _ArrowImage { get; set; } = Constraints.Arrow_Right;
 
@@ -130,7 +155,7 @@ namespace AptDealzBuyer.Model.Request
             get { return _ArrowImage; }
             set { _ArrowImage = value; PropertyChangedEventArgs("ArrowImage"); }
         }
-        
+
         [JsonIgnore]
         private double _NameFont { get; set; } = 13;
         [JsonIgnore]
@@ -214,6 +239,7 @@ namespace AptDealzBuyer.Model.Request
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+        #endregion
     }
 
 }

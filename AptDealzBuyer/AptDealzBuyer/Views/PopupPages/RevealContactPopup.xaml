@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <popup:PopupPage
-    x:Class="AptDealzBuyer.Views.PopupPages.RevealContactPopup"
+    x:Class="AptDealzBuyer.Views.PopupPages.PaymentPopup"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:ext="clr-namespace:AptDealzBuyer.Extention"
     xmlns:popup="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
     NavigationPage.HasNavigationBar="False">
 
-    <ext:CustomShadowFrame
+    <ext:ExtShadowFrame
         Margin="30,0"
         Padding="0"
         BackgroundColor="{StaticResource White}"
@@ -16,13 +16,13 @@
         CornerRadius="10"
         HasShadow="{OnPlatform Android=true,
                                iOS=false}"
-        HeightRequest="350"
+        HeightRequest="250"
         HorizontalOptions="FillAndExpand"
         VerticalOptions="CenterAndExpand">
 
         <Grid
             Margin="0"
-            Padding="0"
+            Padding="20"
             RowDefinitions="*,*,*">
 
             <Label
@@ -38,7 +38,6 @@
             <Label
                 x:Name="lblMessage"
                 Grid.Row="1"
-                Margin="20,0"
                 FontFamily="Poppins"
                 FontSize="15"
                 HorizontalOptions="CenterAndExpand"
@@ -49,56 +48,27 @@
 
             <Grid
                 Grid.Row="2"
-                Margin="20,0"
                 ColumnDefinitions="*,*"
-                ColumnSpacing="10"
+                ColumnSpacing="15"
+                HeightRequest="50"
                 VerticalOptions="CenterAndExpand">
-                <ext:CustomShadowFrame
+                <Button
                     Grid.Column="0"
-                    Margin="0"
-                    Padding="0"
-                    BackgroundColor="{StaticResource Green}"
+                    Clicked="FrmPay_Tapped"
                     CornerRadius="25"
-                    HorizontalOptions="FillAndExpand"
-                    VerticalOptions="CenterAndExpand">
-                    <Label
-                        Margin="0,10"
-                        FontFamily="Poppins Medium"
-                        FontSize="18"
-                        HorizontalOptions="CenterAndExpand"
-                        Text="Pay"
-                        TextColor="{StaticResource White}"
-                        VerticalOptions="CenterAndExpand" />
-                    <ext:CustomShadowFrame.GestureRecognizers>
-                        <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmPay_Tapped" />
-                    </ext:CustomShadowFrame.GestureRecognizers>
-                </ext:CustomShadowFrame>
+                    Style="{StaticResource btnPrimary}"
+                    Text="Pay" />
 
-                <ext:CustomShadowFrame
+                <Button
                     Grid.Column="1"
-                    Margin="0"
-                    Padding="0"
-                    BackgroundColor="Transparent"
-                    BorderColor="{StaticResource Green}"
+                    Clicked="FrmBack_Tapped"
                     CornerRadius="25"
-                    HorizontalOptions="FillAndExpand"
-                    VerticalOptions="CenterAndExpand">
-                    <Label
-                        Margin="0,10"
-                        FontFamily="Poppins Medium"
-                        FontSize="18"
-                        HorizontalOptions="CenterAndExpand"
-                        Text="Back"
-                        TextColor="{StaticResource Green}"
-                        VerticalOptions="CenterAndExpand" />
-                    <ext:CustomShadowFrame.GestureRecognizers>
-                        <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmBack_Tapped" />
-                    </ext:CustomShadowFrame.GestureRecognizers>
-                </ext:CustomShadowFrame>
+                    Style="{StaticResource btnBorder}"
+                    Text="Back" />
             </Grid>
 
         </Grid>
 
-    </ext:CustomShadowFrame>
+    </ext:ExtShadowFrame>
 
 </popup:PopupPage>

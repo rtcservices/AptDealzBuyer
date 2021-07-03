@@ -8,10 +8,9 @@
     NavigationPage.HasNavigationBar="False">
     <ContentView.Content>
 
-       <Grid RowSpacing="0">
+        <Grid RowSpacing="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="50" />
-                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
@@ -34,15 +33,7 @@
                     </Image.GestureRecognizers>
                 </Image>
 
-                <Image
-                    Grid.Column="1"
-                    Margin="0"
-                    Aspect="AspectFill"
-                    HeightRequest="45"
-                    HorizontalOptions="CenterAndExpand"
-                    Source="iconHeaderLogo.png"
-                    VerticalOptions="CenterAndExpand"
-                    WidthRequest="45" />
+                <Image Grid.Column="1" Style="{StaticResource imgLogo}" />
 
                 <StackLayout
                     Grid.Column="2"
@@ -71,70 +62,47 @@
                         </Image.GestureRecognizers>
                     </Image>
                 </StackLayout>
+                <BoxView Grid.ColumnSpan="3" Style="{StaticResource boxHorizontal}" />
             </Grid>
-            <!--#endregion-->
-            <BoxView
-                Grid.Row="1"
-                BackgroundColor="{StaticResource LightGray}"
-                HeightRequest="1"
-                HorizontalOptions="FillAndExpand"
-                VerticalOptions="EndAndExpand" />
 
-            <Grid Grid.Row="2" Margin="0">
+            <Grid Grid.Row="1" Margin="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-
                 <Grid
                     Grid.Row="0"
-                    Margin="20,0"
-                    ColumnDefinitions="Auto,*,Auto"
-                    HorizontalOptions="FillAndExpand">
-                    <Image
+                    Margin="5,5,5,0"
+                    ColumnDefinitions="Auto,*"
+                    ColumnSpacing="0">
+                    <ImageButton
                         x:Name="ImgBack"
-                        Margin="0"
-                        Aspect="AspectFit"
-                        HeightRequest="25"
-                        HorizontalOptions="StartAndExpand"
+                        Grid.Column="0"
+                        Clicked="ImgBack_Tapped"
                         Source="iconBackArrow.png"
-                        VerticalOptions="CenterAndExpand"
-                        WidthRequest="25">
-                        <Image.GestureRecognizers>
-                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgBack_Tapped" />
-                        </Image.GestureRecognizers>
-                    </Image>
-
+                        Style="{StaticResource ImgBtnPrimary}" />
                     <Label
                         Grid.Column="1"
-                        Margin="5,0,0,0"
-                        FontFamily="Poppins SemiBold"
-                        FontSize="20"
-                        HorizontalOptions="StartAndExpand"
-                        Text="Terms &amp; Policies"
-                        TextColor="{StaticResource Black}"
-                        VerticalOptions="CenterAndExpand" />
-
+                        Style="{StaticResource lblHeader}"
+                        Text="Terms &amp; Policies" />
                 </Grid>
 
-                <ScrollView Grid.Row="1" Margin="0,15,0,0">
+                <ScrollView Grid.Row="1" Style="{StaticResource scrPrimary}">
+                    <Grid
+                        Padding="20,0"
+                        RowDefinitions="Auto,Auto"
+                        RowSpacing="10">
 
-                    <Grid Margin="0" RowDefinitions="Auto,Auto">
-
-                        <StackLayout Grid.Row="0" Margin="20">
+                        <StackLayout Grid.Row="0">
                             <Label
-                                Grid.Row="0"
-                                Margin="5,0,0,0"
                                 FontFamily="Poppins SemiBold"
-                                FontSize="15"
+                                FontSize="17"
                                 HorizontalOptions="StartAndExpand"
                                 Text="Terms and Conditions"
                                 TextColor="{StaticResource Black}"
                                 VerticalOptions="CenterAndExpand" />
 
                             <Label
-                                Grid.Row="0"
-                                Margin="5,0,0,0"
                                 FontFamily="Poppins"
                                 FontSize="14"
                                 HorizontalOptions="FillAndExpand"
@@ -144,20 +112,16 @@
                                 VerticalOptions="FillAndExpand" />
                         </StackLayout>
 
-                        <StackLayout Grid.Row="1" Margin="20">
+                        <StackLayout Grid.Row="1">
                             <Label
-                                Grid.Row="0"
-                                Margin="5,0,0,0"
                                 FontFamily="Poppins SemiBold"
-                                FontSize="15"
+                                FontSize="17"
                                 HorizontalOptions="StartAndExpand"
                                 Text="Privacy Policy"
                                 TextColor="{StaticResource Black}"
                                 VerticalOptions="CenterAndExpand" />
 
                             <Label
-                                Grid.Row="0"
-                                Margin="5,0,0,0"
                                 FontFamily="Poppins"
                                 FontSize="14"
                                 HorizontalOptions="FillAndExpand"
@@ -166,7 +130,6 @@
                                 TextColor="{StaticResource Black}"
                                 VerticalOptions="FillAndExpand" />
                         </StackLayout>
-
                     </Grid>
 
                 </ScrollView>

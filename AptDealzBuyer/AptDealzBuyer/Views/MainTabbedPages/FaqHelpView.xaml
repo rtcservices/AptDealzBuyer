@@ -8,10 +8,9 @@
     NavigationPage.HasNavigationBar="False">
     <ContentView.Content>
 
-       <Grid RowSpacing="0">
+        <Grid RowSpacing="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="50" />
-                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
@@ -34,15 +33,7 @@
                     </Image.GestureRecognizers>
                 </Image>
 
-                <Image
-                    Grid.Column="1"
-                    Margin="0"
-                    Aspect="AspectFill"
-                    HeightRequest="45"
-                    HorizontalOptions="CenterAndExpand"
-                    Source="iconHeaderLogo.png"
-                    VerticalOptions="CenterAndExpand"
-                    WidthRequest="45" />
+                <Image Grid.Column="1" Style="{StaticResource imgLogo}" />
 
                 <StackLayout
                     Grid.Column="2"
@@ -71,16 +62,10 @@
                         </Image.GestureRecognizers>
                     </Image>
                 </StackLayout>
+                <BoxView Grid.ColumnSpan="3" Style="{StaticResource boxHorizontal}" />
             </Grid>
-            <!--#endregion-->
-            <BoxView
-                Grid.Row="1"
-                BackgroundColor="{StaticResource LightGray}"
-                HeightRequest="1"
-                HorizontalOptions="FillAndExpand"
-                VerticalOptions="EndAndExpand" />
 
-            <Grid Grid.Row="2" Margin="0">
+            <Grid Grid.Row="1" RowSpacing="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
@@ -88,32 +73,19 @@
 
                 <Grid
                     Grid.Row="0"
-                    Margin="20,0"
-                    ColumnDefinitions="Auto,*,Auto"
-                    HorizontalOptions="FillAndExpand">
-                    <Image
+                    Margin="5,5,5,0"
+                    ColumnDefinitions="Auto,*"
+                    ColumnSpacing="0">
+                    <ImageButton
                         x:Name="ImgBack"
-                        Margin="0"
-                        Aspect="AspectFit"
-                        HeightRequest="25"
-                        HorizontalOptions="StartAndExpand"
+                        Grid.Column="0"
+                        Clicked="ImgBack_Tapped"
                         Source="iconBackArrow.png"
-                        VerticalOptions="CenterAndExpand"
-                        WidthRequest="25">
-                        <Image.GestureRecognizers>
-                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgBack_Tapped" />
-                        </Image.GestureRecognizers>
-                    </Image>
-
+                        Style="{StaticResource ImgBtnPrimary}" />
                     <Label
                         Grid.Column="1"
-                        Margin="5,0,0,0"
-                        FontFamily="Poppins SemiBold"
-                        FontSize="18"
-                        HorizontalOptions="StartAndExpand"
-                        Text="FAQ"
-                        TextColor="{StaticResource Black}"
-                        VerticalOptions="CenterAndExpand" />
+                        Style="{StaticResource lblHeader}"
+                        Text="FAQ" />
                 </Grid>
 
                 <ListView
@@ -123,12 +95,11 @@
                     HorizontalOptions="FillAndExpand"
                     HorizontalScrollBarVisibility="Never"
                     SeparatorVisibility="None"
-                    VerticalOptions="FillAndExpand"
+                    VerticalOptions="StartAndExpand"
                     VerticalScrollBarVisibility="Never">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
-
                                 <Grid
                                     Margin="0"
                                     Padding="0"
@@ -178,7 +149,7 @@
                                             IsVisible="{Binding ShowFaqDesc, Mode=TwoWay}"
                                             VerticalOptions="FillAndExpand">
                                             <Label
-                                                Margin="20,0"
+                                                Margin="20,10"
                                                 FontFamily="Poppins"
                                                 FontSize="15"
                                                 HorizontalOptions="StartAndExpand"

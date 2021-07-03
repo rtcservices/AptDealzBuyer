@@ -5,6 +5,7 @@ using System.Linq;
 using Xamarin.Forms;
 using AptDealzBuyer.Utility;
 using Xamarin.Forms.Xaml;
+using AptDealzBuyer.Repository;
 
 namespace AptDealzBuyer.Views.Orders
 {
@@ -12,7 +13,7 @@ namespace AptDealzBuyer.Views.Orders
     public partial class RaiseGrievancePage : ContentPage
     {
         #region Objects
-        // create objects here
+        private string relativePath = string.Empty;
         #endregion
 
         #region Constructor
@@ -74,9 +75,21 @@ namespace AptDealzBuyer.Views.Orders
 
         }
 
-        private void ImgImageUpload_Tapped(object sender, EventArgs e)
+        private async void UploadProductImage_Tapped(object sender, EventArgs e)
         {
+            try
+            {
+                Common.BindAnimation(image: ImgUplode);
+                ImageConvertion.SelectedImagePath = ImgProductImage;
+                ImageConvertion.SetNullSource((int)FileUploadCategory.ProfileDocuments);
+                await ImageConvertion.SelectImage();
+                //relativePath = await DependencyService.Get<IFileUploadRepository>().UploadFile((int)FileUploadCategory.ProfileDocuments);
 
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("RaiseGrievancePage/UploadProductImage: " + ex.Message);
+            }
         }
         #endregion
     }

@@ -4,17 +4,16 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:ext="clr-namespace:AptDealzBuyer.Extention"
+    xmlns:ffImage="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
     xmlns:iOS="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
-    xmlns:skiaRate="clr-namespace:SkiaRate;assembly=SkiaRate.Forms"
     iOS:Page.UseSafeArea="True"
     BackgroundColor="{StaticResource White}"
     NavigationPage.HasNavigationBar="False">
     <ContentPage.Content>
 
-       <Grid RowSpacing="0">
+        <Grid RowSpacing="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="50" />
-                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
@@ -37,15 +36,7 @@
                     </Image.GestureRecognizers>
                 </Image>
 
-                <Image
-                    Grid.Column="1"
-                    Margin="0"
-                    Aspect="AspectFill"
-                    HeightRequest="45"
-                    HorizontalOptions="CenterAndExpand"
-                    Source="iconHeaderLogo.png"
-                    VerticalOptions="CenterAndExpand"
-                    WidthRequest="45" />
+                <Image Grid.Column="1" Style="{StaticResource imgLogo}" />
 
                 <StackLayout
                     Grid.Column="2"
@@ -74,16 +65,10 @@
                         </Image.GestureRecognizers>
                     </Image>
                 </StackLayout>
+                <BoxView Grid.ColumnSpan="3" Style="{StaticResource boxHorizontal}" />
             </Grid>
-            <!--#endregion-->
-            <BoxView
-                Grid.Row="1"
-                BackgroundColor="{StaticResource LightGray}"
-                HeightRequest="1"
-                HorizontalOptions="FillAndExpand"
-                VerticalOptions="EndAndExpand" />
 
-            <Grid Grid.Row="2" Margin="0">
+            <Grid Grid.Row="1" Margin="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
@@ -91,40 +76,26 @@
 
                 <Grid
                     Grid.Row="0"
-                    Margin="20,0"
-                    ColumnDefinitions="Auto,*,Auto"
-                    HorizontalOptions="FillAndExpand">
-                    <Image
+                    Margin="5,5,5,0"
+                    ColumnDefinitions="Auto,*"
+                    ColumnSpacing="0">
+                    <ImageButton
                         x:Name="ImgBack"
-                        Margin="0"
-                        Aspect="AspectFit"
-                        HeightRequest="25"
-                        HorizontalOptions="StartAndExpand"
+                        Grid.Column="0"
+                        Clicked="ImgBack_Tapped"
                         Source="iconBackArrow.png"
-                        VerticalOptions="CenterAndExpand"
-                        WidthRequest="25">
-                        <Image.GestureRecognizers>
-                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgBack_Tapped" />
-                        </Image.GestureRecognizers>
-                    </Image>
-
+                        Style="{StaticResource ImgBtnPrimary}" />
                     <Label
                         Grid.Column="1"
-                        Margin="5,0,0,0"
-                        FontFamily="Poppins SemiBold"
-                        FontSize="20"
-                        HorizontalOptions="StartAndExpand"
-                        Text="Raise Grievance"
-                        TextColor="{StaticResource Black}"
-                        VerticalOptions="CenterAndExpand" />
-
+                        Style="{StaticResource lblHeader}"
+                        Text="Raise Grievance" />
                 </Grid>
 
-                <ScrollView Grid.Row="1" Margin="0,15,0,0">
+                <ScrollView Grid.Row="1" Style="{StaticResource scrPrimary}">
 
                     <Grid Margin="0" RowDefinitions="Auto,*,Auto">
 
-                        <ext:CustomShadowFrame
+                        <ext:ExtShadowFrame
                             Grid.Row="0"
                             Margin="20,0"
                             Padding="0"
@@ -217,7 +188,7 @@
                                         VerticalOptions="CenterAndExpand" />
                                 </Grid>
                             </Grid>
-                        </ext:CustomShadowFrame>
+                        </ext:ExtShadowFrame>
 
                         <Grid
                             Grid.Row="1"
@@ -602,7 +573,7 @@
                                     TextColor="{StaticResource Black}"
                                     VerticalOptions="CenterAndExpand" />
 
-                                <ext:CustomShadowFrame
+                                <ext:ExtShadowFrame
                                     Grid.Column="1"
                                     Margin="0"
                                     Padding="0"
@@ -638,11 +609,11 @@
                                             </Image.GestureRecognizers>
                                         </Image>
                                     </Grid>
-                                </ext:CustomShadowFrame>
+                                </ext:ExtShadowFrame>
 
                             </Grid>
 
-                            <ext:CustomShadowFrame
+                            <ext:ExtShadowFrame
                                 Grid.Row="2"
                                 Margin="20,10"
                                 Padding="0"
@@ -650,15 +621,28 @@
                                 CornerRadius="5"
                                 HasShadow="False">
                                 <Grid Margin="5" ColumnDefinitions="Auto,*,Auto,Auto">
-                                    <Image
-                                        Grid.Column="0"
+                                    <Frame
                                         Margin="0"
-                                        Aspect="Fill"
-                                        HeightRequest="80"
-                                        HorizontalOptions="CenterAndExpand"
-                                        Source="imgUploadImage.png"
-                                        VerticalOptions="CenterAndExpand"
-                                        WidthRequest="80" />
+                                        Padding="0"
+                                        BackgroundColor="{StaticResource LightGray}"
+                                        CornerRadius="{OnPlatform Android=5,
+                                                                  iOS=10}"
+                                        HasShadow="False"
+                                        HeightRequest="70"
+                                        WidthRequest="70">
+                                        <ffImage:CachedImage
+                                            x:Name="ImgProductImage"
+                                            Grid.Column="0"
+                                            Margin="0"
+                                            Aspect="AspectFill"
+                                            ErrorPlaceholder="imgUploadImage.png"
+                                            HeightRequest="70"
+                                            HorizontalOptions="CenterAndExpand"
+                                            LoadingPlaceholder="imgUploadImage.png"
+                                            Source="imgUploadImage.png"
+                                            VerticalOptions="CenterAndExpand"
+                                            WidthRequest="70" />
+                                    </Frame>
 
                                     <Label
                                         Grid.Column="1"
@@ -678,6 +662,7 @@
                                         WidthRequest="1" />
 
                                     <Image
+                                        x:Name="ImgUplode"
                                         Grid.Column="3"
                                         Margin="10"
                                         HeightRequest="35"
@@ -685,13 +670,13 @@
                                         Source="iconImageUpload.png"
                                         VerticalOptions="CenterAndExpand">
                                         <Image.GestureRecognizers>
-                                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgImageUpload_Tapped" />
+                                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="UploadProductImage_Tapped" />
                                         </Image.GestureRecognizers>
                                     </Image>
                                 </Grid>
-                            </ext:CustomShadowFrame>
+                            </ext:ExtShadowFrame>
 
-                            <ext:CustomShadowFrame
+                            <ext:ExtShadowFrame
                                 Grid.Row="3"
                                 Margin="20,10"
                                 Padding="0"
@@ -710,7 +695,7 @@
                                     PlaceholderColor="{StaticResource Gray}"
                                     TextColor="{StaticResource Black}"
                                     VerticalOptions="FillAndExpand" />
-                            </ext:CustomShadowFrame>
+                            </ext:ExtShadowFrame>
 
                             <Grid
                                 Grid.Row="4"
@@ -728,7 +713,7 @@
                                     TextColor="{StaticResource Black}"
                                     VerticalOptions="CenterAndExpand" />
 
-                                <ext:CustomShadowFrame
+                                <ext:ExtShadowFrame
                                     Grid.Column="1"
                                     Margin="0"
                                     Padding="0"
@@ -745,11 +730,11 @@
                                         PlaceholderColor="{StaticResource Gray}"
                                         TextColor="{StaticResource Black}"
                                         VerticalOptions="CenterAndExpand" />
-                                </ext:CustomShadowFrame>
+                                </ext:ExtShadowFrame>
 
                             </Grid>
 
-                            <ext:CustomShadowFrame
+                            <ext:ExtShadowFrame
                                 Grid.Row="5"
                                 Margin="20"
                                 Padding="0"
@@ -768,10 +753,10 @@
                                     Text="Submit"
                                     TextColor="{StaticResource White}"
                                     VerticalOptions="CenterAndExpand" />
-                                <ext:CustomShadowFrame.GestureRecognizers>
+                                <ext:ExtShadowFrame.GestureRecognizers>
                                     <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmSubmit_Tapped" />
-                                </ext:CustomShadowFrame.GestureRecognizers>
-                            </ext:CustomShadowFrame>
+                                </ext:ExtShadowFrame.GestureRecognizers>
+                            </ext:ExtShadowFrame>
 
                         </Grid>
                     </Grid>

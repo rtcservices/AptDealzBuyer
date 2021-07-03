@@ -15,36 +15,39 @@ namespace AptDealzBuyer.Services
             string relativePath = "";
             try
             {
-                var base64String = Convert.ToBase64String(ImageConvertion.SelectedImageByte);
-                var fileName = Guid.NewGuid().ToString() + ".png";
-
-                UserDialogs.Instance.ShowLoading(Constraints.Loading);
-                ProfileAPI profileAPI = new ProfileAPI();
-                FileUpload mFileUpload = new FileUpload();
-
-                mFileUpload.Base64String = base64String;
-                mFileUpload.FileName = fileName;
-                mFileUpload.FileUploadCategory = fileUploadCategory;
-
-                var mResponse = await profileAPI.FileUpload(mFileUpload);
-                if (mResponse != null && mResponse.Succeeded)
+                if (ImageConvertion.SelectedImageByte != null)
                 {
-                    var jObject = (Newtonsoft.Json.Linq.JObject)mResponse.Data;
-                    if (jObject != null)
+                    var base64String = Convert.ToBase64String(ImageConvertion.SelectedImageByte);
+                    var fileName = Guid.NewGuid().ToString() + ".png";
+
+                    UserDialogs.Instance.ShowLoading(Constraints.Loading);
+                    ProfileAPI profileAPI = new ProfileAPI();
+                    FileUpload mFileUpload = new FileUpload();
+
+                    mFileUpload.Base64String = base64String;
+                    mFileUpload.FileName = fileName;
+                    mFileUpload.FileUploadCategory = fileUploadCategory;
+
+                    var mResponse = await profileAPI.FileUpload(mFileUpload);
+                    if (mResponse != null && mResponse.Succeeded)
                     {
-                        var mBuyerFile = jObject.ToObject<Model.Reponse.BuyerFileDocument>();
-                        if (mBuyerFile != null)
+                        var jObject = (Newtonsoft.Json.Linq.JObject)mResponse.Data;
+                        if (jObject != null)
                         {
-                            relativePath = mBuyerFile.relativePath;
+                            var mBuyerFile = jObject.ToObject<Model.Reponse.BuyerFileDocument>();
+                            if (mBuyerFile != null)
+                            {
+                                relativePath = mBuyerFile.relativePath;
+                            }
                         }
                     }
-                }
-                else
-                {
-                    if (mResponse != null)
-                        Common.DisplayErrorMessage(mResponse.Message);
                     else
-                        Common.DisplayErrorMessage(Constraints.Something_Wrong);
+                    {
+                        if (mResponse != null)
+                            Common.DisplayErrorMessage(mResponse.Message);
+                        else
+                            Common.DisplayErrorMessage(Constraints.Something_Wrong);
+                    }
                 }
             }
             catch (Exception ex)

@@ -37,8 +37,9 @@ namespace AptDealzBuyer.Views.MainTabbedPages
 
         private void ImgBack_Tapped(object sender, EventArgs e)
         {
-            //Common.BindAnimation(image: ImgBack);
-            App.Current.MainPage = new MasterDataPage();
+            Common.BindAnimation(imageButton: ImgBack);
+            //App.Current.MainPage = new MasterDataPage();
+            Navigation.PopAsync();
         }
     }
 }

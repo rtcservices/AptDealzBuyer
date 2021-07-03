@@ -5,7 +5,6 @@ using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -15,8 +14,11 @@ namespace AptDealzBuyer.Views.DashboardPages
     public partial class RaiseGrievancesPage : ContentPage
     {
         #region Objects
-        // create objects here
         public List<RaiseGrievanceM> RaiseGrievanceMs = new List<RaiseGrievanceM>();
+        private string filterBy = Utility.RequirementSortBy.ID.ToString();
+        private bool sortBy = true;
+        private readonly int pageSize = 10;
+        private int pageNo;
         #endregion
 
         #region Constructor
@@ -27,14 +29,13 @@ namespace AptDealzBuyer.Views.DashboardPages
         #endregion
 
         #region Methods
-        // write methods here
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            BindRaiseGrievance();
+            GetRaiseGrievance();
         }
 
-        public void BindRaiseGrievance()
+        public void GetRaiseGrievance()
         {
             lstGrievance.ItemsSource = null;
             RaiseGrievanceMs = new List<RaiseGrievanceM>()
@@ -53,7 +54,6 @@ namespace AptDealzBuyer.Views.DashboardPages
         #endregion
 
         #region Events
-        // create events here
         private void ImgMenu_Tapped(object sender, EventArgs e)
         {
             Common.BindAnimation(image: ImgMenu);
@@ -82,12 +82,33 @@ namespace AptDealzBuyer.Views.DashboardPages
 
         private void FrmSortBy_Tapped(object sender, EventArgs e)
         {
-            var sortby = new PrevReqPopup("Sort By", "ID", "Quotes");
-            sortby.isRefresh += (s1, e1) =>
+            //var sortby = new PrevReqPopup("Sort By", "ID", "Quotes");
+            //sortby.isRefresh += (s1, e1) =>
+            //{
+            //    //get result from popup
+            //};
+            //PopupNavigation.Instance.PushAsync(sortby);
+            try
             {
-                //get result from popup
-            };
-            PopupNavigation.Instance.PushAsync(sortby);
+                if (ImgSort.Source.ToString().Replace("File: ", "") == Constraints.Sort_ASC)
+                {
+                    ImgSort.Source = Constraints.Sort_DSC;
+                    sortBy = false;
+                }
+                else
+                {
+                    ImgSort.Source = Constraints.Sort_ASC;
+                    sortBy = true;
+                }
+
+                pageNo = 1;
+                GetRaiseGrievance();
+                //GetRaiseGrievance(filterBy, sortBy);
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("ActiveRequirementView/FrmSortBy_Tapped: " + ex.Message);
+            }
         }
 
         private void FrmStatus_Tapped(object sender, EventArgs e)
@@ -103,6 +124,35 @@ namespace AptDealzBuyer.Views.DashboardPages
         private void FrmSelect_Tapped(object sender, EventArgs e)
         {
 
+        }
+
+        private void lstGrievance_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+        {
+            lstGrievance.SelectedItem = null;
+        }
+
+        private void FrmFilterBy_Tapped(object sender, EventArgs e)
+        {
+            try
+            {
+                var sortby = new SortByPopup(filterBy, "Active");
+                sortby.isRefresh += (s1, e1) =>
+                {
+                    string result = s1.ToString();
+                    if (!string.IsNullOrEmpty(result))
+                    {
+                        pageNo = 1;
+                        filterBy = result;
+                        GetRaiseGrievance();
+                        //GetRaiseGrievance(filterBy, sortBy);
+                    }
+                };
+                PopupNavigation.Instance.PushAsync(sortby);
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("ActiveRequirementView/CustomEntry_Unfocused: " + ex.Message);
+            }
         }
         #endregion
     }

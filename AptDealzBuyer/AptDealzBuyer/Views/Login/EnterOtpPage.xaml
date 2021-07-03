@@ -52,24 +52,15 @@
                         VerticalOptions="CenterAndExpand" />
 
                     <Label
-                        Margin="0"
-                        FontFamily="Poppins Medium"
-                        FontSize="18"
-                        HorizontalOptions="CenterAndExpand"
-                        Text="Enter OTP"
-                        TextColor="{StaticResource Black}"
-                        VerticalOptions="CenterAndExpand" />
+                        FontSize="24"
+                        Style="{StaticResource lblBoldHeader}"
+                        Text="Enter OTP" />
 
                     <Label
-                        Margin="0"
-                        FontFamily="Poppins"
-                        FontSize="14"
                         HorizontalOptions="CenterAndExpand"
                         HorizontalTextAlignment="Center"
-                        LineHeight="1.2"
-                        Text="Please enter the 6 digit OTP &#x0a; received on your email or phone number."
-                        TextColor="{StaticResource Black}"
-                        VerticalOptions="CenterAndExpand" />
+                        Style="{StaticResource lblLight}"
+                        Text="Please enter the 6 digit OTP &#x0a; received on your email or phone number." />
                 </StackLayout>
 
                 <StackLayout
@@ -94,7 +85,6 @@
                             FontSize="15"
                             HorizontalOptions="FillAndExpand"
                             HorizontalTextAlignment="Center"
-                            IsPassword="True"
                             Keyboard="Numeric"
                             MaxLength="1"
                             ReturnType="Next"
@@ -119,7 +109,6 @@
                             FontSize="15"
                             HorizontalOptions="FillAndExpand"
                             HorizontalTextAlignment="Center"
-                            IsPassword="True"
                             Keyboard="Numeric"
                             MaxLength="1"
                             ReturnType="Next"
@@ -144,7 +133,6 @@
                             FontSize="15"
                             HorizontalOptions="FillAndExpand"
                             HorizontalTextAlignment="Center"
-                            IsPassword="True"
                             Keyboard="Numeric"
                             MaxLength="1"
                             ReturnType="Next"
@@ -169,7 +157,6 @@
                             FontSize="15"
                             HorizontalOptions="FillAndExpand"
                             HorizontalTextAlignment="Center"
-                            IsPassword="True"
                             Keyboard="Numeric"
                             MaxLength="1"
                             ReturnType="Next"
@@ -194,7 +181,6 @@
                             FontSize="15"
                             HorizontalOptions="FillAndExpand"
                             HorizontalTextAlignment="Center"
-                            IsPassword="True"
                             Keyboard="Numeric"
                             MaxLength="1"
                             ReturnType="Next"
@@ -221,7 +207,6 @@
                             FontSize="15"
                             HorizontalOptions="FillAndExpand"
                             HorizontalTextAlignment="Center"
-                            IsPassword="True"
                             Keyboard="Numeric"
                             MaxLength="1"
                             ReturnType="Next"
@@ -246,7 +231,7 @@
                     VerticalOptions="StartAndExpand">
                     <Label
                         Margin="15,10"
-                        FontFamily="Poppins Medium"
+                        FontFamily="Poppins SemiBold"
                         HorizontalOptions="CenterAndExpand"
                         Text="Submit"
                         TextColor="{StaticResource White}"
@@ -259,16 +244,12 @@
                 <Button
                     x:Name="BtnResentOtp"
                     Grid.Row="3"
-                    Margin="0"
-                    Padding="15"
                     BackgroundColor="Transparent"
                     Clicked="BtnResentOtp_Tapped"
-                    FontFamily="Poppins Medium"
-                    FontSize="15"
                     HorizontalOptions="CenterAndExpand"
+                    Style="{StaticResource btnPrimary}"
                     Text="Resend OTP"
-                    TextColor="{StaticResource Black}"
-                    VerticalOptions="CenterAndExpand" />
+                    TextColor="{StaticResource Black}" />
             </Grid>
 
         </Grid>

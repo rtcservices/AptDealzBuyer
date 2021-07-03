@@ -2,7 +2,9 @@
 using AptDealzBuyer.Model.Reponse;
 using Firebase.Auth;
 using Foundation;
+using Plugin.FirebaseAuth;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -14,7 +16,7 @@ namespace AptDealzBuyer.iOS.Service
     {
         const int OTP_TIMEOUT = 30; // seconds
         private TaskCompletionSource<bool> _phoneAuthTcs;
-
+        TaskCompletionSource<Dictionary<bool, string>> keyValuePairs;
         public string _verificationId { get; set; }
 
         public FirebaseAuthenticator()
@@ -29,16 +31,21 @@ namespace AptDealzBuyer.iOS.Service
             return tcs.Task;
         }
 
-        public Task<bool> SendOtpCodeAsync(string phoneNumber)
+        public Task<Dictionary<bool, string>> SendOtpCodeAsync(string phoneNumber)
         {
-            _phoneAuthTcs = new TaskCompletionSource<bool>();
+            phoneNumber = (string)App.Current.Resources["CountryCode"] + phoneNumber;
+            //_phoneAuthTcs = new TaskCompletionSource<bool>();
 
             PhoneAuthProvider.DefaultInstance.VerifyPhoneNumber(
                 phoneNumber,
                 null,
                 new VerificationResultHandler(OnVerificationResult));
+            var user = Auth.DefaultInstance.CurrentUser;
 
-            return _phoneAuthTcs.Task;
+            keyValuePairs = new TaskCompletionSource<Dictionary<bool, string>>();
+
+            return keyValuePairs.Task;
+            //return _phoneAuthTcs.Task;
         }
 
         private void OnVerificationResult(string verificationId, NSError error)

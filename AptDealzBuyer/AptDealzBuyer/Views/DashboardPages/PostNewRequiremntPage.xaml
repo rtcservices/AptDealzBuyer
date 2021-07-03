@@ -36,15 +36,7 @@
                     </Image.GestureRecognizers>
                 </Image>
 
-                <Image
-                    Grid.Column="1"
-                    Margin="0"
-                    Aspect="AspectFill"
-                    HeightRequest="45"
-                    HorizontalOptions="CenterAndExpand"
-                    Source="iconHeaderLogo.png"
-                    VerticalOptions="CenterAndExpand"
-                    WidthRequest="45" />
+                <Image Grid.Column="1" Style="{StaticResource imgLogo}" />
 
                 <StackLayout
                     Grid.Column="2"
@@ -74,14 +66,10 @@
                     </Image>
                 </StackLayout>
 
-                <BoxView
-                    Grid.ColumnSpan="3"
-                    BackgroundColor="{StaticResource LightGray}"
-                    HeightRequest="1"
-                    HorizontalOptions="FillAndExpand"
-                    VerticalOptions="EndAndExpand" />
+                <BoxView Grid.ColumnSpan="3" Style="{StaticResource boxHorizontal}" />
             </Grid>
 
+            <!--  Main Grid  -->
             <Grid Grid.Row="1" Margin="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -89,43 +77,31 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <StackLayout
+                <!--  Back / Title  -->
+                <Grid
                     Grid.Row="0"
-                    Margin="15,15,0,0"
-                    HorizontalOptions="StartAndExpand"
-                    Orientation="Horizontal">
-                    <Image
+                    Margin="5,5,5,0"
+                    ColumnDefinitions="Auto,*"
+                    ColumnSpacing="0">
+                    <ImageButton
                         x:Name="ImgBack"
-                        Margin="0"
-                        Aspect="AspectFit"
-                        HeightRequest="25"
-                        HorizontalOptions="CenterAndExpand"
+                        Grid.Column="0"
+                        Clicked="ImgBack_Tapped"
                         Source="iconBackArrow.png"
-                        VerticalOptions="CenterAndExpand"
-                        WidthRequest="25">
-                        <Image.GestureRecognizers>
-                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgBack_Tapped" />
-                        </Image.GestureRecognizers>
-                    </Image>
-
+                        Style="{StaticResource ImgBtnPrimary}" />
                     <Label
-                        Grid.Row="0"
-                        Margin="5,0,0,0"
-                        FontFamily="Poppins SemiBold"
-                        FontSize="18"
-                        HorizontalOptions="StartAndExpand"
-                        Text="Post New Requirement"
-                        TextColor="{StaticResource Black}"
-                        VerticalOptions="CenterAndExpand" />
-                </StackLayout>
+                        Grid.Column="1"
+                        Style="{StaticResource lblHeader}"
+                        Text="Post New Requirement" />
+                </Grid>
 
                 <ScrollView
                     Grid.Row="1"
-                    Margin="20"
                     HorizontalScrollBarVisibility="Never"
                     VerticalOptions="StartAndExpand"
                     VerticalScrollBarVisibility="Never">
-                    <Grid RowSpacing="20">
+
+                    <Grid Padding="20" RowSpacing="20">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
@@ -136,74 +112,92 @@
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
+                        <!--  Title / Category / SubCategory  -->
                         <Grid
                             Grid.Row="0"
                             RowDefinitions="Auto,Auto,Auto"
                             RowSpacing="20">
-                            <Frame Grid.Row="0" Style="{StaticResource frmEntry}">
+
+                            <StackLayout Grid.Row="0" Spacing="{OnPlatform Android=0, iOS=5}">
+                                <StackLayout HorizontalOptions="StartAndExpand" Orientation="Horizontal">
+                                    <Label Style="{StaticResource lblPrimary13}" Text="Requirement Title" />
+                                    <Label Text="*" TextColor="{StaticResource Red}" />
+                                </StackLayout>
+
                                 <ext:ExtEntry
                                     x:Name="txtTitle"
-                                    Placeholder="Requirement Title *"
-                                    Style="{StaticResource entrPrimary}" />
-                            </Frame>
+                                    ClassId="Title"
+                                    Style="{StaticResource entrPrimary}"
+                                    Unfocused="Entry_Unfocused" />
+                                <BoxView x:Name="BoxTitle" Style="{StaticResource boxHorizontal}" />
+                            </StackLayout>
 
-                            <Frame Grid.Row="1" Style="{StaticResource frmEntry}">
+                            <StackLayout Grid.Row="1" Spacing="5">
+                                <StackLayout HorizontalOptions="StartAndExpand" Orientation="Horizontal">
+                                    <Label Style="{StaticResource lblPrimary13}" Text="Category" />
+                                    <Label Text="*" TextColor="{StaticResource Red}" />
+                                </StackLayout>
+
                                 <Grid ColumnDefinitions="*,Auto" ColumnSpacing="0">
                                     <Picker
                                         x:Name="pkCategory"
                                         Title="Category"
                                         Grid.Column="0"
-                                        Margin="0,0"
-                                        FontFamily="Poppins"
-                                        FontSize="15"
-                                        HorizontalOptions="FillAndExpand"
+                                        ClassId="Category"
                                         SelectedIndexChanged="pkCategory_SelectedIndexChanged"
-                                        TextColor="{StaticResource Black}"
-                                        TitleColor="{StaticResource DarkGray}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource pkPrimary}"
+                                        Unfocused="Picker_Unfocused" />
 
                                     <ImageButton
                                         x:Name="BtnCategory"
                                         Grid.Column="1"
-                                        Margin="10,0,0,0"
+                                        Margin="10,0"
                                         BackgroundColor="Transparent"
                                         Clicked="BtnCategory_Clicked"
-                                        HeightRequest="25"
+                                        HeightRequest="20"
                                         HorizontalOptions="EndAndExpand"
                                         Source="iconDownArrow.png"
-                                        VerticalOptions="CenterAndExpand" />
+                                        VerticalOptions="CenterAndExpand"
+                                        WidthRequest="20" />
                                 </Grid>
-                            </Frame>
 
-                            <Frame Grid.Row="2" Style="{StaticResource frmEntry}">
+                                <BoxView x:Name="BoxCategory" Style="{StaticResource boxHorizontal}" />
+                            </StackLayout>
+
+                            <StackLayout Grid.Row="2" Spacing="5">
+                                <StackLayout HorizontalOptions="StartAndExpand" Orientation="Horizontal">
+                                    <Label Style="{StaticResource lblPrimary13}" Text="Sub Category" />
+                                    <Label Text="*" TextColor="{StaticResource Red}" />
+                                </StackLayout>
+
                                 <Grid ColumnDefinitions="*,Auto" ColumnSpacing="0">
                                     <Picker
                                         x:Name="pkSubCategory"
                                         Title="Sub Category"
                                         Grid.Column="0"
-                                        Margin="0"
-                                        FontFamily="Poppins"
-                                        FontSize="15"
-                                        HorizontalOptions="FillAndExpand"
+                                        ClassId="SubCategory"
                                         SelectedIndexChanged="pkSubCategory_SelectedIndexChanged"
-                                        TextColor="{StaticResource Black}"
-                                        TitleColor="{StaticResource DarkGray}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource pkPrimary}"
+                                        Unfocused="Picker_Unfocused" />
 
                                     <ImageButton
                                         x:Name="BtnSubCategory"
                                         Grid.Column="1"
-                                        Margin="10,0,0,0"
+                                        Margin="10,0"
                                         BackgroundColor="Transparent"
                                         Clicked="BtnSubCategory_Clicked"
-                                        HeightRequest="25"
+                                        HeightRequest="20"
                                         HorizontalOptions="EndAndExpand"
                                         Source="iconDownArrow.png"
-                                        VerticalOptions="CenterAndExpand" />
+                                        VerticalOptions="CenterAndExpand"
+                                        WidthRequest="20" />
                                 </Grid>
-                            </Frame>
+
+                                <BoxView x:Name="BoxSubCategory" Style="{StaticResource boxHorizontal}" />
+                            </StackLayout>
                         </Grid>
 
+                        <!--  Uplode Product Image  -->
                         <Frame
                             Grid.Row="1"
                             Margin="0"
@@ -267,52 +261,122 @@
                             </Grid>
                         </Frame>
 
+                        <!--  Description / Quantity / Estimation  -->
                         <Grid
                             Grid.Row="2"
                             RowDefinitions="Auto,Auto,Auto"
                             RowSpacing="20">
-                            <Frame
-                                Grid.Row="0"
-                                Margin="0"
-                                Padding="0"
-                                BackgroundColor="Transparent"
-                                BorderColor="{StaticResource LightGray}"
-                                CornerRadius="5"
-                                HasShadow="False"
-                                HeightRequest="140">
-                                <Editor
-                                    x:Name="txtDescription"
-                                    Margin="15"
-                                    FontFamily="Poppins"
-                                    FontSize="15"
-                                    HorizontalOptions="FillAndExpand"
-                                    Placeholder="Product Description *"
-                                    PlaceholderColor="{StaticResource Gray}"
-                                    TextColor="{StaticResource Black}"
-                                    VerticalOptions="FillAndExpand" />
-                            </Frame>
 
-                            <Frame Grid.Row="1" Style="{StaticResource frmEntry}">
-                                <ext:ExtEntry
-                                    x:Name="txtQuantity"
-                                    Keyboard="Numeric"
-                                    Placeholder="Quantity *"
-                                    Style="{StaticResource entrPrimary}" />
-                            </Frame>
+                            <StackLayout Grid.Row="0" Spacing="5">
+                                <StackLayout HorizontalOptions="StartAndExpand" Orientation="Horizontal">
+                                    <Label Style="{StaticResource lblPrimary13}" Text="Product Description" />
+                                    <Label Text="*" TextColor="{StaticResource Red}" />
+                                </StackLayout>
+                                <Frame
+                                    Grid.Row="0"
+                                    Margin="0"
+                                    Padding="0"
+                                    BackgroundColor="Transparent"
+                                    CornerRadius="5"
+                                    HasShadow="False"
+                                    HeightRequest="100">
+                                    <Editor
+                                        x:Name="txtDescription"
+                                        ClassId="Description"
+                                        Style="{StaticResource edPrimary}"
+                                        Unfocused="Editor_Unfocused" />
+                                </Frame>
+                                <BoxView x:Name="BoxDescription" Style="{StaticResource boxHorizontal}" />
+                            </StackLayout>
 
-                            <Frame Grid.Row="2" Style="{StaticResource frmEntry}">
+                            <Grid Grid.Row="1" ColumnSpacing="10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <StackLayout Grid.Column="0" Spacing="{OnPlatform Android=0, iOS=5}">
+                                    <StackLayout HorizontalOptions="StartAndExpand" Orientation="Horizontal">
+                                        <Label Style="{StaticResource lblPrimary13}" Text="Quantity" />
+                                        <Label Text="*" TextColor="{StaticResource Red}" />
+                                    </StackLayout>
+
+                                    <ext:ExtEntry
+                                        x:Name="txtQuantity"
+                                        ClassId="Quantity"
+                                        Keyboard="Numeric"
+                                        Style="{StaticResource entrPrimary}"
+                                        Unfocused="Entry_Unfocused" />
+                                    <BoxView x:Name="BoxQuantity" Style="{StaticResource boxHorizontal}" />
+                                </StackLayout>
+
+                                <StackLayout Grid.Column="1" Spacing="0">
+                                    <StackLayout HorizontalOptions="StartAndExpand" Orientation="Horizontal">
+                                        <Label Style="{StaticResource lblPrimary13}" Text="Units" />
+                                        <Label Text="*" TextColor="{StaticResource Red}" />
+                                    </StackLayout>
+
+                                    <Grid
+                                        ColumnDefinitions="*,Auto"
+                                        ColumnSpacing="0"
+                                        VerticalOptions="EndAndExpand">
+                                        <Picker
+                                            x:Name="pkQuantityUnits"
+                                            Grid.Column="0"
+                                            BackgroundColor="Transparent"
+                                            ClassId="QuantityUnits"
+                                            Style="{StaticResource pkPrimary}"
+                                            Unfocused="Picker_Unfocused">
+                                            <Picker.Items>
+                                                <x:String>Numbers</x:String>
+                                                <x:String>Pieces</x:String>
+                                                <x:String>Boxes</x:String>
+                                                <x:String>Dozen</x:String>
+                                                <x:String>Litres</x:String>
+                                                <x:String>Kilograms</x:String>
+                                            </Picker.Items>
+                                        </Picker>
+
+                                        <ImageButton
+                                            x:Name="BtnUnits"
+                                            Grid.Column="1"
+                                            Margin="10,0"
+                                            BackgroundColor="Transparent"
+                                            Clicked="BtnUnits_Clicked"
+                                            HeightRequest="20"
+                                            HorizontalOptions="EndAndExpand"
+                                            Source="iconDownArrow.png"
+                                            VerticalOptions="CenterAndExpand"
+                                            WidthRequest="20" />
+                                    </Grid>
+                                    <BoxView
+                                        x:Name="BoxQuantityUnits"
+                                        Grid.ColumnSpan="2"
+                                        Style="{StaticResource boxHorizontal}" />
+                                </StackLayout>
+                            </Grid>
+
+                            <StackLayout Grid.Row="2" Spacing="{OnPlatform Android=0, iOS=5}">
+                                <StackLayout HorizontalOptions="StartAndExpand" Orientation="Horizontal">
+                                    <Label Style="{StaticResource lblPrimary13}" Text="Total Price Estimation" />
+                                    <Label Text="*" TextColor="{StaticResource Red}" />
+                                </StackLayout>
                                 <ext:ExtEntry
                                     x:Name="txtEstimation"
+                                    ClassId="PriceEstimation"
                                     Keyboard="Numeric"
-                                    Placeholder="Total Price Estimation"
-                                    Style="{StaticResource entrPrimary}" />
-                            </Frame>
+                                    Style="{StaticResource entrPrimary}"
+                                    Unfocused="Entry_Unfocused" />
+                                <BoxView x:Name="BoxPriceEstimation" Style="{StaticResource boxHorizontal}" />
+                            </StackLayout>
                         </Grid>
 
+                        <!--  Make in India /  ProductFromSeller  -->
                         <Grid
                             Grid.Row="3"
                             RowDefinitions="Auto,Auto"
                             RowSpacing="20">
+
                             <StackLayout
                                 Grid.Row="0"
                                 Margin="0"
@@ -323,12 +387,13 @@
                                     HeightRequest="25"
                                     HorizontalOptions="StartAndExpand"
                                     Source="iconUncheck.png"
-                                    VerticalOptions="CenterAndExpand" />
+                                    VerticalOptions="CenterAndExpand"
+                                    WidthRequest="25" />
 
                                 <Label
                                     Margin="10,0,0,0"
                                     FontFamily="Poppins"
-                                    FontSize="14"
+                                    FontSize="15"
                                     HorizontalOptions="StartAndExpand"
                                     Text="Prefer Make in India Products"
                                     TextColor="{StaticResource Black}"
@@ -348,12 +413,13 @@
                                     HeightRequest="25"
                                     HorizontalOptions="StartAndExpand"
                                     Source="iconUncheck.png"
-                                    VerticalOptions="CenterAndExpand" />
+                                    VerticalOptions="CenterAndExpand"
+                                    WidthRequest="25" />
 
                                 <Label
                                     Margin="10,0,0,0"
                                     FontFamily="Poppins"
-                                    FontSize="14"
+                                    FontSize="15"
                                     HorizontalOptions="StartAndExpand"
                                     Text="Pickup product directly from seller"
                                     TextColor="{StaticResource Black}"
@@ -364,47 +430,63 @@
                             </StackLayout>
                         </Grid>
 
+                        <!--  LocationPinCode / Supply / Date  -->
                         <Grid
                             Grid.Row="4"
                             RowDefinitions="Auto,Auto,Auto"
                             RowSpacing="20">
-                            <Frame Grid.Row="0" Style="{StaticResource frmEntry}">
+                            <StackLayout Grid.Row="0" Spacing="{OnPlatform Android=0, iOS=5}">
+                                <StackLayout HorizontalOptions="StartAndExpand" Orientation="Horizontal">
+                                    <Label
+                                        x:Name="lblLocationPINCode"
+                                        Style="{StaticResource lblPrimary13}"
+                                        Text="Delivery Location PIN Code" />
+                                    <Label Text="*" TextColor="{StaticResource Red}" />
+                                </StackLayout>
                                 <ext:ExtEntry
                                     x:Name="txtLocationPinCode"
+                                    ClassId="LocationPinCode"
                                     Keyboard="Numeric"
-                                    Placeholder="Delivery Location PIN Code *"
-                                    Style="{StaticResource entrPrimary}" />
-                            </Frame>
+                                    Style="{StaticResource entrPrimary}"
+                                    Unfocused="Entry_Unfocused" />
+                                <BoxView x:Name="BoxLocationPinCode" Style="{StaticResource boxHorizontal}" />
+                            </StackLayout>
 
-                            <Frame Grid.Row="1" Style="{StaticResource frmEntry}">
+                            <StackLayout Grid.Row="1" Spacing="{OnPlatform Android=0, iOS=5}">
+                                <StackLayout HorizontalOptions="StartAndExpand" Orientation="Horizontal">
+                                    <Label Style="{StaticResource lblPrimary13}" Text="Preffred Source of Supply (Region)" />
+                                    <Label Text="*" TextColor="{StaticResource Red}" />
+                                </StackLayout>
                                 <ext:ExtEntry
                                     x:Name="txtSourceSupply"
-                                    Placeholder="Preffred Source of Supply"
-                                    Style="{StaticResource entrPrimary}" />
-                            </Frame>
+                                    ClassId="PreffredSourceSupply"
+                                    Style="{StaticResource entrPrimary}"
+                                    Unfocused="Entry_Unfocused" />
+                                <BoxView x:Name="BoxSourceSupply" Style="{StaticResource boxHorizontal}" />
+                            </StackLayout>
 
-                            <Frame Grid.Row="2" Style="{StaticResource frmEntry}">
-                                <!--<ext:ExtEntry
-                                    x:Name="txtDeliveryDate"
-                                    Placeholder="Expected Delivery Date"
-                                    Style="{StaticResource entrPrimary}" />-->
+                            <StackLayout Grid.Row="2" Spacing="5">
+                                <Label
+                                    x:Name="lblDeliveryDate"
+                                    Style="{StaticResource lblPrimary13}"
+                                    Text="Expected Delivery Date" />
                                 <ext:ExtDatePicker
                                     x:Name="dpExpectedDeliveryDate"
-                                    Grid.Column="0"
-                                    Margin="10,0"
+                                    Margin="0"
                                     BackgroundColor="Transparent"
                                     FontFamily="Poppins"
                                     FontSize="15"
                                     Format="MM/dd/yyyy"
                                     HorizontalOptions="FillAndExpand"
-                                    Placeholder="Expected Delivery Date"
                                     TextColor="{StaticResource Black}" />
-                                <Frame.GestureRecognizers>
+                                <BoxView x:Name="BoxExpectedDeliveryDate" Style="{StaticResource boxHorizontal}" />
+                                <StackLayout.GestureRecognizers>
                                     <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ExpectedDeliveryDate_Tapped" />
-                                </Frame.GestureRecognizers>
-                            </Frame>
+                                </StackLayout.GestureRecognizers>
+                            </StackLayout>
                         </Grid>
 
+                        <!--  Billing Address  -->
                         <Grid
                             Grid.Row="5"
                             RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
@@ -419,79 +501,139 @@
                                 TextColor="{StaticResource Black}"
                                 VerticalOptions="CenterAndExpand" />
 
-                            <Frame Grid.Row="1" Style="{StaticResource frmEntry}">
+                            <StackLayout Grid.Row="1" Spacing="{OnPlatform Android=0, iOS=5}">
+                                <StackLayout HorizontalOptions="StartAndExpand" Orientation="Horizontal">
+                                    <Label Style="{StaticResource lblPrimary13}" Text="Name" />
+
+                                    <Label Text="*" TextColor="{StaticResource Red}" />
+                                </StackLayout>
                                 <ext:ExtEntry
                                     x:Name="txtName"
-                                    Placeholder="Name *"
-                                    Style="{StaticResource entrPrimary}" />
-                            </Frame>
+                                    ClassId="Name"
+                                    Style="{StaticResource entrPrimary}"
+                                    Unfocused="Entry_Unfocused" />
+                                <BoxView x:Name="BoxName" Style="{StaticResource boxHorizontal}" />
+                            </StackLayout>
 
-                            <Frame Grid.Row="2" Style="{StaticResource frmEntry}">
+                            <StackLayout Grid.Row="2" Spacing="{OnPlatform Android=0, iOS=5}">
+                                <StackLayout HorizontalOptions="StartAndExpand" Orientation="Horizontal">
+                                    <Label Style="{StaticResource lblPrimary13}" Text="Building" />
+                                    <Label Text="*" TextColor="{StaticResource Red}" />
+                                </StackLayout>
                                 <ext:ExtEntry
                                     x:Name="txtBuilding"
-                                    Placeholder="Building *"
-                                    Style="{StaticResource entrPrimary}" />
-                            </Frame>
+                                    ClassId="Building"
+                                    Style="{StaticResource entrPrimary}"
+                                    Unfocused="Entry_Unfocused" />
+                                <BoxView x:Name="BoxBuilding" Style="{StaticResource boxHorizontal}" />
+                            </StackLayout>
 
-                            <Frame Grid.Row="3" Style="{StaticResource frmEntry}">
+                            <StackLayout Grid.Row="3" Spacing="{OnPlatform Android=0, iOS=5}">
+                                <StackLayout HorizontalOptions="StartAndExpand" Orientation="Horizontal">
+                                    <Label Style="{StaticResource lblPrimary13}" Text="Street" />
+                                    <Label Text="*" TextColor="{StaticResource Red}" />
+                                </StackLayout>
                                 <ext:ExtEntry
                                     x:Name="txtStreet"
-                                    Placeholder="Street *"
-                                    Style="{StaticResource entrPrimary}" />
-                            </Frame>
+                                    ClassId="Street"
+                                    Style="{StaticResource entrPrimary}"
+                                    Unfocused="Entry_Unfocused" />
+                                <BoxView x:Name="BoxStreet" Style="{StaticResource boxHorizontal}" />
+                            </StackLayout>
 
-                            <Frame Grid.Row="4" Style="{StaticResource frmEntry}">
+                            <StackLayout Grid.Row="4" Spacing="{OnPlatform Android=0, iOS=5}">
+                                <StackLayout HorizontalOptions="StartAndExpand" Orientation="Horizontal">
+                                    <Label Style="{StaticResource lblPrimary13}" Text="City" />
+                                    <Label Text="*" TextColor="{StaticResource Red}" />
+                                </StackLayout>
                                 <ext:ExtEntry
                                     x:Name="txtCity"
-                                    Placeholder="City *"
-                                    Style="{StaticResource entrPrimary}" />
-                            </Frame>
+                                    ClassId="City"
+                                    Style="{StaticResource entrPrimary}"
+                                    Unfocused="Entry_Unfocused" />
+                                <BoxView x:Name="BoxCity" Style="{StaticResource boxHorizontal}" />
+                            </StackLayout>
 
-                            <Frame Grid.Row="5" Style="{StaticResource frmEntry}">
+                            <StackLayout Grid.Row="5" Spacing="{OnPlatform Android=0, iOS=5}">
+                                <StackLayout HorizontalOptions="StartAndExpand" Orientation="Horizontal">
+                                    <Label Style="{StaticResource lblPrimary13}" Text="PIN Code" />
+                                    <Label Text="*" TextColor="{StaticResource Red}" />
+                                </StackLayout>
                                 <ext:ExtEntry
                                     x:Name="txtPinCode"
+                                    ClassId="PinCode"
                                     Keyboard="Numeric"
-                                    Placeholder="PIN Code *"
-                                    Style="{StaticResource entrPrimary}" />
-                            </Frame>
+                                    Style="{StaticResource entrPrimary}"
+                                    Unfocused="Entry_Unfocused" />
+                                <BoxView x:Name="BoxPinCode" Style="{StaticResource boxHorizontal}" />
+                            </StackLayout>
                         </Grid>
 
+                        <!--  Shipping Address  -->
                         <Grid
                             Grid.Row="6"
                             RowDefinitions="Auto,Auto"
                             RowSpacing="20">
 
-                            <Frame
-                                Grid.Row="0"
-                                Margin="0,0"
-                                Padding="0"
-                                BackgroundColor="{StaticResource LightGray}"
-                                CornerRadius="5"
-                                HasShadow="False">
-                                <StackLayout Margin="0,10" Orientation="Horizontal">
-                                    <Label
-                                        Grid.Row="0"
-                                        Margin="10,0,0,0"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="18"
+                            <Grid Grid.Row="0">
+                                <StackLayout
+                                    Grid.Row="0"
+                                    Margin="0"
+                                    HorizontalOptions="StartAndExpand"
+                                    Orientation="Horizontal">
+                                    <Image
+                                        x:Name="imgSameAddress"
+                                        HeightRequest="25"
                                         HorizontalOptions="StartAndExpand"
-                                        Text="Shipping Address"
+                                        Source="iconUncheck.png"
+                                        VerticalOptions="CenterAndExpand"
+                                        WidthRequest="25" />
+
+                                    <Label
+                                        Margin="10,0,0,0"
+                                        FontFamily="Poppins"
+                                        FontSize="15"
+                                        HorizontalOptions="StartAndExpand"
+                                        Text="Same as billing address"
                                         TextColor="{StaticResource Black}"
                                         VerticalOptions="CenterAndExpand" />
-
-                                    <Image
-                                        x:Name="imgShippingDown"
-                                        Margin="0,0,15,0"
-                                        HeightRequest="25"
-                                        HorizontalOptions="EndAndExpand"
-                                        Source="iconDownArrow.png"
-                                        VerticalOptions="CenterAndExpand" />
                                     <StackLayout.GestureRecognizers>
-                                        <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="StkShipping_Tapped" />
+                                        <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="StkSameAddress_Tapped" />
                                     </StackLayout.GestureRecognizers>
                                 </StackLayout>
 
-                            </Frame>
+                                <Frame
+                                    Grid.Row="1"
+                                    Margin="0,0"
+                                    Padding="0"
+                                    BackgroundColor="{StaticResource LightGray}"
+                                    CornerRadius="5"
+                                    HasShadow="False">
+                                    <StackLayout Margin="0,10" Orientation="Horizontal">
+                                        <Label
+                                            Grid.Row="0"
+                                            Margin="10,0,0,0"
+                                            FontFamily="Poppins Medium"
+                                            FontSize="18"
+                                            HorizontalOptions="StartAndExpand"
+                                            Text="Shipping Address"
+                                            TextColor="{StaticResource Black}"
+                                            VerticalOptions="CenterAndExpand" />
+
+                                        <Image
+                                            x:Name="imgShippingDown"
+                                            Margin="0,0,15,0"
+                                            HeightRequest="20"
+                                            HorizontalOptions="EndAndExpand"
+                                            Source="iconDownArrow.png"
+                                            VerticalOptions="CenterAndExpand"
+                                            WidthRequest="20" />
+                                        <StackLayout.GestureRecognizers>
+                                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="StkShipping_Tapped" />
+                                        </StackLayout.GestureRecognizers>
+                                    </StackLayout>
+                                </Frame>
+                            </Grid>
 
                             <Grid
                                 x:Name="grdShippingAddress"
@@ -499,53 +641,90 @@
                                 IsVisible="False"
                                 RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
                                 RowSpacing="20">
-                                <Frame Grid.Row="0" Style="{StaticResource frmEntry}">
+                                <StackLayout Grid.Row="0" Spacing="{OnPlatform Android=0, iOS=5}">
+                                    <StackLayout HorizontalOptions="StartAndExpand" Orientation="Horizontal">
+                                        <Label Style="{StaticResource lblPrimary13}" Text="Name" />
+                                        <Label Text="*" TextColor="{StaticResource Red}" />
+                                    </StackLayout>
                                     <ext:ExtEntry
                                         x:Name="txtSAName"
-                                        Placeholder="Name *"
-                                        Style="{StaticResource entrPrimary}" />
-                                </Frame>
+                                        ClassId="SAName"
+                                        Style="{StaticResource entrPrimary}"
+                                        Unfocused="Entry_Unfocused" />
+                                    <BoxView x:Name="BoxSAName" Style="{StaticResource boxHorizontal}" />
+                                </StackLayout>
 
-                                <Frame Grid.Row="1" Style="{StaticResource frmEntry}">
+                                <StackLayout Grid.Row="1" Spacing="{OnPlatform Android=0, iOS=5}">
+                                    <StackLayout HorizontalOptions="StartAndExpand" Orientation="Horizontal">
+                                        <Label Style="{StaticResource lblPrimary13}" Text="Building" />
+                                        <Label Text="*" TextColor="{StaticResource Red}" />
+                                    </StackLayout>
                                     <ext:ExtEntry
                                         x:Name="txtSABuilding"
-                                        Placeholder="Building *"
-                                        Style="{StaticResource entrPrimary}" />
-                                </Frame>
+                                        ClassId="SABuilding"
+                                        Style="{StaticResource entrPrimary}"
+                                        Unfocused="Entry_Unfocused" />
+                                    <BoxView x:Name="BoxSABuilding" Style="{StaticResource boxHorizontal}" />
+                                </StackLayout>
 
-                                <Frame Grid.Row="2" Style="{StaticResource frmEntry}">
+                                <StackLayout Grid.Row="2" Spacing="{OnPlatform Android=0, iOS=5}">
+                                    <StackLayout HorizontalOptions="StartAndExpand" Orientation="Horizontal">
+                                        <Label Style="{StaticResource lblPrimary13}" Text="Street" />
+                                        <Label Text="*" TextColor="{StaticResource Red}" />
+                                    </StackLayout>
                                     <ext:ExtEntry
                                         x:Name="txtSAStreet"
-                                        Placeholder="Street *"
-                                        Style="{StaticResource entrPrimary}" />
-                                </Frame>
+                                        ClassId="SAStreet"
+                                        Style="{StaticResource entrPrimary}"
+                                        Unfocused="Entry_Unfocused" />
+                                    <BoxView x:Name="BoxSAStreet" Style="{StaticResource boxHorizontal}" />
+                                </StackLayout>
 
-                                <Frame Grid.Row="3" Style="{StaticResource frmEntry}">
+                                <StackLayout Grid.Row="3" Spacing="{OnPlatform Android=0, iOS=5}">
+                                    <StackLayout HorizontalOptions="StartAndExpand" Orientation="Horizontal">
+                                        <Label Style="{StaticResource lblPrimary13}" Text="City" />
+                                        <Label Text="*" TextColor="{StaticResource Red}" />
+                                    </StackLayout>
                                     <ext:ExtEntry
                                         x:Name="txtSACity"
-                                        Placeholder="City *"
-                                        Style="{StaticResource entrPrimary}" />
-                                </Frame>
+                                        ClassId="SACity"
+                                        Style="{StaticResource entrPrimary}"
+                                        Unfocused="Entry_Unfocused" />
+                                    <BoxView x:Name="BoxSACity" Style="{StaticResource boxHorizontal}" />
+                                </StackLayout>
 
-                                <Frame Grid.Row="4" Style="{StaticResource frmEntry}">
+                                <StackLayout Grid.Row="4" Spacing="{OnPlatform Android=0, iOS=5}">
+                                    <StackLayout HorizontalOptions="StartAndExpand" Orientation="Horizontal">
+                                        <Label Style="{StaticResource lblPrimary13}" Text="PIN Code" />
+                                        <Label Text="*" TextColor="{StaticResource Red}" />
+                                    </StackLayout>
                                     <ext:ExtEntry
                                         x:Name="txtSAPinCode"
+                                        ClassId="SAPinCode"
                                         Keyboard="Numeric"
-                                        Placeholder="PIN Code *"
-                                        Style="{StaticResource entrPrimary}" />
-                                </Frame>
+                                        Style="{StaticResource entrPrimary}"
+                                        Unfocused="Entry_Unfocused" />
+                                    <BoxView x:Name="BoxSAPinCode" Style="{StaticResource boxHorizontal}" />
+                                </StackLayout>
 
-                                <Frame Grid.Row="5" Style="{StaticResource frmEntry}">
+                                <StackLayout Grid.Row="5" Spacing="{OnPlatform Android=0, iOS=5}">
+                                    <StackLayout HorizontalOptions="StartAndExpand" Orientation="Horizontal">
+                                        <Label Style="{StaticResource lblPrimary13}" Text="Landmark" />
+                                        <Label Text="*" TextColor="{StaticResource Red}" />
+                                    </StackLayout>
                                     <ext:ExtEntry
                                         x:Name="txtSALandmark"
-                                        Placeholder="Landmark *"
-                                        Style="{StaticResource entrPrimary}" />
-                                </Frame>
+                                        ClassId="SALandmark"
+                                        Style="{StaticResource entrPrimary}"
+                                        Unfocused="Entry_Unfocused" />
+                                    <BoxView x:Name="BoxSALandmark" Style="{StaticResource boxHorizontal}" />
+                                </StackLayout>
                             </Grid>
                         </Grid>
                     </Grid>
                 </ScrollView>
 
+                <!--  Need Insurance / Submit Button  -->
                 <Grid
                     Grid.Row="2"
                     Padding="20,0,20,20"
@@ -562,12 +741,13 @@
                             HeightRequest="25"
                             HorizontalOptions="StartAndExpand"
                             Source="iconUncheck.png"
-                            VerticalOptions="CenterAndExpand" />
+                            VerticalOptions="CenterAndExpand"
+                            WidthRequest="25" />
 
                         <Label
                             Margin="10,0,0,0"
                             FontFamily="Poppins"
-                            FontSize="14"
+                            FontSize="15"
                             HorizontalOptions="StartAndExpand"
                             Text="Do you need Insurance Coverage?"
                             TextColor="{StaticResource Black}"
@@ -577,28 +757,12 @@
                         </StackLayout.GestureRecognizers>
                     </StackLayout>
 
-                    <Frame
-                        x:Name="FrmSubmitRequirement"
+                    <Button
+                        x:Name="BtnSubmitRequirement"
                         Grid.Row="1"
-                        Margin="0"
-                        Padding="0"
-                        BackgroundColor="{StaticResource Green}"
-                        CornerRadius="5"
-                        HasShadow="False"
-                        HeightRequest="50"
-                        HorizontalOptions="FillAndExpand"
-                        VerticalOptions="CenterAndExpand">
-                        <Label
-                            FontFamily="Poppins Medium"
-                            FontSize="15"
-                            HorizontalOptions="CenterAndExpand"
-                            Text="Submit Requirement"
-                            TextColor="{StaticResource White}"
-                            VerticalOptions="CenterAndExpand" />
-                        <Frame.GestureRecognizers>
-                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmSubmitRequirement_Tapped" />
-                        </Frame.GestureRecognizers>
-                    </Frame>
+                        Clicked="BtnSubmitRequirement_Clicked"
+                        Style="{StaticResource btnPrimary}"
+                        Text="Submit Requirement" />
                 </Grid>
             </Grid>
         </Grid>

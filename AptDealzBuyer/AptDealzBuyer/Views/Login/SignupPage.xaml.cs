@@ -5,6 +5,8 @@ using AptDealzBuyer.Model.Reponse;
 using AptDealzBuyer.Model.Request;
 using AptDealzBuyer.Utility;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -23,7 +25,6 @@ namespace AptDealzBuyer.Views.Login
         {
             InitializeComponent();
             txtFullName.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
-            //txtEmailAddress.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeNone);
         }
         #endregion
 
@@ -40,9 +41,15 @@ namespace AptDealzBuyer.Views.Login
 
         bool Validations()
         {
-            bool result = false;
+            bool isValid = false;
             try
             {
+                if (Common.EmptyFiels(txtFullName.Text) || Common.EmptyFiels(txtEmailAddress.Text) || Common.EmptyFiels(txtPhoneNumber.Text))
+                {
+                    RequiredFields();
+                    isValid = false;
+                }
+
                 if (Common.EmptyFiels(txtFullName.Text))
                 {
                     Common.DisplayErrorMessage(Constraints.Required_FullName);
@@ -69,14 +76,54 @@ namespace AptDealzBuyer.Views.Login
                 }
                 else
                 {
-                    result = true;
+                    isValid = true;
                 }
             }
             catch (Exception ex)
             {
                 Common.DisplayErrorMessage("SignupPage/Validations: " + ex.Message);
             }
-            return result;
+            return isValid;
+        }
+
+        void RequiredFields()
+        {
+            try
+            {
+                Common.DisplayErrorMessage(Constraints.Required_All);
+                if (Common.EmptyFiels(txtFullName.Text))
+                {
+                    BoxFullName.BackgroundColor = (Color)App.Current.Resources["LightRed"];
+                }
+
+                if (Common.EmptyFiels(txtEmailAddress.Text))
+                {
+                    BoxEmailAddress.BackgroundColor = (Color)App.Current.Resources["LightRed"];
+                }
+
+                if (Common.EmptyFiels(txtPhoneNumber.Text))
+                {
+                    BoxPhoneNumber.BackgroundColor = (Color)App.Current.Resources["LightRed"];
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("SignupPage/RequiredFields: " + ex.Message);
+            }
+        }
+
+        void FieldsTrim()
+        {
+            try
+            {
+                txtFullName.Text = txtFullName.Text.Trim();
+                txtEmailAddress.Text = txtEmailAddress.Text.Trim();
+                txtPhoneNumber.Text = txtPhoneNumber.Text.Trim();
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("SignupPage/FieldsTrim: " + ex.Message);
+            }
         }
 
         Model.Request.Register FillRegister()
@@ -105,6 +152,7 @@ namespace AptDealzBuyer.Views.Login
             {
                 if (Validations())
                 {
+                    FieldsTrim();
                     RegisterAPI registerAPI = new RegisterAPI();
                     UniquePhoneNumber mUniquePhoneNumber = new UniquePhoneNumber();
                     mUniquePhoneNumber.PhoneNumber = txtPhoneNumber.Text;
@@ -126,11 +174,34 @@ namespace AptDealzBuyer.Views.Login
                             var UniquePhone = (bool)mResponse.Data;
                             if (UniquePhone)
                             {
-                                var isSent = await SendOTP(mRegister.PhoneNumber);
-                                if (isSent)
+                                var keyValuePairs = await SendOTP(mRegister.PhoneNumber);
+                                var keyValue = keyValuePairs.FirstOrDefault();
+                                if (keyValue.Key)
                                 {
-                                    var _verificationId = Xamarin.Forms.DependencyService.Get<IFirebaseAuthenticator>()._verificationId;
-                                    await Navigation.PushAsync(new Views.Login.EnterOtpPage(mRegister));
+                                    if (keyValue.Value == Constraints.OTPSent)
+                                    {
+                                        var _verificationId = Xamarin.Forms.DependencyService.Get<IFirebaseAuthenticator>()._verificationId;
+                                        await Navigation.PushAsync(new Views.Login.EnterOtpPage(mRegister));
+                                    }
+                                    else
+                                    {
+                                        //Common.DisplayWarningMessage(keyValue.Value);
+                                        Settings.firebaseVerificationId = keyValue.Value;
+                                        Settings.PhoneAuthToken = keyValue.Value;
+                                        AuthenticationAPI authenticationAPI = new AuthenticationAPI();
+
+                                        var mLogin = FillLogin();
+                                        mResponse = await authenticationAPI.BuyerAuthPhone(mLogin);
+                                        NavigateToDashboard(mResponse);
+                                    }
+                                }
+                                else if (!string.IsNullOrEmpty(keyValue.Value))
+                                {
+                                    Common.DisplayErrorMessage(keyValue.Value);
+                                }
+                                else
+                                {
+                                    Common.DisplayErrorMessage(Constraints.CouldNotSentOTP);
                                 }
                             }
                             else
@@ -168,30 +239,95 @@ namespace AptDealzBuyer.Views.Login
             }
         }
 
-        async Task<bool> SendOTP(string phoneNumber)
+        async Task<Dictionary<bool, string>> SendOTP(string phoneNumber)
         {
+            Dictionary<bool, string> keyValuePairs = new Dictionary<bool, string>();
             try
             {
-                var result = await Xamarin.Forms.DependencyService.Get<IFirebaseAuthenticator>().SendOtpCodeAsync(phoneNumber);
-                if (!result)
+                keyValuePairs = await Xamarin.Forms.DependencyService.Get<IFirebaseAuthenticator>().SendOtpCodeAsync(phoneNumber);
+                var keyValue = keyValuePairs.FirstOrDefault();
+
+                if (!keyValue.Key)
                 {
-                    var isTryAgain = await UserDialogs.Instance.ConfirmAsync("Could not send Verification Code to the given number", "Verification", "Try Again", "Goto Login");
+                    var isTryAgain = await UserDialogs.Instance.ConfirmAsync(Constraints.CouldNotSentOTP, "Verification", "Try Again", "Goto Login");
                     if (isTryAgain)
                         return await SendOTP(phoneNumber);
                     else
-                        return false;
+                        return keyValuePairs;
                 }
                 else
                 {
-                    await DisplayAlert("OTP", "OTP send to your Phone number " + phoneNumber, "Ok");
-                    return true;
+                    //await DisplayAlert("OTP", "OTP send to your Phone number " + phoneNumber, "Ok");
+                    return keyValuePairs;
                 }
             }
             catch (Exception ex)
             {
                 Common.DisplayErrorMessage("SignupPage/SendOTP: " + ex.Message);
-                return false;
+                return keyValuePairs;
             }
+        }
+
+        void NavigateToDashboard(Response mResponse)
+        {
+            try
+            {
+                if (mResponse != null && mResponse.Succeeded)
+                {
+                    var jObject = (Newtonsoft.Json.Linq.JObject)mResponse.Data;
+                    if (jObject != null)
+                    {
+                        var mBuyer = jObject.ToObject<Model.Request.Buyer>();
+                        if (mBuyer != null)
+                        {
+                            Settings.UserId = mBuyer.Id;
+                            Settings.RefreshToken = mBuyer.RefreshToken;
+                            Settings.LoginTrackingKey = mBuyer.LoginTrackingKey == "00000000-0000-0000-0000-000000000000" ? Settings.LoginTrackingKey : mBuyer.LoginTrackingKey;
+                            Common.Token = mBuyer.JwToken;
+
+                            App.Current.MainPage = new MasterData.MasterDataPage();
+                        }
+                    }
+                }
+                else
+                {
+                    if (mResponse != null)
+                        Common.DisplayErrorMessage(mResponse.Message);
+                    else
+                        Common.DisplayErrorMessage(Constraints.Something_Wrong);
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("EnterOtpPage/NavigateToDashboard: " + ex.Message);
+            }
+        }
+
+        Model.Request.Login FillLogin()
+        {
+            Model.Request.Login mLogin = new Model.Request.Login();
+            try
+            {
+                mLogin.PhoneNumber = txtPhoneNumber.Text;
+                if (!Common.EmptyFiels(Settings.fcm_token))
+                {
+                    mLogin.FcmToken = Settings.fcm_token;
+                }
+                if (!Common.EmptyFiels(Settings.firebaseVerificationId))
+                {
+                    mLogin.FirebaseVerificationId = Settings.PhoneAuthToken;
+                }
+                else
+                {
+                    Common.DisplayErrorMessage(Constraints.Something_Wrong);
+                    return null;
+                }
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+            return mLogin;
         }
         #endregion
 
@@ -199,19 +335,6 @@ namespace AptDealzBuyer.Views.Login
         private void ImgBack_Tapped(object sender, EventArgs e)
         {
             Navigation.PopAsync();
-        }
-
-        private void FrmGetOtp_Tapped(object sender, EventArgs e)
-        {
-            try
-            {
-                Common.BindAnimation(frame: FrmGetOtp);
-                RegisterUser();
-            }
-            catch (Exception ex)
-            {
-                Common.DisplayErrorMessage("SignupPage/GetOtp_Tapped: " + ex.Message);
-            }
         }
 
         private void StkLogin_Tapped(object sender, EventArgs e)
@@ -232,6 +355,46 @@ namespace AptDealzBuyer.Views.Login
                 imgCheck.Source = Constraints.CheckBox_Checked;
             }
         }
-        #endregion      
+
+        private void BtnGetOtp_Clicked(object sender, EventArgs e)
+        {
+            try
+            {
+                Common.BindAnimation(button: BtnGetOtp);
+                RegisterUser();
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("SignupPage/GetOtp_Tapped: " + ex.Message);
+            }
+        }
+
+        private void Entry_Unfocused(object sender, FocusEventArgs e)
+        {
+            try
+            {
+                var entry = (Extention.ExtEntry)sender;
+                if (!Common.EmptyFiels(entry.Text))
+                {
+                    if (entry.ClassId == "FullName")
+                    {
+                        BoxFullName.BackgroundColor = (Color)App.Current.Resources["LightGray"];
+                    }
+                    else if (entry.ClassId == "Email")
+                    {
+                        BoxEmailAddress.BackgroundColor = (Color)App.Current.Resources["LightGray"];
+                    }
+                    else if (entry.ClassId == "PhoneNumber")
+                    {
+                        BoxPhoneNumber.BackgroundColor = (Color)App.Current.Resources["LightGray"];
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("SignupPage/Entry_Unfocused: " + ex.Message);
+            }
+        }
+        #endregion
     }
 }

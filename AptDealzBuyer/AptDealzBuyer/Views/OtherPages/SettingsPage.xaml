@@ -10,10 +10,9 @@
     NavigationPage.HasNavigationBar="False">
     <ContentPage.Content>
 
-       <Grid RowSpacing="0">
+        <Grid RowSpacing="0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="60" />
-                <RowDefinition Height="Auto" />
+                <RowDefinition Height="50" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
@@ -36,15 +35,7 @@
                     </Image.GestureRecognizers>
                 </Image>
 
-                <Image
-                    Grid.Column="1"
-                    Margin="0"
-                    Aspect="AspectFill"
-                    HeightRequest="55"
-                    HorizontalOptions="CenterAndExpand"
-                    Source="iconHeaderLogo.png"
-                    VerticalOptions="CenterAndExpand"
-                    WidthRequest="55" />
+                <Image Grid.Column="1" Style="{StaticResource imgLogo}" />
 
                 <StackLayout
                     Grid.Column="2"
@@ -73,53 +64,35 @@
                         </Image.GestureRecognizers>
                     </Image>
                 </StackLayout>
+                <BoxView Grid.ColumnSpan="3" Style="{StaticResource boxHorizontal}" />
             </Grid>
-            <!--#endregion-->
-            <BoxView
-                Grid.Row="1"
-                BackgroundColor="{StaticResource LightGray}"
-                HeightRequest="1"
-                HorizontalOptions="FillAndExpand"
-                VerticalOptions="EndAndExpand" />
 
-            <Grid Grid.Row="2" Margin="0">
+
+            <Grid Grid.Row="1" Margin="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
+                <!--  Back / Title  -->
                 <Grid
                     Grid.Row="0"
-                    Margin="20,0"
-                    ColumnDefinitions="Auto,*,Auto"
-                    HorizontalOptions="FillAndExpand">
-                    <Image
+                    Margin="5,5,5,0"
+                    ColumnDefinitions="Auto,*"
+                    ColumnSpacing="0">
+                    <ImageButton
                         x:Name="ImgBack"
-                        Margin="0"
-                        Aspect="AspectFit"
-                        HeightRequest="30"
-                        HorizontalOptions="StartAndExpand"
+                        Grid.Column="0"
+                        Clicked="ImgBack_Tapped"
                         Source="iconBackArrow.png"
-                        VerticalOptions="CenterAndExpand"
-                        WidthRequest="30">
-                        <Image.GestureRecognizers>
-                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgBack_Tapped" />
-                        </Image.GestureRecognizers>
-                    </Image>
-
+                        Style="{StaticResource ImgBtnPrimary}" />
                     <Label
                         Grid.Column="1"
-                        Margin="5,0,0,0"
-                        FontFamily="Poppins SemiBold"
-                        FontSize="20"
-                        HorizontalOptions="StartAndExpand"
-                        Text="Deactivate Account"
-                        TextColor="{StaticResource Black}"
-                        VerticalOptions="CenterAndExpand" />
-
+                        Style="{StaticResource lblHeader}"
+                        Text="Deactivate Account" />
                 </Grid>
 
-                <ScrollView Grid.Row="1" Margin="0,15,0,0">
+                <ScrollView Grid.Row="1" Style="{StaticResource scrPrimary}">
 
                     <Grid Margin="0" RowDefinitions="Auto,Auto,Auto,Auto">
 
@@ -139,7 +112,7 @@
                                 TextColor="{StaticResource Black}"
                                 VerticalOptions="CenterAndExpand" />
 
-                            <ext:CustomShadowFrame
+                            <ext:ExtShadowFrame
                                 Grid.Column="1"
                                 Margin="0"
                                 Padding="0"
@@ -169,7 +142,7 @@
                                         </Image.GestureRecognizers>
                                     </Image>
                                 </StackLayout>
-                            </ext:CustomShadowFrame>
+                            </ext:ExtShadowFrame>
 
                         </Grid>
 
@@ -193,7 +166,7 @@
                                 Grid.Column="1"
                                 ColumnDefinitions="*,*"
                                 ColumnSpacing="20">
-                                <ext:CustomShadowFrame
+                                <ext:ExtShadowFrame
                                     Grid.Column="0"
                                     Margin="0"
                                     Padding="0"
@@ -209,9 +182,9 @@
                                         Text="Light"
                                         TextColor="{StaticResource Black}"
                                         VerticalOptions="CenterAndExpand" />
-                                </ext:CustomShadowFrame>
+                                </ext:ExtShadowFrame>
 
-                                <ext:CustomShadowFrame
+                                <ext:ExtShadowFrame
                                     Grid.Column="1"
                                     Margin="0"
                                     Padding="0"
@@ -227,7 +200,7 @@
                                         Text="Dark"
                                         TextColor="{StaticResource White}"
                                         VerticalOptions="CenterAndExpand" />
-                                </ext:CustomShadowFrame>
+                                </ext:ExtShadowFrame>
                             </Grid>
 
                         </Grid>
@@ -248,7 +221,7 @@
                                 TextColor="{StaticResource Black}"
                                 VerticalOptions="CenterAndExpand" />
 
-                            <ext:CustomShadowFrame
+                            <ext:ExtShadowFrame
                                 Grid.Column="1"
                                 Margin="0"
                                 Padding="0"
@@ -278,7 +251,7 @@
                                         </Image.GestureRecognizers>
                                     </Image>
                                 </StackLayout>
-                            </ext:CustomShadowFrame>
+                            </ext:ExtShadowFrame>
 
                         </Grid>
 

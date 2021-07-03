@@ -12,6 +12,7 @@
         #region [ Authentication API ]
         public const string BuyerAuthenticateEmail = "api/v{0}/BuyerAuth/authenticate/email";
         public const string BuyerAuthenticatePhone = "api/v{0}/BuyerAuth/authenticate/phone";
+        public const string CheckPhoneNumber = "api/v{0}/BuyerAuth/CheckPhoneNumber?phoneNumber={1}";
         public const string SendOtpByEmail = "api/Account/SendOtpByEmail";
         public const string RefreshToken = "api/Account/refresh-token";
         public const string Logout = "api/Account/logout";
@@ -24,6 +25,7 @@
         public const string Country = "api/v{0}/Country/Get";
         public const string FileUpload = "api/FileUpload";
         public const string GetUserProfileByEmail = "api/Account/GetUserProfile/Email";
+        public const string ValidatePincode = "pincode/{0}";
         #endregion
 
         #region [ Category API ]
@@ -36,10 +38,24 @@
         public const string GetRequirement = "api/v{0}/Requirement/Get?PageNumber={1}&PageSize={2}";
         public const string GetRequirementById = "api/v{0}/Requirement/Get/{1}";
         public const string GetAllMyActiveRequirements = "api/v{0}/Requirement/GetAllMyActiveRequirements";
-        public const string GetMyPreviousRequirements = "api/v{0}/Requirement/GetMyPreviousRequirements?PageNumber={1}&PageSize={2}";
+        public const string GetMyPreviousRequirements = "api/v{0}/Requirement/GetMyPreviousRequirements";
         public const string DeleteRequirement = "api/v{0}/Requirement/Delete/{1}";
-        public const string CancelRequirement = "api/v{0}/Requirement/CancelRequirement";
+        public const string CancelRequirement = "api/v{0}/Requirement/CancelRequirement?RequirementId={1}";
         public const string UpdateStatusRequirement = "api/v{0}/Requirement/UpdateStatus";
+        #endregion
+
+        #region [ Quote API ]
+        public const string GetQuoteById = "api/v{0}/Quote/Get/{1}";
+        public const string GetQuotes = "api/v{0}/Quote/Get?RequirementId={1}";
+        public const string AcceptQuote = "api/v{0}/Quote/AcceptQuote?quoteId={1}";
+        public const string RejectQuote = "api/v{0}/Quote/RejectQuote?quoteId={1}";
+        public const string RevealSellerContact = "api/v{0}/Quote/RevealSellerContact";
+        #endregion
+
+        #region [Order API]
+        public const string CreateOrder = "api/v1/Order/Create";
         #endregion
     }
 }
+
+

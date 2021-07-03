@@ -3,38 +3,34 @@
     x:Class="AptDealzBuyer.Views.PopupPages.SuccessPopup"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:ext="clr-namespace:AptDealzBuyer.Extention"
     xmlns:popup="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup">
 
-    <ext:CustomShadowFrame
-        Margin="30,0"
+    <Frame
+        Margin="35,0"
         Padding="0"
         BackgroundColor="{StaticResource White}"
         BorderColor="{StaticResource White}"
-        BorderWidth="1"
         CornerRadius="10"
-        HasShadow="{OnPlatform Android=true,
-                               iOS=false}"
-        HeightRequest="350"
+        HasShadow="False"
         HorizontalOptions="FillAndExpand"
         VerticalOptions="CenterAndExpand">
 
         <Grid
             Margin="0"
-            Padding="0"
-            RowDefinitions="Auto,Auto,*,Auto">
+            Padding="25"
+            RowDefinitions="Auto,Auto,*,Auto"
+            RowSpacing="25">
 
             <Image
                 Grid.Row="0"
-                Margin="0,20,0,0"
-                HeightRequest="100"
+                HeightRequest="70"
                 HorizontalOptions="CenterAndExpand"
                 Source="iconSmile.png"
-                VerticalOptions="CenterAndExpand" />
+                VerticalOptions="CenterAndExpand"
+                WidthRequest="70" />
 
             <Label
                 Grid.Row="1"
-                Margin="0"
                 FontFamily="Poppins Medium"
                 FontSize="18"
                 HorizontalOptions="CenterAndExpand"
@@ -45,39 +41,26 @@
             <Label
                 x:Name="lblMessage"
                 Grid.Row="2"
-                Margin="30,0"
                 FontFamily="Poppins"
-                FontSize="15"
-                HorizontalOptions="CenterAndExpand"
+                FontSize="17"
+                HorizontalOptions="FillAndExpand"
                 HorizontalTextAlignment="Center"
-                Text="New requirement created successfully!"
+                LineBreakMode="WordWrap"
+                Text=""
                 TextColor="{StaticResource Green}"
                 VerticalOptions="CenterAndExpand" />
 
-            <ext:CustomShadowFrame
+            <Button
                 Grid.Row="3"
-                Margin="0,0,0,40"
-                Padding="0"
-                BackgroundColor="{StaticResource Green}"
-                CornerRadius="23"
-                HeightRequest="46"
+                Clicked="FrmHome_Tapped"
+                CornerRadius="25"
                 HorizontalOptions="CenterAndExpand"
-                VerticalOptions="CenterAndExpand"
-                WidthRequest="120">
-                <Label
-                    FontFamily="Poppins Medium"
-                    FontSize="18"
-                    HorizontalOptions="CenterAndExpand"
-                    Text="Home"
-                    TextColor="{StaticResource White}"
-                    VerticalOptions="CenterAndExpand" />
-                <ext:CustomShadowFrame.GestureRecognizers>
-                    <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmHome_Tapped" />
-                </ext:CustomShadowFrame.GestureRecognizers>
-            </ext:CustomShadowFrame>
+                Style="{StaticResource btnPrimary}"
+                Text="Home"
+                WidthRequest="150" />
 
         </Grid>
 
-    </ext:CustomShadowFrame>
+    </Frame>
 
 </popup:PopupPage>

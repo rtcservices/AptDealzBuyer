@@ -1,4 +1,5 @@
 ﻿using Acr.UserDialogs;
+using AptDealzBuyer.API;
 using AptDealzBuyer.Views.MasterData;
 using System;
 using System.Text.RegularExpressions;
@@ -13,9 +14,9 @@ namespace AptDealzBuyer.Utility
         #region Properties
         public static MasterDataPage MasterData { get; set; }
         public static string Token { get; set; }
-        //public static string RefreshToken { get; set; }
         private static Regex PhoneNumber { get; set; } = new Regex(@"^[0-9]{10}$");
         private static Regex RegexPassword { get; set; } = new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{8,}$");
+        private static Regex RegexPincode { get; set; } = new Regex(@"^[0-9]{6}$");
         #endregion
 
         #region DisplayMessages
@@ -108,6 +109,7 @@ namespace AptDealzBuyer.Utility
 
         public static bool IsValidPhone(this string value)
         {
+            value = value.Trim();
             return PhoneNumber.IsMatch(value);
         }
 
@@ -115,6 +117,7 @@ namespace AptDealzBuyer.Utility
         {
             try
             {
+                value = value.Trim();
                 var addr = new System.Net.Mail.MailAddress($"{value}");
                 return addr.Address == $"{value}";
             }
@@ -126,7 +129,14 @@ namespace AptDealzBuyer.Utility
 
         public static bool IsValidPassword(this string value)
         {
+            value = value.Trim();
             return (RegexPassword.IsMatch($"{value}"));
+        }
+
+        public static bool IsValidPincode(this string value)
+        {
+            value = value.Trim();
+            return (RegexPincode.IsMatch($"{value}"));
         }
 
         public static bool EmptyFiels(string extEntry)
@@ -135,7 +145,11 @@ namespace AptDealzBuyer.Utility
             {
                 return true;
             }
-            return false;
+            else
+            {
+                extEntry = extEntry.Trim();
+                return false;
+            }
         }
 
         public async static Task<bool> InternetConnection()
@@ -160,7 +174,6 @@ namespace AptDealzBuyer.Utility
             }
         }
         #endregion
-
     }
 
     #region Enum   
@@ -185,11 +198,16 @@ namespace AptDealzBuyer.Utility
         ID = 1,
         Date = 2,
         Quotes = 3,
-        quotationId = 4,
-        amount = 5,
-        validity = 6,
-        ASC = 7,
-        DSC = 8
+        Amount = 4,
+        Validity = 5,
+        ASC = 6,
+        DSC = 7
+    }
+
+    public enum PaymentStatus
+    {
+        Success = 1,
+        Failed = 2
     }
     #endregion
 }

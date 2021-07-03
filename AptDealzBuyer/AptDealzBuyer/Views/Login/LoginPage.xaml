@@ -31,16 +31,14 @@
                 </Image>
             </Grid>
 
-            <Grid
-                Grid.Row="1"
-                Padding="20"
-                RowSpacing="0">
+            <Grid Grid.Row="1" RowSpacing="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
+                <!--  LOGO / welcome Label  -->
                 <StackLayout Grid.Row="0" Spacing="0">
                     <Image
                         Aspect="AspectFill"
@@ -50,43 +48,41 @@
                         VerticalOptions="CenterAndExpand" />
 
                     <Label
-                        Margin="0"
-                        FontFamily="Poppins Medium"
-                        FontSize="18"
-                        HorizontalOptions="CenterAndExpand"
-                        Text="Welcome Back"
-                        TextColor="{StaticResource Black}"
-                        VerticalOptions="CenterAndExpand" />
+                        FontSize="24"
+                        Style="{StaticResource lblBoldHeader}"
+                        Text="Welcome Back" />
 
                     <Label
-                        Margin="0"
-                        FontFamily="Poppins"
-                        FontSize="14"
                         HorizontalOptions="CenterAndExpand"
-                        Text="Login to your AptDealz Account"
-                        TextColor="{StaticResource Black}"
-                        VerticalOptions="CenterAndExpand" />
+                        HorizontalTextAlignment="Center"
+                        Style="{StaticResource lblLight}"
+                        Text="Login to your AptDealz Account" />
                 </StackLayout>
 
+                <!--  Entry / Keep Login / Get Otp  -->
                 <Grid
                     Grid.Row="1"
+                    Padding="20,0"
                     RowDefinitions="Auto,*"
+                    RowSpacing="25"
                     VerticalOptions="CenterAndExpand">
 
-                    <StackLayout
+                    <!--<StackLayout
                         Grid.Row="0"
                         HorizontalOptions="FillAndExpand"
                         Spacing="20"
-                        VerticalOptions="CenterAndExpand">
+                        VerticalOptions="CenterAndExpand">-->
 
-                        <Frame Style="{StaticResource frmEntryGray}">
-                            <ext:ExtEntry
-                                x:Name="txtUserAuth"
-                                Placeholder="Email / Phone Number"
-                                Style="{StaticResource entrGray}" />
-                        </Frame>
+                    <StackLayout Grid.Row="0" Spacing="{OnPlatform Android=0, iOS=5}">
+                        <Label Style="{StaticResource lblPrimary13}" Text="Email / Phone Number" />
+                        <ext:ExtEntry
+                            x:Name="txtUserAuth"
+                            Style="{StaticResource entrGray}"
+                            Unfocused="txtUserAuth_Unfocused" />
+                        <BoxView x:Name="BoxUserAuth" Style="{StaticResource boxHorizontal}" />
+                    </StackLayout>
 
-                        <StackLayout
+                    <!--<StackLayout
                             HorizontalOptions="StartAndExpand"
                             Orientation="Horizontal"
                             VerticalOptions="CenterAndExpand">
@@ -109,45 +105,29 @@
                                 <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="StkRemember_Tapped" />
                             </StackLayout.GestureRecognizers>
                         </StackLayout>
-                    </StackLayout>
+                    </StackLayout>-->
 
-                    <Frame
-                        x:Name="FrmGetOtp"
+                    <Button
+                        x:Name="BtnGetOtp"
                         Grid.Row="1"
-                        Margin="0,30"
-                        Padding="0"
-                        BackgroundColor="{StaticResource Green}"
-                        CornerRadius="5"
-                        HasShadow="False"
-                        HeightRequest="50"
-                        HorizontalOptions="FillAndExpand"
-                        VerticalOptions="EndAndExpand">
-                        <Label
-                            FontFamily="Poppins Medium"
-                            HorizontalOptions="CenterAndExpand"
-                            Text="Get OTP"
-                            TextColor="{StaticResource White}"
-                            VerticalOptions="CenterAndExpand" />
-                        <Frame.GestureRecognizers>
-                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmGetOtp_Tapped" />
-                        </Frame.GestureRecognizers>
-                    </Frame>
+                        Margin="0"
+                        Clicked="BtnGetOtp_Clicked"
+                        Style="{StaticResource btnPrimary}"
+                        Text="Get OTP" />
                 </Grid>
 
+                <!--  Dont have Accoutn  -->
                 <StackLayout
                     Grid.Row="2"
-                    Margin="0,20,0,10"
+                    Padding="0,20"
                     HorizontalOptions="CenterAndExpand"
                     Orientation="Horizontal">
 
                     <Label
-                        Margin="10,0,0,0"
-                        FontFamily="Poppins Medium"
                         FontSize="15"
                         HorizontalOptions="EndAndExpand"
-                        Text="Don't have an Account ?"
-                        TextColor="{StaticResource Black}"
-                        VerticalOptions="CenterAndExpand" />
+                        Style="{StaticResource lblBoldHeader}"
+                        Text="Don't have an Account ?" />
 
                     <Label
                         Margin="10,0,0,0"

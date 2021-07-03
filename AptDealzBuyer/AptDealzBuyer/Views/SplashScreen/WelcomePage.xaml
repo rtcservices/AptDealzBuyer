@@ -97,21 +97,16 @@
                     Spacing="10"
                     VerticalOptions="CenterAndExpand">
                     <Label
-                        FontFamily="Poppins SemiBold"
-                        FontSize="17"
-                        HorizontalOptions="CenterAndExpand"
+                        FontSize="21"
                         HorizontalTextAlignment="Center"
-                        Text="What is Lorem Ipsum"
-                        TextColor="{StaticResource Black}"
-                        VerticalOptions="CenterAndExpand" />
+                        Style="{StaticResource lblBoldHeader}"
+                        Text="What is Lorem Ipsum" />
 
                     <Label
-                        FontFamily="Poppins"
-                        HorizontalOptions="CenterAndExpand"
+                        FontSize="15"
                         HorizontalTextAlignment="Center"
-                        Text="Lorem Ipsum is simply dummy text of the printing and typesetting industry."
-                        TextColor="{StaticResource Black}"
-                        VerticalOptions="CenterAndExpand" />
+                        Style="{StaticResource lblLight}"
+                        Text="Lorem Ipsum is simply dummy text of the printing and typesetting industry." />
                 </StackLayout>
 
                 <IndicatorView
@@ -128,27 +123,13 @@
                     WidthRequest="30" />
             </Grid>
 
-            <ext:CustomShadowFrame
-                x:Name="FrmLogin"
+            <Button
+                x:Name="BtnLogin"
                 Grid.Row="2"
                 Margin="20,0,20,20"
-                Padding="10,5"
-                BackgroundColor="{StaticResource Green}"
-                CornerRadius="5"
-                HasShadow="False"
-                HorizontalOptions="FillAndExpand"
-                VerticalOptions="EndAndExpand">
-                <Label
-                    Margin="15,10"
-                    FontFamily="Poppins Medium"
-                    HorizontalOptions="CenterAndExpand"
-                    Text="Login"
-                    TextColor="{StaticResource White}"
-                    VerticalOptions="CenterAndExpand" />
-                <ext:CustomShadowFrame.GestureRecognizers>
-                    <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmLogin_Tapped" />
-                </ext:CustomShadowFrame.GestureRecognizers>
-            </ext:CustomShadowFrame>
+                Clicked="BtnLogin_Clicked"
+                Style="{StaticResource btnPrimary}"
+                Text="Login" />
         </Grid>
 
     </ContentPage.Content>

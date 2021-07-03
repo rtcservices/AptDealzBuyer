@@ -36,22 +36,32 @@ namespace AptDealzBuyer.Views.PopupPages
             if (PageName == "Active")
             {
                 StkThirdType.IsVisible = true;
+                StkSecondType.IsVisible = true;
                 lblFirstType.Text = "ID";
                 lblSecondType.Text = "Date";
                 lblThirdType.Text = "No of Quotes";
             }
             else if (PageName == "Previous")
             {
-                StkThirdType.IsVisible = false;
+                StkSecondType.IsVisible = false;
                 lblFirstType.Text = "ID";
-                lblSecondType.Text = "Quotes";
+                lblThirdType.Text = "Quotes";
             }
             else if (PageName == "ViewReq")
             {
+                StkSecondType.IsVisible = true;
                 StkThirdType.IsVisible = true;
                 lblFirstType.Text = "ID";
                 lblSecondType.Text = "Amount";
                 lblThirdType.Text = "Validity";
+            }
+            else
+            {
+                StkSecondType.IsVisible = true;
+                StkThirdType.IsVisible = true;
+                lblFirstType.Text = "ID";
+                lblSecondType.Text = "Date";
+                lblThirdType.Text = "No of Quotes";
             }
         }
         void BindSource(string viewSource)
@@ -92,16 +102,8 @@ namespace AptDealzBuyer.Views.PopupPages
         #region Events
         private void StkFirstType_Tapped(object sender, EventArgs e)
         {
-            if (PageName == "ViewReq")
-            {
-                BindSource(RequirementSortBy.quotationId.ToString());
-                isRefresh?.Invoke(RequirementSortBy.quotationId.ToString(), null);
-            }
-            else
-            {
-                BindSource(RequirementSortBy.ID.ToString());
-                isRefresh?.Invoke(RequirementSortBy.ID.ToString(), null);
-            }
+            BindSource(RequirementSortBy.ID.ToString());
+            isRefresh?.Invoke(RequirementSortBy.ID.ToString(), null);
             PopupNavigation.Instance.PopAsync();
         }
 
@@ -109,8 +111,8 @@ namespace AptDealzBuyer.Views.PopupPages
         {
             if (PageName == "ViewReq")
             {
-                BindSource(RequirementSortBy.amount.ToString());
-                isRefresh?.Invoke(RequirementSortBy.amount.ToString(), null);
+                BindSource(RequirementSortBy.Amount.ToString());
+                isRefresh?.Invoke(RequirementSortBy.Amount.ToString(), null);
             }
             else
             {
@@ -124,8 +126,8 @@ namespace AptDealzBuyer.Views.PopupPages
         {
             if (PageName == "ViewReq")
             {
-                BindSource(RequirementSortBy.validity.ToString());
-                isRefresh?.Invoke(RequirementSortBy.validity.ToString(), null);
+                BindSource(RequirementSortBy.Validity.ToString());
+                isRefresh?.Invoke(RequirementSortBy.Validity.ToString(), null);
             }
             else
             {

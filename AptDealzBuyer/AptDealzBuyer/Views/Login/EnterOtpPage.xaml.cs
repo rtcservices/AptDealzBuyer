@@ -7,6 +7,7 @@ using AptDealzBuyer.Utility;
 using AptDealzBuyer.Views.MasterData;
 using AptDealzBuyer.Views.SplashScreen;
 using System;
+using System.Linq;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -18,22 +19,29 @@ namespace AptDealzBuyer.Views.Login
         #region Objects
         private string UserAuth;
         private bool isEmail;
-        private bool IsKeepLogin;
         private bool IsRegister;
         private string OTPString;
         private Register mRegister;
         #endregion
 
         #region Constructor
-        public EnterOtpPage(string UserAuth, bool isEmail = true, bool IsKeepLogin = false)
+        public EnterOtpPage(string UserAuth, bool isEmail = true)
         {
             InitializeComponent();
             this.UserAuth = UserAuth;
             this.isEmail = isEmail;
-            this.IsKeepLogin = IsKeepLogin;
             ResendButtonEnable();
         }
 
+        public EnterOtpPage(Register register)
+        {
+            InitializeComponent();
+            mRegister = register;
+            this.IsRegister = true;
+        }
+        #endregion
+
+        #region Methods        
         void ResendButtonEnable()
         {
             BtnResentOtp.IsEnabled = false;
@@ -53,15 +61,6 @@ namespace AptDealzBuyer.Views.Login
             });
         }
 
-        public EnterOtpPage(Register register)
-        {
-            InitializeComponent();
-            mRegister = register;
-            this.IsRegister = true;
-        }
-        #endregion
-
-        #region Methods        
         protected override void OnAppearing()
         {
             base.OnAppearing();
@@ -135,14 +134,14 @@ namespace AptDealzBuyer.Views.Login
                             Settings.LoginTrackingKey = mBuyer.LoginTrackingKey == "00000000-0000-0000-0000-000000000000" ? Settings.LoginTrackingKey : mBuyer.LoginTrackingKey;
                             Common.Token = mBuyer.JwToken;
 
-                            if (this.IsKeepLogin)
-                            {
-                                Settings.UserToken = mBuyer.JwToken;
-                            }
-                            else
-                            {
-                                Settings.UserToken = string.Empty;
-                            }
+                            //if (this.IsKeepLogin)
+                            //{
+                            //    Settings.UserToken = mBuyer.JwToken;
+                            //}
+                            //else
+                            //{
+                            //    Settings.UserToken = string.Empty;
+                            //}
 
                             App.Current.MainPage = new MasterDataPage();
                         }
@@ -222,6 +221,10 @@ namespace AptDealzBuyer.Views.Login
                                 NavigateToDashboard(mResponse);
                             }
                         }
+                        else
+                        {
+                            Common.DisplayErrorMessage(Constraints.InValid_OTP);
+                        }
                     }
                     else
                     {
@@ -275,9 +278,23 @@ namespace AptDealzBuyer.Views.Login
                 else
                 {
                     var result = await Xamarin.Forms.DependencyService.Get<IFirebaseAuthenticator>().SendOtpCodeAsync(UserAuth);
-                    if (!result)
+                    var keyValue = result.FirstOrDefault();
+
+                    if (!keyValue.Key)
                     {
                         Common.DisplayErrorMessage("Could not send Verification Code to the given number!");
+                    }
+                    else
+                    {
+                        if (keyValue.Value != Constraints.OTPSent)
+                        {
+                            Settings.firebaseVerificationId = keyValue.Value;
+                            Settings.PhoneAuthToken = keyValue.Value;
+
+                            var mLogin = FillLogin();
+                            var mResponse = await authenticationAPI.BuyerAuthPhone(mLogin);
+                            NavigateToDashboard(mResponse);
+                        }
                     }
                 }
 

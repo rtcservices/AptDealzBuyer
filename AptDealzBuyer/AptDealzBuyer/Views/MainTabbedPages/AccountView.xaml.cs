@@ -1,5 +1,6 @@
 ﻿using Acr.UserDialogs;
 using AptDealzBuyer.API;
+using AptDealzBuyer.Extention;
 using AptDealzBuyer.Model.Reponse;
 using AptDealzBuyer.Model.Request;
 using AptDealzBuyer.Repository;
@@ -43,7 +44,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
 
         #region Objects          
         private ProfileAPI profileAPI;
-        private List<Country> countries;
+        private List<Country> mCountries;
         private BuyerDetails mBuyerDetail;
         private string relativePath;
         bool isFirstLoad = true;
@@ -66,15 +67,14 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 profileAPI = new ProfileAPI();
                 UserDialogs.Instance.ShowLoading(Constraints.Loading);
 
-                if (countries == null || countries.Count == 0)
+                if (mCountries == null || mCountries.Count == 0)
                     await GetCountries();
 
-                //pkNationality.ItemsSource = countries.Select(x => x.Name).ToList();
                 await GetProfile();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                //Common.DisplayErrorMessage("AccountView/BindProperties: " + ex.Message);
+                Common.DisplayErrorMessage("AccountView/BindProperties: " + ex.Message);
             }
             finally
             {
@@ -86,7 +86,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         {
             try
             {
-                countries = await profileAPI.GetCountry();
+                mCountries = await profileAPI.GetCountry();
             }
             catch (Exception ex)
             {
@@ -107,10 +107,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                         mBuyerDetail = jObject.ToObject<Model.Request.BuyerDetails>();
                         if (mBuyerDetail != null)
                         {
-                            BindProfileDetails(mBuyerDetail);
-                            //txtFullName.Focus();
-                            //pkNationality.Unfocus();
-                            //pkNationality.IsSuggestionListOpen = false;
+                            GetProfileDetails(mBuyerDetail);
                         }
                     }
                 }
@@ -128,7 +125,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             }
         }
 
-        void BindProfileDetails(BuyerDetails mBuyerDetails)
+        void GetProfileDetails(BuyerDetails mBuyerDetails)
         {
             try
             {
@@ -165,9 +162,9 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 {
                     txtPinCode.Text = mBuyerDetails.PinCode;
                 }
-                if (mBuyerDetails.CountryId > 0 && countries != null && countries.Count() > 0)
+                if (mBuyerDetails.CountryId > 0 && mCountries != null && mCountries.Count() > 0)
                 {
-                    pkNationality.Text = countries.Where(x => x.CountryId == mBuyerDetails.CountryId).FirstOrDefault().Name;
+                    pkNationality.Text = mCountries.Where(x => x.CountryId == mBuyerDetails.CountryId).FirstOrDefault().Name;
                 }
             }
             catch (Exception ex)
@@ -176,7 +173,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             }
         }
 
-        Model.Request.BuyerDetails FillProfileDetails()
+        Model.Request.BuyerDetails UpdateProfileDetails()
         {
             mBuyerDetail.UserId = mBuyerDetail.BuyerId;
             mBuyerDetail.FullName = txtFullName.Text;
@@ -186,40 +183,31 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             {
                 string baseURL = (string)App.Current.Resources["BaseURL"];
                 mBuyerDetail.ProfilePhoto = relativePath.Replace(baseURL, "");
-                //mBuyerDetail.ProfilePhoto = relativePath;
             }
-            if (!Common.EmptyFiels(txtBuildingNumber.Text))
-            {
-                mBuyerDetail.Building = txtBuildingNumber.Text;
-            }
-            if (!Common.EmptyFiels(txtStreet.Text))
-            {
-                mBuyerDetail.Street = txtStreet.Text;
-            }
-            if (!Common.EmptyFiels(txtCity.Text))
-            {
-                mBuyerDetail.City = txtCity.Text;
-            }
+            mBuyerDetail.Building = txtBuildingNumber.Text;
+            mBuyerDetail.Street = txtStreet.Text;
+            mBuyerDetail.City = txtCity.Text;
             if (!Common.EmptyFiels(pkNationality.Text))
             {
-                mBuyerDetail.CountryId = countries.Where(x => x.Name == pkNationality.Text.ToString()).FirstOrDefault()?.CountryId;
+                mBuyerDetail.CountryId = mCountries.Where(x => x.Name.ToLower() == pkNationality.Text.ToLower().ToString()).FirstOrDefault()?.CountryId;
             }
-            if (!Common.EmptyFiels(txtLandmark.Text))
-            {
-                mBuyerDetail.Landmark = txtLandmark.Text;
-            }
-            if (!Common.EmptyFiels(txtPinCode.Text))
-            {
-                mBuyerDetail.PinCode = txtPinCode.Text;
-            }
+            mBuyerDetail.Landmark = txtLandmark.Text;
+            mBuyerDetail.PinCode = txtPinCode.Text;
+
             return mBuyerDetail;
         }
 
         bool Validations()
         {
-            bool result = false;
+            bool isValid = false;
             try
             {
+                if (Common.EmptyFiels(txtFullName.Text) || Common.EmptyFiels(txtPhoneNumber.Text) || Common.EmptyFiels(pkNationality.Text))
+                {
+                    RequiredFields();
+                    isValid = false;
+                }
+
                 if (Common.EmptyFiels(txtFullName.Text))
                 {
                     Common.DisplayErrorMessage(Constraints.Required_FullName);
@@ -236,16 +224,77 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 {
                     Common.DisplayErrorMessage(Constraints.Required_Nationality);
                 }
+                else if (mCountries.Where(x => x.Name.ToLower() == pkNationality.Text.ToLower()).Count() == 0)
+                {
+                    Common.DisplayErrorMessage(Constraints.InValid_Nationality);
+                }
                 else
                 {
-                    result = true;
+                    isValid = true;
                 }
             }
             catch (Exception ex)
             {
                 Common.DisplayErrorMessage("AccountView/Validations: " + ex.Message);
             }
-            return result;
+            return isValid;
+        }
+
+        void RequiredFields()
+        {
+            try
+            {
+                Common.DisplayErrorMessage(Constraints.Required_All);
+
+                if (Common.EmptyFiels(txtFullName.Text))
+                {
+                    BoxFullName.BackgroundColor = (Color)App.Current.Resources["LightRed"];
+                }
+                else
+                {
+                    BoxFullName.BackgroundColor = (Color)App.Current.Resources["LightGray"];
+                }
+
+                if (Common.EmptyFiels(txtPhoneNumber.Text))
+                {
+                    BoxPhoneNumber.BackgroundColor = (Color)App.Current.Resources["LightRed"];
+                }
+                else
+                {
+                    BoxPhoneNumber.BackgroundColor = (Color)App.Current.Resources["LightGray"];
+                }
+
+                if (Common.EmptyFiels(pkNationality.Text))
+                {
+                    BoxNationality.BackgroundColor = (Color)App.Current.Resources["LightRed"];
+                }
+                else
+                {
+                    BoxNationality.BackgroundColor = (Color)App.Current.Resources["LightGray"];
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("AccountView/EnableRequiredFields: " + ex.Message);
+            }
+        }
+
+        void FieldsTrim()
+        {
+            try
+            {
+                txtFullName.Text = txtFullName.Text.Trim();
+                txtPhoneNumber.Text = txtPhoneNumber.Text.Trim();
+                txtBuildingNumber.Text = txtBuildingNumber.Text.Trim();
+                txtStreet.Text = txtStreet.Text.Trim();
+                txtCity.Text = txtCity.Text.Trim();
+                txtLandmark.Text = txtLandmark.Text.Trim();
+                txtPinCode.Text = txtPinCode.Text.Trim();
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("AccountView/FieldsTrim: " + ex.Message);
+            }
         }
 
         async void UpdateProfile()
@@ -254,8 +303,12 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             {
                 if (Validations())
                 {
+                    if (!await PinCodeValidation())
+                        return;
+
+                    FieldsTrim();
                     UserDialogs.Instance.ShowLoading(Constraints.Loading);
-                    var mBuyerDetails = FillProfileDetails();
+                    var mBuyerDetails = UpdateProfileDetails();
 
                     var mResponse = await profileAPI.SaveProfile(mBuyerDetails);
                     if (mResponse != null && mResponse.Succeeded)
@@ -268,10 +321,10 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                     }
                     else
                     {
-                        if (mResponse == null)
-                            return;
-
-                        Common.DisplayErrorMessage(mResponse.Message);
+                        if (mResponse != null)
+                            Common.DisplayErrorMessage(mResponse.Message);
+                        else
+                            Common.DisplayErrorMessage(Constraints.Something_Wrong);
                     }
                 }
             }
@@ -317,6 +370,64 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 Common.DisplayErrorMessage("AccountView/DoLogout: " + ex.Message);
             }
         }
+
+        void UnfocussedFields(Entry entry = null, ExtAutoSuggestBox autoSuggestBox = null)
+        {
+            try
+            {
+                if (entry != null)
+                {
+                    if (entry.ClassId == "FullName")
+                    {
+                        BoxFullName.BackgroundColor = (Color)App.Current.Resources["LightGray"];
+                    }
+
+                    else if (entry.ClassId == "PhoneNumber")
+                    {
+                        BoxPhoneNumber.BackgroundColor = (Color)App.Current.Resources["LightGray"];
+                    }
+                }
+
+                if (autoSuggestBox != null)
+                {
+                    if (autoSuggestBox.ClassId == "Nationality")
+                    {
+                        BoxNationality.BackgroundColor = (Color)App.Current.Resources["LightGray"];
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("AccountView/UnfocussedFields: " + ex.Message);
+            }
+        }
+
+        async Task<bool> PinCodeValidation()
+        {
+            bool isValid = false;
+            try
+            {
+                if (!Common.EmptyFiels(txtPinCode.Text))
+                {
+                    txtPinCode.Text = txtPinCode.Text.Trim();
+                    if (Common.IsValidPincode(txtPinCode.Text))
+                    {
+                        isValid = true;
+                        //isValid = await DependencyService.Get<IProfileRepository>().ValidPincode(Convert.ToInt32(txtPinCode.Text));
+                    }
+                    else
+                    {
+                        Common.DisplayErrorMessage(Constraints.InValid_Pincode);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("AccountView/PinCodeValidation: " + ex.Message);
+            }
+            return isValid;
+        }
         #endregion
 
         #region Events       
@@ -338,13 +449,13 @@ namespace AptDealzBuyer.Views.MainTabbedPages
 
         private void ImgBack_Tapped(object sender, EventArgs e)
         {
-            Common.BindAnimation(image: ImgBack);
+            Common.BindAnimation(imageButton: ImgBack);
             App.Current.MainPage = new MasterDataPage();
         }
 
-        private void FrmUpdate_Tapped(object sender, EventArgs e)
+        private void BtnUpdate_Clicked(object sender, EventArgs e)
         {
-            Common.BindAnimation(frame: FrmUpdate);
+            Common.BindAnimation(button: BtnUpdate);
             UpdateProfile();
         }
 
@@ -381,47 +492,84 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         int i = 0;
         private void AutoSuggestBox_TextChanged(object sender, dotMorten.Xamarin.Forms.AutoSuggestBoxTextChangedEventArgs e)
         {
-            if (DeviceInfo.Platform == DevicePlatform.iOS)
+            try
             {
-                if (isFirstLoad || i < 2)
+                if (DeviceInfo.Platform == DevicePlatform.iOS)
                 {
-                    isFirstLoad = false;
-                    pkNationality.IsSuggestionListOpen = false;
-                    i++;
-                    return;
+                    if (isFirstLoad || i < 2)
+                    {
+                        isFirstLoad = false;
+                        pkNationality.IsSuggestionListOpen = false;
+                        i++;
+                        return;
+                    }
+                }
+
+                if (mCountriesData == null)
+                    mCountriesData = new ObservableCollection<string>();
+
+                mCountriesData.Clear();
+                if (!string.IsNullOrEmpty(pkNationality.Text))
+                {
+                    mCountriesData = new ObservableCollection<string>(mCountries.Where(x => x.Name.ToLower().Contains(pkNationality.Text.ToLower())).Select(x => x.Name));
+                }
+                else
+                {
+                    mCountriesData = new ObservableCollection<string>(mCountries.Select(x => x.Name));
                 }
             }
-
-            if (mCountriesData == null)
-                mCountriesData = new ObservableCollection<string>();
-
-            mCountriesData.Clear();
-            if (!string.IsNullOrEmpty(pkNationality.Text))
+            catch (Exception ex)
             {
-                mCountriesData = new ObservableCollection<string>(countries.Where(x => x.Name.ToLower().Contains(pkNationality.Text.ToLower())).Select(x => x.Name));
-            }
-            else
-            {
-                mCountriesData = new ObservableCollection<string>(countries.Select(x => x.Name));
+                Common.DisplayErrorMessage("AccountView/AutoSuggestBox_TextChanged: " + ex.Message);
             }
         }
 
         private void AutoSuggestBox_QuerySubmitted(object sender, dotMorten.Xamarin.Forms.AutoSuggestBoxQuerySubmittedEventArgs e)
         {
-            if (e.ChosenSuggestion != null)
+            try
             {
-                pkNationality.Text = e.ChosenSuggestion.ToString();
+                if (e.ChosenSuggestion != null)
+                {
+                    pkNationality.Text = e.ChosenSuggestion.ToString();
+                }
+                else
+                {
+                    // User hit Enter from the search box. Use args.QueryText to determine what to do.
+                    pkNationality.Unfocus();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                // User hit Enter from the search box. Use args.QueryText to determine what to do.
-                pkNationality.Unfocus();
+                Common.DisplayErrorMessage("AccountView/AutoSuggestBox_QuerySubmitted: " + ex.Message);
             }
         }
 
         private void AutoSuggestBox_SuggestionChosen(object sender, dotMorten.Xamarin.Forms.AutoSuggestBoxSuggestionChosenEventArgs e)
         {
             pkNationality.Text = e.SelectedItem.ToString();
+        }
+
+        private void Entry_Unfocused(object sender, FocusEventArgs e)
+        {
+            var entry = (ExtEntry)sender;
+            if (!Common.EmptyFiels(entry.Text))
+            {
+                UnfocussedFields(entry: entry);
+            }
+        }
+
+        private void AutoSuggestBox_Unfocused(object sender, FocusEventArgs e)
+        {
+            var autoSuggestBox = (ExtAutoSuggestBox)sender;
+            if (!Common.EmptyFiels(autoSuggestBox.Text))
+            {
+                UnfocussedFields(autoSuggestBox: autoSuggestBox);
+            }
+        }
+
+        private async void txtPinCode_Unfocused(object sender, FocusEventArgs e)
+        {
+            await PinCodeValidation();
         }
         #endregion
     }
