@@ -1,4 +1,5 @@
-﻿using AptDealzBuyer.API;
+﻿using Acr.UserDialogs;
+using AptDealzBuyer.API;
 using AptDealzBuyer.Model.Reponse;
 using AptDealzBuyer.Repository;
 using AptDealzBuyer.Utility;
@@ -16,11 +17,16 @@ namespace AptDealzBuyer.Services
             List<Category> categories = new List<Category>();
             try
             {
+                //UserDialogs.Instance.ShowLoading(Constraints.Loading);
                 categories = await categoryAPI.GetCategory();
             }
             catch (Exception ex)
             {
                 Common.DisplayErrorMessage("CategoryRepository/GetCategory: " + ex.Message);
+            }
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
             }
             return categories;
         }
@@ -30,13 +36,17 @@ namespace AptDealzBuyer.Services
             List<SubCategory> subCategories = new List<SubCategory>();
             try
             {
+                UserDialogs.Instance.ShowLoading(Constraints.Loading);
                 subCategories = await categoryAPI.GetSubCategory(CategortyId);
             }
             catch (Exception ex)
             {
                 Common.DisplayErrorMessage("CategoryRepository/GetSubCategory: " + ex.Message);
             }
-
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
+            }
             return subCategories;
         }
     }

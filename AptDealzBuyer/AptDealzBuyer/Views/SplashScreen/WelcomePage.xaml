@@ -3,7 +3,6 @@
     x:Class="AptDealzBuyer.Views.SplashScreen.WelcomePage"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:ext="clr-namespace:AptDealzBuyer.Extention"
     xmlns:iOS="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
     Title="Onboarding"
     Padding="{OnPlatform Android=0,
@@ -14,55 +13,17 @@
     NavigationPage.HasNavigationBar="False">
     <ContentPage.Content>
 
-        <Grid
-            HorizontalOptions="FillAndExpand"
-            RowSpacing="0"
-            VerticalOptions="FillAndExpand">
+        <Grid RowSpacing="20">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <!--  Skip Button  -->
-            <Grid
-                x:Name="FrmSkip"
-                Grid.Row="0"
-                Margin="{OnPlatform Android='0,-45,-45,0',
-                                    iOS='0,-35,-35,0'}">
-                <Frame
-                    Margin="0"
-                    Padding="10"
-                    BackgroundColor="{StaticResource Orange}"
-                    CornerRadius="55"
-                    HeightRequest="90"
-                    HorizontalOptions="EndAndExpand"
-                    VerticalOptions="StartAndExpand"
-                    WidthRequest="90">
-                    <Label
-                        Margin="15,0,0,15"
-                        BackgroundColor="Transparent"
-                        FontFamily="Poppins SemiBold"
-                        FontSize="15"
-                        HorizontalOptions="Start"
-                        Text="Skip"
-                        TextColor="{StaticResource White}"
-                        VerticalOptions="End" />
-                    <Frame.GestureRecognizers>
-                        <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="SkipTapped_Tapped" />
-                    </Frame.GestureRecognizers>
-                </Frame>
-            </Grid>
-
             <!--  Carousal  -->
-            <Grid
-                Grid.Row="1"
-                Padding="0"
-                RowSpacing="25"
-                VerticalOptions="CenterAndExpand">
+            <Grid Grid.Row="0" RowSpacing="20">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
@@ -125,7 +86,7 @@
 
             <Button
                 x:Name="BtnLogin"
-                Grid.Row="2"
+                Grid.Row="1"
                 Margin="20,0,20,20"
                 Clicked="BtnLogin_Clicked"
                 Style="{StaticResource btnPrimary}"

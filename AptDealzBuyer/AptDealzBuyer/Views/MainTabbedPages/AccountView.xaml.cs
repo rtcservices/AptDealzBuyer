@@ -6,6 +6,7 @@ using AptDealzBuyer.Model.Request;
 using AptDealzBuyer.Repository;
 using AptDealzBuyer.Utility;
 using AptDealzBuyer.Views.MasterData;
+using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -44,10 +45,10 @@ namespace AptDealzBuyer.Views.MainTabbedPages
 
         #region Objects          
         private ProfileAPI profileAPI;
-        private List<Country> mCountries;
         private BuyerDetails mBuyerDetail;
         private string relativePath;
         bool isFirstLoad = true;
+        private bool isUpdatPhoto = false;
         #endregion
 
         #region Constructor
@@ -55,6 +56,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         {
             InitializeComponent();
             txtFullName.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
+            BtnUpdate.IsEnabled = false;
             BindProperties();
         }
         #endregion
@@ -65,19 +67,19 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             try
             {
                 profileAPI = new ProfileAPI();
-                UserDialogs.Instance.ShowLoading(Constraints.Loading);
-
-                if (mCountries == null || mCountries.Count == 0)
+                if (Common.mCountries == null || Common.mCountries.Count == 0)
                     await GetCountries();
 
+                await Task.Run(() =>
+                {
+                    UserDialogs.Instance.ShowLoading(Constraints.Loading);
+                });
                 await GetProfile();
+                UserDialogs.Instance.HideLoading();
             }
             catch (Exception ex)
             {
                 Common.DisplayErrorMessage("AccountView/BindProperties: " + ex.Message);
-            }
-            finally
-            {
                 UserDialogs.Instance.HideLoading();
             }
         }
@@ -86,7 +88,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         {
             try
             {
-                mCountries = await profileAPI.GetCountry();
+                Common.mCountries = await profileAPI.GetCountry();
             }
             catch (Exception ex)
             {
@@ -123,6 +125,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             {
                 Common.DisplayErrorMessage("AccountView/GetProfile: " + ex.Message);
             }
+
         }
 
         void GetProfileDetails(BuyerDetails mBuyerDetails)
@@ -130,6 +133,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             try
             {
                 txtFullName.Text = mBuyerDetails.FullName;
+                txtEmailAddress.Text = mBuyerDetails.Email;
                 txtPhoneNumber.Text = mBuyerDetails.PhoneNumber;
 
                 if (!Common.EmptyFiels(mBuyerDetails.ProfilePhoto))
@@ -162,9 +166,9 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 {
                     txtPinCode.Text = mBuyerDetails.PinCode;
                 }
-                if (mBuyerDetails.CountryId > 0 && mCountries != null && mCountries.Count() > 0)
+                if (mBuyerDetails.CountryId > 0 && Common.mCountries != null && Common.mCountries.Count() > 0)
                 {
-                    pkNationality.Text = mCountries.Where(x => x.CountryId == mBuyerDetails.CountryId).FirstOrDefault().Name;
+                    pkNationality.Text = Common.mCountries.Where(x => x.CountryId == mBuyerDetails.CountryId).FirstOrDefault().Name;
                 }
             }
             catch (Exception ex)
@@ -173,10 +177,49 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             }
         }
 
+        void HasUpdateProfileDetail()
+        {
+            try
+            {
+                bool isUpdate = false;
+                if (mBuyerDetail == null)
+                    isUpdate = true;
+
+                if (mBuyerDetail.FullName != txtFullName.Text) // Alex != Alex1
+                    isUpdate = true;
+                else if (mBuyerDetail.PhoneNumber != txtPhoneNumber.Text)
+                    isUpdate = true;
+                else if (!Common.EmptyFiels(mBuyerDetail.Nationality) && mBuyerDetail.Nationality != pkNationality.Text)
+                    isUpdate = true;
+                else if (mBuyerDetail.Building != txtBuildingNumber.Text)
+                    isUpdate = true;
+                else if (mBuyerDetail.Street != txtStreet.Text)
+                    isUpdate = true;
+                else if (mBuyerDetail.City != txtCity.Text)
+                    isUpdate = true;
+                else if (mBuyerDetail.PinCode != txtPinCode.Text)
+                    isUpdate = true;
+                else if (mBuyerDetail.Landmark != txtLandmark.Text)
+                    isUpdate = true;
+                else if (isUpdatPhoto)
+                    isUpdate = true;
+                else
+                    isUpdate = false;
+
+                BtnUpdate.IsEnabled = isUpdate;
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("AccountView/HasUpdateProfileDetail: " + ex.Message);
+            }
+
+        }
+
         Model.Request.BuyerDetails UpdateProfileDetails()
         {
             mBuyerDetail.UserId = mBuyerDetail.BuyerId;
             mBuyerDetail.FullName = txtFullName.Text;
+            mBuyerDetail.Email = txtEmailAddress.Text;
             mBuyerDetail.PhoneNumber = txtPhoneNumber.Text;
 
             if (!Common.EmptyFiels(relativePath))
@@ -189,7 +232,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             mBuyerDetail.City = txtCity.Text;
             if (!Common.EmptyFiels(pkNationality.Text))
             {
-                mBuyerDetail.CountryId = mCountries.Where(x => x.Name.ToLower() == pkNationality.Text.ToLower().ToString()).FirstOrDefault()?.CountryId;
+                mBuyerDetail.CountryId = Common.mCountries.Where(x => x.Name.ToLower() == pkNationality.Text.ToLower().ToString()).FirstOrDefault()?.CountryId;
             }
             mBuyerDetail.Landmark = txtLandmark.Text;
             mBuyerDetail.PinCode = txtPinCode.Text;
@@ -224,7 +267,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 {
                     Common.DisplayErrorMessage(Constraints.Required_Nationality);
                 }
-                else if (mCountries.Where(x => x.Name.ToLower() == pkNationality.Text.ToLower()).Count() == 0)
+                else if (Common.mCountries.Where(x => x.Name.ToLower() == pkNationality.Text.ToLower()).Count() == 0)
                 {
                     Common.DisplayErrorMessage(Constraints.InValid_Nationality);
                 }
@@ -250,32 +293,20 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 {
                     BoxFullName.BackgroundColor = (Color)App.Current.Resources["LightRed"];
                 }
-                else
-                {
-                    BoxFullName.BackgroundColor = (Color)App.Current.Resources["LightGray"];
-                }
 
                 if (Common.EmptyFiels(txtPhoneNumber.Text))
                 {
                     BoxPhoneNumber.BackgroundColor = (Color)App.Current.Resources["LightRed"];
-                }
-                else
-                {
-                    BoxPhoneNumber.BackgroundColor = (Color)App.Current.Resources["LightGray"];
                 }
 
                 if (Common.EmptyFiels(pkNationality.Text))
                 {
                     BoxNationality.BackgroundColor = (Color)App.Current.Resources["LightRed"];
                 }
-                else
-                {
-                    BoxNationality.BackgroundColor = (Color)App.Current.Resources["LightGray"];
-                }
             }
             catch (Exception ex)
             {
-                Common.DisplayErrorMessage("AccountView/EnableRequiredFields: " + ex.Message);
+                Common.DisplayErrorMessage("AccountView/RequiredFields: " + ex.Message);
             }
         }
 
@@ -285,11 +316,26 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             {
                 txtFullName.Text = txtFullName.Text.Trim();
                 txtPhoneNumber.Text = txtPhoneNumber.Text.Trim();
-                txtBuildingNumber.Text = txtBuildingNumber.Text.Trim();
-                txtStreet.Text = txtStreet.Text.Trim();
-                txtCity.Text = txtCity.Text.Trim();
-                txtLandmark.Text = txtLandmark.Text.Trim();
-                txtPinCode.Text = txtPinCode.Text.Trim();
+                if (!Common.EmptyFiels(txtBuildingNumber.Text))
+                {
+                    txtBuildingNumber.Text = txtBuildingNumber.Text.Trim();
+                }
+                if (!Common.EmptyFiels(txtStreet.Text))
+                {
+                    txtStreet.Text = txtStreet.Text.Trim();
+                }
+                if (!Common.EmptyFiels(txtCity.Text))
+                {
+                    txtCity.Text = txtCity.Text.Trim();
+                }
+                if (!Common.EmptyFiels(txtLandmark.Text))
+                {
+                    txtLandmark.Text = txtLandmark.Text.Trim();
+                }
+                if (!Common.EmptyFiels(txtPinCode.Text))
+                {
+                    txtPinCode.Text = txtPinCode.Text.Trim();
+                }
             }
             catch (Exception ex)
             {
@@ -303,11 +349,11 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             {
                 if (Validations())
                 {
+                    UserDialogs.Instance.ShowLoading(Constraints.Loading);
                     if (!await PinCodeValidation())
                         return;
 
                     FieldsTrim();
-                    UserDialogs.Instance.ShowLoading(Constraints.Loading);
                     var mBuyerDetails = UpdateProfileDetails();
 
                     var mResponse = await profileAPI.SaveProfile(mBuyerDetails);
@@ -316,7 +362,8 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                         var updateId = mResponse.Data;
                         if (updateId != null)
                         {
-                            Common.DisplaySuccessMessage(mResponse.Message);
+                            SuccessfullUpdate(mResponse.Message);
+                            BtnUpdate.IsEnabled = false;
                         }
                     }
                     else
@@ -338,6 +385,19 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             }
         }
 
+        void SuccessfullUpdate(string MessageString)
+        {
+            try
+            {
+                var successPopup = new PopupPages.SuccessPopup(MessageString);
+                PopupNavigation.Instance.PushAsync(successPopup);
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("AccountView/SuccessfullUpdate: " + ex.Message);
+            }
+        }
+
         async void DoLogout()
         {
             try
@@ -346,6 +406,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 if (isClose)
                 {
                     AuthenticationAPI authenticationAPI = new AuthenticationAPI();
+                    UserDialogs.Instance.ShowLoading(Constraints.Loading);
                     var mResponse = await authenticationAPI.Logout(Settings.RefreshToken, Settings.LoginTrackingKey);
                     if (mResponse != null && mResponse.Succeeded)
                     {
@@ -362,12 +423,16 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                     Settings.RefreshToken = string.Empty;
                     Settings.LoginTrackingKey = string.Empty;
 
-                    App.Current.MainPage = new NavigationPage(new SplashScreen.WelcomePage(true));
+                    App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
                 }
             }
             catch (Exception ex)
             {
                 Common.DisplayErrorMessage("AccountView/DoLogout: " + ex.Message);
+            }
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
             }
         }
 
@@ -396,6 +461,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                     }
                 }
 
+                HasUpdateProfileDetail();
             }
             catch (Exception ex)
             {
@@ -411,16 +477,22 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 if (!Common.EmptyFiels(txtPinCode.Text))
                 {
                     txtPinCode.Text = txtPinCode.Text.Trim();
-                    if (Common.IsValidPincode(txtPinCode.Text))
+                    isValid = await DependencyService.Get<IProfileRepository>().ValidPincode(txtPinCode.Text);
+                    if (isValid)
                     {
-                        isValid = true;
-                        //isValid = await DependencyService.Get<IProfileRepository>().ValidPincode(Convert.ToInt32(txtPinCode.Text));
+                        BoxPincode.BackgroundColor = (Color)App.Current.Resources["LightGray"];
                     }
                     else
                     {
-                        Common.DisplayErrorMessage(Constraints.InValid_Pincode);
+                        BoxPincode.BackgroundColor = (Color)App.Current.Resources["LightRed"];
                     }
                 }
+                else
+                {
+                    BoxPincode.BackgroundColor = (Color)App.Current.Resources["LightGray"];
+                    isValid = true;
+                }
+                HasUpdateProfileDetail();
             }
             catch (Exception ex)
             {
@@ -476,6 +548,8 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 if (ImageConvertion.SelectedImageByte != null)
                 {
                     relativePath = await DependencyService.Get<IFileUploadRepository>().UploadFile((int)FileUploadCategory.ProfilePicture);
+                    isUpdatPhoto = true;
+                    HasUpdateProfileDetail();
                 }
             }
             catch (Exception ex)
@@ -511,11 +585,11 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 mCountriesData.Clear();
                 if (!string.IsNullOrEmpty(pkNationality.Text))
                 {
-                    mCountriesData = new ObservableCollection<string>(mCountries.Where(x => x.Name.ToLower().Contains(pkNationality.Text.ToLower())).Select(x => x.Name));
+                    mCountriesData = new ObservableCollection<string>(Common.mCountries.Where(x => x.Name.ToLower().Contains(pkNationality.Text.ToLower())).Select(x => x.Name));
                 }
                 else
                 {
-                    mCountriesData = new ObservableCollection<string>(mCountries.Select(x => x.Name));
+                    mCountriesData = new ObservableCollection<string>(Common.mCountries.Select(x => x.Name));
                 }
             }
             catch (Exception ex)
@@ -552,10 +626,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         private void Entry_Unfocused(object sender, FocusEventArgs e)
         {
             var entry = (ExtEntry)sender;
-            if (!Common.EmptyFiels(entry.Text))
-            {
-                UnfocussedFields(entry: entry);
-            }
+            UnfocussedFields(entry: entry);
         }
 
         private void AutoSuggestBox_Unfocused(object sender, FocusEventArgs e)
@@ -570,6 +641,11 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         private async void txtPinCode_Unfocused(object sender, FocusEventArgs e)
         {
             await PinCodeValidation();
+        }
+
+        private void BtnLogo_Clicked(object sender, EventArgs e)
+        {
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
         }
         #endregion
     }

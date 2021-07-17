@@ -24,7 +24,7 @@ namespace AptDealzBuyer.Views.MasterData
 
                 Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
                 MasterBehavior = MasterBehavior.Popover;
-                Common.MasterData.IsGestureEnabled = true;
+                Common.MasterData.IsGestureEnabled = false;
                 Common.MasterData.IsPresented = false;
             }
             catch (Exception ex)

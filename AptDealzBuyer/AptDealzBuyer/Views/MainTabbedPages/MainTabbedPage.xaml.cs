@@ -12,12 +12,14 @@ namespace AptDealzBuyer.Views.MainTabbedPages
     {
         #region Objects
         private string selectedView;
+        bool isNavigate = false;
         #endregion
 
         #region Constructor
-        public MainTabbedPage(string OpenView)
+        public MainTabbedPage(string OpenView, bool isNavigate = false)
         {
             InitializeComponent();
+            this.isNavigate = isNavigate;
             selectedView = OpenView;
             BindViews(selectedView);
         }
@@ -29,17 +31,36 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             base.OnBackButtonPressed();
             try
             {
-                if (DeviceInfo.Platform == DevicePlatform.Android)
+                if (!Common.EmptyFiels(selectedView))
                 {
-                    Device.BeginInvokeOnMainThread(async () =>
+                    if (selectedView == "ActiveRequirements" || selectedView == "PreviousRequirements"
+                        || selectedView == "Orders" || selectedView == "OrderHistory"
+                        || selectedView == "ShippingDetails" || selectedView == "Profile"
+                        || selectedView == "AboutAptDealz" || selectedView == "TermsPolicies"
+                        || selectedView == "FAQHelp"
+                        )
                     {
-                        var result = await DisplayAlert(Constraints.Alert, Constraints.DoYouWantToExit, Constraints.Yes, Constraints.No);
-                        if (result)
-                        {
-                            Xamarin.Forms.DependencyService.Get<ICloseAppOnBackButton>().CloseApp();
-                        }
-                    });
+                        selectedView = "Home";
+                        BindViews("Home");
+                    }
                 }
+
+                if (!isNavigate)
+                {
+                    if (DeviceInfo.Platform == DevicePlatform.Android)
+                    {
+                        Device.BeginInvokeOnMainThread(async () =>
+                        {
+                            var result = await DisplayAlert(Constraints.Alert, Constraints.DoYouWantToExit, Constraints.Yes, Constraints.No);
+                            if (result)
+                            {
+                                Xamarin.Forms.DependencyService.Get<ICloseAppOnBackButton>().CloseApp();
+                            }
+                        });
+                    }
+                }
+
+                isNavigate = false;
             }
             catch (Exception ex)
             {
@@ -127,6 +148,11 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 UnselectTab();
                 grdMain.Children.Add(new FaqHelpView());
             }
+            else if (view == "PostNewRequirements")
+            {
+                UnselectTab();
+                Navigation.PushAsync(new DashboardPages.PostNewRequiremntPage());
+            }
             else
             {
                 UnselectTab();
@@ -134,6 +160,8 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 lblHome.TextColor = (Color)App.Current.Resources["Orange"];
                 grdMain.Children.Add(new HomeView());
             }
+
+            selectedView = view;
         }
         #endregion
 
@@ -145,16 +173,19 @@ namespace AptDealzBuyer.Views.MainTabbedPages
 
         private void StkRequirements_Tapped(object sender, EventArgs e)
         {
+            this.isNavigate = true;
             BindViews("ActiveRequirements");
         }
 
         private void StkOrders_Tapped(object sender, EventArgs e)
         {
+            this.isNavigate = true;
             BindViews("Orders");
         }
 
         private void StkAccount_Tapped(object sender, EventArgs e)
         {
+            this.isNavigate = true;
             BindViews("Profile");
         }
         #endregion

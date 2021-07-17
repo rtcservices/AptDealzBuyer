@@ -14,7 +14,7 @@ namespace AptDealzBuyer.Services
             bool hasDelete = false;
             try
             {
-                var isDelete = await App.Current.MainPage.DisplayAlert(Constraints.Alert, Constraints.AreYouSureWantDelete, Constraints.Yes, Constraints.No);
+                var isDelete = await App.Current.MainPage.DisplayAlert(Constraints.Alert, Constraints.AreYouSureWantDeleteReq, Constraints.Yes, Constraints.No);
                 if (isDelete)
                 {
                     RequirementAPI requirementAPI = new RequirementAPI();

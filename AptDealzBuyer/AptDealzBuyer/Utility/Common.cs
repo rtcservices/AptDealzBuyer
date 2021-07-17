@@ -1,7 +1,8 @@
 ﻿using Acr.UserDialogs;
-using AptDealzBuyer.API;
+using AptDealzBuyer.Model.Reponse;
 using AptDealzBuyer.Views.MasterData;
 using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -14,6 +15,7 @@ namespace AptDealzBuyer.Utility
         #region Properties
         public static MasterDataPage MasterData { get; set; }
         public static string Token { get; set; }
+        public static List<Country> mCountries { get; set; }
         private static Regex PhoneNumber { get; set; } = new Regex(@"^[0-9]{10}$");
         private static Regex RegexPassword { get; set; } = new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{8,}$");
         private static Regex RegexPincode { get; set; } = new Regex(@"^[0-9]{6}$");
@@ -198,7 +200,7 @@ namespace AptDealzBuyer.Utility
         ID = 1,
         Date = 2,
         Quotes = 3,
-        Amount = 4,
+        TotalPriceEstimation = 4,
         Validity = 5,
         ASC = 6,
         DSC = 7
@@ -208,6 +210,26 @@ namespace AptDealzBuyer.Utility
     {
         Success = 1,
         Failed = 2
+    }
+
+    public enum QuoteStatus
+    {
+        Submitted = 1,
+        Accepted = 2,
+        Rejected = 3,
+        All = 4
+    }
+
+    public enum OrderStatus
+    {
+        Pending = 1,
+        Accepted = 2,
+        ReadyForPickup = 3,
+        Shipped = 4,
+        Delivered = 5,
+        Completed = 6,
+        CancelledFromBuyer = 7,
+        All = 8
     }
     #endregion
 }

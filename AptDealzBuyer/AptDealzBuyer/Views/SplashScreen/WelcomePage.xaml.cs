@@ -22,12 +22,7 @@ namespace AptDealzBuyer.Views.SplashScreen
         public WelcomePage()
         {
             InitializeComponent();
-        }
-
-        public WelcomePage(bool IsLogin)
-        {
-            InitializeComponent();
-            Navigation.PushAsync(new Login.LoginPage());
+            Settings.IsViewWelcomeScreen = false;
         }
         #endregion
 

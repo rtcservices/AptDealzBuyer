@@ -32,7 +32,11 @@
                     </Image.GestureRecognizers>
                 </Image>
 
-                <Image Grid.Column="1" Style="{StaticResource imgLogo}" />
+                <ImageButton
+                    x:Name="BtnLogo"
+                    Grid.Column="1"
+                    Clicked="BtnLogo_Clicked"
+                    Style="{StaticResource imgLogo}" />
 
                 <StackLayout
                     Grid.Column="2"
@@ -115,43 +119,21 @@
                             </Grid.ColumnDefinitions>
                             <Image
                                 Grid.Column="0"
-                                Aspect="AspectFit"
-                                BackgroundColor="Transparent"
-                                HeightRequest="{OnPlatform Android=20,
-                                                           iOS=25}"
-                                HorizontalOptions="Center"
                                 Source="iconSearch.png"
-                                VerticalOptions="Center"
-                                WidthRequest="{OnPlatform Android=20,
-                                                          iOS=25}" />
+                                Style="{StaticResource imgSearch}" />
                             <ext:ExtEntry
                                 x:Name="entrSearch"
                                 Grid.Column="1"
-                                FontFamily="Poppins"
-                                FontSize="15"
                                 Placeholder="Search"
-                                TextChanged="entrSearch_TextChanged"
-                                VerticalOptions="{OnPlatform Android=EndAndExpand,
-                                                             iOS=CenterAndExpand}" />
+                                Style="{StaticResource entrGray}"
+                                TextChanged="entrSearch_TextChanged" />
                             <ImageButton
                                 x:Name="BtnClose"
                                 Grid.Column="2"
-                                Margin="0"
-                                Padding="13"
-                                Aspect="AspectFit"
-                                BackgroundColor="Transparent"
                                 Clicked="BtnClose_Clicked"
-                                HeightRequest="40"
-                                HorizontalOptions="EndAndExpand"
                                 Source="iconClose.png"
-                                VerticalOptions="Center"
-                                WidthRequest="40" />
-                            <BoxView
-                                Grid.ColumnSpan="3"
-                                BackgroundColor="{StaticResource Green}"
-                                HeightRequest="1"
-                                HorizontalOptions="FillAndExpand"
-                                VerticalOptions="EndAndExpand" />
+                                Style="{StaticResource ImgBtnH40P13}" />
+                            <BoxView Grid.ColumnSpan="3" Style="{StaticResource boxHorizontalGreen}" />
                         </Grid>
                     </Frame>
 
@@ -166,14 +148,7 @@
                         <Frame
                             x:Name="FrmSortBy"
                             Grid.Column="0"
-                            Margin="0"
-                            Padding="0"
-                            BackgroundColor="Transparent"
-                            BorderColor="{StaticResource LightGray}"
-                            CornerRadius="5"
-                            HasShadow="False"
-                            HorizontalOptions="EndAndExpand"
-                            IsClippedToBounds="True">
+                            Style="{StaticResource frmGrayBorder}">
                             <Grid
                                 Margin="5"
                                 ColumnDefinitions="Auto,*"
@@ -185,17 +160,16 @@
                                     HeightRequest="20"
                                     HorizontalOptions="CenterAndExpand"
                                     Source="iconSortASC.png"
-                                    VerticalOptions="CenterAndExpand" />
+                                    VerticalOptions="CenterAndExpand"
+                                    WidthRequest="20" />
 
                                 <Label
                                     Grid.Column="1"
                                     Margin="0,5,0,0"
-                                    FontFamily="Poppins"
                                     FontSize="12"
                                     HorizontalOptions="CenterAndExpand"
-                                    Text="Sort by"
-                                    TextColor="{StaticResource Black}"
-                                    VerticalOptions="CenterAndExpand" />
+                                    Style="{StaticResource lblLight}"
+                                    Text="Sort by" />
                             </Grid>
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmSortBy_Tapped" />
@@ -204,14 +178,7 @@
                         <Frame
                             x:Name="FrmFilterBy"
                             Grid.Column="1"
-                            Margin="0"
-                            Padding="0"
-                            BackgroundColor="Transparent"
-                            BorderColor="{StaticResource LightGray}"
-                            CornerRadius="5"
-                            HasShadow="False"
-                            HorizontalOptions="EndAndExpand"
-                            IsClippedToBounds="True">
+                            Style="{StaticResource frmGrayBorder}">
                             <Grid
                                 Margin="5"
                                 ColumnDefinitions="Auto,*"
@@ -225,14 +192,13 @@
                                     VerticalOptions="CenterAndExpand" />
 
                                 <Label
+                                    x:Name="lblFilterBy"
                                     Grid.Column="1"
                                     Margin="0,5,0,0"
-                                    FontFamily="Poppins"
                                     FontSize="12"
                                     HorizontalOptions="CenterAndExpand"
-                                    Text="Filter by"
-                                    TextColor="{StaticResource Black}"
-                                    VerticalOptions="CenterAndExpand" />
+                                    Style="{StaticResource lblLight}"
+                                    Text="Filter by" />
                             </Grid>
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmFilterBy_Tapped" />
@@ -257,7 +223,8 @@
                                         <Grid
                                             Grid.Column="0"
                                             Padding="15,15,0,15"
-                                            RowDefinitions="Auto,Auto,Auto">
+                                            RowDefinitions="Auto,Auto,Auto,Auto"
+                                            RowSpacing="0">
 
                                             <!--  Visible Grid  -->
                                             <StackLayout
@@ -268,48 +235,47 @@
 
                                                 <Label
                                                     Margin="0"
-                                                    FontFamily="Poppins Medium"
                                                     FontSize="15"
                                                     HorizontalOptions="StartAndExpand"
-                                                    Text="{Binding RequirementNo}"
-                                                    TextColor="{StaticResource Black}"
-                                                    VerticalOptions="CenterAndExpand" />
+                                                    Style="{StaticResource lblMedium}"
+                                                    Text="{Binding RequirementNo}" />
 
                                                 <Label
                                                     Margin="0"
-                                                    FontFamily="Poppins Medium"
                                                     FontSize="15"
                                                     HorizontalOptions="EndAndExpand"
+                                                    Style="{StaticResource lblMedium}"
                                                     Text="{Binding Status}"
-                                                    TextColor="{Binding StatusColor}"
-                                                    VerticalOptions="CenterAndExpand" />
+                                                    TextColor="{Binding StatusColor}" />
                                             </StackLayout>
 
                                             <Label
                                                 Grid.Row="1"
-                                                Margin="0"
-                                                FontFamily="Poppins"
-                                                FontSize="15"
                                                 HorizontalOptions="StartAndExpand"
-                                                Text="{Binding Title}"
-                                                TextColor="{StaticResource Black}"
-                                                VerticalOptions="CenterAndExpand" />
+                                                Style="{StaticResource lblLight}"
+                                                Text="{Binding Title}" />
+
+                                            <Label
+                                                Grid.Row="2"
+                                                FontSize="15"
+                                                HorizontalOptions="EndAndExpand"
+                                                Style="{StaticResource lblMedium}"
+                                                Text="{Binding TotalPriceEstimation, StringFormat='RS {0:}'}"
+                                                TextColor="{StaticResource Green}" />
 
                                             <!--  Hide Grid  -->
                                             <Grid
-                                                Grid.Row="2"
+                                                Grid.Row="3"
                                                 IsVisible="{Binding MoreDetail, Mode=TwoWay}"
                                                 RowDefinitions="Auto,Auto,Auto">
 
                                                 <Label
                                                     Grid.Row="0"
                                                     Margin="0"
-                                                    FontFamily="Poppins Medium"
                                                     FontSize="15"
                                                     HorizontalOptions="StartAndExpand"
-                                                    Text="Category"
-                                                    TextColor="{StaticResource Black}"
-                                                    VerticalOptions="CenterAndExpand" />
+                                                    Style="{StaticResource lblMedium}"
+                                                    Text="{Binding Category}" />
 
                                                 <Grid
                                                     Grid.Row="1"
@@ -319,35 +285,24 @@
                                                     VerticalOptions="CenterAndExpand">
                                                     <Label
                                                         Grid.Column="0"
-                                                        Margin="0"
-                                                        FontFamily="Poppins"
-                                                        FontSize="15"
                                                         HorizontalOptions="StartAndExpand"
-                                                        Text="{Binding CreatedDate, StringFormat='{0:MM-dd-yyyy}'}"
-                                                        TextColor="{StaticResource Black}"
-                                                        VerticalOptions="CenterAndExpand" />
+                                                        Style="{StaticResource lblLight}"
+                                                        Text="{Binding CreatedDate, StringFormat='{0:dd/MM/yyyy}'}" />
 
                                                     <Label
                                                         Grid.Column="1"
-                                                        Margin="0"
-                                                        FontFamily="Poppins Medium"
                                                         FontSize="15"
                                                         HorizontalOptions="EndAndExpand"
-                                                        Text="{Binding TotalQuotes}"
-                                                        TextColor="{StaticResource Black}"
-                                                        VerticalOptions="CenterAndExpand" />
+                                                        Style="{StaticResource lblMedium}"
+                                                        Text="{Binding TotalQuotes}" />
 
                                                 </Grid>
 
                                                 <Label
                                                     Grid.Row="2"
-                                                    Margin="0"
-                                                    FontFamily="Poppins"
-                                                    FontSize="15"
                                                     HorizontalOptions="StartAndExpand"
-                                                    Text="{Binding ProductDescription}"
-                                                    TextColor="{StaticResource Black}"
-                                                    VerticalOptions="CenterAndExpand" />
+                                                    Style="{StaticResource lblLight}"
+                                                    Text="{Binding ProductDescription}" />
                                             </Grid>
 
                                         </Grid>
@@ -367,11 +322,7 @@
                                             WidthRequest="50" />
                                     </Grid>
 
-                                    <BoxView
-                                        BackgroundColor="{StaticResource Green}"
-                                        HeightRequest="1"
-                                        HorizontalOptions="FillAndExpand"
-                                        VerticalOptions="EndAndExpand" />
+                                    <BoxView Style="{StaticResource boxHorizontalGreen}" />
                                     <Grid.GestureRecognizers>
                                         <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="GrdViewPrevRequirement_Tapped" />
                                     </Grid.GestureRecognizers>
@@ -385,13 +336,11 @@
                 <Label
                     x:Name="lblNoRecord"
                     Grid.Row="2"
-                    FontFamily="Poppins Medium"
                     FontSize="15"
                     HorizontalOptions="CenterAndExpand"
                     IsVisible="false"
-                    Text="No requirments found"
-                    TextColor="{StaticResource Black}"
-                    VerticalOptions="CenterAndExpand" />
+                    Style="{StaticResource lblMedium}"
+                    Text="No requirments found" />
             </Grid>
         </Grid>
 

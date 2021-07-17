@@ -1,9 +1,7 @@
 ﻿using Acr.UserDialogs;
 using AptDealzBuyer.API;
 using AptDealzBuyer.Utility;
-using AptDealzBuyer.Views.SplashScreen;
 using System;
-
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -36,7 +34,7 @@ namespace AptDealzBuyer.Views.OtherPages
                     var mResponse = await profileAPI.DeactiviateUser(Settings.UserId);
                     if (mResponse != null && mResponse.Succeeded)
                     {
-                        App.Current.MainPage = new NavigationPage(new WelcomePage(true));
+                        App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
                     }
                     else
                     {
@@ -85,5 +83,10 @@ namespace AptDealzBuyer.Views.OtherPages
             DeactivateAccount();
         }
         #endregion
+
+        private void BtnLogo_Clicked(object sender, EventArgs e)
+        {
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
+        }
     }
 }

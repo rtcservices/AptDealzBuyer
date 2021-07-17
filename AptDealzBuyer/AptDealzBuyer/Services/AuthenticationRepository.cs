@@ -1,12 +1,8 @@
 ﻿using Acr.UserDialogs;
 using AptDealzBuyer.API;
-using AptDealzBuyer.Model.Reponse;
 using AptDealzBuyer.Repository;
 using AptDealzBuyer.Utility;
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Xamarin.Forms;
 
 namespace AptDealzBuyer.Services
 {
@@ -19,7 +15,7 @@ namespace AptDealzBuyer.Services
             AuthenticationAPI authenticationAPI = new AuthenticationAPI();
             try
             {
-                //Common.Token = Settings.UserToken;
+                UserDialogs.Instance.ShowLoading(Constraints.Loading);
                 var mResponse = await authenticationAPI.RefreshToken(Settings.RefreshToken);
                 if (mResponse != null && mResponse.Succeeded)
                 {
@@ -30,7 +26,7 @@ namespace AptDealzBuyer.Services
                         if (mBuyer != null)
                         {
                             Settings.UserId = mBuyer.Id;
-                            //Settings.UserToken = mBuyer.JwToken;
+                            Settings.UserToken = mBuyer.JwToken;
                             Common.Token = mBuyer.JwToken;
                             Settings.RefreshToken = mBuyer.RefreshToken;
                             Settings.LoginTrackingKey = mBuyer.LoginTrackingKey == "00000000-0000-0000-0000-000000000000" ? Settings.LoginTrackingKey : mBuyer.LoginTrackingKey;

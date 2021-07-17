@@ -56,10 +56,13 @@ namespace AptDealzBuyer.Model.Request
         public string DeliveryLocationPinCode { get; set; }
 
         [JsonProperty("preferredSourceOfSupply")]
-        public string PreferredSourceOfSupply { get; set; }
+        public object PreferredSourceOfSupply { get; set; }
 
         [JsonProperty("expectedDeliveryDate")]
         public DateTime ExpectedDeliveryDate { get; set; }
+
+        [JsonProperty("expectedDeliveryDateStr")]
+        public string ExpectedDeliveryDateStr { get; set; }
 
         [JsonProperty("billingAddressName")]
         public string BillingAddressName { get; set; }
@@ -116,7 +119,7 @@ namespace AptDealzBuyer.Model.Request
         public bool CanRevealContact { get; set; }
 
         [JsonProperty("receivedQuotes")]
-        public object ReceivedQuotes { get; set; }
+        public List<Quote> ReceivedQuotes { get; set; }
 
         [JsonProperty("buyerContact")]
         public object BuyerContact { get; set; }
@@ -210,6 +213,23 @@ namespace AptDealzBuyer.Model.Request
             }
         }
 
+        [JsonIgnore]
+        public string DeliveryDate
+        {
+            get
+            {
+                if (ExpectedDeliveryDate != null && ExpectedDeliveryDate != DateTime.MinValue)
+                {
+                    return ExpectedDeliveryDate.Date.ToString("dd/MM/yyyy");
+                }
+                else
+                {
+                    return string.Empty;
+                }
+            }
+        }
+
+        [JsonIgnore]
         public Color StatusColor
         {
             get

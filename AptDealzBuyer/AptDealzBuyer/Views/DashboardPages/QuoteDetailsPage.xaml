@@ -35,7 +35,11 @@
                     </Image.GestureRecognizers>
                 </Image>
 
-                <Image Grid.Column="1" Style="{StaticResource imgLogo}" />
+                <ImageButton
+                    x:Name="BtnLogo"
+                    Grid.Column="1"
+                    Clicked="BtnLogo_Clicked"
+                    Style="{StaticResource imgLogo}" />
 
                 <StackLayout
                     Grid.Column="2"
@@ -65,13 +69,7 @@
                     </Image>
                 </StackLayout>
             </Grid>
-            <!--#endregion-->
-            <BoxView
-                Grid.Row="1"
-                BackgroundColor="{StaticResource LightGray}"
-                HeightRequest="1"
-                HorizontalOptions="FillAndExpand"
-                VerticalOptions="EndAndExpand" />
+            <BoxView Grid.Row="1" Style="{StaticResource boxHorizontal}" />
 
             <Grid Grid.Row="2" Margin="0">
                 <Grid.RowDefinitions>
@@ -96,18 +94,12 @@
                         Text="Quote Details" />
                 </Grid>
 
-                <ScrollView
-                    Grid.Row="1"
-                    Margin="0,15,0,0"
-                    HorizontalScrollBarVisibility="Never"
-                    VerticalScrollBarVisibility="Never">
+                <ScrollView Grid.Row="1" Style="{StaticResource scrPrimary}">
 
                     <Grid Margin="0" RowDefinitions="*,Auto,Auto">
-                        <Grid
-                            Grid.Row="0"
-                            HorizontalOptions="FillAndExpand"
-                            RowSpacing="10">
+                        <Grid Grid.Row="0" RowSpacing="10">
                             <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
@@ -128,26 +120,18 @@
                                     HorizontalOptions="FillAndExpand"
                                     Orientation="Horizontal">
                                     <Label
-                                        FontFamily="Poppins"
-                                        FontSize="14"
                                         HorizontalOptions="StartAndExpand"
-                                        Text="Requirement ID"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblLight}"
+                                        Text="Requirement ID" />
                                     <Label
                                         x:Name="lblRequirementId"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontSize="15"
                                         HorizontalOptions="EndAndExpand"
-                                        TextColor="{StaticResource Green}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblMedium}"
+                                        TextColor="{StaticResource Green}" />
                                 </StackLayout>
 
-                                <BoxView
-                                    BackgroundColor="{StaticResource LightGray}"
-                                    HeightRequest="1"
-                                    HorizontalOptions="FillAndExpand"
-                                    VerticalOptions="EndAndExpand" />
+                                <BoxView Style="{StaticResource boxHorizontal}" />
                             </StackLayout>
 
                             <StackLayout Grid.Row="1">
@@ -156,27 +140,19 @@
                                     HorizontalOptions="FillAndExpand"
                                     Orientation="Horizontal">
                                     <Label
-                                        FontFamily="Poppins"
-                                        FontSize="14"
                                         HorizontalOptions="StartAndExpand"
-                                        Text="Quote Reference No"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblLight}"
+                                        Text="Quote Reference No" />
 
                                     <Label
                                         x:Name="lblQuoteRefNo"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontSize="15"
                                         HorizontalOptions="EndAndExpand"
-                                        TextColor="{StaticResource Green}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblMedium}"
+                                        TextColor="{StaticResource Green}" />
                                 </StackLayout>
 
-                                <BoxView
-                                    BackgroundColor="{StaticResource LightGray}"
-                                    HeightRequest="1"
-                                    HorizontalOptions="FillAndExpand"
-                                    VerticalOptions="EndAndExpand" />
+                                <BoxView Style="{StaticResource boxHorizontal}" />
                             </StackLayout>
 
                             <StackLayout Grid.Row="2">
@@ -186,20 +162,15 @@
                                     Orientation="Horizontal">
 
                                     <Label
-                                        FontFamily="Poppins"
-                                        FontSize="14"
                                         HorizontalOptions="StartAndExpand"
-                                        Text="Buyer ID"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblLight}"
+                                        Text="Buyer ID" />
 
                                     <Label
                                         x:Name="lblBuyerId"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontSize="15"
                                         HorizontalOptions="EndAndExpand"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblMedium}" />
                                 </StackLayout>
 
                                 <BoxView Style="{StaticResource boxHorizontal}" />
@@ -211,20 +182,15 @@
                                     HorizontalOptions="FillAndExpand"
                                     Orientation="Horizontal">
                                     <Label
-                                        FontFamily="Poppins"
-                                        FontSize="14"
                                         HorizontalOptions="StartAndExpand"
-                                        Text="Seller ID"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblLight}"
+                                        Text="Seller ID" />
 
                                     <Label
                                         x:Name="lblSellerId"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontSize="15"
                                         HorizontalOptions="EndAndExpand"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblMedium}" />
                                 </StackLayout>
 
                                 <BoxView Style="{StaticResource boxHorizontal}" />
@@ -236,20 +202,16 @@
                                     HorizontalOptions="FillAndExpand"
                                     Orientation="Horizontal">
                                     <Label
-                                        FontFamily="Poppins"
-                                        FontSize="14"
+                                        x:Name="lblShippingPinCode"
                                         HorizontalOptions="StartAndExpand"
-                                        Text="Shipping PIN Code"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblLight}"
+                                        Text="Shipping PIN Code" />
 
                                     <Label
                                         x:Name="lblShippingPINCode"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontSize="15"
                                         HorizontalOptions="EndAndExpand"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblMedium}" />
                                 </StackLayout>
 
                                 <BoxView Style="{StaticResource boxHorizontal}" />
@@ -261,20 +223,15 @@
                                     HorizontalOptions="FillAndExpand"
                                     Orientation="Horizontal">
                                     <Label
-                                        FontFamily="Poppins"
-                                        FontSize="14"
                                         HorizontalOptions="StartAndExpand"
-                                        Text="Requested Quantity"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblLight}"
+                                        Text="Requested Quantity" />
 
                                     <Label
                                         x:Name="lblRequestedQuantity"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontSize="15"
                                         HorizontalOptions="EndAndExpand"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblMedium}" />
                                 </StackLayout>
 
                                 <BoxView Style="{StaticResource boxHorizontal}" />
@@ -287,19 +244,14 @@
                                     Orientation="Horizontal">
 
                                     <Label
-                                        FontFamily="Poppins"
-                                        FontSize="14"
                                         HorizontalOptions="StartAndExpand"
-                                        Text="Unit Price"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblLight}"
+                                        Text="Unit Price" />
                                     <Label
                                         x:Name="lblUnitPrice"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontSize="15"
                                         HorizontalOptions="EndAndExpand"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblMedium}" />
 
                                 </StackLayout>
 
@@ -312,19 +264,14 @@
                                     HorizontalOptions="FillAndExpand"
                                     Orientation="Horizontal">
                                     <Label
-                                        FontFamily="Poppins"
-                                        FontSize="14"
                                         HorizontalOptions="StartAndExpand"
-                                        Text="Net Amount"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblLight}"
+                                        Text="Net Amount" />
                                     <Label
                                         x:Name="lblNetAmount"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontSize="15"
                                         HorizontalOptions="EndAndExpand"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblMedium}" />
                                 </StackLayout>
 
                                 <BoxView Style="{StaticResource boxHorizontal}" />
@@ -337,20 +284,15 @@
                                     Orientation="Horizontal">
 
                                     <Label
-                                        FontFamily="Poppins"
-                                        FontSize="14"
                                         HorizontalOptions="StartAndExpand"
-                                        Text="Handling Charges"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblLight}"
+                                        Text="Handling Charges" />
 
                                     <Label
                                         x:Name="lblHandlingCharges"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontSize="15"
                                         HorizontalOptions="EndAndExpand"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblMedium}" />
                                 </StackLayout>
 
                                 <BoxView Style="{StaticResource boxHorizontal}" />
@@ -363,20 +305,15 @@
                                     Orientation="Horizontal">
 
                                     <Label
-                                        FontFamily="Poppins"
-                                        FontSize="14"
                                         HorizontalOptions="StartAndExpand"
-                                        Text="Shipping Charges"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblLight}"
+                                        Text="Shipping Charges" />
 
                                     <Label
                                         x:Name="lblShippingCharges"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontSize="15"
                                         HorizontalOptions="EndAndExpand"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblMedium}" />
                                 </StackLayout>
 
                                 <BoxView Style="{StaticResource boxHorizontal}" />
@@ -388,20 +325,15 @@
                                     HorizontalOptions="FillAndExpand"
                                     Orientation="Horizontal">
                                     <Label
-                                        FontFamily="Poppins"
-                                        FontSize="14"
                                         HorizontalOptions="StartAndExpand"
-                                        Text="Insurance Charges "
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblLight}"
+                                        Text="Insurance Charges " />
 
                                     <Label
                                         x:Name="lblInsuranceCharges"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontSize="15"
                                         HorizontalOptions="EndAndExpand"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblMedium}" />
                                 </StackLayout>
 
                                 <BoxView Style="{StaticResource boxHorizontal}" />
@@ -414,20 +346,42 @@
                                     Orientation="Horizontal">
 
                                     <Label
-                                        FontFamily="Poppins"
-                                        FontSize="14"
                                         HorizontalOptions="StartAndExpand"
-                                        Text="Country of origin"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblLight}"
+                                        Text="Country of origin" />
                                     <Label
                                         x:Name="lblCountryOrigin"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontSize="15"
                                         HorizontalOptions="EndAndExpand"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblMedium}" />
                                 </StackLayout>
+
+                                <BoxView Style="{StaticResource boxHorizontal}" />
+                            </StackLayout>
+
+                            <StackLayout Grid.Row="12">
+                                <Grid
+                                    Margin="20,0"
+                                    ColumnDefinitions="Auto,*"
+                                    ColumnSpacing="15"
+                                    HorizontalOptions="FillAndExpand">
+
+                                    <Label
+                                        HorizontalOptions="StartAndExpand"
+                                        Style="{StaticResource lblLight}"
+                                        Text="Comments"
+                                        VerticalOptions="StartAndExpand" />
+
+                                    <Label
+                                        x:Name="lblComments"
+                                        Grid.Column="1"
+                                        FontSize="15"
+                                        HorizontalTextAlignment="Start"
+                                        LineBreakMode="WordWrap"
+                                        Style="{StaticResource lblMedium}" />
+
+                                </Grid>
+
 
                                 <BoxView Style="{StaticResource boxHorizontal}" />
                             </StackLayout>
@@ -452,23 +406,19 @@
                                     VerticalOptions="CenterAndExpand">
                                     <Label
                                         Grid.Column="0"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontSize="15"
                                         HorizontalOptions="StartAndExpand"
                                         LineBreakMode="WordWrap"
-                                        Text="Total Quote Amount"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblMedium}"
+                                        Text="Total Quote Amount" />
                                     <Label
                                         x:Name="lblTotalAmount"
                                         Grid.Column="1"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontSize="15"
                                         HorizontalOptions="StartAndExpand"
                                         LineBreakMode="WordWrap"
-                                        Text=""
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblMedium}"
+                                        Text="" />
                                 </Grid>
 
                                 <Grid
@@ -478,23 +428,19 @@
                                     VerticalOptions="CenterAndExpand">
                                     <Label
                                         Grid.Column="0"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontSize="15"
                                         HorizontalOptions="StartAndExpand"
                                         LineBreakMode="WordWrap"
-                                        Text="Quote Validity Date"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblMedium}"
+                                        Text="Quote Validity Date" />
                                     <Label
                                         x:Name="lblDate"
                                         Grid.Column="1"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontSize="15"
                                         HorizontalOptions="StartAndExpand"
                                         LineBreakMode="WordWrap"
-                                        Text=""
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblMedium}"
+                                        Text="" />
                                 </Grid>
 
                                 <Grid
@@ -504,13 +450,11 @@
                                     VerticalOptions="CenterAndExpand">
                                     <Label
                                         Grid.Column="0"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontSize="15"
                                         HorizontalOptions="StartAndExpand"
                                         LineBreakMode="WordWrap"
-                                        Text="Contact Seller"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblMedium}"
+                                        Text="Contact Seller" />
                                     <Button
                                         x:Name="BtnRevealContact"
                                         Grid.Column="1"
@@ -525,9 +469,6 @@
                                 <Grid
                                     Grid.Row="3"
                                     Margin="0,15"
-                                    ColumnDefinitions="*,*"
-                                    ColumnSpacing="25"
-                                    HorizontalOptions="FillAndExpand"
                                     VerticalOptions="CenterAndExpand">
                                     <Button
                                         x:Name="BtnAcceptQuote"
@@ -538,14 +479,15 @@
                                         Style="{StaticResource btnBorder}"
                                         Text="Accept Quote" />
 
-                                    <Button
+                                    <!--<Button ColumnDefinitions="*,*"
+                                        ColumnSpacing="25"
                                         x:Name="BtnRejectQuote"
                                         Grid.Column="1"
                                         Clicked="BtnRejectQuote_Clicked"
                                         FontSize="15"
                                         HeightRequest="40"
                                         Style="{StaticResource btnBorder}"
-                                        Text="Reject Quote" />
+                                        Text="Reject Quote" />-->
                                 </Grid>
                             </Grid>
                         </Frame>

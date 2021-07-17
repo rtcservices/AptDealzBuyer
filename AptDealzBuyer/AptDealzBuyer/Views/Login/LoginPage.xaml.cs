@@ -6,6 +6,7 @@ using AptDealzBuyer.Utility;
 using AptDealzBuyer.Views.MasterData;
 using System;
 using System.Linq;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -15,7 +16,6 @@ namespace AptDealzBuyer.Views.Login
     public partial class LoginPage : ContentPage
     {
         #region Objects
-        //private bool isChecked = false;
         private bool isEmail = false;
         #endregion
 
@@ -32,6 +32,30 @@ namespace AptDealzBuyer.Views.Login
         {
             base.OnAppearing();
             BindProperties();
+        }
+
+        protected override bool OnBackButtonPressed()
+        {
+            base.OnBackButtonPressed();
+            try
+            {
+                if (DeviceInfo.Platform == DevicePlatform.Android)
+                {
+                    Device.BeginInvokeOnMainThread(async () =>
+                    {
+                        var result = await DisplayAlert(Constraints.Alert, Constraints.DoYouWantToExit, Constraints.Yes, Constraints.No);
+                        if (result)
+                        {
+                            Xamarin.Forms.DependencyService.Get<ICloseAppOnBackButton>().CloseApp();
+                        }
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("LoginPage/OnBackButtonPressed: " + ex.Message);
+            }
+            return true;
         }
 
         void BindProperties()
@@ -96,7 +120,7 @@ namespace AptDealzBuyer.Views.Login
             txtUserAuth.Text = txtUserAuth.Text.Trim();
         }
 
-        async void LoginUserByEmail()
+        async void AuthenticateUser()
         {
             try
             {
@@ -135,52 +159,59 @@ namespace AptDealzBuyer.Views.Login
                     else
                     {
                         UserDialogs.Instance.ShowLoading(Constraints.Loading);
-                        var mResponse = await authenticationAPI.CheckPhoneNumber(txtUserAuth.Text);
-                        bool isValidNumber = (bool)mResponse.Data;
-                        if (isValidNumber && mResponse != null)
+                        var mResponse = await authenticationAPI.CheckPhoneNumberExists(txtUserAuth.Text);
+                        if (mResponse != null)
                         {
-                            var result = await Xamarin.Forms.DependencyService.Get<IFirebaseAuthenticator>().SendOtpCodeAsync(txtUserAuth.Text);
-                            var keyValue = result.FirstOrDefault();
-
-                            if (keyValue.Key)
+                            bool isValidNumber = (bool)mResponse.Data;
+                            if (isValidNumber && mResponse != null)
                             {
-                                if (keyValue.Value == Constraints.OTPSent)
+                                var result = await Xamarin.Forms.DependencyService.Get<IFirebaseAuthenticator>().SendOtpCodeAsync(txtUserAuth.Text);
+                                var keyValue = result.FirstOrDefault();
+
+                                if (keyValue.Key)
                                 {
-                                    await Navigation.PushAsync(new Views.Login.EnterOtpPage(txtUserAuth.Text, false));
-                                    txtUserAuth.Text = string.Empty;
+                                    if (keyValue.Value == Constraints.OTPSent)
+                                    {
+                                        await Navigation.PushAsync(new Views.Login.EnterOtpPage(txtUserAuth.Text, false));
+                                        txtUserAuth.Text = string.Empty;
+                                    }
+                                    else
+                                    {
+                                        Settings.firebaseVerificationId = keyValue.Value;
+                                        Settings.PhoneAuthToken = keyValue.Value;
+
+                                        var mLogin = FillLogin();
+                                        mResponse = await authenticationAPI.BuyerAuthPhone(mLogin);
+                                        NavigateToDashboard(mResponse);
+                                    }
+                                }
+                                else if (!string.IsNullOrEmpty(keyValue.Value))
+                                {
+                                    Common.DisplayErrorMessage(keyValue.Value);
                                 }
                                 else
                                 {
-                                    Settings.firebaseVerificationId = keyValue.Value;
-                                    Settings.PhoneAuthToken = keyValue.Value;
-
-                                    var mLogin = FillLogin();
-                                    mResponse = await authenticationAPI.BuyerAuthPhone(mLogin);
-                                    NavigateToDashboard(mResponse);
+                                    Common.DisplayErrorMessage(Constraints.CouldNotSentOTP);
                                 }
-                            }
-                            else if (!string.IsNullOrEmpty(keyValue.Value))
-                            {
-                                Common.DisplayErrorMessage(keyValue.Value);
                             }
                             else
                             {
-                                Common.DisplayErrorMessage(Constraints.CouldNotSentOTP);
+                                if (mResponse != null)
+                                    Common.DisplayErrorMessage(mResponse.Message);
+                                else
+                                    Common.DisplayErrorMessage(Constraints.Something_Wrong);
                             }
                         }
                         else
                         {
-                            if (mResponse != null)
-                                Common.DisplayErrorMessage(mResponse.Message);
-                            else
-                                Common.DisplayErrorMessage(Constraints.Something_Wrong);
+                            Common.DisplayErrorMessage(Constraints.Something_Wrong);
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                Common.DisplayErrorMessage("LoginPage/FrmGetOtp_Tapped: " + ex.Message);
+                Common.DisplayErrorMessage("LoginPage/AuthenticateUser: " + ex.Message);
             }
             finally
             {
@@ -231,6 +262,7 @@ namespace AptDealzBuyer.Views.Login
                             Settings.RefreshToken = mBuyer.RefreshToken;
                             Settings.LoginTrackingKey = mBuyer.LoginTrackingKey == "00000000-0000-0000-0000-000000000000" ? Settings.LoginTrackingKey : mBuyer.LoginTrackingKey;
                             Common.Token = mBuyer.JwToken;
+                            Settings.UserToken = mBuyer.JwToken;
 
                             App.Current.MainPage = new MasterDataPage();
                         }
@@ -251,12 +283,7 @@ namespace AptDealzBuyer.Views.Login
         }
         #endregion
 
-        #region Events
-        private void ImgBack_Tapped(object sender, EventArgs e)
-        {
-            Navigation.PushAsync(new SplashScreen.WelcomePage());
-        }
-
+        #region Events   
         private void StkSignup_Tapped(object sender, EventArgs e)
         {
             Navigation.PushAsync(new Login.SignupPage());
@@ -265,7 +292,7 @@ namespace AptDealzBuyer.Views.Login
         private void BtnGetOtp_Clicked(object sender, EventArgs e)
         {
             Common.BindAnimation(button: BtnGetOtp);
-            LoginUserByEmail();
+            AuthenticateUser();
         }
 
         private void txtUserAuth_Unfocused(object sender, FocusEventArgs e)

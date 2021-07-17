@@ -3,7 +3,6 @@
     x:Class="AptDealzBuyer.Views.Orders.OrderDetailsPage"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:ext="clr-namespace:AptDealzBuyer.Extention"
     xmlns:iOS="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
     xmlns:skiaRate="clr-namespace:SkiaRate;assembly=SkiaRate.Forms"
     iOS:Page.UseSafeArea="True"
@@ -36,7 +35,11 @@
                     </Image.GestureRecognizers>
                 </Image>
 
-                <Image Grid.Column="1" Style="{StaticResource imgLogo}" />
+                <ImageButton
+                    x:Name="BtnLogo"
+                    Grid.Column="1"
+                    Clicked="BtnLogo_Clicked"
+                    Style="{StaticResource imgLogo}" />
 
                 <StackLayout
                     Grid.Column="2"
@@ -91,10 +94,11 @@
                         Text="Order Details" />
                 </Grid>
 
-                <ScrollView Grid.Row="1" Style="{StaticResource scrPrimary}">
-
+                <ScrollView
+                    x:Name="AllDetails"
+                    Grid.Row="1"
+                    Style="{StaticResource scrPrimary}">
                     <Grid RowDefinitions="Auto,*" RowSpacing="0">
-
                         <Grid
                             Grid.Row="0"
                             Margin="0"
@@ -122,23 +126,16 @@
                                     Orientation="Horizontal">
 
                                     <Label
-                                        Margin="0"
-                                        FontFamily="Poppins"
-                                        FontSize="14"
                                         HorizontalOptions="StartAndExpand"
-                                        Text="Requirement ID"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblLight}"
+                                        Text="Requirement ID" />
 
                                     <Label
                                         x:Name="lblRequirementId"
-                                        Margin="0"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontSize="15"
                                         HorizontalOptions="EndAndExpand"
-                                        Text="REQ#123"
-                                        TextColor="{StaticResource Green}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblMedium}"
+                                        TextColor="{StaticResource Green}" />
 
                                 </StackLayout>
 
@@ -156,23 +153,16 @@
                                     Orientation="Horizontal">
 
                                     <Label
-                                        Margin="0"
-                                        FontFamily="Poppins"
-                                        FontSize="14"
                                         HorizontalOptions="StartAndExpand"
-                                        Text="Quote Reference No"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblLight}"
+                                        Text="Quote Reference No" />
 
                                     <Label
                                         x:Name="lblQuoteRefNo"
-                                        Margin="0"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontSize="15"
                                         HorizontalOptions="EndAndExpand"
-                                        Text="QUO#987"
-                                        TextColor="{StaticResource Green}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblMedium}"
+                                        TextColor="{StaticResource Green}" />
 
                                 </StackLayout>
 
@@ -190,23 +180,15 @@
                                     Orientation="Horizontal">
 
                                     <Label
-                                        Margin="0"
-                                        FontFamily="Poppins"
-                                        FontSize="14"
                                         HorizontalOptions="StartAndExpand"
-                                        Text="Buyer Name"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblLight}"
+                                        Text="Buyer Name" />
 
                                     <Label
                                         x:Name="lblBuyerName"
-                                        Margin="0"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontSize="15"
                                         HorizontalOptions="EndAndExpand"
-                                        Text="Benjamin"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblMedium}" />
 
                                 </StackLayout>
 
@@ -224,23 +206,15 @@
                                     Orientation="Horizontal">
 
                                     <Label
-                                        Margin="0"
-                                        FontFamily="Poppins"
-                                        FontSize="14"
                                         HorizontalOptions="StartAndExpand"
-                                        Text="Seller Name"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblLight}"
+                                        Text="Seller Name" />
 
                                     <Label
                                         x:Name="lblSellerName"
-                                        Margin="0"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontSize="15"
                                         HorizontalOptions="EndAndExpand"
-                                        Text="ABC Exports"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblMedium}" />
 
                                 </StackLayout>
 
@@ -258,23 +232,16 @@
                                     Orientation="Horizontal">
 
                                     <Label
-                                        Margin="0"
-                                        FontFamily="Poppins"
-                                        FontSize="14"
+                                        x:Name="lblPinCodeTitle"
                                         HorizontalOptions="StartAndExpand"
-                                        Text="Shipping PIN Code"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblLight}"
+                                        Text="Shipping PIN Code" />
 
                                     <Label
                                         x:Name="lblShippingPINCode"
-                                        Margin="0"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontSize="15"
                                         HorizontalOptions="EndAndExpand"
-                                        Text="682017"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblMedium}" />
 
                                 </StackLayout>
 
@@ -292,23 +259,15 @@
                                     Orientation="Horizontal">
 
                                     <Label
-                                        Margin="0"
-                                        FontFamily="Poppins"
-                                        FontSize="14"
                                         HorizontalOptions="StartAndExpand"
-                                        Text="Requested Quantity"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblLight}"
+                                        Text="Requested Quantity" />
 
                                     <Label
                                         x:Name="lblRequestedQuantity"
-                                        Margin="0"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontSize="15"
                                         HorizontalOptions="EndAndExpand"
-                                        Text="100 Pieces"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblMedium}" />
 
                                 </StackLayout>
 
@@ -326,23 +285,15 @@
                                     Orientation="Horizontal">
 
                                     <Label
-                                        Margin="0"
-                                        FontFamily="Poppins"
-                                        FontSize="14"
                                         HorizontalOptions="StartAndExpand"
-                                        Text="Unit Price"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblLight}"
+                                        Text="Unit Price" />
 
                                     <Label
                                         x:Name="lblUnitPrice"
-                                        Margin="0"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontSize="15"
                                         HorizontalOptions="EndAndExpand"
-                                        Text="Rs 25"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblMedium}" />
 
                                 </StackLayout>
 
@@ -360,23 +311,15 @@
                                     Orientation="Horizontal">
 
                                     <Label
-                                        Margin="0"
-                                        FontFamily="Poppins"
-                                        FontSize="14"
                                         HorizontalOptions="StartAndExpand"
-                                        Text="Net Amount"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblLight}"
+                                        Text="Net Amount" />
 
                                     <Label
                                         x:Name="lblNetAmount"
-                                        Margin="0"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontSize="15"
                                         HorizontalOptions="EndAndExpand"
-                                        Text="Rs 2500"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblMedium}" />
 
                                 </StackLayout>
 
@@ -394,23 +337,15 @@
                                     Orientation="Horizontal">
 
                                     <Label
-                                        Margin="0"
-                                        FontFamily="Poppins"
-                                        FontSize="14"
                                         HorizontalOptions="StartAndExpand"
-                                        Text="Handling Charges"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblLight}"
+                                        Text="Handling Charges" />
 
                                     <Label
                                         x:Name="lblHandlingCharges"
-                                        Margin="0"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontSize="15"
                                         HorizontalOptions="EndAndExpand"
-                                        Text="Rs 500"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblMedium}" />
 
                                 </StackLayout>
 
@@ -428,23 +363,15 @@
                                     Orientation="Horizontal">
 
                                     <Label
-                                        Margin="0"
-                                        FontFamily="Poppins"
-                                        FontSize="14"
                                         HorizontalOptions="StartAndExpand"
-                                        Text="Shipping Charges"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblLight}"
+                                        Text="Shipping Charges" />
 
                                     <Label
                                         x:Name="lblShippingCharges"
-                                        Margin="0"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontSize="15"
                                         HorizontalOptions="EndAndExpand"
-                                        Text="Rs 250"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblMedium}" />
 
                                 </StackLayout>
 
@@ -462,23 +389,15 @@
                                     Orientation="Horizontal">
 
                                     <Label
-                                        Margin="0"
-                                        FontFamily="Poppins"
-                                        FontSize="14"
                                         HorizontalOptions="StartAndExpand"
-                                        Text="Insurance Charges "
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblLight}"
+                                        Text="Insurance Charges " />
 
                                     <Label
                                         x:Name="lblInsuranceCharges"
-                                        Margin="0"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontSize="15"
                                         HorizontalOptions="EndAndExpand"
-                                        Text="Rs 250"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblMedium}" />
 
                                 </StackLayout>
 
@@ -496,31 +415,19 @@
                                     Orientation="Horizontal">
 
                                     <Label
-                                        Margin="0"
-                                        FontFamily="Poppins"
-                                        FontSize="14"
                                         HorizontalOptions="StartAndExpand"
-                                        Text="Origin of Products"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblLight}"
+                                        Text="Origin of Products" />
 
                                     <Label
                                         x:Name="lblOriginProduct"
-                                        Margin="0"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontSize="15"
                                         HorizontalOptions="EndAndExpand"
-                                        Text="India"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblMedium}" />
 
                                 </StackLayout>
 
-                                <BoxView
-                                    BackgroundColor="{StaticResource LightGray}"
-                                    HeightRequest="1"
-                                    HorizontalOptions="FillAndExpand"
-                                    VerticalOptions="EndAndExpand" />
+                                <BoxView Style="{StaticResource boxHorizontal}" />
                             </StackLayout>
                         </Grid>
 
@@ -536,13 +443,13 @@
                             <Frame
                                 Grid.Row="0"
                                 Margin="0"
-                                Padding="0"
+                                Padding="15"
                                 BorderColor="{StaticResource LightGray}"
                                 CornerRadius="5"
                                 HasShadow="False"
                                 HorizontalOptions="FillAndExpand"
                                 VerticalOptions="CenterAndExpand">
-                                <Grid Margin="5,40" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto">
+                                <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto">
 
                                     <Grid
                                         Grid.Row="0"
@@ -551,24 +458,18 @@
                                         VerticalOptions="CenterAndExpand">
                                         <Label
                                             Grid.Column="0"
-                                            Margin="10,5"
-                                            FontFamily="Poppins Medium"
                                             FontSize="15"
                                             HorizontalOptions="StartAndExpand"
                                             LineBreakMode="WordWrap"
-                                            Text="Invoice Number"
-                                            TextColor="{StaticResource Black}"
-                                            VerticalOptions="CenterAndExpand" />
+                                            Style="{StaticResource lblMedium}"
+                                            Text="Invoice Number" />
                                         <Label
+                                            x:Name="lblInvoiceNo"
                                             Grid.Column="1"
-                                            Margin="10,5"
-                                            FontFamily="Poppins Medium"
                                             FontSize="15"
                                             HorizontalOptions="StartAndExpand"
                                             LineBreakMode="WordWrap"
-                                            Text="#INV67"
-                                            TextColor="{StaticResource Black}"
-                                            VerticalOptions="CenterAndExpand" />
+                                            Style="{StaticResource lblMedium}" />
                                     </Grid>
 
                                     <Grid
@@ -578,24 +479,18 @@
                                         VerticalOptions="CenterAndExpand">
                                         <Label
                                             Grid.Column="0"
-                                            Margin="10,5"
-                                            FontFamily="Poppins Medium"
                                             FontSize="15"
                                             HorizontalOptions="StartAndExpand"
                                             LineBreakMode="WordWrap"
-                                            Text="Total Amount"
-                                            TextColor="{StaticResource Black}"
-                                            VerticalOptions="CenterAndExpand" />
+                                            Style="{StaticResource lblMedium}"
+                                            Text="Total Amount" />
                                         <Label
+                                            x:Name="lblTotalAmount"
                                             Grid.Column="1"
-                                            Margin="10,5"
-                                            FontFamily="Poppins Medium"
                                             FontSize="15"
                                             HorizontalOptions="StartAndExpand"
                                             LineBreakMode="WordWrap"
-                                            Text="Rs 3500"
-                                            TextColor="{StaticResource Black}"
-                                            VerticalOptions="CenterAndExpand" />
+                                            Style="{StaticResource lblMedium}" />
                                     </Grid>
 
                                     <Grid
@@ -605,24 +500,18 @@
                                         VerticalOptions="CenterAndExpand">
                                         <Label
                                             Grid.Column="0"
-                                            Margin="10,5"
-                                            FontFamily="Poppins Medium"
                                             FontSize="15"
                                             HorizontalOptions="StartAndExpand"
                                             LineBreakMode="WordWrap"
-                                            Text="Expected Delivery"
-                                            TextColor="{StaticResource Black}"
-                                            VerticalOptions="CenterAndExpand" />
+                                            Style="{StaticResource lblMedium}"
+                                            Text="Expected Delivery" />
                                         <Label
+                                            x:Name="lblExpectedDate"
                                             Grid.Column="1"
-                                            Margin="10,5"
-                                            FontFamily="Poppins Medium"
                                             FontSize="15"
                                             HorizontalOptions="StartAndExpand"
                                             LineBreakMode="WordWrap"
-                                            Text="30-11-2020"
-                                            TextColor="{StaticResource Black}"
-                                            VerticalOptions="CenterAndExpand" />
+                                            Style="{StaticResource lblMedium}" />
                                     </Grid>
 
                                     <Grid
@@ -632,32 +521,24 @@
                                         VerticalOptions="CenterAndExpand">
                                         <Label
                                             Grid.Column="0"
-                                            Margin="10,5"
-                                            FontFamily="Poppins Medium"
                                             FontSize="15"
                                             HorizontalOptions="StartAndExpand"
                                             LineBreakMode="WordWrap"
-                                            Text="Contact Seller"
-                                            TextColor="{StaticResource Black}"
-                                            VerticalOptions="CenterAndExpand" />
+                                            Style="{StaticResource lblMedium}"
+                                            Text="Contact Seller" />
 
                                         <Label
-                                            x:Name="lblContactSeller"
+                                            x:Name="lblSellerContact"
                                             Grid.Column="1"
-                                            Margin="10,5"
-                                            FontFamily="Poppins Medium"
                                             FontSize="15"
                                             HorizontalOptions="StartAndExpand"
                                             LineBreakMode="WordWrap"
-                                            Text="0484-32165498"
-                                            TextColor="{StaticResource Black}"
-                                            VerticalOptions="CenterAndExpand" />
+                                            Style="{StaticResource lblMedium}" />
 
                                     </Grid>
 
                                     <StackLayout
                                         Grid.Row="4"
-                                        Margin="0,10,0,0"
                                         HorizontalOptions="CenterAndExpand"
                                         Orientation="Horizontal"
                                         VerticalOptions="CenterAndExpand">
@@ -671,72 +552,37 @@
 
                                         <Label
                                             x:Name="lblOrderStatus"
-                                            Margin="0"
-                                            FontFamily="Poppins"
-                                            FontSize="15"
                                             HorizontalOptions="StartAndExpand"
-                                            Text="Processing"
-                                            TextColor="{StaticResource Green}"
-                                            VerticalOptions="CenterAndExpand" />
+                                            Style="{StaticResource lblLight}"
+                                            TextColor="{StaticResource Green}" />
 
                                     </StackLayout>
 
                                     <Grid
                                         x:Name="grdTrackRaise"
                                         Grid.Row="5"
-                                        Margin="10,30,10,0"
                                         ColumnDefinitions="*,*"
-                                        ColumnSpacing="20"
-                                        HorizontalOptions="FillAndExpand"
-                                        VerticalOptions="CenterAndExpand">
+                                        ColumnSpacing="10">
 
-                                        <Frame
+                                        <Button
                                             Grid.Column="0"
-                                            Margin="0"
-                                            Padding="0"
-                                            BorderColor="{StaticResource Green}"
-                                            CornerRadius="5"
-                                            HasShadow="False"
-                                            HorizontalOptions="FillAndExpand"
-                                            VerticalOptions="CenterAndExpand">
-                                            <Label
-                                                Grid.Column="1"
-                                                Margin="0,5"
-                                                FontFamily="Poppins Medium"
-                                                FontSize="14"
-                                                HorizontalOptions="CenterAndExpand"
-                                                LineBreakMode="WordWrap"
-                                                Text="Track Order"
-                                                TextColor="{StaticResource Green}"
-                                                VerticalOptions="CenterAndExpand" />
-                                            <Frame.GestureRecognizers>
-                                                <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmTrackOrder_Tapped" />
-                                            </Frame.GestureRecognizers>
-                                        </Frame>
+                                            BorderWidth="1"
+                                            Clicked="FrmTrackOrder_Tapped"
+                                            FontSize="15"
+                                            HeightRequest="40"
+                                            Style="{StaticResource btnBorder}"
+                                            Text="Track Order" />
 
-                                        <Frame
+                                        <Button
                                             Grid.Column="1"
-                                            Margin="0"
-                                            Padding="0"
-                                            BorderColor="{StaticResource Green}"
-                                            CornerRadius="5"
-                                            HasShadow="False"
-                                            HorizontalOptions="FillAndExpand"
-                                            VerticalOptions="CenterAndExpand">
-                                            <Label
-                                                Grid.Column="1"
-                                                Margin="0,5"
-                                                FontFamily="Poppins Medium"
-                                                FontSize="14"
-                                                HorizontalOptions="CenterAndExpand"
-                                                LineBreakMode="WordWrap"
-                                                Text="Raise Grievance"
-                                                TextColor="{StaticResource Green}"
-                                                VerticalOptions="CenterAndExpand" />
-                                            <Frame.GestureRecognizers>
-                                                <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmRaiseGrievance_Tapped" />
-                                            </Frame.GestureRecognizers>
-                                        </Frame>
+                                            Padding="5,0"
+                                            BorderWidth="1"
+                                            Clicked="FrmRaiseGrievance_Tapped"
+                                            FontSize="15"
+                                            HeightRequest="40"
+                                            Style="{StaticResource btnBorder}"
+                                            Text="Raise Grievance" />
+
                                     </Grid>
                                 </Grid>
                             </Frame>
@@ -745,17 +591,15 @@
 
                                 <Button
                                     Grid.Row="0"
-                                    Clicked="FrmCancelOrder_Tapped"
+                                    Clicked="BtnCancelOrder_Tapped"
                                     Style="{StaticResource btnPrimary}"
                                     Text="Cancel Order" />
                                 <Label
                                     Grid.Row="1"
-                                    FontFamily="Poppins"
                                     FontSize="12"
                                     HorizontalOptions="CenterAndExpand"
-                                    Text="(Visible for 1 hr from payment)"
-                                    TextColor="{StaticResource Black}"
-                                    VerticalOptions="CenterAndExpand" />
+                                    Style="{StaticResource lblLight}"
+                                    Text="(Visible for 1 hr from payment)" />
 
                             </Grid>
 
@@ -766,20 +610,13 @@
 
                                 <Grid Grid.Row="0" RowDefinitions="Auto,Auto,Auto">
 
-                                    <Grid
-                                        Grid.Row="0"
-                                        Margin="20,0"
-                                        ColumnDefinitions="*,150,*">
+                                    <Grid Grid.Row="0" ColumnDefinitions="*,150,*">
 
                                         <Label
                                             Grid.Column="0"
-                                            Margin="0"
-                                            FontFamily="Poppins"
-                                            FontSize="15"
                                             HorizontalOptions="StartAndExpand"
-                                            Text="Rate Seller"
-                                            TextColor="{StaticResource Black}"
-                                            VerticalOptions="CenterAndExpand" />
+                                            Style="{StaticResource lblLight}"
+                                            Text="Rate Seller" />
 
                                         <skiaRate:RatingView
                                             x:Name="rvSeller"
@@ -804,34 +641,25 @@
                                             VerticalOptions="CenterAndExpand">
                                             <Label
                                                 Grid.Column="1"
-                                                Margin="10,5"
-                                                FontFamily="Poppins Medium"
                                                 FontSize="15"
                                                 HorizontalOptions="CenterAndExpand"
+                                                Style="{StaticResource lblMedium}"
                                                 Text="Rate"
-                                                TextColor="{StaticResource Green}"
-                                                VerticalOptions="CenterAndExpand" />
+                                                TextColor="{StaticResource Green}" />
                                             <Frame.GestureRecognizers>
-                                                <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmCancelOrder_Tapped" />
+                                                <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="BtnCancelOrder_Tapped" />
                                             </Frame.GestureRecognizers>
                                         </Frame>
 
                                     </Grid>
 
-                                    <Grid
-                                        Grid.Row="1"
-                                        Margin="20,0"
-                                        ColumnDefinitions="*,150,*">
+                                    <Grid Grid.Row="1" ColumnDefinitions="*,150,*">
 
                                         <Label
                                             Grid.Column="0"
-                                            Margin="0"
-                                            FontFamily="Poppins"
-                                            FontSize="15"
                                             HorizontalOptions="StartAndExpand"
-                                            Text="Rate Product"
-                                            TextColor="{StaticResource Black}"
-                                            VerticalOptions="CenterAndExpand" />
+                                            Style="{StaticResource lblLight}"
+                                            Text="Rate Product" />
 
                                         <skiaRate:RatingView
                                             x:Name="rvProduct"
@@ -856,34 +684,25 @@
                                             VerticalOptions="CenterAndExpand">
                                             <Label
                                                 Grid.Column="1"
-                                                Margin="10,5"
-                                                FontFamily="Poppins Medium"
                                                 FontSize="15"
                                                 HorizontalOptions="CenterAndExpand"
+                                                Style="{StaticResource lblMedium}"
                                                 Text="Rate"
-                                                TextColor="{StaticResource Green}"
-                                                VerticalOptions="CenterAndExpand" />
+                                                TextColor="{StaticResource Green}" />
                                             <Frame.GestureRecognizers>
-                                                <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmCancelOrder_Tapped" />
+                                                <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="BtnCancelOrder_Tapped" />
                                             </Frame.GestureRecognizers>
                                         </Frame>
 
                                     </Grid>
 
-                                    <Grid
-                                        Grid.Row="2"
-                                        Margin="20,0"
-                                        ColumnDefinitions="*,150,*">
+                                    <Grid Grid.Row="2" ColumnDefinitions="*,150,*">
 
                                         <Label
                                             Grid.Column="0"
-                                            Margin="0"
-                                            FontFamily="Poppins"
-                                            FontSize="15"
                                             HorizontalOptions="StartAndExpand"
-                                            Text="Rate AptDealz"
-                                            TextColor="{StaticResource Black}"
-                                            VerticalOptions="CenterAndExpand" />
+                                            Style="{StaticResource lblLight}"
+                                            Text="Rate AptDealz" />
 
                                         <skiaRate:RatingView
                                             x:Name="rvAptDealz"
@@ -908,15 +727,13 @@
                                             VerticalOptions="CenterAndExpand">
                                             <Label
                                                 Grid.Column="1"
-                                                Margin="10,5"
-                                                FontFamily="Poppins Medium"
                                                 FontSize="15"
                                                 HorizontalOptions="CenterAndExpand"
+                                                Style="{StaticResource lblMedium}"
                                                 Text="Rate"
-                                                TextColor="{StaticResource Green}"
-                                                VerticalOptions="CenterAndExpand" />
+                                                TextColor="{StaticResource Green}" />
                                             <Frame.GestureRecognizers>
-                                                <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmCancelOrder_Tapped" />
+                                                <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="BtnCancelOrder_Tapped" />
                                             </Frame.GestureRecognizers>
                                         </Frame>
 
@@ -926,7 +743,6 @@
 
                                 <Grid
                                     Grid.Row="1"
-                                    Margin="30"
                                     ColumnDefinitions="*,*"
                                     ColumnSpacing="20"
                                     HorizontalOptions="FillAndExpand"
@@ -942,14 +758,12 @@
                                         VerticalOptions="StartAndExpand">
                                         <Label
                                             Grid.Column="1"
-                                            Margin="0,5"
-                                            FontFamily="Poppins Medium"
-                                            FontSize="14"
+                                            FontSize="15"
                                             HorizontalOptions="CenterAndExpand"
                                             LineBreakMode="WordWrap"
+                                            Style="{StaticResource lblMedium}"
                                             Text="Repost Reqt"
-                                            TextColor="{StaticResource White}"
-                                            VerticalOptions="CenterAndExpand" />
+                                            TextColor="{StaticResource White}" />
                                         <Frame.GestureRecognizers>
                                             <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmTrackOrder_Tapped" />
                                         </Frame.GestureRecognizers>
@@ -968,26 +782,21 @@
                                             VerticalOptions="StartAndExpand">
                                             <Label
                                                 Grid.Column="1"
-                                                Margin="0,5"
-                                                FontFamily="Poppins Medium"
-                                                FontSize="14"
+                                                FontSize="15"
                                                 HorizontalOptions="CenterAndExpand"
                                                 LineBreakMode="WordWrap"
+                                                Style="{StaticResource lblMedium}"
                                                 Text="Raise Grievance"
-                                                TextColor="{StaticResource White}"
-                                                VerticalOptions="CenterAndExpand" />
+                                                TextColor="{StaticResource White}" />
                                             <Frame.GestureRecognizers>
                                                 <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmRaiseGrievance_Tapped" />
                                             </Frame.GestureRecognizers>
                                         </Frame>
                                         <Label
-                                            Margin="0"
-                                            FontFamily="Poppins"
                                             FontSize="12"
                                             HorizontalOptions="CenterAndExpand"
-                                            Text="(Visible up to 48 hrs of delivery)"
-                                            TextColor="{StaticResource Black}"
-                                            VerticalOptions="CenterAndExpand" />
+                                            Style="{StaticResource lblLight}"
+                                            Text="(Visible up to 48 hrs of delivery)" />
                                     </StackLayout>
                                 </Grid>
 
@@ -997,6 +806,14 @@
 
                 </ScrollView>
 
+                <Label
+                    x:Name="lblCancelledOrder"
+                    Grid.Row="1"
+                    FontSize="15"
+                    HorizontalOptions="CenterAndExpand"
+                    IsVisible="false"
+                    Style="{StaticResource lblMedium}"
+                    Text="This Order is Cancelled" />
             </Grid>
         </Grid>
 

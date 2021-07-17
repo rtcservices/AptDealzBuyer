@@ -1,6 +1,5 @@
 ﻿using AptDealzBuyer.Model.Reponse;
 using AptDealzBuyer.Utility;
-using AptDealzBuyer.Views.SplashScreen;
 using Newtonsoft.Json;
 using Plugin.Connectivity;
 using System;
@@ -34,8 +33,16 @@ namespace AptDealzBuyer.API
                             var errorString = JsonConvert.DeserializeObject<string>(responseJson);
                             if (errorString == Constraints.Session_Expired)
                             {
-                                App.Current.MainPage = new NavigationPage(new WelcomePage(true));
+                                App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
                             }
+                        }
+                        else if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
+                        {
+                            Common.DisplayErrorMessage(Constraints.ServiceUnavailable);
+                        }
+                        else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
+                        {
+                            Common.DisplayErrorMessage(Constraints.Something_Wrong_Server);
                         }
                         else
                         {
@@ -53,7 +60,7 @@ namespace AptDealzBuyer.API
             }
             catch (Exception ex)
             {
-                Common.DisplayErrorMessage("ProfileAPI/GetCategory: " + ex.Message);
+                Common.DisplayErrorMessage("CategoryAPI/GetCategory: " + ex.Message);
             }
             return mCategory;
         }
@@ -79,8 +86,16 @@ namespace AptDealzBuyer.API
                             var errorString = JsonConvert.DeserializeObject<string>(responseJson);
                             if (errorString == Constraints.Session_Expired)
                             {
-                                App.Current.MainPage = new NavigationPage(new WelcomePage(true));
+                                App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
                             }
+                        }
+                        else if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
+                        {
+                            Common.DisplayErrorMessage(Constraints.ServiceUnavailable);
+                        }
+                        else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
+                        {
+                            Common.DisplayErrorMessage(Constraints.Something_Wrong_Server);
                         }
                         else
                         {
@@ -98,7 +113,7 @@ namespace AptDealzBuyer.API
             }
             catch (Exception ex)
             {
-                Common.DisplayErrorMessage("ProfileAPI/GetSubCategory: " + ex.Message);
+                Common.DisplayErrorMessage("CategoryAPI/GetSubCategory: " + ex.Message);
             }
             return mSubCategory;
         }

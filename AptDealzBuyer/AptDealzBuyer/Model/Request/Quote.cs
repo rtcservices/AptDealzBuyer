@@ -100,7 +100,20 @@ namespace AptDealzBuyer.Model.Request
         [JsonProperty("buyerContact")]
         public BuyerContact BuyerContact { get; set; }
 
-        #region Extra Properties
+        [JsonProperty("sellerName")]
+        public string SellerName { get; set; }
+
+        [JsonProperty("amount")]
+        public int Amount { get; set; }
+
+        [JsonProperty("validity")]
+        public int Validity { get; set; }
+
+        [JsonProperty("unit")]
+        public string Unit { get; set; }
+
+
+        #region [ Extra Properties ]
         [JsonIgnore]
         public string TotalAmount
         {

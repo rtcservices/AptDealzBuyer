@@ -35,7 +35,11 @@
                     </Image.GestureRecognizers>
                 </Image>
 
-                <Image Grid.Column="1" Style="{StaticResource imgLogo}" />
+                <ImageButton
+                    x:Name="BtnLogo"
+                    Grid.Column="1"
+                    Clicked="BtnLogo_Clicked"
+                    Style="{StaticResource imgLogo}" />
 
                 <StackLayout
                     Grid.Column="2"
@@ -100,12 +104,10 @@
 
                         <Label
                             Grid.Row="0"
-                            FontFamily="Poppins"
-                            FontSize="14"
                             HorizontalOptions="FillAndExpand"
                             LineBreakMode="WordWrap"
+                            Style="{StaticResource lblLight}"
                             Text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged."
-                            TextColor="{StaticResource Black}"
                             VerticalOptions="FillAndExpand" />
 
                         <Frame
@@ -116,11 +118,11 @@
                             BorderColor="{StaticResource LightGray}"
                             CornerRadius="5"
                             HasShadow="False"
-                            HeightRequest="150"
                             HorizontalOptions="FillAndExpand"
                             VerticalOptions="FillAndExpand">
                             <Editor
                                 x:Name="txtReason"
+                                AutoSize="TextChanges"
                                 Placeholder="Reason for Deactivation:"
                                 Style="{StaticResource edPrimary}" />
                         </Frame>

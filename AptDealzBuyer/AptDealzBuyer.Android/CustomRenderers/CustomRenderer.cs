@@ -178,6 +178,12 @@ namespace AptDealzBuyer.Droid.CustomRenderers
 
                 nativeEditTextField.Background = gd;
                 Control.SetPadding(0, 0, 0, 0);
+
+                ExtDatePicker element = Element as ExtDatePicker;
+                if (element.NullableDate.HasValue)
+                    Control.Text = element.NullableDate.Value.ToString(element.Format);
+                else
+                    Control.Text = string.Empty;
             }
             catch (Exception ex)
             {

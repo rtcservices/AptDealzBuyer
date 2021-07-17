@@ -36,11 +36,11 @@
 		<string>Assets.xcassets/AppIcon.appiconset</string>
 		<key>UIAppFonts</key>
 		<array>
-			<string>Poppins Black.otf</string>
-			<string>Poppins ExtraBold.otf</string>
-			<string>Poppins Medium.otf</string>
-			<string>Poppins SemiBold.otf</string>
-			<string>Poppins Thin.otf</string>
+			<string>Poppins-Black.otf</string>
+			<string>Poppins-ExtraBold.otf</string>
+			<string>Poppins-Medium.otf</string>
+			<string>Poppins-SemiBold.otf</string>
+			<string>Poppins-Thin.otf</string>
 			<string>Poppins.otf</string>
 		</array>
 		<key>UIUserInterfaceStyle</key>

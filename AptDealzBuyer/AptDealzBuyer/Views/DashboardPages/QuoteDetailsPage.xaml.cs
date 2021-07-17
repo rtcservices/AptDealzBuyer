@@ -1,10 +1,12 @@
 ﻿using Acr.UserDialogs;
 using AptDealzBuyer.API;
+using AptDealzBuyer.Model;
 using AptDealzBuyer.Model.Request;
 using AptDealzBuyer.Utility;
 using Newtonsoft.Json.Linq;
 using Rg.Plugins.Popup.Services;
 using System;
+using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -16,14 +18,15 @@ namespace AptDealzBuyer.Views.DashboardPages
     {
         #region Objects
         private QuoteAPI quoteAPI;
-        Quote mQuote;
+        private Quote mQuote;
         private string QuoteId;
         private bool isRevealContact = false;
         private bool isAccepteedQuote = false;
+        private bool isPickupProductDirectly = false;
         #endregion
 
         #region Constructor
-        public QuoteDetailsPage(string quoteId, bool isRevealContact, bool isAccepteedQuote)
+        public QuoteDetailsPage(string quoteId, bool isRevealContact, bool isAccepteedQuote, bool isPickupProductDirectly)
         {
             InitializeComponent();
             quoteAPI = new QuoteAPI();
@@ -31,6 +34,7 @@ namespace AptDealzBuyer.Views.DashboardPages
             mQuote = new Quote();
             this.isRevealContact = isRevealContact;
             this.isAccepteedQuote = isAccepteedQuote;
+            this.isPickupProductDirectly = isPickupProductDirectly;
         }
         #endregion
 
@@ -42,12 +46,21 @@ namespace AptDealzBuyer.Views.DashboardPages
             if (isAccepteedQuote)
             {
                 BtnAcceptQuote.IsEnabled = false;
-                BtnRejectQuote.IsEnabled = false;
+                //BtnRejectQuote.IsEnabled = false;
             }
             else
             {
                 BtnAcceptQuote.IsEnabled = true;
-                BtnRejectQuote.IsEnabled = true;
+                //BtnRejectQuote.IsEnabled = true;
+            }
+
+            if (isPickupProductDirectly)
+            {
+                lblShippingPinCode.Text = "Product Pickup PIN Code";
+            }
+            else
+            {
+                lblShippingPinCode.Text = "Shipping PIN Code";
             }
         }
 
@@ -95,10 +108,10 @@ namespace AptDealzBuyer.Views.DashboardPages
                 lblQuoteRefNo.Text = mQuote.QuoteNo;
                 lblBuyerId.Text = mQuote.BuyerId;
                 lblSellerId.Text = mQuote.SellerId;
-                lblUnitPrice.Text = "Rs " + mQuote.UnitPrice.ToString();
+                lblUnitPrice.Text = "Rs " + mQuote.UnitPrice;
                 lblCountryOrigin.Text = mQuote.Country;
-                lblTotalAmount.Text = Convert.ToString(mQuote.TotalQuoteAmount);
-                lblDate.Text = mQuote.ValidityDate.Date.ToString("dd-MM-yyyy");
+                lblTotalAmount.Text = "Rs " + mQuote.TotalQuoteAmount;
+
 
                 if (!Common.EmptyFiels(mQuote.ShippingPinCode))
                 {
@@ -106,29 +119,45 @@ namespace AptDealzBuyer.Views.DashboardPages
                 }
                 if (!Common.EmptyFiels(mQuote.RequestedQuantity.ToString()))
                 {
-                    lblRequestedQuantity.Text = mQuote.RequestedQuantity.ToString() + " Pieces";
+                    lblRequestedQuantity.Text = mQuote.RequestedQuantity + " " + mQuote.Unit;
                 }
                 if (!Common.EmptyFiels(mQuote.NetAmount.ToString()))
                 {
-                    lblNetAmount.Text = "Rs " + mQuote.NetAmount.ToString();
+                    lblNetAmount.Text = "Rs " + mQuote.NetAmount;
                 }
                 if (!Common.EmptyFiels(mQuote.HandlingCharges.ToString()))
                 {
-                    lblHandlingCharges.Text = "Rs " + mQuote.HandlingCharges.ToString();
+                    lblHandlingCharges.Text = "Rs " + mQuote.HandlingCharges;
                 }
                 if (!Common.EmptyFiels(mQuote.ShippingCharges.ToString()))
                 {
-                    lblShippingCharges.Text = "Rs " + mQuote.ShippingCharges.ToString();
+                    lblShippingCharges.Text = "Rs " + mQuote.ShippingCharges;
                 }
                 if (!Common.EmptyFiels(mQuote.InsuranceCharges.ToString()))
                 {
-                    lblInsuranceCharges.Text = "Rs " + mQuote.InsuranceCharges.ToString();
+                    lblInsuranceCharges.Text = "Rs " + mQuote.InsuranceCharges;
+                }
+                if (!Common.EmptyFiels(mQuote.Comments))
+                {
+                    lblComments.Text = mQuote.Comments;
                 }
 
                 if (isRevealContact)
                     BtnRevealContact.IsEnabled = false;
                 else
                     BtnRevealContact.IsEnabled = true;
+
+                if (mQuote.Days.Contains("Expired"))
+                {
+                    BtnAcceptQuote.IsEnabled = false;
+                    lblDate.Text = mQuote.ValidityDate.Date.ToString("dd/MM/yyyy") + " ( Expired )";
+                    //BtnRejectQuote.IsEnabled = true;
+                }
+                else
+                {
+                    lblDate.Text = mQuote.ValidityDate.Date.ToString("dd/MM/yyyy");
+                    //BtnRejectQuote.IsEnabled = false;
+                }
             }
             catch (Exception ex)
             {
@@ -136,54 +165,94 @@ namespace AptDealzBuyer.Views.DashboardPages
             }
         }
 
-        void OrderPayment()
+        void QuotePayment()
         {
             var contactPopup = new PopupPages.PaymentPopup(mQuote.TotalQuoteAmount.ToString());
-            contactPopup.isRefresh += async (s1, e1) =>
-            {
-                bool isPay = (bool)s1;
-                if (isPay)
-                {
-                    try
-                    {
-                        CreateOrder mCreateOrder = new CreateOrder();
-                        mCreateOrder.QuoteId = mQuote.QuoteId;
-                        mCreateOrder.PaidAmount = mQuote.TotalQuoteAmount;
-                        mCreateOrder.PaymentStatus = (int)Utility.PaymentStatus.Success;
-
-                        OrderAPI orderAPI = new OrderAPI();
-                        UserDialogs.Instance.ShowLoading(Constraints.Loading);
-                        var mResponse = await orderAPI.CreateOrder(mCreateOrder);
-                        if (mResponse != null && mResponse.Succeeded)
-                        {
-                            Common.DisplaySuccessMessage(mResponse.Message);
-                        }
-                        else
-                        {
-                            if (mResponse != null)
-                                Common.DisplayErrorMessage(mResponse.Message);
-                            else
-                                Common.DisplayErrorMessage(Constraints.Something_Wrong);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Common.DisplayErrorMessage("QuoteDetailsPage/OpenPaymentPopup: " + ex.Message);
-                    }
-                    finally
-                    {
-                        UserDialogs.Instance.HideLoading();
-                    }
-                }
-                else
-                {
-                    Common.DisplayErrorMessage(Constraints.Something_Wrong);
-                }
-            };
+            contactPopup.isRefresh += (s1, e1) =>
+           {
+               bool isPay = (bool)s1;
+               if (isPay)
+               {
+                   //if (DeviceInfo.Platform == DevicePlatform.Android)
+                   //{
+                   //    OpenRazorPayQuote();
+                   //}
+                   //else
+                   //{
+                   PaidQuote();
+                   //}
+               }
+               else
+               {
+                   isAccepteedQuote = false;
+               }
+           };
             PopupNavigation.Instance.PushAsync(contactPopup);
         }
 
-        async void AcceptQuote()
+        void OpenRazorPayQuote()
+        {
+            try
+            {
+                RazorPayload payload = new RazorPayload();
+                payload.amount = Convert.ToInt64(mQuote.TotalQuoteAmount * 100);
+                //payload.amount = 2000;
+                payload.currency = (string)App.Current.Resources["Currency"];
+                payload.receipt = mQuote.QuoteId;
+
+                MessagingCenter.Send<RazorPayload>(payload, "PayNow");
+
+                MessagingCenter.Subscribe<RazorResponse>(this, "PaidResponse", async (razorResponse) =>
+                {
+                    if (razorResponse != null && razorResponse.isPaid)
+                    {
+                        PaidQuote();
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("QuoteDetailsPage/OpenPaymentPopup: " + ex.Message);
+            }
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
+            }
+        }
+
+        async void PaidQuote()
+        {
+            try
+            {
+                CreateOrder mCreateOrder = new CreateOrder();
+                mCreateOrder.QuoteId = mQuote.QuoteId;
+                mCreateOrder.PaidAmount = mQuote.TotalQuoteAmount;
+                mCreateOrder.PaymentStatus = (int)Utility.PaymentStatus.Success;
+
+                OrderAPI orderAPI = new OrderAPI();
+                UserDialogs.Instance.ShowLoading(Constraints.Loading);
+                var mResponse = await orderAPI.CreateOrder(mCreateOrder);
+                if (mResponse != null && mResponse.Succeeded)
+                {
+                    await AcceptQuote(mResponse.Message);
+                    OnAppearing();
+                }
+                else
+                {
+                    if (mResponse != null)
+                        Common.DisplayErrorMessage(mResponse.Message);
+                    else
+                        Common.DisplayErrorMessage(Constraints.Something_Wrong);
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("QuoteDetailsPage/PaidQuote: " + ex.Message);
+            }
+        }
+
+
+        async Task AcceptQuote(string SuucessfullPaymentMsg)
         {
             try
             {
@@ -191,8 +260,8 @@ namespace AptDealzBuyer.Views.DashboardPages
                 var mResponse = await quoteAPI.AcceptQuote(QuoteId);
                 if (mResponse != null && mResponse.Succeeded)
                 {
-                    //Common.DisplaySuccessMessage(mResponse.Message);
-                    OrderPayment();
+                    Common.DisplaySuccessMessage(SuucessfullPaymentMsg);
+                    isAccepteedQuote = true;
                 }
                 else
                 {
@@ -256,6 +325,9 @@ namespace AptDealzBuyer.Views.DashboardPages
                             var mSellerContact = jObject.ToObject<RevealSellerContact>();
                             if (mSellerContact != null)
                             {
+                                var successPopup = new PopupPages.SuccessPopup(Constraints.ContactRevealed);
+                                await PopupNavigation.Instance.PushAsync(successPopup);
+
                                 BtnRevealContact.Text = mSellerContact.PhoneNumber;
                             }
                         }
@@ -272,6 +344,14 @@ namespace AptDealzBuyer.Views.DashboardPages
                 {
                     PhoneDialer.Open(BtnRevealContact.Text);
                 }
+            }
+            catch (ArgumentNullException)
+            {
+                Common.DisplayErrorMessage(Constraints.Number_was_null);
+            }
+            catch (FeatureNotSupportedException)
+            {
+                Common.DisplayErrorMessage(Constraints.Phone_Dialer_Not_Support);
             }
             catch (Exception ex)
             {
@@ -309,24 +389,33 @@ namespace AptDealzBuyer.Views.DashboardPages
 
         private void BtnRevealContact_Clicked(object sender, EventArgs e)
         {
+            Common.BindAnimation(button: BtnRevealContact);
             RevealSellerContact();
         }
 
         private void BtnAcceptQuote_Clicked(object sender, EventArgs e)
         {
-            AcceptQuote();
+            Common.BindAnimation(button: BtnAcceptQuote);
+            QuotePayment();
         }
 
-        private void BtnRejectQuote_Clicked(object sender, EventArgs e)
-        {
-            RejectQuote();
-            Navigation.PopAsync();
-        }
+        //private void BtnRejectQuote_Clicked(object sender, EventArgs e)
+        //{
+        //    Common.BindAnimation(button: BtnRejectQuote);
+        //    RejectQuote();
+        //    Navigation.PopAsync();
+        //}
 
         private void BtnBackToQuote_Clicked(object sender, EventArgs e)
         {
+            Common.BindAnimation(button: BtnBackToQuote);
             Navigation.PopAsync();
         }
         #endregion
+
+        private void BtnLogo_Clicked(object sender, EventArgs e)
+        {
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
+        }
     }
 }

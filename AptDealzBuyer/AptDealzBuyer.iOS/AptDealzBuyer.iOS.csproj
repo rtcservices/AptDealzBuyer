@@ -76,12 +76,12 @@
     <BundleResource Include="GoogleService-Info.plist" />
     <None Include="Info.plist" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <BundleResource Include="Resources\Poppins Black.otf" />
-    <BundleResource Include="Resources\Poppins ExtraBold.otf" />
-    <BundleResource Include="Resources\Poppins Medium.otf" />
-    <BundleResource Include="Resources\Poppins SemiBold.otf" />
-    <BundleResource Include="Resources\Poppins Thin.otf" />
     <BundleResource Include="Resources\Poppins.otf" />
+    <BundleResource Include="Resources\Poppins-Medium.otf" />
+    <BundleResource Include="Resources\Poppins-SemiBold.otf" />
+    <BundleResource Include="Resources\Poppins-Thin.otf" />
+    <BundleResource Include="Resources\Poppins-Black.otf" />
+    <BundleResource Include="Resources\Poppins-ExtraBold.otf" />
   </ItemGroup>
   <ItemGroup>
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon1024.png">

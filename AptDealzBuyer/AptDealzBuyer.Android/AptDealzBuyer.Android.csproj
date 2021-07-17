@@ -67,6 +67,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Android" />
+    <Reference Include="RazorPayBindingForXamarin">
+      <HintPath>DLL\RazorPayBindingForXamarin.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -104,6 +107,9 @@
     </PackageReference>
     <PackageReference Include="SkiaSharp">
       <Version>2.80.2</Version>
+    </PackageReference>
+    <PackageReference Include="System.Net.Http">
+      <Version>4.3.4</Version>
     </PackageReference>
     <PackageReference Include="Xam.Plugin.Connectivity">
       <Version>3.2.0</Version>
@@ -163,15 +169,15 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\Poppins Black.otf" />
-    <AndroidAsset Include="Assets\Poppins ExtraBold.otf" />
-    <AndroidAsset Include="Assets\Poppins Medium.otf" />
-    <AndroidAsset Include="Assets\Poppins SemiBold.otf" />
-    <AndroidAsset Include="Assets\Poppins Thin.otf" />
     <AndroidAsset Include="Assets\Poppins.otf" />
     <GoogleServicesJson Include="google-services.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </GoogleServicesJson>
+    <AndroidAsset Include="Assets\Poppins-Thin.otf" />
+    <AndroidAsset Include="Assets\Poppins-Black.otf" />
+    <AndroidAsset Include="Assets\Poppins-ExtraBold.otf" />
+    <AndroidAsset Include="Assets\Poppins-Medium.otf" />
+    <AndroidAsset Include="Assets\Poppins-SemiBold.otf" />
     <None Include="KeyStore\AptDealzBuyer.keystore" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
@@ -438,6 +444,9 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\iconGreenDownArrow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="DLL\RazorPayBindingForXamarin.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <ProjectExtensions>

@@ -56,5 +56,10 @@ namespace AptDealzBuyer.Views.OtherPages
                 imgSwitch.Source = Constraints.Switch_Off;
             }
         }
+
+        private void BtnLogo_Clicked(object sender, EventArgs e)
+        {
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
+        }
     }
 }

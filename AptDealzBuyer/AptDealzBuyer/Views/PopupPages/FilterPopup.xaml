@@ -1,14 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <popup:PopupPage
-    x:Class="AptDealzBuyer.Views.PopupPages.SortByPopup"
+    x:Class="AptDealzBuyer.Views.PopupPages.FilterPopup"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:popup="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
     NavigationPage.HasNavigationBar="False">
-
     <Grid
         BackgroundColor="{StaticResource White}"
-        RowDefinitions="Auto,Auto,Auto"
+        RowDefinitions="Auto,Auto,Auto,Auto"
         RowSpacing="0"
         VerticalOptions="EndAndExpand">
 
@@ -100,7 +99,31 @@
                     <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="StkThirdType_Tapped" />
                 </StackLayout.GestureRecognizers>
             </StackLayout>
+
+            <StackLayout
+                x:Name="StkFourType"
+                Grid.Row="3"
+                Margin="0,10,0,0"
+                HorizontalOptions="FillAndExpand"
+                Orientation="Horizontal"
+                VerticalOptions="CenterAndExpand">
+                <Label
+                    x:Name="lblFourType"
+                    FontSize="15"
+                    Style="{StaticResource lblLight}" />
+                <Image
+                    x:Name="imgFourType"
+                    Margin="0"
+                    Aspect="Fill"
+                    HeightRequest="20"
+                    HorizontalOptions="EndAndExpand"
+                    Source="iconRadioUnselect.png"
+                    VerticalOptions="CenterAndExpand"
+                    WidthRequest="20" />
+                <StackLayout.GestureRecognizers>
+                    <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="StkFourType_Tapped" />
+                </StackLayout.GestureRecognizers>
+            </StackLayout>
         </Grid>
     </Grid>
-
 </popup:PopupPage>

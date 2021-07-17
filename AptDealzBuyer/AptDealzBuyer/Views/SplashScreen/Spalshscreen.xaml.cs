@@ -1,6 +1,4 @@
-﻿using Acr.UserDialogs;
-using AptDealzBuyer.API;
-using AptDealzBuyer.Utility;
+﻿using AptDealzBuyer.Utility;
 using AptDealzBuyer.Views.MasterData;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -19,16 +17,38 @@ namespace AptDealzBuyer.Views.SplashScreen
         #endregion
 
         #region Method
-        protected override void OnAppearing()
+        protected async override void OnAppearing()
         {
             base.OnAppearing();
+            await Task.Delay(5 * 1000);
             BindNavigation();
         }
 
-        async void BindNavigation()
+        void BindNavigation()
         {
-            await Task.Delay(5 * 1000);
-            App.Current.MainPage = new NavigationPage(new Views.SplashScreen.WelcomePage());
+            try
+            {
+                if (Common.EmptyFiels(Settings.UserToken))
+                {
+                    if (Settings.IsViewWelcomeScreen)
+                    {
+                        App.Current.MainPage = new NavigationPage(new Views.SplashScreen.WelcomePage());
+                    }
+                    else
+                    {
+                        App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
+                    }
+                }
+                else
+                {
+                    Common.Token = Settings.UserToken;
+                    App.Current.MainPage = new MasterDataPage();
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Common.DisplayErrorMessage("Spalshscreen/BindNavigation: " + ex.Message);
+            }
         }
         #endregion
     }

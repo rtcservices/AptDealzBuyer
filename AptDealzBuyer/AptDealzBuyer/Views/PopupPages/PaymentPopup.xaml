@@ -28,7 +28,7 @@
             <Label
                 Grid.Row="0"
                 Margin="0"
-                FontFamily="Poppins Medium"
+                FontFamily="Poppins-Medium"
                 FontSize="18"
                 HorizontalOptions="CenterAndExpand"
                 Text="Alert"
@@ -38,13 +38,11 @@
             <Label
                 x:Name="lblMessage"
                 Grid.Row="1"
-                FontFamily="Poppins"
-                FontSize="15"
                 HorizontalOptions="CenterAndExpand"
                 HorizontalTextAlignment="Center"
-                Text="Make a payment of Rs 200 to reveal the Seller contacts"
-                TextColor="{StaticResource Green}"
-                VerticalOptions="CenterAndExpand" />
+                Style="{StaticResource lblLight}"
+                Text=""
+                TextColor="{StaticResource Green}" />
 
             <Grid
                 Grid.Row="2"

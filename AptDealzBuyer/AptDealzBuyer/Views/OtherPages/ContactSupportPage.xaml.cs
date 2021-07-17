@@ -114,8 +114,8 @@ namespace AptDealzBuyer.Views.OtherPages
         private void ImgBack_Tapped(object sender, EventArgs e)
         {
             Common.BindAnimation(imageButton: ImgBack);
-            //App.Current.MainPage = new MasterDataPage();
-            Navigation.PopAsync();
+            App.Current.MainPage = new MasterDataPage();
+            //Navigation.PopAsync();
         }
 
         private void ImgSend_Tapped(object sender, EventArgs e)
@@ -123,5 +123,10 @@ namespace AptDealzBuyer.Views.OtherPages
 
         }
         #endregion
+
+        private void BtnLogo_Clicked(object sender, EventArgs e)
+        {
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
+        }
     }
 }

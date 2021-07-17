@@ -1,6 +1,5 @@
 ﻿using AptDealzBuyer.Model.Reponse;
 using AptDealzBuyer.Utility;
-using AptDealzBuyer.Views.SplashScreen;
 using Newtonsoft.Json;
 using Plugin.Connectivity;
 using System;
@@ -22,20 +21,28 @@ namespace AptDealzBuyer.API
                     var requestJson = JsonConvert.SerializeObject(mUniquePhoneNumber);
                     using (var hcf = new HttpClientFactory())
                     {
-                        string url = EndPointURL.IsUniquePhoneNumber;
-                        var mResponseMessage = await hcf.PostAsync(url, requestJson);
-                        var responseJson = await mResponseMessage.Content.ReadAsStringAsync();
-                        if (mResponseMessage.IsSuccessStatusCode)
+                        string url = string.Format(EndPointURL.IsUniquePhoneNumber, (int)App.Current.Resources["Version"]);
+                        var response = await hcf.PostAsync(url, requestJson);
+                        var responseJson = await response.Content.ReadAsStringAsync();
+                        if (response.IsSuccessStatusCode)
                         {
                             mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
                         }
-                        else if (mResponseMessage.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                        else if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
                         {
                             var errorString = JsonConvert.DeserializeObject<string>(responseJson);
                             if (errorString == Constraints.Session_Expired)
                             {
-                                App.Current.MainPage = new NavigationPage(new WelcomePage(true));
+                                App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
                             }
+                        }
+                        else if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
+                        {
+                            Common.DisplayErrorMessage(Constraints.ServiceUnavailable);
+                        }
+                        else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
+                        {
+                            Common.DisplayErrorMessage(Constraints.Something_Wrong_Server);
                         }
                         else
                         {
@@ -70,20 +77,28 @@ namespace AptDealzBuyer.API
                     var requestJson = JsonConvert.SerializeObject(mUniqueEmail);
                     using (var hcf = new HttpClientFactory())
                     {
-                        string url = EndPointURL.IsUniqueEmail;
-                        var mResponseMessage = await hcf.PostAsync(url, requestJson);
-                        var responseJson = await mResponseMessage.Content.ReadAsStringAsync();
-                        if (mResponseMessage.IsSuccessStatusCode)
+                        string url = string.Format(EndPointURL.IsUniqueEmail, (int)App.Current.Resources["Version"]);
+                        var response = await hcf.PostAsync(url, requestJson);
+                        var responseJson = await response.Content.ReadAsStringAsync();
+                        if (response.IsSuccessStatusCode)
                         {
                             mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
                         }
-                        else if (mResponseMessage.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                        else if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
                         {
                             var errorString = JsonConvert.DeserializeObject<string>(responseJson);
                             if (errorString == Constraints.Session_Expired)
                             {
-                                App.Current.MainPage = new NavigationPage(new WelcomePage(true));
+                                App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
                             }
+                        }
+                        else if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
+                        {
+                            Common.DisplayErrorMessage(Constraints.ServiceUnavailable);
+                        }
+                        else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
+                        {
+                            Common.DisplayErrorMessage(Constraints.Something_Wrong_Server);
                         }
                         else
                         {
@@ -130,8 +145,16 @@ namespace AptDealzBuyer.API
                             var errorString = JsonConvert.DeserializeObject<string>(responseJson);
                             if (errorString == Constraints.Session_Expired)
                             {
-                                App.Current.MainPage = new NavigationPage(new WelcomePage(true));
+                                App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
                             }
+                        }
+                        else if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
+                        {
+                            Common.DisplayErrorMessage(Constraints.ServiceUnavailable);
+                        }
+                        else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
+                        {
+                            Common.DisplayErrorMessage(Constraints.Something_Wrong_Server);
                         }
                         else
                         {
@@ -178,8 +201,16 @@ namespace AptDealzBuyer.API
                             var errorString = JsonConvert.DeserializeObject<string>(responseJson);
                             if (errorString == Constraints.Session_Expired)
                             {
-                                App.Current.MainPage = new NavigationPage(new WelcomePage(true));
+                                App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
                             }
+                        }
+                        else if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
+                        {
+                            Common.DisplayErrorMessage(Constraints.ServiceUnavailable);
+                        }
+                        else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
+                        {
+                            Common.DisplayErrorMessage(Constraints.Something_Wrong_Server);
                         }
                         else
                         {

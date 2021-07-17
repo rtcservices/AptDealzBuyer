@@ -3,29 +3,29 @@
     public class EndPointURL
     {
         #region [ Register API ]
+        public const string IsUniquePhoneNumber = "api/v{0}/BuyerAuth/IsUniquePhoneNumber";
+        public const string IsUniqueEmail = "api/v{0}/BuyerAuth/IsUniqueEmail";
         public const string Register = "api/v{0}/BuyerAuth/Register";
-        public const string IsUniquePhoneNumber = "api/Account/IsUniquePhoneNumber";
-        public const string IsUniqueEmail = "api/Account/IsUniqueEmail";
-        public const string SendOtp = "api/Account/SendOtp/Email/{0}";
         #endregion
 
         #region [ Authentication API ]
+        public const string CheckPhoneNumberExists = "api/v{0}/BuyerAuth/CheckPhoneNumberExists?phoneNumber={1}";
         public const string BuyerAuthenticateEmail = "api/v{0}/BuyerAuth/authenticate/email";
         public const string BuyerAuthenticatePhone = "api/v{0}/BuyerAuth/authenticate/phone";
-        public const string CheckPhoneNumber = "api/v{0}/BuyerAuth/CheckPhoneNumber?phoneNumber={1}";
-        public const string SendOtpByEmail = "api/Account/SendOtpByEmail";
+        public const string SendOtpByEmail = "api/v{0}/BuyerAuth/SendOtpByEmail";
         public const string RefreshToken = "api/Account/refresh-token";
+        public const string SendOtp = "api/Account/SendOtp/Email/{0}";
         public const string Logout = "api/Account/logout";
         #endregion
 
         #region [ Profile API ]
+        public const string DeactivateUser = "api/Account/DeactivateUser";
+        public const string GetUserProfileByEmail = "api/v{0}/BuyerAuth/GetUserProfile/Email";
         public const string GetMyProfileData = "api/v{0}/BuyerManagement/GetMyProfileData";
         public const string SaveProfile = "api/v{0}/BuyerManagement/Update";
-        public const string DeactivateUser = "api/Account/DeactivateUser";
         public const string Country = "api/v{0}/Country/Get";
         public const string FileUpload = "api/FileUpload";
-        public const string GetUserProfileByEmail = "api/Account/GetUserProfile/Email";
-        public const string ValidatePincode = "pincode/{0}";
+        public const string GetPincodeInfo = "api/IndianPincode/GetPincodeInfo/{0}";
         #endregion
 
         #region [ Category API ]
@@ -52,8 +52,11 @@
         public const string RevealSellerContact = "api/v{0}/Quote/RevealSellerContact";
         #endregion
 
-        #region [Order API]
-        public const string CreateOrder = "api/v1/Order/Create";
+        #region [ Order API ]
+        public const string GetOrderDetailsForBuyer = "api/v{0}/Order/GetOrderDetailsForBuyer/{1}";
+        public const string GetOrdersForBuyer = "api/v{0}/Order/GetOrdersForBuyer";
+        public const string CancelOrder = "api/v{0}/Order/CancelOrder/{1}";
+        public const string CreateOrder = "api/v{0}/Order/Create";
         #endregion
     }
 }

@@ -7,6 +7,7 @@
     <Application.Resources>
 
         <!--#region [ BaseURL / Version / Page ]-->
+        <x:String x:Key="Currency">INR</x:String>
         <x:String x:Key="CountryCode">+91</x:String>
         <x:String x:Key="BaseURL">https://aptdealzapidev.azurewebsites.net/</x:String>
         <x:Int32 x:Key="Version">1</x:Int32>
@@ -53,6 +54,17 @@
             <Setter Property="HeightRequest" Value="50" />
             <Setter Property="IsClippedToBounds" Value="True" />
             <Setter Property="VerticalOptions" Value="CenterAndExpand" />
+        </Style>
+
+        <Style x:Key="frmGrayBorder" TargetType="Frame">
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="BackgroundColor" Value="Transparent" />
+            <Setter Property="BorderColor" Value="{StaticResource LightGray}" />
+            <Setter Property="CornerRadius" Value="5" />
+            <Setter Property="HasShadow" Value="False" />
+            <Setter Property="HeightRequest" Value="35" />
+            <Setter Property="IsClippedToBounds" Value="True" />
         </Style>
         <!--#endregion-->
 
@@ -113,14 +125,14 @@
             <Setter Property="HorizontalOptions" Value="StartAndExpand" />
             <Setter Property="VerticalOptions" Value="CenterAndExpand" />
             <Setter Property="FontSize" Value="18" />
-            <Setter Property="FontFamily" Value="Poppins SemiBold" />
+            <Setter Property="FontFamily" Value="Poppins-SemiBold" />
         </Style>
 
         <Style x:Key="lblBoldHeader" TargetType="Label">
             <Setter Property="TextColor" Value="{StaticResource Black}" />
             <Setter Property="HorizontalOptions" Value="CenterAndExpand" />
             <Setter Property="VerticalOptions" Value="CenterAndExpand" />
-            <Setter Property="FontFamily" Value="Poppins SemiBold" />
+            <Setter Property="FontFamily" Value="Poppins-SemiBold" />
         </Style>
 
         <Style x:Key="lblLight" TargetType="Label">
@@ -135,14 +147,14 @@
             <Setter Property="TextColor" Value="{StaticResource Black}" />
             <Setter Property="VerticalTextAlignment" Value="Center" />
             <Setter Property="VerticalOptions" Value="CenterAndExpand" />
-            <Setter Property="FontFamily" Value="Poppins Medium" />
+            <Setter Property="FontFamily" Value="Poppins-Medium" />
         </Style>
 
         <Style x:Key="lblSemiBold" TargetType="Label">
             <Setter Property="TextColor" Value="{StaticResource Black}" />
             <Setter Property="VerticalTextAlignment" Value="Center" />
             <Setter Property="VerticalOptions" Value="CenterAndExpand" />
-            <Setter Property="FontFamily" Value="Poppins SemiBold" />
+            <Setter Property="FontFamily" Value="Poppins-SemiBold" />
         </Style>
         <!--#endregion-->
 
@@ -167,9 +179,16 @@
             <Setter Property="HorizontalOptions" Value="FillAndExpand" />
             <Setter Property="VerticalOptions" Value="EndAndExpand" />
         </Style>
+
+        <Style x:Key="boxHorizontalGreen" TargetType="BoxView">
+            <Setter Property="BackgroundColor" Value="{StaticResource Green}" />
+            <Setter Property="HeightRequest" Value="1" />
+            <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+            <Setter Property="VerticalOptions" Value="EndAndExpand" />
+        </Style>
         <!--#endregion-->
 
-        <!--#region [ Button / ImageButton ]-->
+        <!--#region [ Button ]-->
         <Style x:Key="btnPrimary" TargetType="Button">
             <Setter Property="HeightRequest" Value="50" />
             <Setter Property="CornerRadius" Value="5" />
@@ -179,7 +198,7 @@
             <Setter Property="Margin" Value="0" />
             <Setter Property="BackgroundColor" Value="{StaticResource Green}" />
             <Setter Property="FontSize" Value="17" />
-            <Setter Property="FontFamily" Value="Poppins SemiBold" />
+            <Setter Property="FontFamily" Value="Poppins-SemiBold" />
             <Setter Property="TextColor" Value="{StaticResource White}" />
         </Style>
 
@@ -193,10 +212,12 @@
             <Setter Property="BorderWidth" Value="1" />
             <Setter Property="BackgroundColor" Value="Transparent" />
             <Setter Property="FontSize" Value="17" />
-            <Setter Property="FontFamily" Value="Poppins Medium" />
+            <Setter Property="FontFamily" Value="Poppins-Medium" />
             <Setter Property="TextColor" Value="{StaticResource Green}" />
         </Style>
+        <!--#endregion-->
 
+        <!--#region [ ImageButton ]-->
         <Style x:Key="ImgBtnPrimary" TargetType="ImageButton">
             <Setter Property="HeightRequest" Value="45" />
             <Setter Property="WidthRequest" Value="45" />
@@ -207,20 +228,41 @@
             <Setter Property="Margin" Value="0" />
             <Setter Property="BackgroundColor" Value="Transparent" />
         </Style>
-        <!--#endregion-->
 
-        <!--#region [ Images ]-->
-        <Style x:Key="imgLogo" TargetType="Image">
+        <Style x:Key="ImgBtnH40P13" TargetType="ImageButton">
+            <Setter Property="HeightRequest" Value="40" />
+            <Setter Property="WidthRequest" Value="40" />
+            <Setter Property="Aspect" Value="AspectFit" />
+            <Setter Property="HorizontalOptions" Value="EndAndExpand" />
+            <Setter Property="VerticalOptions" Value="Center" />
+            <Setter Property="Padding" Value="13" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="BackgroundColor" Value="Transparent" />
+        </Style>
+
+        <Style x:Key="imgLogo" TargetType="ImageButton">
             <Setter Property="HeightRequest" Value="47" />
             <Setter Property="WidthRequest" Value="47" />
             <Setter Property="Aspect" Value="AspectFit" />
             <Setter Property="HorizontalOptions" Value="CenterAndExpand" />
             <Setter Property="VerticalOptions" Value="CenterAndExpand" />
             <Setter Property="Margin" Value="0" />
+            <Setter Property="Padding" Value="0" />
             <Setter Property="BackgroundColor" Value="Transparent" />
             <Setter Property="Source" Value="iconHeaderLogo.png" />
         </Style>
         <!--#endregion-->
 
+        <!--#region [ Images ]-->
+        <Style x:Key="imgSearch" TargetType="Image">
+            <Setter Property="HeightRequest" Value="{OnPlatform Android=20, iOS=25}" />
+            <Setter Property="WidthRequest" Value="{OnPlatform Android=20, iOS=25}" />
+            <Setter Property="Aspect" Value="AspectFit" />
+            <Setter Property="HorizontalOptions" Value="Center" />
+            <Setter Property="VerticalOptions" Value="Center" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="BackgroundColor" Value="Transparent" />
+        </Style>
+        <!--#endregion-->
     </Application.Resources>
 </Application>

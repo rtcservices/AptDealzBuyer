@@ -52,6 +52,6 @@ namespace AptDealzBuyer.Model.Request
         public DateTime RegisteredOn { get; set; }
 
         [JsonProperty("nationality")]
-        public object Nationality { get; set; }
+        public string Nationality { get; set; }
     }
 }

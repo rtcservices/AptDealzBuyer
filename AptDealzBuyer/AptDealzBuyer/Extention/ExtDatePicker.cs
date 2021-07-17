@@ -68,7 +68,7 @@ namespace AptDealzBuyer.Extention
         {
             this.DateSelected += CustomDatePicker_DateSelected;
             // this.Date = DateTime.Now.Date;
-            this.Format = "MM/dd/yyyy";
+            this.Format = "dd/MM/yyyy";
         }
 
         // Wird gefeuert wenn ein neues Datum selektiert wurde

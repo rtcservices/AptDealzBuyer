@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Polly;
+using System;
+using System.Diagnostics;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -60,22 +64,63 @@ namespace AptDealzBuyer.Utility
 
         public async Task<HttpResponseMessage> PostAsync(string controllerName, string srlzRequest)
         {
-            return await client.PostAsync(controllerName, new StringContent(srlzRequest, Encoding.UTF8, "application/json"));
+            return await Policy
+              .Handle<WebException>(ex =>
+              {
+                  return true;
+              })
+              .WaitAndRetryAsync
+              (
+                  3,
+                  retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt))
+              )
+              .ExecuteAsync(async () => await client.PostAsync(controllerName, new StringContent(srlzRequest, Encoding.UTF8, "application/json")));
         }
 
         public async Task<HttpResponseMessage> PutAsync(string controllerName, string srlzRequest)
         {
-            return await client.PutAsync(controllerName, new StringContent(srlzRequest, Encoding.UTF8, "application/json"));
+            return await Policy
+            .Handle<WebException>(ex =>
+            {
+                return true;
+            })
+            .WaitAndRetryAsync
+            (
+                3,
+                retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt))
+            )
+            .ExecuteAsync(async () => await client.PutAsync(controllerName, new StringContent(srlzRequest, Encoding.UTF8, "application/json")));
         }
 
         public async Task<HttpResponseMessage> DeleteAsync(string controllerName)
         {
-            return await client.DeleteAsync(controllerName);
+            return await Policy
+               .Handle<WebException>(ex =>
+               {
+                   return true;
+               })
+               .WaitAndRetryAsync
+               (
+                   3,
+                   retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt))
+               )
+               .ExecuteAsync(async () => await client.DeleteAsync(controllerName).ConfigureAwait(false)).ConfigureAwait(false);
         }
 
         public async Task<HttpResponseMessage> GetAsync(string controllerName)
         {
-            return await client.GetAsync(controllerName);
+
+            return await Policy
+            .Handle<WebException>(ex =>
+            {
+                return true;
+            })
+            .WaitAndRetryAsync
+            (
+                3,
+                retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt))
+            )
+            .ExecuteAsync(async () => await client.GetAsync(controllerName).ConfigureAwait(false)).ConfigureAwait(false);
         }
 
         public void Dispose()

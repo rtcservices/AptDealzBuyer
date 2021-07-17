@@ -188,11 +188,20 @@ namespace AptDealzBuyer.Views.Login
                                         //Common.DisplayWarningMessage(keyValue.Value);
                                         Settings.firebaseVerificationId = keyValue.Value;
                                         Settings.PhoneAuthToken = keyValue.Value;
-                                        AuthenticationAPI authenticationAPI = new AuthenticationAPI();
 
-                                        var mLogin = FillLogin();
-                                        mResponse = await authenticationAPI.BuyerAuthPhone(mLogin);
-                                        NavigateToDashboard(mResponse);
+                                        mRegister.FirebaseVerificationId = Settings.PhoneAuthToken;
+                                        mResponse = await registerAPI.Register(mRegister);
+                                        if (mResponse != null && mResponse.Succeeded)
+                                        {
+                                            App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
+                                        }
+                                        else
+                                        {
+                                            if (mResponse != null)
+                                                Common.DisplayErrorMessage(mResponse.Message);
+                                            else
+                                                Common.DisplayErrorMessage(Constraints.Something_Wrong);
+                                        }
                                     }
                                 }
                                 else if (!string.IsNullOrEmpty(keyValue.Value))
@@ -238,6 +247,8 @@ namespace AptDealzBuyer.Views.Login
                 UserDialogs.Instance.HideLoading();
             }
         }
+
+
 
         async Task<Dictionary<bool, string>> SendOTP(string phoneNumber)
         {

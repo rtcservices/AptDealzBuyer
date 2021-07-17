@@ -35,7 +35,11 @@
                     </Image.GestureRecognizers>
                 </Image>
 
-                <Image Grid.Column="1" Style="{StaticResource imgLogo}" />
+                <ImageButton
+                    x:Name="BtnLogo"
+                    Grid.Column="1"
+                    Clicked="BtnLogo_Clicked"
+                    Style="{StaticResource imgLogo}" />
 
                 <StackLayout
                     Grid.Column="2"
@@ -103,14 +107,11 @@
 
                             <Label
                                 Grid.Column="0"
-                                Margin="0"
-                                FontFamily="Poppins"
-                                FontSize="15"
+                                Style="{StaticResource lblLight}"
                                 HorizontalOptions="StartAndExpand"
                                 LineBreakMode="WordWrap"
                                 Text="Language"
-                                TextColor="{StaticResource Black}"
-                                VerticalOptions="CenterAndExpand" />
+                               />
 
                             <ext:ExtShadowFrame
                                 Grid.Column="1"
@@ -154,13 +155,11 @@
                             <Label
                                 Grid.Column="0"
                                 Margin="0"
-                                FontFamily="Poppins"
-                                FontSize="15"
+                               Style="{StaticResource lblLight}"
                                 HorizontalOptions="StartAndExpand"
                                 LineBreakMode="WordWrap"
                                 Text="Display Mode"
-                                TextColor="{StaticResource Black}"
-                                VerticalOptions="CenterAndExpand" />
+                                />
 
                             <Grid
                                 Grid.Column="1"
@@ -175,13 +174,11 @@
                                     HasShadow="False">
                                     <Label
                                         Margin="0,10"
-                                        FontFamily="Poppins"
-                                        FontSize="15"
+                                       Style="{StaticResource lblLight}"
                                         HorizontalOptions="CenterAndExpand"
                                         LineBreakMode="WordWrap"
                                         Text="Light"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                         />
                                 </ext:ExtShadowFrame>
 
                                 <ext:ExtShadowFrame
@@ -193,13 +190,12 @@
                                     HasShadow="False">
                                     <Label
                                         Margin="0,10"
-                                        FontFamily="Poppins"
-                                        FontSize="15"
+                                       Style="{StaticResource lblLight}"
                                         HorizontalOptions="CenterAndExpand"
                                         LineBreakMode="WordWrap"
                                         Text="Dark"
                                         TextColor="{StaticResource White}"
-                                        VerticalOptions="CenterAndExpand" />
+                                         />
                                 </ext:ExtShadowFrame>
                             </Grid>
 
@@ -213,13 +209,11 @@
                             <Label
                                 Grid.Column="0"
                                 Margin="0"
-                                FontFamily="Poppins"
-                                FontSize="15"
+                              Style="{StaticResource lblLight}"
                                 HorizontalOptions="StartAndExpand"
                                 LineBreakMode="WordWrap"
                                 Text="Alert Tone"
-                                TextColor="{StaticResource Black}"
-                                VerticalOptions="CenterAndExpand" />
+                                />
 
                             <ext:ExtShadowFrame
                                 Grid.Column="1"
@@ -262,14 +256,11 @@
 
                             <Label
                                 Grid.Column="0"
-                                Margin="0"
-                                FontFamily="Poppins"
-                                FontSize="15"
+                                Style="{StaticResource lblLight}"
                                 HorizontalOptions="StartAndExpand"
                                 LineBreakMode="WordWrap"
                                 Text="Mute Notifications"
-                                TextColor="{StaticResource Black}"
-                                VerticalOptions="CenterAndExpand" />
+                                />
 
                             <Image
                                 x:Name="imgSwitch"

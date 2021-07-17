@@ -32,7 +32,11 @@
                     </Image.GestureRecognizers>
                 </Image>
 
-                <Image Grid.Column="1" Style="{StaticResource imgLogo}" />
+                <ImageButton
+                    x:Name="BtnLogo"
+                    Grid.Column="1"
+                    Clicked="BtnLogo_Clicked"
+                    Style="{StaticResource imgLogo}" />
 
                 <StackLayout
                     Grid.Column="2"
@@ -95,12 +99,10 @@
                         RowSpacing="20">
                         <Label
                             Grid.Row="0"
-                            FontFamily="Poppins"
-                            FontSize="14"
                             HorizontalOptions="FillAndExpand"
                             LineBreakMode="WordWrap"
+                            Style="{StaticResource lblLight}"
                             Text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
-                            TextColor="{StaticResource Black}"
                             VerticalOptions="StartAndExpand" />
 
                         <Frame
@@ -117,7 +119,7 @@
 
                                 <Label
                                     Grid.Row="0"
-                                    FontFamily="Poppins Medium"
+                                    FontFamily="Poppins-Medium"
                                     FontSize="20"
                                     HorizontalOptions="StartAndExpand"
                                     Text="Contact Info"
@@ -126,21 +128,15 @@
 
                                 <Label
                                     Grid.Row="1"
-                                    FontFamily="Poppins"
-                                    FontSize="15"
                                     HorizontalOptions="StartAndExpand"
-                                    Text="30, ABC, XYZ Road &#x0a;Kochi, Kerala, &#x0a;PIN - 682024"
-                                    TextColor="{StaticResource Black}"
-                                    VerticalOptions="CenterAndExpand" />
+                                    Style="{StaticResource lblLight}"
+                                    Text="30, ABC, XYZ Road &#x0a;Kochi, Kerala, &#x0a;PIN - 682024" />
 
                                 <Label
                                     Grid.Row="2"
-                                    FontFamily="Poppins"
-                                    FontSize="15"
                                     HorizontalOptions="StartAndExpand"
-                                    Text="Phone: +91 012345678"
-                                    TextColor="{StaticResource Black}"
-                                    VerticalOptions="CenterAndExpand" />
+                                    Style="{StaticResource lblLight}"
+                                    Text="Phone: +91 012345678" />
 
                             </Grid>
                         </Frame>

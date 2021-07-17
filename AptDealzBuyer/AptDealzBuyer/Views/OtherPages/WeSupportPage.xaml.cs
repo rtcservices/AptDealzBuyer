@@ -61,5 +61,10 @@ namespace AptDealzBuyer.Views.OtherPages
         {
             Navigation.PopAsync();
         }
+
+        private void BtnLogo_Clicked(object sender, EventArgs e)
+        {
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
+        }
     }
 }

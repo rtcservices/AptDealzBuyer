@@ -1,11 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <popup:PopupPage
-    x:Class="AptDealzBuyer.Views.PopupPages.PrevReqPopup"
+    x:Class="AptDealzBuyer.Views.PopupPages.StatusPopup"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:popup="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
-    NavigationPage.HasNavigationBar="False">
-
+    xmlns:popup="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup">
     <Grid
         BackgroundColor="{StaticResource White}"
         HorizontalOptions="FillAndExpand"
@@ -16,18 +14,12 @@
             x:Name="lblTitle"
             Grid.Row="0"
             Margin="25,10,25,0"
-            FontFamily="Poppins"
-            FontSize="18"
+            FontSize="17"
             HorizontalOptions="StartAndExpand"
-            TextColor="{StaticResource Black}"
-            VerticalOptions="CenterAndExpand" />
+            Style="{StaticResource lblLight}"
+            Text="Status By" />
 
-        <BoxView
-            Grid.Row="1"
-            BackgroundColor="{StaticResource LightGray}"
-            HeightRequest="1"
-            HorizontalOptions="FillAndExpand"
-            VerticalOptions="EndAndExpand" />
+        <BoxView Grid.Row="1" Style="{StaticResource boxHorizontal}" />
 
         <Grid
             Grid.Row="2"
@@ -44,12 +36,8 @@
                 <Label
                     x:Name="lblFirstType"
                     Grid.Row="0"
-                    Margin="0"
-                    FontFamily="Poppins"
-                    FontSize="15"
                     HorizontalOptions="StartAndExpand"
-                    TextColor="{StaticResource Black}"
-                    VerticalOptions="CenterAndExpand" />
+                    Style="{StaticResource lblLight}" />
                 <Image
                     x:Name="imgFirstType"
                     Margin="0"
@@ -73,12 +61,8 @@
                 <Label
                     x:Name="lblSecondType"
                     Grid.Row="0"
-                    Margin="0"
-                    FontFamily="Poppins"
-                    FontSize="15"
                     HorizontalOptions="StartAndExpand"
-                    TextColor="{StaticResource Black}"
-                    VerticalOptions="CenterAndExpand" />
+                    Style="{StaticResource lblLight}" />
                 <Image
                     x:Name="imgSecondType"
                     Margin="0"
@@ -90,6 +74,32 @@
                     WidthRequest="20" />
                 <StackLayout.GestureRecognizers>
                     <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="StkSecondType_Tapped" />
+                </StackLayout.GestureRecognizers>
+            </StackLayout>
+
+            <StackLayout
+                x:Name="StkThirdType"
+                Grid.Row="2"
+                Margin="0"
+                HorizontalOptions="FillAndExpand"
+                Orientation="Horizontal"
+                VerticalOptions="CenterAndExpand">
+                <Label
+                    x:Name="lblThirdType"
+                    Grid.Row="0"
+                    HorizontalOptions="StartAndExpand"
+                    Style="{StaticResource lblLight}" />
+                <Image
+                    x:Name="imgThirdType"
+                    Margin="0"
+                    Aspect="Fill"
+                    HeightRequest="20"
+                    HorizontalOptions="EndAndExpand"
+                    Source="iconRadioUnselect.png"
+                    VerticalOptions="CenterAndExpand"
+                    WidthRequest="20" />
+                <StackLayout.GestureRecognizers>
+                    <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="StkThirdType_Tapped" />
                 </StackLayout.GestureRecognizers>
             </StackLayout>
 

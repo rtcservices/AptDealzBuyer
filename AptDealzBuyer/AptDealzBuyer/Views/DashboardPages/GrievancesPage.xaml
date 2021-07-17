@@ -34,7 +34,11 @@
                     </Image.GestureRecognizers>
                 </Image>
 
-                <Image Grid.Column="1" Style="{StaticResource imgLogo}" />
+                <ImageButton
+                    x:Name="BtnLogo"
+                    Grid.Column="1"
+                    Clicked="BtnLogo_Clicked"
+                    Style="{StaticResource imgLogo}" />
 
                 <StackLayout
                     Grid.Column="2"
@@ -120,12 +124,10 @@
                             <Label
                                 Grid.Column="1"
                                 Margin="5,3,0,0"
-                                FontFamily="Poppins"
                                 FontSize="13"
                                 HorizontalOptions="CenterAndExpand"
-                                Text="Add New"
-                                TextColor="{StaticResource Black}"
-                                VerticalOptions="CenterAndExpand" />
+                                Style="{StaticResource lblLight}"
+                                Text="Add New" />
                         </Grid>
                         <Frame.GestureRecognizers>
                             <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmAdd_Tapped" />
@@ -158,12 +160,10 @@
                             <Label
                                 Grid.Column="1"
                                 Margin="0,5,0,0"
-                                FontFamily="Poppins"
                                 FontSize="12"
                                 HorizontalOptions="CenterAndExpand"
-                                Text="Sort by"
-                                TextColor="{StaticResource Black}"
-                                VerticalOptions="CenterAndExpand" />
+                                Style="{StaticResource lblLight}"
+                                Text="Sort by" />
                         </Grid>
                         <Frame.GestureRecognizers>
                             <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmSortBy_Tapped" />
@@ -193,14 +193,13 @@
                                 VerticalOptions="CenterAndExpand" />
 
                             <Label
+                                x:Name="lblFilterBy"
                                 Grid.Column="1"
                                 Margin="0,5,0,0"
-                                FontFamily="Poppins"
                                 FontSize="12"
                                 HorizontalOptions="CenterAndExpand"
-                                Text="Filter by"
-                                TextColor="{StaticResource Black}"
-                                VerticalOptions="CenterAndExpand" />
+                                Style="{StaticResource lblLight}"
+                                Text="Filter by" />
                         </Grid>
                         <Frame.GestureRecognizers>
                             <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmFilterBy_Tapped" />
@@ -231,12 +230,10 @@
                             <Label
                                 Grid.Column="1"
                                 Margin="5,3,0,0"
-                                FontFamily="Poppins"
                                 FontSize="13"
                                 HorizontalOptions="CenterAndExpand"
-                                Text="Status"
-                                TextColor="{StaticResource Black}"
-                                VerticalOptions="CenterAndExpand" />
+                                Style="{StaticResource lblLight}"
+                                Text="Status" />
                         </Grid>
                         <Frame.GestureRecognizers>
                             <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmStatus_Tapped" />
@@ -270,7 +267,7 @@
                                             <Label
                                                 Grid.Row="0"
                                                 Margin="0"
-                                                FontFamily="Poppins Medium"
+                                                FontFamily="Poppins-Medium"
                                                 FontSize="15"
                                                 HorizontalOptions="StartAndExpand"
                                                 Text="{Binding GrNo}"
@@ -280,7 +277,7 @@
                                             <Label
                                                 Grid.Row="1"
                                                 Margin="0"
-                                                FontFamily="Poppins Medium"
+                                                FontFamily="Poppins-Medium"
                                                 FontSize="15"
                                                 HorizontalOptions="StartAndExpand"
                                                 LineBreakMode="WordWrap"
@@ -303,7 +300,7 @@
                                             <Label
                                                 Grid.Row="1"
                                                 Margin="10,5"
-                                                FontFamily="Poppins Medium"
+                                                FontFamily="Poppins-Medium"
                                                 FontSize="15"
                                                 HorizontalOptions="CenterAndExpand"
                                                 LineBreakMode="WordWrap"

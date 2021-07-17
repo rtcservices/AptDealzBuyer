@@ -30,6 +30,10 @@
         #region Error Message
         public static string Session_Expired = "Session expired, Please login again!";
         public static string Something_Wrong = "Something went wrong!";
+        public static string Something_Wrong_Server = "Something went wrong from server!";
+        public static string ServiceUnavailable = "Service Unavailable, Try again later!";
+        public static string Number_was_null = "Number was null or white space";
+        public static string Phone_Dialer_Not_Support = "Phone Dialer is not supported on this device";
         #endregion
 
         #region Alert Title
@@ -52,6 +56,8 @@
         public const string AreYouSureWantDeactivateAccount = "Are you sure want to deactivate account?";
         public const string AreYouSureWantDelete = "Are you sure want to delete?";
         public const string AreYouSureWantCancel = "Are you sure want to cancel?";
+        public const string AreYouSureWantCancelReq = "Are you sure you want to cancel the requirement?";
+        public const string AreYouSureWantDeleteReq = "Are you sure you want to delete the requirement?";
         public const string AreYouSureWantLogout = "Are you sure want to logout?";
         public const string DoYouWantToExit = "Do you really want to exit?";
 
@@ -65,6 +71,7 @@
         public const string PlsCheckInternetConncetion = "Please check internet connection to use App.";
 
         public const string Agree_T_C = "Please check box for Terms & Conditions.";
+        public const string ContactRevealed = "Seller Contacts Revealed!";
 
         public const string InValid_Email = "Please enter valid email address!";
         public const string InValid_PhoneNumber = "Please enter valid phone number!";
@@ -91,7 +98,7 @@
         public const string Required_QuantityUnits = "Please select quantity unit!";
         public const string Required_Description = "Please enter description!";
         public const string Required_Quantity = "Please enter quantity!";
-        public const string Required_PriceEstimation = "Please enter total price estimation!";
+        public const string Required_PriceEstimation = "Please enter Total Price Estimation!";
         public const string Required_Delivery_PinCode = "Please enter location pin code!";
 
         public const string Required_Billing_Name = "Please enter billing address name!";

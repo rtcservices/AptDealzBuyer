@@ -15,10 +15,10 @@ namespace AptDealzBuyer.Views.DashboardPages
     public partial class GrievancesPage : ContentPage
     {
         #region Objects
-        // create objects here
         public List<GrievanceM> GrievanceMs = new List<GrievanceM>();
-        private string filterBy = Utility.RequirementSortBy.ID.ToString();
-        private bool sortBy = true;
+        private string filterBy = "";
+        private string title = string.Empty;
+        private bool? sortBy = null;
         private readonly int pageSize = 10;
         private int pageNo;
         #endregion
@@ -78,17 +78,11 @@ namespace AptDealzBuyer.Views.DashboardPages
 
         private void ImgSearch_Tapped(object sender, EventArgs e)
         {
-            PopupNavigation.Instance.PushAsync(new PopupPages.SearchPopup());
+
         }
 
         private void FrmSortBy_Tapped(object sender, EventArgs e)
         {
-            //var sortby = new PrevReqPopup("Sort By", "ID", "Quotes");
-            //sortby.isRefresh += (s1, e1) =>
-            //{
-            //    //get result from popup
-            //};
-            //PopupNavigation.Instance.PushAsync(sortby);
             try
             {
                 if (ImgSort.Source.ToString().Replace("File: ", "") == Constraints.Sort_ASC)
@@ -117,14 +111,25 @@ namespace AptDealzBuyer.Views.DashboardPages
             Navigation.PushAsync(new DashboardPages.RaiseGrievancesPage());
         }
 
-        private void FrmStatus_Tapped(object sender, EventArgs e)
+        private async void FrmStatus_Tapped(object sender, EventArgs e)
         {
-            var sortby = new PrevReqPopup("Status", "Open", "Close");
-            sortby.isRefresh += (s1, e1) =>
+            try
             {
-                //get result from popup
-            };
-            PopupNavigation.Instance.PushAsync(sortby);
+                StatusPopup statusPopup = new StatusPopup(filterBy, "OrderSupplying");
+                statusPopup.isRefresh += (s1, e1) =>
+                {
+                    string result = s1.ToString();
+                    if (!Common.EmptyFiels(result))
+                    {
+                        //BindList
+                    }
+                };
+                await PopupNavigation.Instance.PushAsync(statusPopup);
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("QuoteView/FrmStatusBy_Tapped: " + ex.Message);
+            }
         }
 
         private void GrdViewGrievances_Tapped(object sender, EventArgs e)
@@ -136,16 +141,23 @@ namespace AptDealzBuyer.Views.DashboardPages
         {
             try
             {
-                var sortby = new SortByPopup(filterBy, "Active");
+                var sortby = new FilterPopup(filterBy, "Active");
                 sortby.isRefresh += (s1, e1) =>
                 {
                     string result = s1.ToString();
-                    if (!string.IsNullOrEmpty(result))
+                    if (!Common.EmptyFiels(result))
                     {
-                        pageNo = 1;
                         filterBy = result;
+                        if (filterBy == RequirementSortBy.TotalPriceEstimation.ToString())
+                        {
+                            lblFilterBy.Text = "Amount";
+                        }
+                        else
+                        {
+                            lblFilterBy.Text = filterBy;
+                        }
+                        pageNo = 1;
                         GetGrievance();
-                        //GetGrievance(filterBy, sortBy);
                     }
                 };
                 PopupNavigation.Instance.PushAsync(sortby);
@@ -156,5 +168,10 @@ namespace AptDealzBuyer.Views.DashboardPages
             }
         }
         #endregion
+
+        private void BtnLogo_Clicked(object sender, EventArgs e)
+        {
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
+        }
     }
 }

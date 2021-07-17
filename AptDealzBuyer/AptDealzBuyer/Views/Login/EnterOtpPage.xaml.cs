@@ -5,7 +5,6 @@ using AptDealzBuyer.Model.Reponse;
 using AptDealzBuyer.Model.Request;
 using AptDealzBuyer.Utility;
 using AptDealzBuyer.Views.MasterData;
-using AptDealzBuyer.Views.SplashScreen;
 using System;
 using System.Linq;
 using Xamarin.Forms;
@@ -101,7 +100,7 @@ namespace AptDealzBuyer.Views.Login
                 var mResponse = await registerAPI.Register(mRegister);
                 if (mResponse != null && mResponse.Succeeded)
                 {
-                    App.Current.MainPage = new NavigationPage(new WelcomePage(true));
+                    App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
                 }
                 else
                 {
@@ -126,22 +125,14 @@ namespace AptDealzBuyer.Views.Login
                     var jObject = (Newtonsoft.Json.Linq.JObject)mResponse.Data;
                     if (jObject != null)
                     {
-                        var mBuyer = jObject.ToObject<Model.Request.Buyer>();
+                        var mBuyer = jObject.ToObject<Buyer>();
                         if (mBuyer != null)
                         {
                             Settings.UserId = mBuyer.Id;
                             Settings.RefreshToken = mBuyer.RefreshToken;
                             Settings.LoginTrackingKey = mBuyer.LoginTrackingKey == "00000000-0000-0000-0000-000000000000" ? Settings.LoginTrackingKey : mBuyer.LoginTrackingKey;
                             Common.Token = mBuyer.JwToken;
-
-                            //if (this.IsKeepLogin)
-                            //{
-                            //    Settings.UserToken = mBuyer.JwToken;
-                            //}
-                            //else
-                            //{
-                            //    Settings.UserToken = string.Empty;
-                            //}
+                            Settings.UserToken = mBuyer.JwToken;
 
                             App.Current.MainPage = new MasterDataPage();
                         }
@@ -258,6 +249,14 @@ namespace AptDealzBuyer.Views.Login
         {
             try
             {
+                OTPString = string.Empty;
+                TxtOtpOne.Text = string.Empty;
+                TxtOtpTwo.Text = string.Empty;
+                TxtOtpThree.Text = string.Empty;
+                TxtOtpFour.Text = string.Empty;
+                TxtOtpFive.Text = string.Empty;
+                TxtOtpSix.Text = string.Empty;
+
                 AuthenticationAPI authenticationAPI = new AuthenticationAPI();
                 UserDialogs.Instance.ShowLoading(Constraints.Loading);
                 if (this.isEmail)
@@ -317,7 +316,7 @@ namespace AptDealzBuyer.Views.Login
             Navigation.PopAsync();
         }
 
-        private void FrmSubmit_Tapped(object sender, EventArgs e)
+        private void BtnSubmit_Tapped(object sender, EventArgs e)
         {
             SubmitOTP();
         }
@@ -370,7 +369,7 @@ namespace AptDealzBuyer.Views.Login
             if (!Common.EmptyFiels(TxtOtpSix.Text))
             {
                 TxtOtpSix.Unfocus();
-                frmSubmit.BackgroundColor = (Color)App.Current.Resources["Green"];
+                BtnSubmit.BackgroundColor = (Color)App.Current.Resources["Green"];
             }
             else
                 TxtOtpFive.Focus();

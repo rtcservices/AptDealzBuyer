@@ -36,7 +36,11 @@
                         </Image.GestureRecognizers>
                     </Image>
 
-                    <Image Grid.Column="1" Style="{StaticResource imgLogo}" />
+                    <ImageButton
+                        x:Name="BtnLogo"
+                        Grid.Column="1"
+                        Clicked="BtnLogo_Clicked"
+                        Style="{StaticResource imgLogo}" />
 
                     <StackLayout
                         Grid.Column="2"
@@ -149,11 +153,10 @@
                                                     </Grid.RowDefinitions>
                                                     <Label
                                                         Grid.Row="0"
-                                                        Margin="0"
-                                                        FontFamily="Poppins"
                                                         FontSize="11"
                                                         HorizontalOptions="FillAndExpand"
                                                         LineBreakMode="WordWrap"
+                                                        Style="{StaticResource lblLight}"
                                                         Text="{Binding Message}"
                                                         TextColor="{Binding MessageTextColor}"
                                                         VerticalOptions="FillAndExpand" />
@@ -162,18 +165,15 @@
                                                         HorizontalOptions="FillAndExpand"
                                                         Orientation="Horizontal">
                                                         <Label
-                                                            Margin="0"
-                                                            FontFamily="Poppins"
                                                             FontSize="11"
                                                             HorizontalOptions="StartAndExpand"
+                                                            Style="{StaticResource lblLight}"
                                                             Text="{Binding UserName}"
-                                                            TextColor="{StaticResource Black}"
                                                             VerticalOptions="FillAndExpand" />
                                                         <Label
-                                                            Margin="0"
-                                                            FontFamily="Poppins"
                                                             FontSize="9"
                                                             HorizontalOptions="EndAndExpand"
+                                                            Style="{StaticResource lblLight}"
                                                             Text="{Binding Time}"
                                                             TextColor="{Binding MessageTextColor}"
                                                             VerticalOptions="EndAndExpand" />
@@ -229,7 +229,7 @@
                                     Margin="5"
                                     AutoSize="TextChanges"
                                     FontFamily="Poppins"
-                                    FontSize="14"
+                                    FontSize="15"
                                     Keyboard="Text"
                                     MinimumHeightRequest="50"
                                     Placeholder="Enter your message" />

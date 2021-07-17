@@ -71,7 +71,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         {
             try
             {
-                var stk = (Extention.ExtShadowFrame)sender;
+                var stk = (Frame)sender;
                 var menuName = stk.BindingContext as HomeMenu;
 
                 if (menuName != null && menuName.MenuName == "PostNewRequirements")
@@ -96,13 +96,18 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 }
                 else if (menuName != null && menuName.MenuName != null)
                 {
-                    Navigation.PushAsync(new MainTabbedPage(menuName.MenuName));
+                    Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(menuName.MenuName, true));
                 }
             }
             catch (Exception ex)
             {
                 Common.DisplayErrorMessage("HomeView/BtnMenu_Tapped: " + ex.Message);
             }
+        }
+
+        private void BtnLogo_Clicked(object sender, EventArgs e)
+        {
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
         }
         #endregion
     }

@@ -7,15 +7,15 @@ using Xamarin.Forms.Xaml;
 namespace AptDealzBuyer.Views.PopupPages
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class SortByPopup : PopupPage
+    public partial class StatusPopup : PopupPage
     {
-        #region Objects       
+        #region Objects
         public event EventHandler isRefresh;
         private string PageName;
         #endregion
 
-        #region Constructor        
-        public SortByPopup(string SortBy, string SortPageName)
+        #region Constructor
+        public StatusPopup(string SortBy, string SortPageName)
         {
             InitializeComponent();
             PageName = SortPageName;
@@ -23,8 +23,7 @@ namespace AptDealzBuyer.Views.PopupPages
         }
         #endregion
 
-        #region Methos
-
+        #region Methods
         protected override void OnAppearing()
         {
             base.OnAppearing();
@@ -33,23 +32,21 @@ namespace AptDealzBuyer.Views.PopupPages
 
         void BindLabel()
         {
-            if (PageName == "Active")
+            if (PageName == "OrderSupplying")
             {
                 StkThirdType.IsVisible = true;
-                StkSecondType.IsVisible = true;
-                lblFirstType.Text = "ID";
-                lblSecondType.Text = "Date";
-                lblThirdType.Text = "No of Quotes";
+                lblFirstType.Text = "All";
+                lblSecondType.Text = "Accepted";
+                lblThirdType.Text = "Submitted";
             }
             else if (PageName == "Previous")
             {
-                StkSecondType.IsVisible = false;
+                StkThirdType.IsVisible = false;
                 lblFirstType.Text = "ID";
-                lblThirdType.Text = "Quotes";
+                lblSecondType.Text = "Quotes";
             }
             else if (PageName == "ViewReq")
             {
-                StkSecondType.IsVisible = true;
                 StkThirdType.IsVisible = true;
                 lblFirstType.Text = "ID";
                 lblSecondType.Text = "Amount";
@@ -57,28 +54,28 @@ namespace AptDealzBuyer.Views.PopupPages
             }
             else
             {
-                StkSecondType.IsVisible = true;
                 StkThirdType.IsVisible = true;
-                lblFirstType.Text = "ID";
-                lblSecondType.Text = "Date";
-                lblThirdType.Text = "No of Quotes";
+                lblFirstType.Text = "All";
+                lblSecondType.Text = "Accepted";
+                lblThirdType.Text = "Submitted";
             }
         }
+
         void BindSource(string viewSource)
         {
             if (!string.IsNullOrEmpty(viewSource))
             {
-                if (viewSource == RequirementSortBy.ID.ToString())
+                if (viewSource == QuoteStatus.All.ToString())
                 {
                     ClearSource();
                     imgFirstType.Source = Constraints.Radio_Selected;
                 }
-                else if (viewSource == RequirementSortBy.Date.ToString())
+                else if (viewSource == QuoteStatus.Accepted.ToString())
                 {
                     ClearSource();
                     imgSecondType.Source = Constraints.Radio_Selected;
                 }
-                else if (viewSource == RequirementSortBy.Quotes.ToString())
+                else if (viewSource == QuoteStatus.Submitted.ToString())
                 {
                     ClearSource();
                     imgThirdType.Source = Constraints.Radio_Selected;
@@ -102,38 +99,28 @@ namespace AptDealzBuyer.Views.PopupPages
         #region Events
         private void StkFirstType_Tapped(object sender, EventArgs e)
         {
-            BindSource(RequirementSortBy.ID.ToString());
-            isRefresh?.Invoke(RequirementSortBy.ID.ToString(), null);
+
+            BindSource(QuoteStatus.All.ToString());
+            isRefresh?.Invoke(QuoteStatus.All.ToString(), null);
+
             PopupNavigation.Instance.PopAsync();
         }
 
         private void StkSecondType_Tapped(object sender, EventArgs e)
         {
-            if (PageName == "ViewReq")
-            {
-                BindSource(RequirementSortBy.Amount.ToString());
-                isRefresh?.Invoke(RequirementSortBy.Amount.ToString(), null);
-            }
-            else
-            {
-                BindSource(RequirementSortBy.Date.ToString());
-                isRefresh?.Invoke(RequirementSortBy.Date.ToString(), null);
-            }
+
+            BindSource(QuoteStatus.Accepted.ToString());
+            isRefresh?.Invoke(QuoteStatus.Accepted.ToString(), null);
+
             PopupNavigation.Instance.PopAsync();
         }
 
         private void StkThirdType_Tapped(object sender, EventArgs e)
         {
-            if (PageName == "ViewReq")
-            {
-                BindSource(RequirementSortBy.Validity.ToString());
-                isRefresh?.Invoke(RequirementSortBy.Validity.ToString(), null);
-            }
-            else
-            {
-                BindSource(RequirementSortBy.Quotes.ToString());
-                isRefresh?.Invoke(RequirementSortBy.Quotes.ToString(), null);
-            }
+
+            BindSource(QuoteStatus.Submitted.ToString());
+            isRefresh?.Invoke(QuoteStatus.Submitted.ToString(), null);
+
             PopupNavigation.Instance.PopAsync();
         }
         #endregion

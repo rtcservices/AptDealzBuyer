@@ -21,8 +21,9 @@ namespace AptDealzBuyer.Views.MainTabbedPages
     {
         #region Objects      
         private List<Requirement> mRequirements;
-        private string filterBy = Utility.RequirementSortBy.ID.ToString();
-        private bool sortBy = true;
+        private string filterBy = "";
+        private string title = string.Empty;
+        private bool? sortBy = null;
         private readonly int pageSize = 10;
         private int pageNo;
         #endregion
@@ -33,18 +34,21 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             InitializeComponent();
             mRequirements = new List<Requirement>();
             pageNo = 1;
-            GetActiveRequirements(filterBy, sortBy);
+            GetActiveRequirements(filterBy, title, sortBy, true);
         }
         #endregion
 
         #region Methods
-        public async void GetActiveRequirements(string FilterBy, bool SortBy)
+        public async void GetActiveRequirements(string FilterBy = "", string Title = "", bool? SortBy = null, bool isLoader = false)
         {
             try
             {
                 RequirementAPI requirementAPI = new RequirementAPI();
-                UserDialogs.Instance.ShowLoading(Constraints.Loading);
-                var mResponse = await requirementAPI.GetAllMyActiveRequirements(FilterBy, SortBy, pageNo, pageSize);
+                if (isLoader)
+                {
+                    UserDialogs.Instance.ShowLoading(Constraints.Loading);
+                }
+                var mResponse = await requirementAPI.GetAllMyActiveRequirements(FilterBy, Title, SortBy, pageNo, pageSize);
                 if (mResponse != null && mResponse.Succeeded)
                 {
                     JArray result = (JArray)mResponse.Data;
@@ -59,16 +63,16 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                         if (mRequirements.Where(x => x.RequirementId == mRequirement.RequirementId).Count() == 0)
                             mRequirements.Add(mRequirement);
                     }
-                    BindList();
+                    BindList(mRequirements);
                 }
                 else
                 {
                     lstRequirements.IsVisible = false;
-                    FrmSortBy.IsVisible = false;
-                    FrmFilterBy.IsVisible = false;
-                    FrmSearchBy.IsVisible = false;
                     lblNoRecord.IsVisible = true;
-                    lblNoRecord.Text = mResponse.Message;
+                    if (mResponse != null && mResponse.Message != null)
+                    {
+                        lblNoRecord.Text = mResponse.Message;
+                    }
                 }
             }
             catch (Exception ex)
@@ -81,23 +85,17 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             }
         }
 
-        void BindList()
+        void BindList(List<Requirement> mRequirementList)
         {
-            if (mRequirements != null && mRequirements.Count > 0)
+            if (mRequirementList != null && mRequirementList.Count > 0)
             {
                 lstRequirements.IsVisible = true;
-                FrmSortBy.IsVisible = true;
-                FrmFilterBy.IsVisible = true;
-                FrmSearchBy.IsVisible = true;
                 lblNoRecord.IsVisible = false;
-                lstRequirements.ItemsSource = mRequirements.ToList();
+                lstRequirements.ItemsSource = mRequirementList.ToList();
             }
             else
             {
                 lstRequirements.IsVisible = false;
-                FrmFilterBy.IsVisible = false;
-                FrmSearchBy.IsVisible = false;
-                FrmSortBy.IsVisible = false;
                 lblNoRecord.IsVisible = true;
             }
         }
@@ -111,7 +109,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 {
                     pageNo = 1;
                     mRequirements.Clear();
-                    GetActiveRequirements(filterBy, sortBy);
+                    GetActiveRequirements(filterBy, title, sortBy, true);
                 }
             }
             catch (Exception ex)
@@ -164,7 +162,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 }
 
                 pageNo = 1;
-                GetActiveRequirements(filterBy, sortBy);
+                GetActiveRequirements(filterBy, title, sortBy, true);
             }
             catch (Exception ex)
             {
@@ -248,7 +246,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
 
                         if (this.mRequirements.Count() >= totalAspectedRow)
                         {
-                            GetActiveRequirements(filterBy, sortBy);
+                            GetActiveRequirements(filterBy, title, sortBy, true);
                         }
                     }
                     else
@@ -273,7 +271,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             lstRequirements.IsRefreshing = true;
             pageNo = 1;
             mRequirements.Clear();
-            GetActiveRequirements(filterBy, sortBy);
+            GetActiveRequirements(filterBy, title, sortBy, true);
             lstRequirements.IsRefreshing = false;
         }
 
@@ -281,30 +279,14 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         {
             try
             {
+                pageNo = 1;
                 if (!Common.EmptyFiels(entrSearch.Text))
                 {
-                    var ReqSearch = mRequirements.Where(x =>
-                                                        x.RequirementNo.ToLower().Contains(entrSearch.Text.ToLower()) ||
-                                                        x.Title.ToLower().Contains(entrSearch.Text.ToLower())).ToList();
-                    if (ReqSearch != null && ReqSearch.Count > 0)
-                    {
-                        lstRequirements.IsVisible = true;
-                        FrmFilterBy.IsVisible = true;
-                        FrmSortBy.IsVisible = true;
-                        lblNoRecord.IsVisible = false;
-                        lstRequirements.ItemsSource = ReqSearch.ToList();
-                    }
-                    else
-                    {
-                        lstRequirements.IsVisible = false;
-                        FrmFilterBy.IsVisible = false;
-                        FrmSortBy.IsVisible = false;
-                        lblNoRecord.IsVisible = true;
-                    }
+                    GetActiveRequirements(filterBy, entrSearch.Text, sortBy, false);
                 }
                 else
                 {
-                    BindList();
+                    GetActiveRequirements(filterBy, title, sortBy, true);
                 }
             }
             catch (Exception ex)
@@ -316,22 +298,30 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         private void BtnClose_Clicked(object sender, EventArgs e)
         {
             entrSearch.Text = string.Empty;
-            BindList();
+            BindList(mRequirements);
         }
 
         private void FrmFilterBy_Tapped(object sender, EventArgs e)
         {
             try
             {
-                var sortby = new SortByPopup(filterBy, "Active");
+                var sortby = new FilterPopup(filterBy, "Active");
                 sortby.isRefresh += (s1, e1) =>
                 {
                     string result = s1.ToString();
-                    if (!string.IsNullOrEmpty(result))
+                    if (!Common.EmptyFiels(result))
                     {
-                        pageNo = 1;
                         filterBy = result;
-                        GetActiveRequirements(filterBy, sortBy);
+                        if (filterBy == RequirementSortBy.TotalPriceEstimation.ToString())
+                        {
+                            lblFilterBy.Text = "Amount";
+                        }
+                        else
+                        {
+                            lblFilterBy.Text = filterBy;
+                        }
+                        pageNo = 1;
+                        GetActiveRequirements(filterBy, title, sortBy, true);
                     }
                 };
                 PopupNavigation.Instance.PushAsync(sortby);
@@ -340,6 +330,11 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             {
                 Common.DisplayErrorMessage("ActiveRequirementView/CustomEntry_Unfocused: " + ex.Message);
             }
+        }
+
+        private void BtnLogo_Clicked(object sender, EventArgs e)
+        {
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
         }
         #endregion
     }

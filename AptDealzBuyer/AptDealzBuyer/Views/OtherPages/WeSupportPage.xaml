@@ -34,7 +34,11 @@
                     </Image.GestureRecognizers>
                 </Image>
 
-                <Image Grid.Column="1" Style="{StaticResource imgLogo}" />
+                <ImageButton
+                    x:Name="BtnLogo"
+                    Grid.Column="1"
+                    Clicked="BtnLogo_Clicked"
+                    Style="{StaticResource imgLogo}" />
 
                 <StackLayout
                     Grid.Column="2"
@@ -131,12 +135,10 @@
 
                     <StackLayout Grid.Row="2" Padding="20">
                         <Label
-                            FontFamily="Poppins"
-                            FontSize="14"
                             HorizontalOptions="CenterAndExpand"
+                            Style="{StaticResource lblLight}"
                             Text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
-                            TextColor="{StaticResource DarkGray}"
-                            VerticalOptions="CenterAndExpand" />
+                            TextColor="{StaticResource DarkGray}" />
                     </StackLayout>
 
                 </Grid>

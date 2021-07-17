@@ -21,6 +21,8 @@ namespace AptDealzBuyer.iOS
             Rg.Plugins.Popup.Popup.Init();
             CarouselView.FormsPlugin.iOS.CarouselViewRenderer.Init();
             Firebase.Core.App.Configure();
+            //Xamarin.Essentials.Platform.Init();
+
             LoadApplication(new App());
             DependencyService.Register<IFirebaseAuthenticator, FirebaseAuthenticator>();
 

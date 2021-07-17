@@ -36,7 +36,11 @@
                     </Image.GestureRecognizers>
                 </Image>
 
-                <Image Grid.Column="1" Style="{StaticResource imgLogo}" />
+                <ImageButton
+                    x:Name="BtnLogo"
+                    Grid.Column="1"
+                    Clicked="BtnLogo_Clicked"
+                    Style="{StaticResource imgLogo}" />
 
                 <StackLayout
                     Grid.Column="2"
@@ -115,8 +119,8 @@
                                     <Label
                                         Grid.Column="0"
                                         Margin="10,5"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontFamily="Poppins-Medium"
+                                        FontSize="15"
                                         HorizontalOptions="StartAndExpand"
                                         LineBreakMode="WordWrap"
                                         Text="Requirement ID"
@@ -125,8 +129,8 @@
                                     <Label
                                         Grid.Column="1"
                                         Margin="10,5"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontFamily="Poppins-Medium"
+                                        FontSize="15"
                                         HorizontalOptions="StartAndExpand"
                                         LineBreakMode="WordWrap"
                                         Text="REQ#123"
@@ -142,8 +146,8 @@
                                     <Label
                                         Grid.Column="0"
                                         Margin="10,5"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontFamily="Poppins-Medium"
+                                        FontSize="15"
                                         HorizontalOptions="StartAndExpand"
                                         LineBreakMode="WordWrap"
                                         Text="Quote Reference No"
@@ -152,8 +156,8 @@
                                     <Label
                                         Grid.Column="1"
                                         Margin="10,5"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontFamily="Poppins-Medium"
+                                        FontSize="15"
                                         HorizontalOptions="StartAndExpand"
                                         LineBreakMode="WordWrap"
                                         Text="QUO#987"
@@ -169,8 +173,8 @@
                                     <Label
                                         Grid.Column="0"
                                         Margin="10,5"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontFamily="Poppins-Medium"
+                                        FontSize="15"
                                         HorizontalOptions="StartAndExpand"
                                         LineBreakMode="WordWrap"
                                         Text="Invoice Number"
@@ -179,8 +183,8 @@
                                     <Label
                                         Grid.Column="1"
                                         Margin="10,5"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontFamily="Poppins-Medium"
+                                        FontSize="15"
                                         HorizontalOptions="StartAndExpand"
                                         LineBreakMode="WordWrap"
                                         Text="#INV67"
@@ -215,19 +219,15 @@
                                     Orientation="Horizontal">
 
                                     <Label
-                                        Margin="0"
-                                        FontFamily="Poppins"
-                                        FontSize="14"
                                         HorizontalOptions="StartAndExpand"
-                                        Text="Seller"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblLight}"
+                                        Text="Seller" />
 
                                     <Label
                                         x:Name="lblSellerName"
                                         Margin="0"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontFamily="Poppins-Medium"
+                                        FontSize="15"
                                         HorizontalOptions="EndAndExpand"
                                         Text="Seller Name"
                                         TextColor="{StaticResource Green}"
@@ -250,18 +250,15 @@
 
                                     <Label
                                         Margin="0"
-                                        FontFamily="Poppins"
-                                        FontSize="14"
                                         HorizontalOptions="StartAndExpand"
-                                        Text="Shipping PIN Code"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblLight}"
+                                        Text="Shipping PIN Code" />
 
                                     <Label
                                         x:Name="lblShippingPINCode"
                                         Margin="0"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontFamily="Poppins-Medium"
+                                        FontSize="15"
                                         HorizontalOptions="EndAndExpand"
                                         Text="682017"
                                         TextColor="{StaticResource Black}"
@@ -284,18 +281,15 @@
 
                                     <Label
                                         Margin="0"
-                                        FontFamily="Poppins"
-                                        FontSize="14"
                                         HorizontalOptions="StartAndExpand"
-                                        Text="Quantity"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblLight}"
+                                        Text="Quantity" />
 
                                     <Label
                                         x:Name="lblQuantity"
                                         Margin="0"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontFamily="Poppins-Medium"
+                                        FontSize="15"
                                         HorizontalOptions="EndAndExpand"
                                         Text="100 Pieces"
                                         TextColor="{StaticResource Black}"
@@ -318,18 +312,15 @@
 
                                     <Label
                                         Margin="0"
-                                        FontFamily="Poppins"
-                                        FontSize="14"
                                         HorizontalOptions="StartAndExpand"
-                                        Text="Unit Price"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblLight}"
+                                        Text="Unit Price" />
 
                                     <Label
                                         x:Name="lblUnitPrice"
                                         Margin="0"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontFamily="Poppins-Medium"
+                                        FontSize="15"
                                         HorizontalOptions="EndAndExpand"
                                         Text="Rs 25"
                                         TextColor="{StaticResource Black}"
@@ -351,19 +342,15 @@
                                     Orientation="Horizontal">
 
                                     <Label
-                                        Margin="0"
-                                        FontFamily="Poppins"
-                                        FontSize="14"
                                         HorizontalOptions="StartAndExpand"
-                                        Text="Net Amount"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblLight}"
+                                        Text="Net Amount" />
 
                                     <Label
                                         x:Name="lblNetAmount"
                                         Margin="0"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontFamily="Poppins-Medium"
+                                        FontSize="15"
                                         HorizontalOptions="EndAndExpand"
                                         Text="Rs 2500"
                                         TextColor="{StaticResource Black}"
@@ -385,19 +372,15 @@
                                     Orientation="Horizontal">
 
                                     <Label
-                                        Margin="0"
-                                        FontFamily="Poppins"
-                                        FontSize="14"
                                         HorizontalOptions="StartAndExpand"
-                                        Text="Handling Charges"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblLight}"
+                                        Text="Handling Charges" />
 
                                     <Label
                                         x:Name="lblHandlingCharges"
                                         Margin="0"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontFamily="Poppins-Medium"
+                                        FontSize="15"
                                         HorizontalOptions="EndAndExpand"
                                         Text="Rs 500"
                                         TextColor="{StaticResource Black}"
@@ -419,19 +402,15 @@
                                     Orientation="Horizontal">
 
                                     <Label
-                                        Margin="0"
-                                        FontFamily="Poppins"
-                                        FontSize="14"
                                         HorizontalOptions="StartAndExpand"
-                                        Text="Shipping Charges"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblLight}"
+                                        Text="Shipping Charges" />
 
                                     <Label
                                         x:Name="lblShippingCharges"
                                         Margin="0"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontFamily="Poppins-Medium"
+                                        FontSize="15"
                                         HorizontalOptions="EndAndExpand"
                                         Text="Rs 250"
                                         TextColor="{StaticResource Black}"
@@ -453,19 +432,15 @@
                                     Orientation="Horizontal">
 
                                     <Label
-                                        Margin="0"
-                                        FontFamily="Poppins"
-                                        FontSize="14"
                                         HorizontalOptions="StartAndExpand"
-                                        Text="Insurance Charges "
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblLight}"
+                                        Text="Insurance Charges " />
 
                                     <Label
                                         x:Name="lblInsuranceCharges"
                                         Margin="0"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontFamily="Poppins-Medium"
+                                        FontSize="15"
                                         HorizontalOptions="EndAndExpand"
                                         Text="Rs 250"
                                         TextColor="{StaticResource Black}"
@@ -489,8 +464,8 @@
 
                                     <Label
                                         Margin="0"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontFamily="Poppins-Medium"
+                                        FontSize="15"
                                         HorizontalOptions="StartAndExpand"
                                         Text="Total Amount"
                                         TextColor="{StaticResource Green}"
@@ -499,8 +474,8 @@
                                     <Label
                                         x:Name="lblTotalAmount"
                                         Margin="0"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontFamily="Poppins-Medium"
+                                        FontSize="15"
                                         HorizontalOptions="EndAndExpand"
                                         Text="Rs 3500"
                                         TextColor="{StaticResource Green}"
@@ -515,8 +490,8 @@
 
                                     <Label
                                         Margin="0"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontFamily="Poppins-Medium"
+                                        FontSize="15"
                                         HorizontalOptions="StartAndExpand"
                                         Text="Order Status"
                                         TextColor="{StaticResource Green}"
@@ -525,8 +500,8 @@
                                     <Label
                                         x:Name="lblOrderStatus"
                                         Margin="0"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontFamily="Poppins-Medium"
+                                        FontSize="15"
                                         HorizontalOptions="EndAndExpand"
                                         Text="Shipped"
                                         TextColor="{StaticResource Green}"
@@ -550,7 +525,7 @@
                             <Label
                                 Grid.Row="0"
                                 Margin="5,0,0,0"
-                                FontFamily="Poppins SemiBold"
+                                FontFamily="Poppins-SemiBold"
                                 FontSize="20"
                                 HorizontalOptions="CenterAndExpand"
                                 Text="Details"
@@ -564,14 +539,10 @@
 
                                 <Label
                                     Grid.Column="0"
-                                    Margin="0"
-                                    FontFamily="Poppins"
-                                    FontSize="14"
                                     HorizontalOptions="StartAndExpand"
                                     LineBreakMode="WordWrap"
-                                    Text="Complaint Type"
-                                    TextColor="{StaticResource Black}"
-                                    VerticalOptions="CenterAndExpand" />
+                                    Style="{StaticResource lblLight}"
+                                    Text="Complaint Type" />
 
                                 <ext:ExtShadowFrame
                                     Grid.Column="1"
@@ -591,7 +562,7 @@
                                             Grid.Column="0"
                                             Margin="0,10"
                                             FontFamily="Poppins"
-                                            FontSize="14"
+                                            FontSize="15"
                                             HorizontalOptions="FillAndExpand"
                                             TextColor="{StaticResource Black}"
                                             TitleColor="{StaticResource Black}"
@@ -646,13 +617,9 @@
 
                                     <Label
                                         Grid.Column="1"
-                                        Margin="0"
-                                        FontFamily="Poppins"
-                                        FontSize="14"
                                         HorizontalOptions="CenterAndExpand"
-                                        Text="Upload Photo/Video"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblLight}"
+                                        Text="Upload Photo/Video" />
 
                                     <BoxView
                                         Grid.Column="2"
@@ -683,13 +650,13 @@
                                 BackgroundColor="Transparent"
                                 BorderColor="{StaticResource LightGray}"
                                 CornerRadius="5"
-                                HasShadow="False"
-                                HeightRequest="140">
+                                HasShadow="False">
                                 <Editor
                                     x:Name="txtDescription"
                                     Margin="10"
+                                    AutoSize="TextChanges"
                                     FontFamily="Poppins"
-                                    FontSize="14"
+                                    FontSize="15"
                                     HorizontalOptions="FillAndExpand"
                                     Placeholder="Issue Description"
                                     PlaceholderColor="{StaticResource Gray}"
@@ -704,11 +671,9 @@
 
                                 <Label
                                     Grid.Column="0"
-                                    Margin="0"
-                                    FontFamily="Poppins"
-                                    FontSize="14"
                                     HorizontalOptions="StartAndExpand"
                                     LineBreakMode="WordWrap"
+                                    Style="{StaticResource lblLight}"
                                     Text="Preferred Solution"
                                     TextColor="{StaticResource Black}"
                                     VerticalOptions="CenterAndExpand" />
@@ -725,7 +690,7 @@
                                         x:Name="txtTitle"
                                         Margin="15,10"
                                         FontFamily="Poppins"
-                                        FontSize="14"
+                                        FontSize="15"
                                         HorizontalOptions="FillAndExpand"
                                         PlaceholderColor="{StaticResource Gray}"
                                         TextColor="{StaticResource Black}"
@@ -746,7 +711,7 @@
                                 <Label
                                     Grid.Column="1"
                                     Margin="20,10"
-                                    FontFamily="Poppins Medium"
+                                    FontFamily="Poppins-Medium"
                                     FontSize="15"
                                     HorizontalOptions="CenterAndExpand"
                                     LineBreakMode="WordWrap"

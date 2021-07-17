@@ -31,7 +31,7 @@
 
             <Label
                 Grid.Row="1"
-                FontFamily="Poppins Medium"
+                FontFamily="Poppins-Medium"
                 FontSize="18"
                 HorizontalOptions="CenterAndExpand"
                 Text="Success"
@@ -41,14 +41,13 @@
             <Label
                 x:Name="lblMessage"
                 Grid.Row="2"
-                FontFamily="Poppins"
                 FontSize="17"
                 HorizontalOptions="FillAndExpand"
                 HorizontalTextAlignment="Center"
                 LineBreakMode="WordWrap"
+                Style="{StaticResource lblLight}"
                 Text=""
-                TextColor="{StaticResource Green}"
-                VerticalOptions="CenterAndExpand" />
+                TextColor="{StaticResource Green}" />
 
             <Button
                 Grid.Row="3"
@@ -56,7 +55,7 @@
                 CornerRadius="25"
                 HorizontalOptions="CenterAndExpand"
                 Style="{StaticResource btnPrimary}"
-                Text="Home"
+                Text="OK"
                 WidthRequest="150" />
 
         </Grid>

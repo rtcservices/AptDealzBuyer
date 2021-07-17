@@ -35,7 +35,12 @@
                     </Image.GestureRecognizers>
                 </Image>
 
-                <Image Grid.Column="1" Style="{StaticResource imgLogo}" />
+                <ImageButton
+                    x:Name="BtnLogo"
+                    Grid.Column="1"
+                    Clicked="BtnLogo_Clicked"
+                    Style="{StaticResource imgLogo}" />
+
 
                 <StackLayout
                     Grid.Column="2"
@@ -89,12 +94,11 @@
                     VerticalScrollBarVisibility="Never">
                     <flv:FlowListView.FlowColumnTemplate>
                         <DataTemplate>
-                            <ext:ExtShadowFrame
+                            <Frame
                                 Margin="6,0,6,12"
                                 Padding="0"
                                 BackgroundColor="{StaticResource LightGray}"
                                 BorderColor="{StaticResource Gray}"
-                                BorderWidth="1"
                                 CornerRadius="10"
                                 HasShadow="False"
                                 HeightRequest="100"
@@ -121,21 +125,16 @@
                                     <Label
                                         Grid.Row="1"
                                         Margin="4,0"
-                                        FontFamily="Poppins Medium"
                                         FontSize="13"
                                         HorizontalOptions="CenterAndExpand"
                                         HorizontalTextAlignment="Center"
-                                        Text="{Binding UiName}"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblMedium}"
+                                        Text="{Binding UiName}" />
                                 </Grid>
-                                <ext:ExtShadowFrame.GestureRecognizers>
-                                    <TapGestureRecognizer
-                                        x:Name="btnDivision"
-                                        NumberOfTapsRequired="1"
-                                        Tapped="BtnMenu_Tapped" />
-                                </ext:ExtShadowFrame.GestureRecognizers>
-                            </ext:ExtShadowFrame>
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="BtnMenu_Tapped" />
+                                </Frame.GestureRecognizers>
+                            </Frame>
                         </DataTemplate>
                     </flv:FlowListView.FlowColumnTemplate>
                 </flv:FlowListView>

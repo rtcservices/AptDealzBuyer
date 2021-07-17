@@ -17,7 +17,8 @@ namespace AptDealzBuyer.Views.PopupPages
         public PaymentPopup(string Amount)
         {
             InitializeComponent();
-            lblMessage.Text = "Make a payment of Rs " + Amount + " to reveal the Seller contacts";
+            //lblMessage.Text = "Make a payment of Rs " + Amount + " to reveal the Seller contacts";
+            lblMessage.Text = "Make a payment of Rs " + Amount + " to Accept Quote";
             this.CloseWhenBackgroundIsClicked = false;
         }
         #endregion

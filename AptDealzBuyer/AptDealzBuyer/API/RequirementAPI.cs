@@ -1,12 +1,9 @@
 ﻿using AptDealzBuyer.Model.Reponse;
 using AptDealzBuyer.Repository;
 using AptDealzBuyer.Utility;
-using AptDealzBuyer.Views.SplashScreen;
 using Newtonsoft.Json;
 using Plugin.Connectivity;
-using Polly;
 using System;
-using System.Net;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -15,7 +12,6 @@ namespace AptDealzBuyer.API
     public class RequirementAPI
     {
         #region [ GET ]
-        int getRequirement = 0;
         public async Task<Response> GetRequirement(int PageNumber, int PageSize)
         {
             Response mResponse = new Response();
@@ -38,24 +34,31 @@ namespace AptDealzBuyer.API
                             if (errorString == Constraints.Session_Expired)
                             {
                                 Common.DisplayErrorMessage(Constraints.Session_Expired);
-                                App.Current.MainPage = new NavigationPage(new WelcomePage(true));
+                                App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
                             }
+                        }
+                        else if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
+                        {
+                            Common.DisplayErrorMessage(Constraints.ServiceUnavailable);
+                        }
+                        else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
+                        {
+                            Common.DisplayErrorMessage(Constraints.Something_Wrong_Server);
                         }
                         else
                         {
                             if (responseJson.Contains("TokenExpired"))
                             {
                                 var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
-                                if (!isRefresh && getRequirement == 3)
+                                if (!isRefresh)
                                 {
                                     Common.DisplayErrorMessage(Constraints.Session_Expired);
-                                    App.Current.MainPage = new NavigationPage(new WelcomePage(true));
+                                    App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
                                 }
                                 else
                                 {
                                     await GetRequirement(PageNumber, PageSize);
                                 }
-                                getRequirement++;
                             }
                             else
                             {
@@ -79,7 +82,6 @@ namespace AptDealzBuyer.API
             return mResponse;
         }
 
-        int getRequirementById = 0;
         public async Task<Response> GetRequirementById(string RequirmentId)
         {
             Response mResponse = new Response();
@@ -102,24 +104,31 @@ namespace AptDealzBuyer.API
                             if (errorString == Constraints.Session_Expired)
                             {
                                 Common.DisplayErrorMessage(Constraints.Session_Expired);
-                                App.Current.MainPage = new NavigationPage(new WelcomePage(true));
+                                App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
                             }
+                        }
+                        else if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
+                        {
+                            Common.DisplayErrorMessage(Constraints.ServiceUnavailable);
+                        }
+                        else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
+                        {
+                            Common.DisplayErrorMessage(Constraints.Something_Wrong_Server);
                         }
                         else
                         {
                             if (responseJson.Contains("TokenExpired"))
                             {
                                 var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
-                                if (!isRefresh && getRequirementById == 3)
+                                if (!isRefresh)
                                 {
                                     Common.DisplayErrorMessage(Constraints.Session_Expired);
-                                    App.Current.MainPage = new NavigationPage(new WelcomePage(true));
+                                    App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
                                 }
                                 else
                                 {
                                     await GetRequirementById(RequirmentId);
                                 }
-                                getRequirementById++;
                             }
                             else
                             {
@@ -143,8 +152,7 @@ namespace AptDealzBuyer.API
             return mResponse;
         }
 
-        int getAllMyActiveRequirements = 0;
-        public async Task<Response> GetAllMyActiveRequirements(string SortBy = "", bool? IsAscending = null, int PageNumber = 1, int PageSize = 10)
+        public async Task<Response> GetAllMyActiveRequirements(string SortBy = "", string Title = "", bool? IsAscending = null, int PageNumber = 1, int PageSize = 10)
         {
             Response mResponse = new Response();
             try
@@ -153,15 +161,14 @@ namespace AptDealzBuyer.API
                 {
                     using (var hcf = new HttpClientFactory(token: Common.Token))
                     {
-                        string url = "";
-                        if (!Common.EmptyFiels(SortBy) && IsAscending != null)
-                            url = string.Format(EndPointURL.GetAllMyActiveRequirements + "?SortBy={1}&IsAscending={2}&PageNumber={3}&PageSize={4}", (int)App.Current.Resources["Version"], SortBy, IsAscending, PageNumber, PageSize);
-                        else if (!Common.EmptyFiels(SortBy) && IsAscending == null)
-                            url = string.Format(EndPointURL.GetAllMyActiveRequirements + "?SortBy={1}&PageNumber={2}&PageSize={3}", (int)App.Current.Resources["Version"], SortBy, PageNumber, PageSize);
-                        else if (Common.EmptyFiels(SortBy) && IsAscending != null)
-                            url = string.Format(EndPointURL.GetAllMyActiveRequirements + "?IsAscending={1}&PageNumber={2}&PageSize={3}", (int)App.Current.Resources["Version"], IsAscending, PageNumber, PageSize);
-                        else
-                            url = string.Format(EndPointURL.GetAllMyActiveRequirements + "?PageNumber={1}&PageSize={2}", (int)App.Current.Resources["Version"], PageNumber, PageSize);
+                        string url = string.Format(EndPointURL.GetAllMyActiveRequirements + "?PageNumber={1}&PageSize={2}", (int)App.Current.Resources["Version"], PageNumber, PageSize);
+
+                        if (!Common.EmptyFiels(Title))
+                            url += "&Title=" + Title;
+                        if (!Common.EmptyFiels(SortBy))
+                            url += "&SortBy=" + SortBy;
+                        if (IsAscending.HasValue)
+                            url += "&IsAscending=" + IsAscending.Value;
 
                         var response = await hcf.GetAsync(url);
                         var responseJson = await response.Content.ReadAsStringAsync();
@@ -175,24 +182,31 @@ namespace AptDealzBuyer.API
                             if (errorString == Constraints.Session_Expired)
                             {
                                 Common.DisplayErrorMessage(Constraints.Session_Expired);
-                                App.Current.MainPage = new NavigationPage(new WelcomePage(true));
+                                App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
                             }
+                        }
+                        else if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
+                        {
+                            Common.DisplayErrorMessage(Constraints.ServiceUnavailable);
+                        }
+                        else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
+                        {
+                            Common.DisplayErrorMessage(Constraints.Something_Wrong_Server);
                         }
                         else
                         {
                             if (responseJson.Contains("TokenExpired"))
                             {
                                 var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
-                                if (!isRefresh && getAllMyActiveRequirements == 3)
+                                if (!isRefresh)
                                 {
                                     Common.DisplayErrorMessage(Constraints.Session_Expired);
-                                    App.Current.MainPage = new NavigationPage(new WelcomePage(true));
+                                    App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
                                 }
                                 else
                                 {
-                                    await GetAllMyActiveRequirements(RequirementSortBy.ID.ToString(), null, PageNumber, PageSize);
+                                    await GetAllMyActiveRequirements(SortBy, Title, IsAscending, PageNumber, PageSize);
                                 }
-                                getAllMyActiveRequirements++;
                             }
                             else
                             {
@@ -205,7 +219,7 @@ namespace AptDealzBuyer.API
                 {
                     if (await Common.InternetConnection())
                     {
-                        await GetAllMyActiveRequirements(RequirementSortBy.ID.ToString(), null, PageNumber, PageSize);
+                        await GetAllMyActiveRequirements(SortBy, Title, IsAscending, PageNumber, PageSize);
                     }
                 }
             }
@@ -216,8 +230,7 @@ namespace AptDealzBuyer.API
             return mResponse;
         }
 
-        int getMyPreviousRequirements = 0;
-        public async Task<Response> GetMyPreviousRequirements(string SortBy = "", bool? IsAscending = null, int PageNumber = 1, int PageSize = 10)
+        public async Task<Response> GetMyPreviousRequirements(string SortBy = "", string Title = "", bool? IsAscending = null, int PageNumber = 1, int PageSize = 10)
         {
             Response mResponse = new Response();
             try
@@ -226,15 +239,14 @@ namespace AptDealzBuyer.API
                 {
                     using (var hcf = new HttpClientFactory(token: Common.Token))
                     {
-                        string url = "";
-                        if (!Common.EmptyFiels(SortBy) && IsAscending != null)
-                            url = string.Format(EndPointURL.GetMyPreviousRequirements + "?SortBy={1}&IsAscending={2}&PageNumber={3}&PageSize={4}", (int)App.Current.Resources["Version"], SortBy, IsAscending, PageNumber, PageSize);
-                        else if (!Common.EmptyFiels(SortBy) && IsAscending == null)
-                            url = string.Format(EndPointURL.GetMyPreviousRequirements + "?SortBy={1}&PageNumber={2}&PageSize={3}", (int)App.Current.Resources["Version"], SortBy, PageNumber, PageSize);
-                        else if (Common.EmptyFiels(SortBy) && IsAscending != null)
-                            url = string.Format(EndPointURL.GetMyPreviousRequirements + "?IsAscending={1}&PageNumber={2}&PageSize={3}", (int)App.Current.Resources["Version"], IsAscending, PageNumber, PageSize);
-                        else
-                            url = string.Format(EndPointURL.GetMyPreviousRequirements + "?PageNumber={1}&PageSize={2}", (int)App.Current.Resources["Version"], PageNumber, PageSize);
+                        string url = string.Format(EndPointURL.GetMyPreviousRequirements + "?PageNumber={1}&PageSize={2}", (int)App.Current.Resources["Version"], PageNumber, PageSize);
+
+                        if (!Common.EmptyFiels(Title))
+                            url += "&Title=" + Title;
+                        if (!Common.EmptyFiels(SortBy))
+                            url += "&SortBy=" + SortBy;
+                        if (IsAscending.HasValue)
+                            url += "&IsAscending=" + IsAscending.Value;
 
                         var response = await hcf.GetAsync(url);
                         var responseJson = await response.Content.ReadAsStringAsync();
@@ -248,24 +260,31 @@ namespace AptDealzBuyer.API
                             if (errorString == Constraints.Session_Expired)
                             {
                                 Common.DisplayErrorMessage(Constraints.Session_Expired);
-                                App.Current.MainPage = new NavigationPage(new WelcomePage(true));
+                                App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
                             }
+                        }
+                        else if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
+                        {
+                            Common.DisplayErrorMessage(Constraints.ServiceUnavailable);
+                        }
+                        else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
+                        {
+                            Common.DisplayErrorMessage(Constraints.Something_Wrong_Server);
                         }
                         else
                         {
                             if (responseJson.Contains("TokenExpired"))
                             {
                                 var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
-                                if (!isRefresh && getMyPreviousRequirements == 3)
+                                if (!isRefresh)
                                 {
                                     Common.DisplayErrorMessage(Constraints.Session_Expired);
-                                    App.Current.MainPage = new NavigationPage(new WelcomePage(true));
+                                    App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
                                 }
                                 else
                                 {
-                                    await GetMyPreviousRequirements("", null, PageNumber, PageSize);
+                                    await GetMyPreviousRequirements(SortBy, Title, IsAscending, PageNumber, PageSize);
                                 }
-                                getMyPreviousRequirements++;
                             }
                             else
                             {
@@ -278,7 +297,7 @@ namespace AptDealzBuyer.API
                 {
                     if (await Common.InternetConnection())
                     {
-                        await GetMyPreviousRequirements("", null, PageNumber, PageSize);
+                        await GetMyPreviousRequirements(SortBy, Title, IsAscending, PageNumber, PageSize);
                     }
                 }
             }
@@ -291,8 +310,6 @@ namespace AptDealzBuyer.API
         #endregion
 
         #region [ POST ]
-
-        int createRequirement = 0;
         public async Task<Response> CreateRequirement(Model.Request.Requirement mRequirement)
         {
             Response mResponse = new Response();
@@ -315,24 +332,31 @@ namespace AptDealzBuyer.API
                             var errorString = JsonConvert.DeserializeObject<string>(responseJson);
                             if (errorString == Constraints.Session_Expired)
                             {
-                                App.Current.MainPage = new NavigationPage(new WelcomePage(true));
+                                App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
                             }
+                        }
+                        else if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
+                        {
+                            Common.DisplayErrorMessage(Constraints.ServiceUnavailable);
+                        }
+                        else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
+                        {
+                            Common.DisplayErrorMessage(Constraints.Something_Wrong_Server);
                         }
                         else
                         {
                             if (responseJson.Contains("TokenExpired"))
                             {
                                 var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
-                                if (!isRefresh && createRequirement == 3)
+                                if (!isRefresh)
                                 {
                                     Common.DisplayErrorMessage(Constraints.Session_Expired);
-                                    App.Current.MainPage = new NavigationPage(new WelcomePage(true));
+                                    App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
                                 }
                                 else
                                 {
                                     await CreateRequirement(mRequirement);
                                 }
-                                createRequirement++;
                             }
                             else
                             {
@@ -358,7 +382,6 @@ namespace AptDealzBuyer.API
             return mResponse;
         }
 
-        int cancelRequirement = 0;
         public async Task<Response> CancelRequirement(string requirementId)
         {
             Response mResponse = new Response();
@@ -381,24 +404,31 @@ namespace AptDealzBuyer.API
                             var errorString = JsonConvert.DeserializeObject<string>(responseJson);
                             if (errorString == Constraints.Session_Expired)
                             {
-                                App.Current.MainPage = new NavigationPage(new WelcomePage(true));
+                                App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
                             }
+                        }
+                        else if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
+                        {
+                            Common.DisplayErrorMessage(Constraints.ServiceUnavailable);
+                        }
+                        else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
+                        {
+                            Common.DisplayErrorMessage(Constraints.Something_Wrong_Server);
                         }
                         else
                         {
                             if (responseJson.Contains("TokenExpired"))
                             {
                                 var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
-                                if (!isRefresh && cancelRequirement == 3)
+                                if (!isRefresh)
                                 {
                                     Common.DisplayErrorMessage(Constraints.Session_Expired);
-                                    App.Current.MainPage = new NavigationPage(new WelcomePage(true));
+                                    App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
                                 }
                                 else
                                 {
                                     await CancelRequirement(requirementId);
                                 }
-                                cancelRequirement++;
                             }
                             else
                             {
@@ -427,7 +457,6 @@ namespace AptDealzBuyer.API
 
         #region [ DELETE ]
 
-        int deleteRequirement = 0;
         public async Task<Response> DeleteRequirement(string id)
         {
             Response mResponse = new Response();
@@ -449,24 +478,31 @@ namespace AptDealzBuyer.API
                             var errorString = JsonConvert.DeserializeObject<string>(responseJson);
                             if (errorString == Constraints.Session_Expired)
                             {
-                                App.Current.MainPage = new NavigationPage(new WelcomePage(true));
+                                App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
                             }
+                        }
+                        else if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
+                        {
+                            Common.DisplayErrorMessage(Constraints.ServiceUnavailable);
+                        }
+                        else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
+                        {
+                            Common.DisplayErrorMessage(Constraints.Something_Wrong_Server);
                         }
                         else
                         {
                             if (responseJson.Contains("TokenExpired"))
                             {
                                 var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
-                                if (!isRefresh && deleteRequirement == 3)
+                                if (!isRefresh)
                                 {
                                     Common.DisplayErrorMessage(Constraints.Session_Expired);
-                                    App.Current.MainPage = new NavigationPage(new WelcomePage(true));
+                                    App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
                                 }
                                 else
                                 {
                                     await DeleteRequirement(id);
                                 }
-                                deleteRequirement++;
                             }
                             else
                             {
@@ -494,8 +530,6 @@ namespace AptDealzBuyer.API
         #endregion
 
         #region [ PUT ]
-
-        int updateStatusRequirement = 0;
         public async Task<Response> UpdateStatusRequirement(string requirementId, int status)
         {
             Response mResponse = new Response();
@@ -518,24 +552,31 @@ namespace AptDealzBuyer.API
                             var errorString = JsonConvert.DeserializeObject<string>(responseJson);
                             if (errorString == Constraints.Session_Expired)
                             {
-                                App.Current.MainPage = new NavigationPage(new WelcomePage(true));
+                                App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
                             }
+                        }
+                        else if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
+                        {
+                            Common.DisplayErrorMessage(Constraints.ServiceUnavailable);
+                        }
+                        else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
+                        {
+                            Common.DisplayErrorMessage(Constraints.Something_Wrong_Server);
                         }
                         else
                         {
                             if (responseJson.Contains("TokenExpired"))
                             {
                                 var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
-                                if (!isRefresh && updateStatusRequirement == 3)
+                                if (!isRefresh)
                                 {
                                     Common.DisplayErrorMessage(Constraints.Session_Expired);
-                                    App.Current.MainPage = new NavigationPage(new WelcomePage(true));
+                                    App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
                                 }
                                 else
                                 {
                                     await UpdateStatusRequirement(requirementId, status);
                                 }
-                                updateStatusRequirement++;
                             }
                             else
                             {

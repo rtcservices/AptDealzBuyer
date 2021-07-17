@@ -34,7 +34,11 @@
                     </Image.GestureRecognizers>
                 </Image>
 
-                <Image Grid.Column="1" Style="{StaticResource imgLogo}" />
+                <ImageButton
+                    x:Name="BtnLogo"
+                    Grid.Column="1"
+                    Clicked="BtnLogo_Clicked"
+                    Style="{StaticResource imgLogo}" />
 
                 <StackLayout
                     Grid.Column="2"
@@ -110,24 +114,20 @@
 
                             <StackLayout Grid.Row="0">
                                 <StackLayout
-                                    Margin="20,5,20,0"
+                                    Margin="20,0"
                                     HorizontalOptions="FillAndExpand"
                                     Orientation="Horizontal">
 
                                     <Label
-                                        Margin="0"
-                                        FontFamily="Poppins"
-                                        FontSize="14"
                                         HorizontalOptions="StartAndExpand"
-                                        Text="Grievance ID"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblLight}"
+                                        Text="Grievance ID" />
 
                                     <Label
                                         x:Name="lblGrievanceId"
                                         Margin="0"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontFamily="Poppins-Medium"
+                                        FontSize="15"
                                         HorizontalOptions="EndAndExpand"
                                         Text="#GR123"
                                         TextColor="{StaticResource Black}"
@@ -149,19 +149,15 @@
                                     Orientation="Horizontal">
 
                                     <Label
-                                        Margin="0"
-                                        FontFamily="Poppins"
-                                        FontSize="14"
                                         HorizontalOptions="StartAndExpand"
-                                        Text="Order ID"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblLight}"
+                                        Text="Order ID" />
 
                                     <Label
                                         x:Name="lblOrderId"
                                         Margin="0"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontFamily="Poppins-Medium"
+                                        FontSize="15"
                                         HorizontalOptions="EndAndExpand"
                                         Text="#OR12"
                                         TextColor="{StaticResource Black}"
@@ -183,19 +179,15 @@
                                     Orientation="Horizontal">
 
                                     <Label
-                                        Margin="0"
-                                        FontFamily="Poppins"
-                                        FontSize="14"
                                         HorizontalOptions="StartAndExpand"
-                                        Text="Order Date"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblLight}"
+                                        Text="Order Date" />
 
                                     <Label
                                         x:Name="lblOrderDate"
                                         Margin="0"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontFamily="Poppins-Medium"
+                                        FontSize="15"
                                         HorizontalOptions="EndAndExpand"
                                         Text="22-12-2020"
                                         TextColor="{StaticResource Black}"
@@ -217,19 +209,15 @@
                                     Orientation="Horizontal">
 
                                     <Label
-                                        Margin="0"
-                                        FontFamily="Poppins"
-                                        FontSize="14"
                                         HorizontalOptions="StartAndExpand"
-                                        Text="Grievance Date"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblLight}"
+                                        Text="Grievance Date" />
 
                                     <Label
                                         x:Name="lblGrievanceDate"
                                         Margin="0"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontFamily="Poppins-Medium"
+                                        FontSize="15"
                                         HorizontalOptions="EndAndExpand"
                                         Text="22-12-2020"
                                         TextColor="{StaticResource Black}"
@@ -251,19 +239,15 @@
                                     Orientation="Horizontal">
 
                                     <Label
-                                        Margin="0"
-                                        FontFamily="Poppins"
-                                        FontSize="14"
                                         HorizontalOptions="StartAndExpand"
-                                        Text="Buyer Name"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblLight}"
+                                        Text="Buyer Name" />
 
                                     <Label
                                         x:Name="lblBuyeName"
                                         Margin="0"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontFamily="Poppins-Medium"
+                                        FontSize="15"
                                         HorizontalOptions="EndAndExpand"
                                         Text="Han"
                                         TextColor="{StaticResource Black}"
@@ -285,19 +269,15 @@
                                     Orientation="Horizontal">
 
                                     <Label
-                                        Margin="0"
-                                        FontFamily="Poppins"
-                                        FontSize="14"
                                         HorizontalOptions="StartAndExpand"
-                                        Text="Grievance Type"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblLight}"
+                                        Text="Grievance Type" />
 
                                     <Label
                                         x:Name="lblGrievanceType"
                                         Margin="0"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontFamily="Poppins-Medium"
+                                        FontSize="15"
                                         HorizontalOptions="EndAndExpand"
                                         Text="Delayed Delivery"
                                         TextColor="{StaticResource Black}"
@@ -319,19 +299,15 @@
                                     Orientation="Horizontal">
 
                                     <Label
-                                        Margin="0"
-                                        FontFamily="Poppins"
-                                        FontSize="14"
                                         HorizontalOptions="StartAndExpand"
-                                        Text="Status"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblLight}"
+                                        Text="Status" />
 
                                     <Label
                                         x:Name="lblStatus"
                                         Margin="0"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontFamily="Poppins-Medium"
+                                        FontSize="15"
                                         HorizontalOptions="EndAndExpand"
                                         Text="Open"
                                         TextColor="{StaticResource Black}"
@@ -353,19 +329,15 @@
                                     Orientation="Horizontal">
 
                                     <Label
-                                        Margin="0"
-                                        FontFamily="Poppins"
-                                        FontSize="14"
                                         HorizontalOptions="StartAndExpand"
-                                        Text="Attached Documents"
-                                        TextColor="{StaticResource Black}"
-                                        VerticalOptions="CenterAndExpand" />
+                                        Style="{StaticResource lblLight}"
+                                        Text="Attached Documents" />
 
                                     <Label
                                         x:Name="lblNetAmount"
                                         Margin="0"
-                                        FontFamily="Poppins Medium"
-                                        FontSize="14"
+                                        FontFamily="Poppins-Medium"
+                                        FontSize="15"
                                         HorizontalOptions="EndAndExpand"
                                         Text="Files"
                                         TextColor="{StaticResource Black}"
@@ -391,27 +363,34 @@
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
-                            <Frame
+
+                            <!--  Text Lorem ipsum Frame  -->
+                            <StackLayout
                                 Grid.Row="0"
-                                Margin="0"
-                                Padding="10"
-                                BackgroundColor="Transparent"
-                                BorderColor="{StaticResource LightGray}"
-                                CornerRadius="5"
-                                HasShadow="False"
                                 HorizontalOptions="FillAndExpand"
-                                VerticalOptions="CenterAndExpand">
-                                <Editor
-                                    Margin="10"
-                                    Style="{StaticResource edPrimary}"
-                                    Text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text." />
-                            </Frame>
+                                VerticalOptions="FillAndExpand">
+                                <Frame
+                                    Padding="10"
+                                    BackgroundColor="White"
+                                    BorderColor="{StaticResource LightGray}"
+                                    HeightRequest="80"
+                                    Style="{StaticResource frmEntry}">
+                                    <Editor
+                                        AutoSize="TextChanges"
+                                        FontFamily="Poppins"
+                                        Keyboard="Text"
+                                        Placeholder="Notes"
+                                        Style="{StaticResource edPrimary}"
+                                        TabIndex="1" />
+                                </Frame>
+                            </StackLayout>
 
                             <Grid
                                 Grid.Row="1"
                                 RowDefinitions="Auto,Auto"
-                                RowSpacing="20">
+                                RowSpacing="40">
 
+                                <!--  Admin  -->
                                 <Grid
                                     Grid.Row="0"
                                     ColumnDefinitions="Auto,*"
@@ -433,8 +412,8 @@
 
                                         <Label
                                             Margin="0"
-                                            FontFamily="Poppins Medium"
-                                            FontSize="15"
+                                            FontFamily="Poppins-Medium"
+                                            FontSize="16"
                                             HorizontalOptions="CenterAndExpand"
                                             Text="Admin"
                                             TextColor="{StaticResource Black}"
@@ -442,22 +421,18 @@
 
                                     </StackLayout>
 
-                                    <Frame
-                                        Grid.Column="1"
-                                        Margin="0"
-                                        Padding="0"
-                                        BackgroundColor="Transparent"
-                                        BorderColor="{StaticResource LightGray}"
-                                        CornerRadius="5"
-                                        HasShadow="False">
+                                    <StackLayout Grid.Column="1" Spacing="{OnPlatform Android=0, iOS=7}">
+                                        <Label Style="{StaticResource lblPrimary13}" Text="Response" />
                                         <Editor
                                             x:Name="txtAdminResponse"
-                                            Margin="10"
-                                            Placeholder="Response"
+                                            AutoSize="TextChanges"
                                             Style="{StaticResource edPrimary}" />
-                                    </Frame>
+                                        <BoxView Style="{StaticResource boxHorizontal}" />
+                                    </StackLayout>
+
                                 </Grid>
 
+                                <!--  Buyer  -->
                                 <Grid
                                     Grid.Row="1"
                                     ColumnDefinitions="Auto,*"
@@ -478,44 +453,37 @@
                                             WidthRequest="50" />
 
                                         <Label
-                                            Margin="0"
-                                            FontFamily="Poppins Medium"
-                                            FontSize="15"
                                             HorizontalOptions="CenterAndExpand"
-                                            Text="Buyer"
-                                            TextColor="{StaticResource Black}"
-                                            VerticalOptions="CenterAndExpand" />
+                                            Style="{StaticResource lblLight}"
+                                            Text="Buyer" />
 
                                     </StackLayout>
 
-                                    <Frame
-                                        Grid.Column="1"
-                                        Margin="0"
-                                        Padding="0"
-                                        BackgroundColor="Transparent"
-                                        BorderColor="{StaticResource LightGray}"
-                                        CornerRadius="5"
-                                        HasShadow="False">
+                                    <StackLayout Grid.Column="1" Spacing="{OnPlatform Android=0, iOS=7}">
+                                        <Label Style="{StaticResource lblPrimary13}" Text="Response" />
                                         <Editor
                                             x:Name="txtBuyerResponse"
-                                            Margin="10"
-                                            Placeholder="Response"
+                                            AutoSize="TextChanges"
                                             Style="{StaticResource edPrimary}" />
-                                    </Frame>
+                                        <BoxView Style="{StaticResource boxHorizontal}" />
+                                    </StackLayout>
                                 </Grid>
                             </Grid>
 
-                            <StackLayout Grid.Row="2" Spacing="{OnPlatform Android=0, iOS=5}">
+                            <!--  message  -->
+                            <StackLayout Grid.Row="2" Spacing="5">
                                 <Label Style="{StaticResource lblPrimary13}" Text="Enter your message" />
                                 <Editor
                                     x:Name="txtMessage"
-                                    Margin="10"
-                                    HeightRequest="100"
+                                    Margin="10,0"
+                                    AutoSize="TextChanges"
                                     Style="{StaticResource edPrimary}" />
-                                <BoxView Style="{StaticResource boxHorizontal}" />
+                                <BoxView x:Name="BoxMessage" Style="{StaticResource boxHorizontal}" />
                             </StackLayout>
 
+                            <!--  SubmitButton  -->
                             <Button
+                                x:Name="frmGrievance"
                                 Grid.Row="3"
                                 Clicked="FrmSubmit_Tapped"
                                 Style="{StaticResource btnPrimary}"

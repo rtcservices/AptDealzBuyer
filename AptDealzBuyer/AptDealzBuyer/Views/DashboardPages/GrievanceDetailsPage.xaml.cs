@@ -54,5 +54,11 @@ namespace AptDealzBuyer.Views.DashboardPages
 
         }
         #endregion
+
+        private void BtnLogo_Clicked(object sender, EventArgs e)
+        {
+            //Common.BindAnimation(imageButton: BtnLogo);
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
+        }
     }
 }

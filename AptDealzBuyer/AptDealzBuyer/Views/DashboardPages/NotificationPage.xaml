@@ -34,7 +34,11 @@
                     </Image.GestureRecognizers>
                 </Image>
 
-                <Image Grid.Column="1" Style="{StaticResource imgLogo}" />
+                <ImageButton
+                    x:Name="BtnLogo"
+                    Grid.Column="1"
+                    Clicked="BtnLogo_Clicked"
+                    Style="{StaticResource imgLogo}" />
 
                 <StackLayout
                     Grid.Column="2"
@@ -122,13 +126,10 @@
                                         <Label
                                             Grid.Column="1"
                                             Margin="10,0,0,0"
-                                            FontFamily="Poppins"
-                                            FontSize="15"
                                             HorizontalOptions="StartAndExpand"
                                             LineBreakMode="WordWrap"
-                                            Text="{Binding NotificationTitle}"
-                                            TextColor="{StaticResource Black}"
-                                            VerticalOptions="CenterAndExpand" />
+                                            Style="{StaticResource lblLight}"
+                                            Text="{Binding NotificationTitle}" />
 
                                         <Image
                                             Grid.Column="2"
