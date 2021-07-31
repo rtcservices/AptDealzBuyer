@@ -22,10 +22,10 @@
             RowSpacing="25">
 
             <Image
+                x:Name="ImgReaction"
                 Grid.Row="0"
                 HeightRequest="70"
                 HorizontalOptions="CenterAndExpand"
-                Source="iconSmile.png"
                 VerticalOptions="CenterAndExpand"
                 WidthRequest="70" />
 

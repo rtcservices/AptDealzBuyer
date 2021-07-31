@@ -1,4 +1,5 @@
 ﻿using AptDealzBuyer.Model.Reponse;
+using AptDealzBuyer.Model.Request;
 using AptDealzBuyer.Repository;
 using AptDealzBuyer.Utility;
 using Newtonsoft.Json;
@@ -306,14 +307,14 @@ namespace AptDealzBuyer.API
             return mResponse;
         }
 
-        public async Task<Response> RevealSellerContact(string quoteId, int paymentStatus)
+        public async Task<Response> RevealSellerContact(RevealSellerContact mRevealSellerContact)
         {
             Response mResponse = new Response();
             try
             {
                 if (CrossConnectivity.Current.IsConnected)
                 {
-                    string requestJson = "{\"quoteId\":\"" + quoteId + "\",\"paymentStatus\":" + paymentStatus + "}";
+                    string requestJson = JsonConvert.SerializeObject(mRevealSellerContact);
                     using (var hcf = new HttpClientFactory(token: Common.Token))
                     {
                         string url = string.Format(EndPointURL.RevealSellerContact, (int)App.Current.Resources["Version"]);
@@ -351,7 +352,7 @@ namespace AptDealzBuyer.API
                                 }
                                 else
                                 {
-                                    await RevealSellerContact(quoteId, paymentStatus);
+                                    await RevealSellerContact(mRevealSellerContact);
                                 }
                             }
                             else
@@ -365,7 +366,7 @@ namespace AptDealzBuyer.API
                 {
                     if (await Common.InternetConnection())
                     {
-                        await RevealSellerContact(quoteId, paymentStatus);
+                        await RevealSellerContact(mRevealSellerContact);
                     }
                 }
             }

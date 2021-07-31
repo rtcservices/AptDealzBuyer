@@ -39,7 +39,7 @@ namespace AptDealzBuyer.Views.Login
                 imgCheck.Source = Constraints.CheckBox_UnChecked;
         }
 
-        bool Validations()
+        private bool Validations()
         {
             bool isValid = false;
             try
@@ -86,7 +86,7 @@ namespace AptDealzBuyer.Views.Login
             return isValid;
         }
 
-        void RequiredFields()
+        private void RequiredFields()
         {
             try
             {
@@ -112,7 +112,7 @@ namespace AptDealzBuyer.Views.Login
             }
         }
 
-        void FieldsTrim()
+        private void FieldsTrim()
         {
             try
             {
@@ -126,7 +126,7 @@ namespace AptDealzBuyer.Views.Login
             }
         }
 
-        Model.Request.Register FillRegister()
+        private Model.Request.Register FillRegister()
         {
             Register mRegister = new Register();
             try
@@ -146,7 +146,7 @@ namespace AptDealzBuyer.Views.Login
             return mRegister;
         }
 
-        async void RegisterUser()
+        private async void RegisterUser()
         {
             try
             {
@@ -248,9 +248,7 @@ namespace AptDealzBuyer.Views.Login
             }
         }
 
-
-
-        async Task<Dictionary<bool, string>> SendOTP(string phoneNumber)
+        private async Task<Dictionary<bool, string>> SendOTP(string phoneNumber)
         {
             Dictionary<bool, string> keyValuePairs = new Dictionary<bool, string>();
             try
@@ -279,7 +277,7 @@ namespace AptDealzBuyer.Views.Login
             }
         }
 
-        void NavigateToDashboard(Response mResponse)
+        private void NavigateToDashboard(Response mResponse)
         {
             try
             {
@@ -310,13 +308,13 @@ namespace AptDealzBuyer.Views.Login
             }
             catch (Exception ex)
             {
-                Common.DisplayErrorMessage("EnterOtpPage/NavigateToDashboard: " + ex.Message);
+                Common.DisplayErrorMessage("SignupPage/NavigateToDashboard: " + ex.Message);
             }
         }
 
-        Model.Request.Login FillLogin()
+        private Model.Request.AuthenticatePhone FillLogin()
         {
-            Model.Request.Login mLogin = new Model.Request.Login();
+            Model.Request.AuthenticatePhone mLogin = new Model.Request.AuthenticatePhone();
             try
             {
                 mLogin.PhoneNumber = txtPhoneNumber.Text;
@@ -345,6 +343,7 @@ namespace AptDealzBuyer.Views.Login
         #region Events
         private void ImgBack_Tapped(object sender, EventArgs e)
         {
+            Common.BindAnimation(image: ImgBack);
             Navigation.PopAsync();
         }
 
@@ -355,15 +354,22 @@ namespace AptDealzBuyer.Views.Login
 
         private void StkAgreeTC_Tapped(object sender, EventArgs e)
         {
-            if (imgCheck.Source.ToString().Replace("File: ", "") == Constraints.CheckBox_Checked)
+            try
             {
-                isChecked = false;
-                imgCheck.Source = Constraints.CheckBox_UnChecked;
+                if (imgCheck.Source.ToString().Replace("File: ", "") == Constraints.CheckBox_Checked)
+                {
+                    isChecked = false;
+                    imgCheck.Source = Constraints.CheckBox_UnChecked;
+                }
+                else
+                {
+                    isChecked = true;
+                    imgCheck.Source = Constraints.CheckBox_Checked;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                isChecked = true;
-                imgCheck.Source = Constraints.CheckBox_Checked;
+                Common.DisplayErrorMessage("SignupPage/StkAgreeTC_Tapped: " + ex.Message);
             }
         }
 

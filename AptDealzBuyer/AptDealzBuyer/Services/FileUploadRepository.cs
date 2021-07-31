@@ -12,15 +12,25 @@ namespace AptDealzBuyer.Services
     {
         public async Task<string> UploadFile(int fileUploadCategory)
         {
-            string relativePath = "";
+            string relativePath = string.Empty;
+            string base64String;
+            string fileName = string.Empty;
+
             try
             {
-                if (ImageConvertion.SelectedImageByte != null)
+                if (ImageConvertion.SelectedImageByte != null || FileSelection.fileByte != null)
                 {
-                    var base64String = Convert.ToBase64String(ImageConvertion.SelectedImageByte);
-                    var fileName = Guid.NewGuid().ToString() + ".png";
+                    if (fileUploadCategory != (int)FileUploadCategory.ProfileDocuments)
+                    {
+                        base64String = Convert.ToBase64String(ImageConvertion.SelectedImageByte);
+                        fileName = Guid.NewGuid().ToString() + ".png";
+                    }
+                    else
+                    {
+                        base64String = Convert.ToBase64String(FileSelection.fileByte);
+                        fileName = FileSelection.fileName;
+                    }
 
-                    UserDialogs.Instance.ShowLoading(Constraints.Loading);
                     ProfileAPI profileAPI = new ProfileAPI();
                     FileUpload mFileUpload = new FileUpload();
 
@@ -37,7 +47,7 @@ namespace AptDealzBuyer.Services
                             var mBuyerFile = jObject.ToObject<Model.Reponse.BuyerFileDocument>();
                             if (mBuyerFile != null)
                             {
-                                relativePath = mBuyerFile.relativePath;
+                                relativePath = mBuyerFile.DocumentPath;
                             }
                         }
                     }
@@ -48,6 +58,10 @@ namespace AptDealzBuyer.Services
                         else
                             Common.DisplayErrorMessage(Constraints.Something_Wrong);
                     }
+                }
+                else
+                {
+                    return relativePath;
                 }
             }
             catch (Exception ex)

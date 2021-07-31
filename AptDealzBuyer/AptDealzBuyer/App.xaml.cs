@@ -1,6 +1,7 @@
 ﻿using AptDealzBuyer.Repository;
 using AptDealzBuyer.Services;
 using AptDealzBuyer.Utility;
+using AptDealzBuyer.Views.MasterData;
 using Plugin.FirebasePushNotification;
 using System;
 using Xamarin.Essentials;
@@ -13,6 +14,9 @@ namespace AptDealzBuyer
         #region Objects
         public static int latitude = 0;
         public static int longitude = 0;
+        public static StoppableTimer stoppableTimer;
+        public static bool IsNotification = false;
+
         #endregion
 
         #region Constructor
@@ -27,13 +31,22 @@ namespace AptDealzBuyer
                 });
 
                 InitializeComponent();
+
                 Application.Current.UserAppTheme = OSAppTheme.Light;
 
                 RegisterDependencies();
                 GetCurrentLocation();
                 BindCrossFirebasePushNotification();
 
-                MainPage = new Views.SplashScreen.Spalshscreen();
+                if (!IsNotification)
+                {
+                    MainPage = new Views.SplashScreen.Spalshscreen();
+                }
+                else
+                {
+                    MainPage = new MasterDataPage(true);
+                    IsNotification = false;
+                }
             }
             catch (Exception ex)
             {
@@ -51,9 +64,12 @@ namespace AptDealzBuyer
             Xamarin.Forms.DependencyService.Register<IProfileRepository, ProfileRepository>();
             Xamarin.Forms.DependencyService.Register<IAuthenticationRepository, AuthenticationRepository>();
             Xamarin.Forms.DependencyService.Register<IOrderRepository, OrderRepository>();
+            Xamarin.Forms.DependencyService.Register<IQuoteRepository, QuoteRepository>();
+            Xamarin.Forms.DependencyService.Register<IGrievanceRepository, GrievanceRepository>();
+            Xamarin.Forms.DependencyService.Register<INotificationRepository, NotificationRepository>();
         }
 
-        public async void GetCurrentLocation()
+        private async void GetCurrentLocation()
         {
             try
             {
@@ -75,9 +91,9 @@ namespace AptDealzBuyer
             try
             {
                 CrossFirebasePushNotification.Current.OnTokenRefresh += (s, p) =>
-                    {
-                        System.Diagnostics.Debug.WriteLine($"TOKEN : {p.Token}");
-                    };
+                {
+                    System.Diagnostics.Debug.WriteLine($"TOKEN : {p.Token}");
+                };
 
                 CrossFirebasePushNotification.Current.OnNotificationReceived += (s, p) =>
                 {
@@ -86,11 +102,7 @@ namespace AptDealzBuyer
 
                 CrossFirebasePushNotification.Current.OnNotificationOpened += (s, p) =>
                 {
-                    System.Diagnostics.Debug.WriteLine("Opened");
-                    foreach (var data in p.Data)
-                    {
-                        System.Diagnostics.Debug.WriteLine($"{data.Key} : {data.Value}");
-                    }
+                    IsNotification = true;
                 };
 
                 CrossFirebasePushNotification.Current.OnNotificationAction += (s, p) =>
@@ -124,6 +136,8 @@ namespace AptDealzBuyer
 
         protected override void OnSleep()
         {
+            if (App.stoppableTimer != null)
+                stoppableTimer.Stop();
         }
 
         protected override void OnResume()

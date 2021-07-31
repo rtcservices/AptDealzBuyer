@@ -9,6 +9,7 @@ namespace AptDealzBuyer.Model
         public Thickness MessageMargin { get; set; }
         public Color MessageBackgroundColor { get; set; } = (Color)App.Current.Resources["LightGray"];
         public Color MessageTextColor { get; set; } = (Color)App.Current.Resources["Black"];
+        public CornerRadius PancakeRadius { get; set; } = new CornerRadius(10, 0, 10, 10);
         public string UserName { get; set; }
         public string Time { get; set; }
         public string ContactImage { get; set; } = "imgContact.jpg";

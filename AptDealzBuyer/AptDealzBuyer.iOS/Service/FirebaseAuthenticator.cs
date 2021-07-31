@@ -2,7 +2,6 @@
 using AptDealzBuyer.Model.Reponse;
 using Firebase.Auth;
 using Foundation;
-using Plugin.FirebaseAuth;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

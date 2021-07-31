@@ -1,9 +1,12 @@
-﻿using Newtonsoft.Json;
+﻿using AptDealzBuyer.Utility;
+using Newtonsoft.Json;
 using System;
+using System.ComponentModel;
+using Xamarin.Forms;
 
 namespace AptDealzBuyer.Model.Reponse
 {
-    public class Order
+    public class Order : INotifyPropertyChanged
     {
         [JsonProperty("orderId")]
         public string OrderId { get; set; }
@@ -63,7 +66,7 @@ namespace AptDealzBuyer.Model.Reponse
         public decimal PaidAmount { get; set; }
 
         [JsonProperty("trackingLink")]
-        public object TrackingLink { get; set; }
+        public string TrackingLink { get; set; }
 
         [JsonProperty("pickupProductDirectly")]
         public bool PickupProductDirectly { get; set; }
@@ -98,15 +101,40 @@ namespace AptDealzBuyer.Model.Reponse
         [JsonProperty("isOrderCancelAllowed")]
         public bool IsOrderCancelAllowed { get; set; }
 
-
         [JsonProperty("sellerContact")]
         public SellerContact SellerContact { get; set; }
 
         [JsonProperty("buyerContact")]
         public BuyerContact BuyerContact { get; set; }
 
+        [JsonProperty("buyerAddressDetails")]
+        public BuyerAddressDetails BuyerAddressDetails { get; set; }
+
+        [JsonProperty("sellerAddressDetails")]
+        public SellerAddressDetails SellerAddressDetails { get; set; }
+
+        [JsonProperty("platFormCharges")]
+        public int PlatFormCharges { get; set; }
+
+        [JsonProperty("sellerEarnings")]
+        public int SellerEarnings { get; set; }
+
+        [JsonProperty("sellerRating")]
+        public int SellerRating { get; set; }
+
+        [JsonProperty("productRating")]
+        public int ProductRating { get; set; }
 
         #region [ Extra Properties ]
+        [JsonIgnore]
+        public bool isSelectGrievance { get; set; } = false;
+        [JsonIgnore]
+        public string OrderSuccessMessage { get; set; }
+        [JsonIgnore]
+        public string OrderErrorMessage { get; set; }
+        [JsonIgnore]
+        public bool IsSuccess { get; set; }
+
         [JsonIgnore]
         public string ExpectedDeliveryDate
         {
@@ -124,41 +152,17 @@ namespace AptDealzBuyer.Model.Reponse
         }
 
         [JsonIgnore]
-        public string OrderStatusEnum
+        public string OrderAction
         {
             get
             {
-                if (Status == (int)Utility.OrderStatus.Pending)
+                if (OrderStatus == (int)Utility.OrderStatus.Completed || OrderStatus == (int)Utility.OrderStatus.CancelledFromBuyer)
                 {
-                    return Utility.OrderStatus.Pending.ToString();
+                    return "Reorder";
                 }
-                else if (Status == (int)Utility.OrderStatus.Accepted)
+                else if (OrderStatus == (int)Utility.OrderStatus.Shipped && PickupProductDirectly)
                 {
-                    return Utility.OrderStatus.Accepted.ToString();
-                }
-                else if (Status == (int)Utility.OrderStatus.ReadyForPickup)
-                {
-                    return Utility.OrderStatus.ReadyForPickup.ToString();
-                }
-                else if (Status == (int)Utility.OrderStatus.Shipped)
-                {
-                    return Utility.OrderStatus.Shipped.ToString();
-                }
-                else if (Status == (int)Utility.OrderStatus.Delivered)
-                {
-                    return Utility.OrderStatus.Delivered.ToString();
-                }
-                else if (Status == (int)Utility.OrderStatus.Completed)
-                {
-                    return Utility.OrderStatus.Completed.ToString();
-                }
-                else if (Status == (int)Utility.OrderStatus.CancelledFromBuyer)
-                {
-                    return Utility.OrderStatus.CancelledFromBuyer.ToString();
-                }
-                else if (Status == (int)Utility.OrderStatus.All)
-                {
-                    return Utility.OrderStatus.All.ToString();
+                    return "Show QR Code";
                 }
                 else
                 {
@@ -168,47 +172,52 @@ namespace AptDealzBuyer.Model.Reponse
         }
 
         [JsonIgnore]
-        public string OrderPaymentStatus
+        public bool OrderActionVisibility { get; set; }
+
+        [JsonIgnore]
+        public bool OrderTrackVisibility { get; set; }
+
+        [JsonIgnore]
+        private string _ArrowImage { get; set; } = Constraints.Arrow_Right;
+
+        [JsonIgnore]
+        public string ArrowImage
         {
-            get
-            {
-                if (PaymentStatus == (int)Utility.OrderStatus.Pending)
-                {
-                    return Utility.OrderStatus.Pending.ToString();
-                }
-                else if (PaymentStatus == (int)Utility.OrderStatus.Accepted)
-                {
-                    return Utility.OrderStatus.Accepted.ToString();
-                }
-                else if (PaymentStatus == (int)Utility.OrderStatus.ReadyForPickup)
-                {
-                    return Utility.OrderStatus.ReadyForPickup.ToString();
-                }
-                else if (PaymentStatus == (int)Utility.OrderStatus.Shipped)
-                {
-                    return Utility.OrderStatus.Shipped.ToString();
-                }
-                else if (PaymentStatus == (int)Utility.OrderStatus.Delivered)
-                {
-                    return Utility.OrderStatus.Delivered.ToString();
-                }
-                else if (PaymentStatus == (int)Utility.OrderStatus.Completed)
-                {
-                    return Utility.OrderStatus.Completed.ToString();
-                }
-                else if (PaymentStatus == (int)Utility.OrderStatus.CancelledFromBuyer)
-                {
-                    return Utility.OrderStatus.CancelledFromBuyer.ToString();
-                }
-                else if (PaymentStatus == (int)Utility.OrderStatus.All)
-                {
-                    return Utility.OrderStatus.All.ToString();
-                }
-                else
-                {
-                    return string.Empty;
-                }
-            }
+            get { return _ArrowImage; }
+            set { _ArrowImage = value; PropertyChangedEventArgs("ArrowImage"); }
+        }
+
+        [JsonIgnore]
+        private bool _MoreDetail { get; set; } = false;
+        [JsonIgnore]
+        public bool MoreDetail
+        {
+            get { return _MoreDetail; }
+            set { _MoreDetail = value; PropertyChangedEventArgs("MoreDetail"); }
+        }
+
+        [JsonIgnore]
+        private bool _OldDetail { get; set; } = true;
+        [JsonIgnore]
+        public bool OldDetail
+        {
+            get { return _OldDetail; }
+            set { _OldDetail = value; PropertyChangedEventArgs("OldDetail"); }
+        }
+
+        [JsonIgnore]
+        private Color _GridBg { get; set; } = Color.Transparent;
+        [JsonIgnore]
+        public Color GridBg
+        {
+            get { return _GridBg; }
+            set { _GridBg = value; PropertyChangedEventArgs("GridBg"); }
+        }
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void PropertyChangedEventArgs(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         #endregion
     }

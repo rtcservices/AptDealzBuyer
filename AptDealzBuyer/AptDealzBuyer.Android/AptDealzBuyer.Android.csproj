@@ -17,7 +17,7 @@
     <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
     <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
     <AndroidUseLatestPlatformSdk>false</AndroidUseLatestPlatformSdk>
-    <TargetFrameworkVersion>v10.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v11.0</TargetFrameworkVersion>
     <AndroidEnableSGenConcurrent>true</AndroidEnableSGenConcurrent>
     <AndroidUseAapt2>true</AndroidUseAapt2>
     <AndroidHttpClientHandlerType>Xamarin.Android.Net.AndroidClientHandler</AndroidHttpClientHandlerType>
@@ -37,14 +37,14 @@
     <EnableLLVM>false</EnableLLVM>
     <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
     <BundleAssemblies>false</BundleAssemblies>
-    <JavaMaximumHeapSize>
-    </JavaMaximumHeapSize>
+    <JavaMaximumHeapSize>1G</JavaMaximumHeapSize>
     <AndroidSupportedAbis />
     <AndroidKeyStore>true</AndroidKeyStore>
     <AndroidSigningKeyStore>..\AptDealzBuyer.Android\KeyStore\AptDealzBuyer.keystore</AndroidSigningKeyStore>
     <AndroidSigningStorePass>test123</AndroidSigningStorePass>
     <AndroidSigningKeyPass>test123</AndroidSigningKeyPass>
     <AndroidSigningKeyAlias>AptDealzBuyer</AndroidSigningKeyAlias>
+    <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -161,6 +161,7 @@
     <Compile Include="DependencService\CloseAppOnBackButton.cs" />
     <Compile Include="DependencService\FirebaseAuthenticator.cs" />
     <Compile Include="DependencService\NotificationHelper.cs" />
+    <Compile Include="DependencService\PhoneDialer.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="MainApplication.cs" />
     <Compile Include="MyFirebaseIIDService.cs" />
@@ -447,6 +448,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="DLL\RazorPayBindingForXamarin.dll" />
+    <AndroidResource Include="Resources\drawable\iconSad.png" />
+    <AndroidResource Include="Resources\drawable\iconVideo.png" />
+    <AndroidResource Include="Resources\drawable\iconMusic.png" />
+    <AndroidResource Include="Resources\drawable\iconFiles2.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <ProjectExtensions>

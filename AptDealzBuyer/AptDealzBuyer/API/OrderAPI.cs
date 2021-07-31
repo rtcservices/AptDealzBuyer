@@ -5,6 +5,8 @@ using AptDealzBuyer.Utility;
 using Newtonsoft.Json;
 using Plugin.Connectivity;
 using System;
+using System.IO;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -13,7 +15,7 @@ namespace AptDealzBuyer.API
     class OrderAPI
     {
         #region [ GET ]
-        public async Task<Response> GetOrdersForBuyer(int? Status = null, string SortBy = "", bool? IsAscending = null, int PageNumber = 1, int PageSize = 10)
+        public async Task<Response> GetOrdersForBuyer(int? Status = null, string Title = "", string SortBy = "", bool? IsAscending = null, int PageNumber = 1, int PageSize = 10)
         {
             Response mResponse = new Response();
             try
@@ -26,6 +28,8 @@ namespace AptDealzBuyer.API
 
                         if (Status > 0)
                             url += "&Status=" + Status;
+                        if (!Common.EmptyFiels(Title))
+                            url += "&Title=" + Title;
                         if (!Common.EmptyFiels(SortBy))
                             url += "&SortBy=" + SortBy;
                         if (IsAscending.HasValue)
@@ -66,7 +70,7 @@ namespace AptDealzBuyer.API
                                 }
                                 else
                                 {
-                                    await GetOrdersForBuyer(Status, SortBy, IsAscending, PageNumber, PageSize);
+                                    await GetOrdersForBuyer(Status, Title, SortBy, IsAscending, PageNumber, PageSize);
                                 }
                             }
                             else
@@ -80,7 +84,7 @@ namespace AptDealzBuyer.API
                 {
                     if (await Common.InternetConnection())
                     {
-                        await GetOrdersForBuyer(Status, SortBy, IsAscending, PageNumber, PageSize);
+                        await GetOrdersForBuyer(Status, Title, SortBy, IsAscending, PageNumber, PageSize);
                     }
                 }
             }
@@ -160,6 +164,141 @@ namespace AptDealzBuyer.API
             }
             return mResponse;
         }
+
+        public async Task<Response> GetShippedOrdersForBuyer(string Title = "", string SortBy = "", bool? IsAscending = null, int PageNumber = 1, int PageSize = 10)
+        {
+            Response mResponse = new Response();
+            try
+            {
+                if (CrossConnectivity.Current.IsConnected)
+                {
+                    using (var hcf = new HttpClientFactory(token: Common.Token))
+                    {
+                        string url = string.Format(EndPointURL.GetShippedOrdersForBuyer + "?PageNumber={1}&PageSize={2}", (int)App.Current.Resources["Version"], PageNumber, PageSize);
+
+                        if (!Common.EmptyFiels(Title))
+                            url += "&Title=" + Title;
+                        if (!Common.EmptyFiels(SortBy))
+                            url += "&SortBy=" + SortBy;
+                        if (IsAscending.HasValue)
+                            url += "&IsAscending=" + IsAscending.Value;
+
+                        var response = await hcf.GetAsync(url);
+                        var responseJson = await response.Content.ReadAsStringAsync();
+                        if (response.IsSuccessStatusCode)
+                        {
+                            mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
+                        }
+                        else if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                        {
+                            var errorString = JsonConvert.DeserializeObject<string>(responseJson);
+                            if (errorString == Constraints.Session_Expired)
+                            {
+                                Common.DisplayErrorMessage(Constraints.Session_Expired);
+                                App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
+                            }
+                        }
+                        else if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
+                        {
+                            Common.DisplayErrorMessage(Constraints.ServiceUnavailable);
+                        }
+                        else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
+                        {
+                            Common.DisplayErrorMessage(Constraints.Something_Wrong_Server);
+                        }
+                        else
+                        {
+                            if (responseJson.Contains("TokenExpired"))
+                            {
+                                var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
+                                if (!isRefresh)
+                                {
+                                    Common.DisplayErrorMessage(Constraints.Session_Expired);
+                                    App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
+                                }
+                                else
+                                {
+                                    await GetShippedOrdersForBuyer(Title, SortBy, IsAscending, PageNumber, PageSize);
+                                }
+                            }
+                            else
+                            {
+                                mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    if (await Common.InternetConnection())
+                    {
+                        await GetShippedOrdersForBuyer(Title, SortBy, IsAscending, PageNumber, PageSize);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("OrderAPI/GetShippedOrdersForBuyer: " + ex.Message);
+            }
+            return mResponse;
+        }
+
+        public async Task<Response> GenerateQRCodeImageForBuyerApp(string orderId)
+        {
+            Response mResponse = new Response();
+            try
+            {
+                if (CrossConnectivity.Current.IsConnected)
+                {
+                    using (var hcf = new HttpClientFactory(token: Common.Token))
+                    {
+                        string url = "https://aptdealzapidev.azurewebsites.net/api/v1/Order/GenerateQRCodeImageForBuyerApp/" + orderId;
+                        var response = await hcf.client.GetAsync(url);
+                        var contentStream = await response.Content.ReadAsStreamAsync();
+                        if (response.IsSuccessStatusCode)
+                        {
+                            mResponse.Succeeded = true;
+                            byte[] buffer = ImageConvertion.streamToByteArray(contentStream);
+                            contentStream.Read(buffer, 0, (int)contentStream.Length);
+                            mResponse.Data = Convert.ToBase64String(buffer);
+                        }
+                        else if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                        {
+                            var errorString = JsonConvert.DeserializeObject<string>("");
+                            if (errorString == Constraints.Session_Expired)
+                            {
+                                Common.DisplayErrorMessage(Constraints.Session_Expired);
+                                App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
+                            }
+                        }
+                        else if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
+                        {
+                            Common.DisplayErrorMessage(Constraints.ServiceUnavailable);
+                        }
+                        else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
+                        {
+                            Common.DisplayErrorMessage(Constraints.Something_Wrong_Server);
+                        }
+                        else
+                        {
+                            mResponse = null;
+                        }
+                    }
+                }
+                else
+                {
+                    if (await Common.InternetConnection())
+                    {
+                        await GenerateQRCodeImageForBuyerApp(orderId);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("OrderAPI/GenerateQRCodeImageForBuyerApp: " + ex.Message);
+            }
+            return mResponse;
+        }
         #endregion
 
         #region [ POST ]
@@ -231,6 +370,78 @@ namespace AptDealzBuyer.API
                 mResponse.Succeeded = false;
                 mResponse.Errors = ex.Message;
                 Common.DisplayErrorMessage("OrderAPI/CreateOrder: " + ex.Message);
+            }
+            return mResponse;
+        }
+
+        public async Task<Response> CreateOrderPayment(OrderPayment mOrderPayment)
+        {
+            Response mResponse = new Response();
+            try
+            {
+                if (CrossConnectivity.Current.IsConnected)
+                {
+                    var requestJson = JsonConvert.SerializeObject(mOrderPayment);
+                    using (var hcf = new HttpClientFactory(token: Common.Token))
+                    {
+                        string url = string.Format(EndPointURL.OrderPayment, (int)App.Current.Resources["Version"]);
+                        var response = await hcf.PostAsync(url, requestJson);
+                        var responseJson = await response.Content.ReadAsStringAsync();
+                        if (response.IsSuccessStatusCode)
+                        {
+                            mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
+                        }
+                        else if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                        {
+                            var errorString = JsonConvert.DeserializeObject<string>(responseJson);
+                            if (errorString == Constraints.Session_Expired)
+                            {
+                                App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
+                            }
+                        }
+                        else if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
+                        {
+                            Common.DisplayErrorMessage(Constraints.ServiceUnavailable);
+                        }
+                        else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
+                        {
+                            Common.DisplayErrorMessage(Constraints.Something_Wrong_Server);
+                        }
+                        else
+                        {
+                            if (responseJson.Contains("TokenExpired"))
+                            {
+                                var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
+                                if (!isRefresh)
+                                {
+                                    Common.DisplayErrorMessage(Constraints.Session_Expired);
+                                    App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
+                                }
+                                else
+                                {
+                                    await CreateOrderPayment(mOrderPayment);
+                                }
+                            }
+                            else
+                            {
+                                mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    if (await Common.InternetConnection())
+                    {
+                        await CreateOrderPayment(mOrderPayment);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                mResponse.Succeeded = false;
+                mResponse.Errors = ex.Message;
+                Common.DisplayErrorMessage("OrderAPI/CreateOrderPayment: " + ex.Message);
             }
             return mResponse;
         }

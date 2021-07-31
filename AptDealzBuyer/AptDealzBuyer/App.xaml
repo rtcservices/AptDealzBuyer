@@ -6,13 +6,16 @@
     xmlns:ext="clr-namespace:AptDealzBuyer.Extention">
     <Application.Resources>
 
-        <!--#region [ BaseURL / Version / Page ]-->
+        <!--#region [ BaseURL / HardCodes ]-->
         <x:String x:Key="Currency">INR</x:String>
         <x:String x:Key="CountryCode">+91</x:String>
         <x:String x:Key="BaseURL">https://aptdealzapidev.azurewebsites.net/</x:String>
+
         <x:Int32 x:Key="Version">1</x:Int32>
         <x:Int32 x:Key="PageNumber">1</x:Int32>
         <x:Int32 x:Key="PageSize">300</x:Int32>
+
+        <x:Int64 x:Key="RevealContact">1</x:Int64>
         <!--#endregion-->
 
         <!--#region [ Color ]-->
@@ -65,6 +68,18 @@
             <Setter Property="HasShadow" Value="False" />
             <Setter Property="HeightRequest" Value="35" />
             <Setter Property="IsClippedToBounds" Value="True" />
+            <Setter Property="VerticalOptions" Value="CenterAndExpand" />
+        </Style>
+
+        <Style x:Key="frmBlank" TargetType="Frame">
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="BackgroundColor" Value="Transparent" />
+            <Setter Property="BorderColor" Value="{StaticResource LightGray}" />
+            <Setter Property="CornerRadius" Value="5" />
+            <Setter Property="HasShadow" Value="False" />
+            <Setter Property="IsClippedToBounds" Value="True" />
+            <Setter Property="VerticalOptions" Value="CenterAndExpand" />
         </Style>
         <!--#endregion-->
 
@@ -215,6 +230,18 @@
             <Setter Property="FontFamily" Value="Poppins-Medium" />
             <Setter Property="TextColor" Value="{StaticResource Green}" />
         </Style>
+
+        <Style x:Key="btnSmall" TargetType="Button">
+            <Setter Property="CornerRadius" Value="5" />
+            <Setter Property="VerticalOptions" Value="CenterAndExpand" />
+            <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="BackgroundColor" Value="{StaticResource Green}" />
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="FontFamily" Value="Poppins-Medium" />
+            <Setter Property="TextColor" Value="{StaticResource White}" />
+        </Style>
         <!--#endregion-->
 
         <!--#region [ ImageButton ]-->
@@ -257,6 +284,16 @@
         <Style x:Key="imgSearch" TargetType="Image">
             <Setter Property="HeightRequest" Value="{OnPlatform Android=20, iOS=25}" />
             <Setter Property="WidthRequest" Value="{OnPlatform Android=20, iOS=25}" />
+            <Setter Property="Aspect" Value="AspectFit" />
+            <Setter Property="HorizontalOptions" Value="Center" />
+            <Setter Property="VerticalOptions" Value="Center" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="BackgroundColor" Value="Transparent" />
+        </Style>
+
+        <Style x:Key="imgSorting" TargetType="Image">
+            <Setter Property="HeightRequest" Value="20" />
+            <Setter Property="WidthRequest" Value="20" />
             <Setter Property="Aspect" Value="AspectFit" />
             <Setter Property="HorizontalOptions" Value="Center" />
             <Setter Property="VerticalOptions" Value="Center" />

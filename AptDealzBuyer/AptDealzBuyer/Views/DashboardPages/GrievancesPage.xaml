@@ -40,33 +40,54 @@
                     Clicked="BtnLogo_Clicked"
                     Style="{StaticResource imgLogo}" />
 
-                <StackLayout
+                <Grid
                     Grid.Column="2"
-                    Margin="0,0,20,0"
-                    HorizontalOptions="EndAndExpand"
-                    Orientation="Horizontal">
-                    <Image
-                        Margin="0"
-                        HeightRequest="30"
-                        HorizontalOptions="CenterAndExpand"
-                        Source="iconNotification.png"
-                        VerticalOptions="CenterAndExpand">
-                        <Image.GestureRecognizers>
+                    Margin="0,0,10,0"
+                    ColumnDefinitions="*,*"
+                    HorizontalOptions="EndAndExpand">
+                    <Grid>
+                        <Image
+                            Margin="0"
+                            HeightRequest="30"
+                            HorizontalOptions="CenterAndExpand"
+                            Source="iconNotification.png"
+                            VerticalOptions="CenterAndExpand"
+                            WidthRequest="30" />
+                        <Frame
+                            x:Name="frmNotification" HasShadow="False"
+                            Margin="10,5,0,0"
+                            Padding="0"
+                            BackgroundColor="{StaticResource Orange}"
+                            CornerRadius="10"
+                            HeightRequest="20"
+                            HorizontalOptions="CenterAndExpand"
+                            IsVisible="false"
+                            VerticalOptions="StartAndExpand"
+                            WidthRequest="20" />
+                        <Label
+                            x:Name="lblNotificationCount" FontSize="15"
+                            Margin="10,5,0,0"
+                            HorizontalOptions="CenterAndExpand"
+                            Style="{StaticResource lblMedium}"
+                            VerticalOptions="Start" />
+                        <Grid.GestureRecognizers>
                             <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgNotification_Tapped" />
-                        </Image.GestureRecognizers>
-                    </Image>
+                        </Grid.GestureRecognizers>
+                    </Grid>
 
                     <Image
+                        Grid.Column="1"
                         Margin="0"
                         HeightRequest="30"
                         HorizontalOptions="CenterAndExpand"
                         Source="iconQuestion.png"
-                        VerticalOptions="CenterAndExpand">
+                        VerticalOptions="CenterAndExpand"
+                        WidthRequest="30">
                         <Image.GestureRecognizers>
                             <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgQuestion_Tapped" />
                         </Image.GestureRecognizers>
                     </Image>
-                </StackLayout>
+                </Grid>
                 <BoxView Grid.ColumnSpan="3" Style="{StaticResource boxHorizontal}" />
             </Grid>
 
@@ -79,47 +100,34 @@
                 </Grid.RowDefinitions>
                 <Grid
                     Grid.Row="0"
-                    Margin="5,5,5,0"
+                    Margin="5,5,15,0"
                     ColumnDefinitions="Auto,*"
                     ColumnSpacing="0">
-                    <ImageButton
-                        x:Name="ImgBack"
-                        Grid.Column="0"
-                        Clicked="ImgBack_Tapped"
-                        Source="iconBackArrow.png"
-                        Style="{StaticResource ImgBtnPrimary}" />
-                    <Label
-                        Grid.Column="1"
-                        Style="{StaticResource lblHeader}"
-                        Text="Grievances" />
-                </Grid>
 
-                <Grid
-                    Grid.Row="1"
-                    Margin="15,0"
-                    ColumnDefinitions="*,Auto,Auto,Auto">
+                    <StackLayout
+                        Grid.Column="0"
+                        Orientation="Horizontal"
+                        Spacing="0">
+                        <ImageButton
+                            x:Name="ImgBack"
+                            Clicked="ImgBack_Tapped"
+                            Source="iconBackArrow.png"
+                            Style="{StaticResource ImgBtnPrimary}" />
+                        <Label Style="{StaticResource lblHeader}" Text="Grievances" />
+                    </StackLayout>
 
                     <Frame
-                        Grid.Column="0"
-                        Margin="0"
-                        Padding="0"
-                        BackgroundColor="Transparent"
-                        BorderColor="{StaticResource LightGray}"
-                        CornerRadius="5"
-                        HasShadow="False"
-                        HorizontalOptions="StartAndExpand">
+                        Grid.Column="1"
+                        HorizontalOptions="EndAndExpand"
+                        Style="{StaticResource frmGrayBorder}">
                         <Grid
                             Margin="7,0"
                             ColumnDefinitions="Auto,*"
                             ColumnSpacing="0">
                             <Image
                                 Grid.Column="0"
-                                Margin="0"
-                                Aspect="AspectFit"
-                                HeightRequest="20"
-                                HorizontalOptions="CenterAndExpand"
                                 Source="iconAdd.png"
-                                VerticalOptions="CenterAndExpand" />
+                                Style="{StaticResource imgSorting}" />
 
                             <Label
                                 Grid.Column="1"
@@ -133,126 +141,163 @@
                             <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmAdd_Tapped" />
                         </Frame.GestureRecognizers>
                     </Frame>
-                    <Frame
-                        x:Name="FrmSortBy"
-                        Grid.Column="1"
-                        Margin="0"
-                        Padding="0"
-                        BackgroundColor="Transparent"
-                        BorderColor="{StaticResource LightGray}"
-                        CornerRadius="5"
-                        HasShadow="False"
-                        HorizontalOptions="EndAndExpand"
-                        IsClippedToBounds="True">
-                        <Grid
-                            Margin="5"
-                            ColumnDefinitions="Auto,*"
-                            ColumnSpacing="0">
-                            <Image
-                                x:Name="ImgSort"
-                                Grid.Column="0"
-                                Margin="0"
-                                HeightRequest="20"
-                                HorizontalOptions="CenterAndExpand"
-                                Source="iconSortASC.png"
-                                VerticalOptions="CenterAndExpand" />
+                </Grid>
 
-                            <Label
-                                Grid.Column="1"
-                                Margin="0,5,0,0"
-                                FontSize="12"
-                                HorizontalOptions="CenterAndExpand"
-                                Style="{StaticResource lblLight}"
-                                Text="Sort by" />
-                        </Grid>
-                        <Frame.GestureRecognizers>
-                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmSortBy_Tapped" />
-                        </Frame.GestureRecognizers>
-                    </Frame>
+                <Grid
+                    Grid.Row="1"
+                    Padding="15,0"
+                    RowSpacing="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
                     <Frame
-                        x:Name="FrmFilterBy"
-                        Grid.Column="2"
+                        x:Name="FrmSearchBy"
+                        Grid.Row="0"
                         Margin="0"
                         Padding="0"
                         BackgroundColor="Transparent"
-                        BorderColor="{StaticResource LightGray}"
+                        BorderColor="Transparent"
                         CornerRadius="5"
                         HasShadow="False"
-                        HorizontalOptions="EndAndExpand"
                         IsClippedToBounds="True">
-                        <Grid
-                            Margin="5"
-                            ColumnDefinitions="Auto,*"
-                            ColumnSpacing="0">
+
+                        <Grid BackgroundColor="Transparent">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="40" />
+                            </Grid.ColumnDefinitions>
                             <Image
                                 Grid.Column="0"
-                                Margin="0"
-                                HeightRequest="20"
-                                HorizontalOptions="CenterAndExpand"
-                                Source="iconFilter.png"
-                                VerticalOptions="CenterAndExpand" />
-
-                            <Label
-                                x:Name="lblFilterBy"
+                                Source="iconSearch.png"
+                                Style="{StaticResource imgSearch}" />
+                            <ext:ExtEntry
+                                x:Name="entrSearch"
                                 Grid.Column="1"
-                                Margin="0,5,0,0"
-                                FontSize="12"
-                                HorizontalOptions="CenterAndExpand"
-                                Style="{StaticResource lblLight}"
-                                Text="Filter by" />
+                                Placeholder="Search"
+                                Style="{StaticResource entrGray}"
+                                TextChanged="entrSearch_TextChanged" />
+                            <ImageButton
+                                x:Name="BtnClose"
+                                Grid.Column="2"
+                                Clicked="BtnClose_Clicked"
+                                Source="iconClose.png"
+                                Style="{StaticResource ImgBtnH40P13}" />
+
+                            <BoxView Grid.ColumnSpan="3" Style="{StaticResource boxHorizontalGreen}" />
                         </Grid>
-                        <Frame.GestureRecognizers>
-                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmFilterBy_Tapped" />
-                        </Frame.GestureRecognizers>
                     </Frame>
-                    <Frame
-                        Grid.Column="3"
-                        Margin="0"
-                        Padding="0"
-                        BackgroundColor="Transparent"
-                        BorderColor="{StaticResource LightGray}"
-                        CornerRadius="5"
-                        HasShadow="False"
+                    <Grid
+                        Grid.Row="1"
+                        ColumnSpacing="10"
                         HorizontalOptions="EndAndExpand">
-                        <Grid
-                            Margin="5,0"
-                            ColumnDefinitions="Auto,*"
-                            ColumnSpacing="0">
-                            <Image
-                                Grid.Column="0"
-                                Margin="0"
-                                Aspect="AspectFit"
-                                HeightRequest="20"
-                                HorizontalOptions="CenterAndExpand"
-                                Source="iconStatus.png"
-                                VerticalOptions="CenterAndExpand" />
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
 
-                            <Label
-                                Grid.Column="1"
-                                Margin="5,3,0,0"
-                                FontSize="13"
-                                HorizontalOptions="CenterAndExpand"
-                                Style="{StaticResource lblLight}"
-                                Text="Status" />
-                        </Grid>
-                        <Frame.GestureRecognizers>
-                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmStatus_Tapped" />
-                        </Frame.GestureRecognizers>
-                    </Frame>
+                        <Frame
+                            x:Name="FrmSortBy"
+                            Grid.Column="0"
+                            Style="{StaticResource frmGrayBorder}">
+                            <Grid
+                                Margin="5"
+                                ColumnDefinitions="Auto,*"
+                                ColumnSpacing="0">
+                                <Image
+                                    x:Name="ImgSort"
+                                    Grid.Column="0"
+                                    Margin="0"
+                                    HeightRequest="20"
+                                    HorizontalOptions="CenterAndExpand"
+                                    Source="iconSortASC.png"
+                                    VerticalOptions="CenterAndExpand" />
+
+                                <Label
+                                    Grid.Column="1"
+                                    Margin="0,5,0,0"
+                                    FontSize="12"
+                                    HorizontalOptions="CenterAndExpand"
+                                    Style="{StaticResource lblLight}"
+                                    Text="Sort by" />
+                            </Grid>
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmSortBy_Tapped" />
+                            </Frame.GestureRecognizers>
+                        </Frame>
+                        <Frame
+                            x:Name="FrmFilterBy"
+                            Grid.Column="1"
+                            Style="{StaticResource frmGrayBorder}">
+                            <Grid
+                                Margin="5"
+                                ColumnDefinitions="Auto,*"
+                                ColumnSpacing="0">
+                                <Image
+                                    Grid.Column="0"
+                                    Margin="0"
+                                    HeightRequest="20"
+                                    HorizontalOptions="CenterAndExpand"
+                                    Source="iconFilter.png"
+                                    VerticalOptions="CenterAndExpand" />
+
+                                <Label
+                                    x:Name="lblFilterBy"
+                                    Grid.Column="1"
+                                    Margin="0,5,0,0"
+                                    FontSize="12"
+                                    HorizontalOptions="CenterAndExpand"
+                                    Style="{StaticResource lblLight}"
+                                    Text="Filter by" />
+                            </Grid>
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmFilterBy_Tapped" />
+                            </Frame.GestureRecognizers>
+                        </Frame>
+                        <Frame Grid.Column="2" Style="{StaticResource frmGrayBorder}">
+                            <Grid
+                                Margin="5,0"
+                                ColumnDefinitions="Auto,*"
+                                ColumnSpacing="0">
+                                <Image
+                                    Grid.Column="0"
+                                    Margin="0"
+                                    Aspect="AspectFit"
+                                    HeightRequest="20"
+                                    HorizontalOptions="CenterAndExpand"
+                                    Source="iconStatus.png"
+                                    VerticalOptions="CenterAndExpand" />
+
+                                <Label
+                                    x:Name="lblStatus"
+                                    Grid.Column="1"
+                                    Margin="5,3,0,0"
+                                    FontSize="12"
+                                    HorizontalOptions="CenterAndExpand"
+                                    Style="{StaticResource lblLight}"
+                                    Text="Status" />
+                            </Grid>
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmStatus_Tapped" />
+                            </Frame.GestureRecognizers>
+                        </Frame>
+                    </Grid>
                 </Grid>
 
                 <ListView
                     x:Name="lstGrievance"
                     Grid.Row="2"
+                    IsPullToRefreshEnabled="True"
+                    ItemAppearing="lstGrievance_ItemAppearing"
+                    ItemSelected="lstGrievance_ItemSelected"
+                    Refreshing="lstGrievance_Refreshing"
                     Style="{StaticResource lstPrimary}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
-
-                                <Grid
-                                    Margin="0"
-                                    Padding="0"
-                                    RowSpacing="0">
+                                <Grid RowSpacing="0">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*" />
                                         <RowDefinition Height="Auto" />
@@ -266,57 +311,38 @@
                                         <Grid Grid.Column="0" RowDefinitions="Auto,Auto">
                                             <Label
                                                 Grid.Row="0"
-                                                Margin="0"
-                                                FontFamily="Poppins-Medium"
                                                 FontSize="15"
                                                 HorizontalOptions="StartAndExpand"
-                                                Text="{Binding GrNo}"
-                                                TextColor="{StaticResource Black}"
-                                                VerticalOptions="CenterAndExpand" />
+                                                Style="{StaticResource lblMedium}"
+                                                Text="{Binding GrievanceNo}" />
 
                                             <Label
                                                 Grid.Row="1"
-                                                Margin="0"
-                                                FontFamily="Poppins-Medium"
                                                 FontSize="15"
                                                 HorizontalOptions="StartAndExpand"
                                                 LineBreakMode="WordWrap"
-                                                Text="{Binding GrTitle}"
-                                                TextColor="{StaticResource Black}"
-                                                VerticalOptions="CenterAndExpand" />
+                                                Style="{StaticResource lblMedium}"
+                                                Text="{Binding RequirementTitle}" />
                                         </Grid>
 
                                         <Frame
                                             Grid.Column="1"
-                                            Margin="0"
-                                            Padding="0"
-                                            BackgroundColor="Transparent"
-                                            BorderColor="{StaticResource LightGray}"
-                                            CornerRadius="5"
-                                            HasShadow="False"
-                                            HeightRequest="35"
-                                            HorizontalOptions="CenterAndExpand"
+                                            Style="{StaticResource frmGrayBorder}"
                                             VerticalOptions="StartAndExpand">
                                             <Label
                                                 Grid.Row="1"
-                                                Margin="10,5"
-                                                FontFamily="Poppins-Medium"
+                                                Margin="10,0"
                                                 FontSize="15"
                                                 HorizontalOptions="CenterAndExpand"
                                                 LineBreakMode="WordWrap"
-                                                Text="{Binding GrStatus}"
-                                                TextColor="{StaticResource Green}"
-                                                VerticalOptions="CenterAndExpand" />
+                                                Style="{StaticResource lblMedium}"
+                                                Text="{Binding StatusDescr}"
+                                                TextColor="{StaticResource Green}" />
                                         </Frame>
 
                                     </Grid>
 
-                                    <BoxView
-                                        Grid.Row="1"
-                                        BackgroundColor="{StaticResource LightGray}"
-                                        HeightRequest="1"
-                                        HorizontalOptions="FillAndExpand"
-                                        VerticalOptions="EndAndExpand" />
+                                    <BoxView Style="{StaticResource boxHorizontalGreen}" />
                                     <Grid.GestureRecognizers>
                                         <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="GrdViewGrievances_Tapped" />
                                     </Grid.GestureRecognizers>
@@ -327,6 +353,14 @@
                     </ListView.ItemTemplate>
                 </ListView>
 
+                <Label
+                    x:Name="lblNoRecord"
+                    Grid.Row="2"
+                    FontSize="15"
+                    HorizontalOptions="CenterAndExpand"
+                    IsVisible="false"
+                    Style="{StaticResource lblMedium}"
+                    Text="No grievances found" />
             </Grid>
         </Grid>
     </ContentPage.Content>

@@ -1,4 +1,5 @@
-﻿using Rg.Plugins.Popup.Pages;
+﻿using AptDealzBuyer.Utility;
+using Rg.Plugins.Popup.Pages;
 using Rg.Plugins.Popup.Services;
 using System;
 using Xamarin.Forms.Xaml;
@@ -14,30 +15,43 @@ namespace AptDealzBuyer.Views.PopupPages
         #endregion
 
         #region Constructor
-        public PaymentPopup(string Amount)
+        public PaymentPopup(string message)
         {
             InitializeComponent();
-            //lblMessage.Text = "Make a payment of Rs " + Amount + " to reveal the Seller contacts";
-            lblMessage.Text = "Make a payment of Rs " + Amount + " to Accept Quote";
-            this.CloseWhenBackgroundIsClicked = false;
+            lblMessage.Text = message;
         }
         #endregion
-
-        #region Methods
-
-        #endregion
+        protected override bool OnBackgroundClicked()
+        {
+            base.OnBackgroundClicked();
+            return false;
+        }
 
         #region Events        
         private void FrmPay_Tapped(object sender, EventArgs e)
         {
-            isRefresh?.Invoke(true, EventArgs.Empty);
-            PopupNavigation.Instance.PopAsync();
+            try
+            {
+                isRefresh?.Invoke(true, EventArgs.Empty);
+                PopupNavigation.Instance.PopAsync();
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("PaymentPopup/FrmPay_Tapped: " + ex.Message);
+            }
         }
 
         private void FrmBack_Tapped(object sender, EventArgs e)
         {
-            isRefresh?.Invoke(false, EventArgs.Empty);
-            PopupNavigation.Instance.PopAsync();
+            try
+            {
+                isRefresh?.Invoke(false, EventArgs.Empty);
+                PopupNavigation.Instance.PopAsync();
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("PaymentPopup/FrmBack_Tapped: " + ex.Message);
+            }
         }
         #endregion
     }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace AptDealzBuyer.Model
 {
@@ -8,15 +9,21 @@ namespace AptDealzBuyer.Model
         public string currency { get; set; }
         public string receipt { get; set; }
         public int payment_capture { get; set; }
+
+        [JsonIgnore]
+        public string email { get; set; }
+        [JsonIgnore]
+        public string contact { get; set; }
     }
 
     public class RazorResponse
     {
-
         public string OrderId { get; set; }
         public string PaymentId { get; set; }
         public string Signature { get; set; }
         public bool isPaid { get; set; }
+        public string OrderNo { get; set; }
+
 
         public string id { get; set; }
         public string entity { get; set; }

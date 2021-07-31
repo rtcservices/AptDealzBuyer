@@ -13,9 +13,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class FaqHelpView : ContentView
     {
-        #region Objects
-        // create objects here
-        public event EventHandler isRefresh;
+        #region Objects      
         public List<FaqM> FaqMs = new List<FaqM>();
         #endregion
 
@@ -24,21 +22,42 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         {
             InitializeComponent();
             BindFaq();
+
+            MessagingCenter.Subscribe<string>(this, "NotificationCount", (count) =>
+            {
+                if (!Common.EmptyFiels(Common.NotificationCount))
+                {
+                    lblNotificationCount.Text = count;
+                    frmNotification.IsVisible = true;
+                }
+                else
+                {
+                    frmNotification.IsVisible = false;
+                    lblNotificationCount.Text = string.Empty;
+                }
+            });
         }
         #endregion
 
         #region Methods
-        public void BindFaq()
+        private void BindFaq()
         {
-            lstFaq.ItemsSource = null;
-            FaqMs = new List<FaqM>()
+            try
+            {
+                lstFaq.ItemsSource = null;
+                FaqMs = new List<FaqM>()
             {
                 new FaqM{ FaqTitle="How do I post requirement?", FaqDesc="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text."},
                 new FaqM{ FaqTitle="How do I view the quotes receive", FaqDesc="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text."},
                 new FaqM{ FaqTitle="Do I have to pay to submit require", FaqDesc="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text."},
                 new FaqM{ FaqTitle="How long will my requirement be", FaqDesc="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text."}
             };
-            lstFaq.ItemsSource = FaqMs.ToList();
+                lstFaq.ItemsSource = FaqMs.ToList();
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("FaqHelpView/BindFaq: " + ex.Message);
+            }
         }
         #endregion
 
@@ -51,7 +70,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
 
         private void ImgNotification_Tapped(object sender, EventArgs e)
         {
-
+            Navigation.PushAsync(new DashboardPages.NotificationPage());
         }
 
         private void ImgQuestion_Tapped(object sender, EventArgs e)
@@ -62,35 +81,41 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         private void ImgBack_Tapped(object sender, EventArgs e)
         {
             Common.BindAnimation(imageButton: ImgBack);
-            App.Current.MainPage = new MasterDataPage();
-            //Navigation.PopAsync();
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
         }
 
         private void ImgExpand_Tapped(object sender, EventArgs e)
         {
-            var imgExp = (Grid)sender;
-            var viewCell = (ViewCell)imgExp.Parent.Parent;
-            if (viewCell != null)
+            try
             {
-                viewCell.ForceUpdateSize();
+                var imgExp = (Grid)sender;
+                var viewCell = (ViewCell)imgExp.Parent.Parent;
+                if (viewCell != null)
+                {
+                    viewCell.ForceUpdateSize();
+                }
+                var faqModel = imgExp.BindingContext as FaqM;
+                if (faqModel != null && faqModel.ArrowImage == Constraints.GreenArrow_Down)
+                {
+                    faqModel.ArrowImage = Constraints.GreenArrow_Up;
+                    faqModel.ShowFaqDesc = true;
+                }
+                else
+                {
+                    faqModel.ArrowImage = Constraints.GreenArrow_Down;
+                    faqModel.ShowFaqDesc = false;
+                }
             }
-            var faqModel = imgExp.BindingContext as FaqM;
-            if (faqModel != null && faqModel.ArrowImage == Constraints.GreenArrow_Down)
+            catch (Exception ex)
             {
-                faqModel.ArrowImage = Constraints.GreenArrow_Up;
-                faqModel.ShowFaqDesc = true;
-            }
-            else
-            {
-                faqModel.ArrowImage = Constraints.GreenArrow_Down;
-                faqModel.ShowFaqDesc = false;
+                Common.DisplayErrorMessage("FaqHelpView/ImgExpand_Tapped: " + ex.Message);
             }
         }
-        #endregion
 
         private void BtnLogo_Clicked(object sender, EventArgs e)
         {
             Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
         }
+        #endregion
     }
 }

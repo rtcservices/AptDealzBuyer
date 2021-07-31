@@ -41,23 +41,30 @@ namespace AptDealzBuyer.Views.Login
         #endregion
 
         #region Methods        
-        void ResendButtonEnable()
+        private void ResendButtonEnable()
         {
-            BtnResentOtp.IsEnabled = false;
-            int i = 120;
-
-            Device.StartTimer(TimeSpan.FromSeconds(1), () =>
+            try
             {
-                BtnResentOtp.Text = i + " sec";
-                if (i == 0)
+                BtnResentOtp.IsEnabled = false;
+                int i = 120;
+
+                Device.StartTimer(TimeSpan.FromSeconds(1), () =>
                 {
-                    BtnResentOtp.IsEnabled = true;
-                    BtnResentOtp.Text = "Resend OTP";
-                    return false;
-                }
-                i--;
-                return true;
-            });
+                    BtnResentOtp.Text = i + " sec";
+                    if (i == 0)
+                    {
+                        BtnResentOtp.IsEnabled = true;
+                        BtnResentOtp.Text = "Resend OTP";
+                        return false;
+                    }
+                    i--;
+                    return true;
+                });
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("EnterOtpPage/ResendButtonEnable: " + ex.Message);
+            }
         }
 
         protected override void OnAppearing()
@@ -65,7 +72,7 @@ namespace AptDealzBuyer.Views.Login
             base.OnAppearing();
         }
 
-        bool Validations()
+        private bool Validations()
         {
             bool isValid = false;
             try
@@ -91,7 +98,7 @@ namespace AptDealzBuyer.Views.Login
             return isValid;
         }
 
-        async void RegisterBuyer()
+        private async void RegisterBuyer()
         {
             try
             {
@@ -112,11 +119,11 @@ namespace AptDealzBuyer.Views.Login
             }
             catch (Exception ex)
             {
-                Common.DisplayErrorMessage("EnterOtpPage/Validations: " + ex.Message);
+                Common.DisplayErrorMessage("EnterOtpPage/RegisterBuyer: " + ex.Message);
             }
         }
 
-        void NavigateToDashboard(Response mResponse)
+        private void NavigateToDashboard(Response mResponse)
         {
             try
             {
@@ -152,19 +159,19 @@ namespace AptDealzBuyer.Views.Login
             }
         }
 
-        Model.Request.Login FillLogin()
+        private Model.Request.AuthenticatePhone FillPhoneAuthentication()
         {
-            Model.Request.Login mLogin = new Model.Request.Login();
+            Model.Request.AuthenticatePhone mAuthenticatePhone = new Model.Request.AuthenticatePhone();
             try
             {
-                mLogin.PhoneNumber = UserAuth;
+                mAuthenticatePhone.PhoneNumber = UserAuth;
                 if (!Common.EmptyFiels(Settings.fcm_token))
                 {
-                    mLogin.FcmToken = Settings.fcm_token;
+                    mAuthenticatePhone.FcmToken = Settings.fcm_token;
                 }
                 if (!Common.EmptyFiels(Settings.firebaseVerificationId))
                 {
-                    mLogin.FirebaseVerificationId = Settings.PhoneAuthToken;
+                    mAuthenticatePhone.FirebaseVerificationId = Settings.PhoneAuthToken;
                 }
                 else
                 {
@@ -176,23 +183,37 @@ namespace AptDealzBuyer.Views.Login
             {
                 return null;
             }
-            return mLogin;
+            return mAuthenticatePhone;
         }
 
-        async void SubmitOTP()
+        private Model.Request.AuthenticateEmail FillEmailAuthentication()
+        {
+            Model.Request.AuthenticateEmail mAuthenticateEmail = new Model.Request.AuthenticateEmail();
+            try
+            {
+                mAuthenticateEmail.Email = UserAuth;
+                OTPString = TxtOtpOne.Text + TxtOtpTwo.Text + TxtOtpThree.Text + TxtOtpFour.Text + TxtOtpFive.Text + TxtOtpSix.Text;
+                mAuthenticateEmail.Otp = OTPString;
+                if (!Common.EmptyFiels(Settings.fcm_token))
+                {
+                    mAuthenticateEmail.FcmToken = Settings.fcm_token;
+                }
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+            return mAuthenticateEmail;
+        }
+
+        private async void SubmitOTP()
         {
             try
             {
                 if (Validations())
                 {
                     UserDialogs.Instance.ShowLoading(Constraints.Loading);
-
                     AuthenticationAPI authenticationAPI = new AuthenticationAPI();
-                    AuthenticateEmail mAuthenticateEmail = new AuthenticateEmail();
-                    mAuthenticateEmail.Email = UserAuth;
-
-                    OTPString = TxtOtpOne.Text + TxtOtpTwo.Text + TxtOtpThree.Text + TxtOtpFour.Text + TxtOtpFive.Text + TxtOtpSix.Text;
-                    mAuthenticateEmail.Otp = OTPString;
 
                     Response mResponse = new Response();
                     if (!this.isEmail)
@@ -207,7 +228,7 @@ namespace AptDealzBuyer.Views.Login
                             }
                             else
                             {
-                                var mLogin = FillLogin();
+                                var mLogin = FillPhoneAuthentication();
                                 mResponse = await authenticationAPI.BuyerAuthPhone(mLogin);
                                 NavigateToDashboard(mResponse);
                             }
@@ -225,7 +246,8 @@ namespace AptDealzBuyer.Views.Login
                         }
                         else
                         {
-                            mResponse = await authenticationAPI.BuyerAuthEmail(mAuthenticateEmail);
+                            var mLogin = FillEmailAuthentication();
+                            mResponse = await authenticationAPI.BuyerAuthEmail(mLogin);
                             NavigateToDashboard(mResponse);
                         }
                     }
@@ -237,7 +259,7 @@ namespace AptDealzBuyer.Views.Login
             }
             catch (Exception ex)
             {
-                Common.DisplayErrorMessage("EnterOtpPage/FrmSubmit_Tapped: " + ex.Message);
+                Common.DisplayErrorMessage("EnterOtpPage/SubmitOTP: " + ex.Message);
             }
             finally
             {
@@ -245,7 +267,7 @@ namespace AptDealzBuyer.Views.Login
             }
         }
 
-        async void ResentOTP()
+        private async void ResentOTP()
         {
             try
             {
@@ -290,7 +312,7 @@ namespace AptDealzBuyer.Views.Login
                             Settings.firebaseVerificationId = keyValue.Value;
                             Settings.PhoneAuthToken = keyValue.Value;
 
-                            var mLogin = FillLogin();
+                            var mLogin = FillPhoneAuthentication();
                             var mResponse = await authenticationAPI.BuyerAuthPhone(mLogin);
                             NavigateToDashboard(mResponse);
                         }
@@ -301,7 +323,7 @@ namespace AptDealzBuyer.Views.Login
             }
             catch (Exception ex)
             {
-                Common.DisplayErrorMessage("EnterOtpPage/BtnResentOtp_Tapped: " + ex.Message);
+                Common.DisplayErrorMessage("EnterOtpPage/ResentOTP: " + ex.Message);
             }
             finally
             {
@@ -313,11 +335,13 @@ namespace AptDealzBuyer.Views.Login
         #region Events
         private void ImgBack_Tapped(object sender, EventArgs e)
         {
+            Common.BindAnimation(image: ImgBack);
             Navigation.PopAsync();
         }
 
         private void BtnSubmit_Tapped(object sender, EventArgs e)
         {
+            Common.BindAnimation(button: BtnSubmit);
             SubmitOTP();
         }
 

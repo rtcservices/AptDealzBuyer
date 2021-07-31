@@ -24,7 +24,7 @@ namespace AptDealzBuyer.Views.SplashScreen
             BindNavigation();
         }
 
-        void BindNavigation()
+        private void BindNavigation()
         {
             try
             {

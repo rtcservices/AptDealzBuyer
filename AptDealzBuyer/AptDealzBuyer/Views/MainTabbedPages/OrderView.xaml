@@ -4,6 +4,8 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:ext="clr-namespace:AptDealzBuyer.Extention"
+    xmlns:iOS="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+    iOS:Page.UseSafeArea="True"
     BackgroundColor="{StaticResource White}"
     NavigationPage.HasNavigationBar="False">
     <ContentView.Content>
@@ -38,33 +40,54 @@
                     Clicked="BtnLogo_Clicked"
                     Style="{StaticResource imgLogo}" />
 
-                <StackLayout
+                <Grid
                     Grid.Column="2"
-                    Margin="0,0,20,0"
-                    HorizontalOptions="EndAndExpand"
-                    Orientation="Horizontal">
-                    <Image
-                        Margin="0"
-                        HeightRequest="30"
-                        HorizontalOptions="CenterAndExpand"
-                        Source="iconNotification.png"
-                        VerticalOptions="CenterAndExpand">
-                        <Image.GestureRecognizers>
+                    Margin="0,0,10,0"
+                    ColumnDefinitions="*,*"
+                    HorizontalOptions="EndAndExpand">
+                    <Grid>
+                        <Image
+                            Margin="0"
+                            HeightRequest="30"
+                            HorizontalOptions="CenterAndExpand"
+                            Source="iconNotification.png"
+                            VerticalOptions="CenterAndExpand"
+                            WidthRequest="30" />
+                        <Frame
+                            x:Name="frmNotification" HasShadow="False"
+                            Margin="10,5,0,0"
+                            Padding="0"
+                            BackgroundColor="{StaticResource Orange}"
+                            CornerRadius="10"
+                            HeightRequest="20"
+                            HorizontalOptions="CenterAndExpand"
+                            IsVisible="false"
+                            VerticalOptions="StartAndExpand"
+                            WidthRequest="20" />
+                        <Label
+                            x:Name="lblNotificationCount" FontSize="15"
+                            Margin="10,5,0,0"
+                            HorizontalOptions="CenterAndExpand"
+                            Style="{StaticResource lblMedium}"
+                            VerticalOptions="Start" />
+                        <Grid.GestureRecognizers>
                             <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgNotification_Tapped" />
-                        </Image.GestureRecognizers>
-                    </Image>
+                        </Grid.GestureRecognizers>
+                    </Grid>
 
                     <Image
+                        Grid.Column="1"
                         Margin="0"
                         HeightRequest="30"
                         HorizontalOptions="CenterAndExpand"
                         Source="iconQuestion.png"
-                        VerticalOptions="CenterAndExpand">
+                        VerticalOptions="CenterAndExpand"
+                        WidthRequest="30">
                         <Image.GestureRecognizers>
                             <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgQuestion_Tapped" />
                         </Image.GestureRecognizers>
                     </Image>
-                </StackLayout>
+                </Grid>
                 <BoxView Grid.ColumnSpan="3" Style="{StaticResource boxHorizontal}" />
             </Grid>
 
@@ -88,6 +111,7 @@
                         Source="iconBackArrow.png"
                         Style="{StaticResource ImgBtnPrimary}" />
                     <Label
+                        x:Name="lblHeader"
                         Grid.Column="1"
                         Style="{StaticResource lblHeader}"
                         Text="My Orders" />
@@ -146,12 +170,10 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <Frame
-                            x:Name="FrmSortBy"
-                            Grid.Column="0"
-                            Style="{StaticResource frmGrayBorder}">
+                        <Frame Grid.Column="0" Style="{StaticResource frmGrayBorder}">
                             <Grid
                                 Margin="5"
                                 ColumnDefinitions="Auto,*"
@@ -177,10 +199,7 @@
                                 <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmSortBy_Tapped" />
                             </Frame.GestureRecognizers>
                         </Frame>
-                        <Frame
-                            x:Name="FrmFilterBy"
-                            Grid.Column="1"
-                            Style="{StaticResource frmGrayBorder}">
+                        <Frame Grid.Column="1" Style="{StaticResource frmGrayBorder}">
                             <Grid
                                 Margin="5"
                                 ColumnDefinitions="Auto,*"
@@ -221,6 +240,7 @@
                                     VerticalOptions="CenterAndExpand" />
 
                                 <Label
+                                    x:Name="lblStatus"
                                     Grid.Column="1"
                                     Margin="5,3,0,0"
                                     FontSize="12"
@@ -245,69 +265,87 @@
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
-                                <Grid RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="10">
-
-                                    <StackLayout
-                                        Grid.Row="0"
-                                        Margin="20,20,20,0"
-                                        HorizontalOptions="FillAndExpand"
-                                        Orientation="Horizontal">
-
+                                <Grid RowSpacing="0">
+                                    <Grid Padding="20">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
                                         <Label
-                                            HorizontalOptions="StartAndExpand"
-                                            Style="{StaticResource lblMedium}"
-                                            Text="{Binding OrderNo}" />
-
-                                        <Label
-                                            HorizontalOptions="EndAndExpand"
-                                            Style="{StaticResource lblLight}"
-                                            Text="{Binding PaidAmount, StringFormat='Rs {0}'}" />
-
-                                    </StackLayout>
-
-                                    <StackLayout
-                                        Grid.Row="1"
-                                        Margin="20,0"
-                                        HorizontalOptions="FillAndExpand"
-                                        Orientation="Horizontal">
-
-                                        <Label
-                                            HorizontalOptions="StartAndExpand"
-                                            Style="{StaticResource lblLight}"
-                                            Text="{Binding OrderStatusDescr}" />
-
-                                        <Label
-                                            HorizontalOptions="EndAndExpand"
-                                            Style="{StaticResource lblLight}"
-                                            Text="{Binding Created, StringFormat='{0:dd/MM/yyyy}'}" />
-
-                                    </StackLayout>
-
-                                    <Frame
-                                        Grid.Row="2"
-                                        Margin="20,10"
-                                        Padding="0"
-                                        BackgroundColor="{StaticResource Green}"
-                                        CornerRadius="5"
-                                        HasShadow="False"
-                                        HeightRequest="35"
-                                        HorizontalOptions="StartAndExpand"
-                                        IsVisible="{Binding PickupProductDirectly}"
-                                        VerticalOptions="CenterAndExpand">
-                                        <Label
-                                            Grid.Row="1"
-                                            Margin="20,0"
+                                            Grid.Row="0"
                                             FontSize="15"
-                                            HorizontalOptions="CenterAndExpand"
+                                            HorizontalOptions="StartAndExpand"
                                             Style="{StaticResource lblMedium}"
-                                            Text="{Binding PaymentStatusDescr}"
-                                            TextColor="{StaticResource White}" />
-                                        <Frame.GestureRecognizers>
-                                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmStatusActions_Tapped" />
-                                        </Frame.GestureRecognizers>
-                                    </Frame>
+                                            Text="{Binding Title}" />
 
-                                    <BoxView Grid.Row="3" Style="{StaticResource boxHorizontal}" />
+                                        <StackLayout Grid.Row="1" Orientation="Horizontal">
+
+                                            <Label
+                                                FontSize="15"
+                                                HorizontalOptions="StartAndExpand"
+                                                Style="{StaticResource lblMedium}"
+                                                Text="{Binding OrderNo}" />
+
+                                            <Label
+                                                FontSize="15"
+                                                HorizontalOptions="EndAndExpand"
+                                                Style="{StaticResource lblMedium}"
+                                                Text="{Binding PaidAmount, StringFormat='Rs {0}'}"
+                                                TextColor="{StaticResource Green}" />
+
+                                        </StackLayout>
+
+                                        <StackLayout Grid.Row="2" Orientation="Horizontal">
+
+                                            <Label
+                                                HorizontalOptions="StartAndExpand"
+                                                Style="{StaticResource lblLight}"
+                                                Text="{Binding OrderStatusDescr}" />
+
+                                            <Label
+                                                HorizontalOptions="EndAndExpand"
+                                                Style="{StaticResource lblLight}"
+                                                Text="{Binding Created, StringFormat='{0:dd/MM/yyyy}'}" />
+
+                                        </StackLayout>
+
+                                        <StackLayout
+                                            Grid.Row="3"
+                                            HorizontalOptions="StartAndExpand"
+                                            Orientation="Horizontal"
+                                            Spacing="10">
+                                            <Button
+                                                Padding="10,0"
+                                                Clicked="BtnTrack_Tapped"
+                                                HeightRequest="35"
+                                                HorizontalOptions="StartAndExpand"
+                                                IsVisible="{Binding OrderTrackVisibility}"
+                                                Style="{StaticResource btnSmall}"
+                                                Text="Track" />
+
+                                            <Button
+                                                Padding="10,0"
+                                                Clicked="BtnOrderAction_Tapped"
+                                                HeightRequest="35"
+                                                HorizontalOptions="StartAndExpand"
+                                                IsVisible="{Binding OrderActionVisibility}"
+                                                Style="{StaticResource btnSmall}"
+                                                Text="{Binding OrderAction}" />
+
+                                            <Button
+                                                Padding="10,0"
+                                                Clicked="BtnSelect_Tapped"
+                                                HeightRequest="35"
+                                                HorizontalOptions="StartAndExpand"
+                                                IsVisible="{Binding isSelectGrievance}"
+                                                Style="{StaticResource btnSmall}"
+                                                Text="Select" />
+                                        </StackLayout>
+                                    </Grid>
+
+                                    <BoxView Style="{StaticResource boxHorizontalGreen}" />
                                     <Grid.GestureRecognizers>
                                         <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="GrdViewOrderDetails_Tapped" />
                                     </Grid.GestureRecognizers>

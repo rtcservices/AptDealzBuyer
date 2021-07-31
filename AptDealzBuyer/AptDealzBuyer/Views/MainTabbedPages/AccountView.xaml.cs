@@ -1,14 +1,11 @@
 ﻿using Acr.UserDialogs;
 using AptDealzBuyer.API;
 using AptDealzBuyer.Extention;
-using AptDealzBuyer.Model.Reponse;
 using AptDealzBuyer.Model.Request;
 using AptDealzBuyer.Repository;
 using AptDealzBuyer.Utility;
-using AptDealzBuyer.Views.MasterData;
 using Rg.Plugins.Popup.Services;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -58,11 +55,25 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             txtFullName.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
             BtnUpdate.IsEnabled = false;
             BindProperties();
+
+            MessagingCenter.Subscribe<string>(this, "NotificationCount", (count) =>
+            {
+                if (!Common.EmptyFiels(Common.NotificationCount))
+                {
+                    lblNotificationCount.Text = count;
+                    frmNotification.IsVisible = true;
+                }
+                else
+                {
+                    frmNotification.IsVisible = false;
+                    lblNotificationCount.Text = string.Empty;
+                }
+            });
         }
         #endregion
 
         #region Methods       
-        async void BindProperties()
+        private async void BindProperties()
         {
             try
             {
@@ -84,7 +95,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             }
         }
 
-        async Task GetCountries()
+        private async Task GetCountries()
         {
             try
             {
@@ -96,42 +107,47 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             }
         }
 
-        async Task GetProfile()
+        private async Task GetProfile()
         {
             try
             {
-                var mResponse = await profileAPI.GetMyProfileData();
-                if (mResponse != null && mResponse.Succeeded)
+                if (Common.mBuyerDetail == null || Common.EmptyFiels(Common.mBuyerDetail.BuyerId))
                 {
-                    var jObject = (Newtonsoft.Json.Linq.JObject)mResponse.Data;
-                    if (jObject != null)
+                    var mResponse = await profileAPI.GetMyProfileData();
+                    if (mResponse != null && mResponse.Succeeded)
                     {
-                        mBuyerDetail = jObject.ToObject<Model.Request.BuyerDetails>();
-                        if (mBuyerDetail != null)
+                        var jObject = (Newtonsoft.Json.Linq.JObject)mResponse.Data;
+                        if (jObject != null)
                         {
-                            GetProfileDetails(mBuyerDetail);
+                            mBuyerDetail = jObject.ToObject<Model.Request.BuyerDetails>();
                         }
+                    }
+                    else
+                    {
+                        if (mResponse != null)
+                            Common.DisplayErrorMessage(mResponse.Message);
+                        else
+                            Common.DisplayErrorMessage(Constraints.Something_Wrong);
                     }
                 }
                 else
                 {
-                    if (mResponse != null)
-                        Common.DisplayErrorMessage(mResponse.Message);
-                    else
-                        Common.DisplayErrorMessage(Constraints.Something_Wrong);
+                    mBuyerDetail = Common.mBuyerDetail;
                 }
+
+                GetProfileDetails(mBuyerDetail);
             }
             catch (Exception ex)
             {
                 Common.DisplayErrorMessage("AccountView/GetProfile: " + ex.Message);
             }
-
         }
 
-        void GetProfileDetails(BuyerDetails mBuyerDetails)
+        private void GetProfileDetails(BuyerDetails mBuyerDetails)
         {
             try
             {
+                lblBuyerId.Text = mBuyerDetails.BuyerNo;
                 txtFullName.Text = mBuyerDetails.FullName;
                 txtEmailAddress.Text = mBuyerDetails.Email;
                 txtPhoneNumber.Text = mBuyerDetails.PhoneNumber;
@@ -162,6 +178,10 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 {
                     txtLandmark.Text = mBuyerDetails.Landmark;
                 }
+                if (!Common.EmptyFiels(mBuyerDetails.State))
+                {
+                    txtState.Text = mBuyerDetails.State;
+                }
                 if (!Common.EmptyFiels(mBuyerDetails.PinCode))
                 {
                     txtPinCode.Text = mBuyerDetails.PinCode;
@@ -177,7 +197,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             }
         }
 
-        void HasUpdateProfileDetail()
+        private void HasUpdateProfileDetail()
         {
             try
             {
@@ -201,6 +221,8 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                     isUpdate = true;
                 else if (mBuyerDetail.Landmark != txtLandmark.Text)
                     isUpdate = true;
+                else if (mBuyerDetail.State != txtState.Text)
+                    isUpdate = true;
                 else if (isUpdatPhoto)
                     isUpdate = true;
                 else
@@ -215,32 +237,39 @@ namespace AptDealzBuyer.Views.MainTabbedPages
 
         }
 
-        Model.Request.BuyerDetails UpdateProfileDetails()
+        private Model.Request.BuyerDetails UpdateProfileDetails()
         {
-            mBuyerDetail.UserId = mBuyerDetail.BuyerId;
-            mBuyerDetail.FullName = txtFullName.Text;
-            mBuyerDetail.Email = txtEmailAddress.Text;
-            mBuyerDetail.PhoneNumber = txtPhoneNumber.Text;
-
-            if (!Common.EmptyFiels(relativePath))
+            try
             {
-                string baseURL = (string)App.Current.Resources["BaseURL"];
-                mBuyerDetail.ProfilePhoto = relativePath.Replace(baseURL, "");
-            }
-            mBuyerDetail.Building = txtBuildingNumber.Text;
-            mBuyerDetail.Street = txtStreet.Text;
-            mBuyerDetail.City = txtCity.Text;
-            if (!Common.EmptyFiels(pkNationality.Text))
-            {
-                mBuyerDetail.CountryId = Common.mCountries.Where(x => x.Name.ToLower() == pkNationality.Text.ToLower().ToString()).FirstOrDefault()?.CountryId;
-            }
-            mBuyerDetail.Landmark = txtLandmark.Text;
-            mBuyerDetail.PinCode = txtPinCode.Text;
+                mBuyerDetail.UserId = mBuyerDetail.BuyerId;
+                mBuyerDetail.FullName = txtFullName.Text;
+                mBuyerDetail.Email = txtEmailAddress.Text;
+                mBuyerDetail.PhoneNumber = txtPhoneNumber.Text;
 
+                if (!Common.EmptyFiels(relativePath))
+                {
+                    string baseURL = (string)App.Current.Resources["BaseURL"];
+                    mBuyerDetail.ProfilePhoto = relativePath.Replace(baseURL, "");
+                }
+                mBuyerDetail.Building = txtBuildingNumber.Text;
+                mBuyerDetail.Street = txtStreet.Text;
+                mBuyerDetail.City = txtCity.Text;
+                if (!Common.EmptyFiels(pkNationality.Text))
+                {
+                    mBuyerDetail.CountryId = Common.mCountries.Where(x => x.Name.ToLower() == pkNationality.Text.ToLower().ToString()).FirstOrDefault()?.CountryId;
+                }
+                mBuyerDetail.Landmark = txtLandmark.Text;
+                mBuyerDetail.State = txtState.Text;
+                mBuyerDetail.PinCode = txtPinCode.Text;
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("AccountView/UpdateProfileDetails: " + ex.Message);
+            }
             return mBuyerDetail;
         }
 
-        bool Validations()
+        private bool Validations()
         {
             bool isValid = false;
             try
@@ -283,7 +312,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             return isValid;
         }
 
-        void RequiredFields()
+        private void RequiredFields()
         {
             try
             {
@@ -310,7 +339,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             }
         }
 
-        void FieldsTrim()
+        private void FieldsTrim()
         {
             try
             {
@@ -332,6 +361,10 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 {
                     txtLandmark.Text = txtLandmark.Text.Trim();
                 }
+                if (!Common.EmptyFiels(txtState.Text))
+                {
+                    txtState.Text = txtState.Text.Trim();
+                }
                 if (!Common.EmptyFiels(txtPinCode.Text))
                 {
                     txtPinCode.Text = txtPinCode.Text.Trim();
@@ -343,7 +376,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             }
         }
 
-        async void UpdateProfile()
+        private async void UpdateProfile()
         {
             try
             {
@@ -362,7 +395,8 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                         var updateId = mResponse.Data;
                         if (updateId != null)
                         {
-                            SuccessfullUpdate(mResponse.Message);
+                            var successPopup = new PopupPages.SuccessPopup(mResponse.Message);
+                            await PopupNavigation.Instance.PushAsync(successPopup);
                             BtnUpdate.IsEnabled = false;
                         }
                     }
@@ -385,20 +419,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             }
         }
 
-        void SuccessfullUpdate(string MessageString)
-        {
-            try
-            {
-                var successPopup = new PopupPages.SuccessPopup(MessageString);
-                PopupNavigation.Instance.PushAsync(successPopup);
-            }
-            catch (Exception ex)
-            {
-                Common.DisplayErrorMessage("AccountView/SuccessfullUpdate: " + ex.Message);
-            }
-        }
-
-        async void DoLogout()
+        private async void DoLogout()
         {
             try
             {
@@ -436,7 +457,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             }
         }
 
-        void UnfocussedFields(Entry entry = null, ExtAutoSuggestBox autoSuggestBox = null)
+        private void UnfocussedFields(Entry entry = null, ExtAutoSuggestBox autoSuggestBox = null)
         {
             try
             {
@@ -469,7 +490,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             }
         }
 
-        async Task<bool> PinCodeValidation()
+        private async Task<bool> PinCodeValidation()
         {
             bool isValid = false;
             try
@@ -511,7 +532,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
 
         private void ImgNotification_Tapped(object sender, EventArgs e)
         {
-
+            Navigation.PushAsync(new DashboardPages.NotificationPage());
         }
 
         private void ImgQuestion_Tapped(object sender, EventArgs e)
@@ -522,7 +543,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         private void ImgBack_Tapped(object sender, EventArgs e)
         {
             Common.BindAnimation(imageButton: ImgBack);
-            App.Current.MainPage = new MasterDataPage();
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
         }
 
         private void BtnUpdate_Clicked(object sender, EventArgs e)
@@ -531,8 +552,9 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             UpdateProfile();
         }
 
-        private void FrmDeactivate_Tapped(object sender, EventArgs e)
+        private void BtnDeactivate_Clicked(object sender, EventArgs e)
         {
+            Common.BindAnimation(button: BtnDeactivate);
             Navigation.PushAsync(new OtherPages.DeactivateAccountPage());
         }
 
@@ -541,6 +563,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             try
             {
                 Common.BindAnimation(image: ImgCamera);
+                UserDialogs.Instance.ShowLoading(Constraints.Loading);
                 ImageConvertion.SelectedImagePath = imgUser;
                 ImageConvertion.SetNullSource((int)FileUploadCategory.ProfilePicture);
                 await ImageConvertion.SelectImage();
@@ -556,10 +579,15 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             {
                 Common.DisplayErrorMessage("AccountView/ImgCamera_Tapped: " + ex.Message);
             }
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
+            }
         }
 
         private void Logout_Tapped(object sender, EventArgs e)
         {
+            Common.BindAnimation(button: BtnLogout);
             DoLogout();
         }
 
@@ -646,6 +674,34 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         private void BtnLogo_Clicked(object sender, EventArgs e)
         {
             Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
+        }
+
+        private void RefreshView_Refreshing(object sender, EventArgs e)
+        {
+            try
+            {
+                rfView.IsRefreshing = true;
+                BtnUpdate.IsEnabled = false;
+                BindProperties();
+                rfView.IsRefreshing = false;
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("AccountView/RefreshView_Refreshing: " + ex.Message);
+            }
+        }
+
+        private void StkBuyerId_Tapped(object sender, EventArgs e)
+        {
+            try
+            {
+                string message = Constraints.CopiedBuyerId;
+                Common.CopyText(lblBuyerId, message);
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("AccountView/StkBuyerId_Tapped: " + ex.Message);
+            }
         }
         #endregion
     }

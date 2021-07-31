@@ -2,7 +2,10 @@
 {
     public static class Constraints
     {
-        #region Images
+
+        public const int LargeBufferSize = 4096;
+
+        #region [ Images ]
         public const string Password_Hide = "iconHidePass.png";
         public const string Password_Visible = "iconVisiblepass.png";
 
@@ -27,7 +30,7 @@
         public const string GreenArrow_Up = "iconGreenUpArrow.png";
         #endregion
 
-        #region Error Message
+        #region [ Error Message ]
         public static string Session_Expired = "Session expired, Please login again!";
         public static string Something_Wrong = "Something went wrong!";
         public static string Something_Wrong_Server = "Something went wrong from server!";
@@ -36,7 +39,7 @@
         public static string Phone_Dialer_Not_Support = "Phone Dialer is not supported on this device";
         #endregion
 
-        #region Alert Title
+        #region [ Alert Title ]
         public const string Yes = "Yes";
         public const string No = "No";
         public const string Ok = "OK";
@@ -51,13 +54,14 @@
         public const string Logout = "Logout";
         #endregion
 
-        #region Alert Message
+        #region [ Alert Message ]
         public const string CouldNotSentOTP = "Could not send Verification Code to the given number!";
         public const string AreYouSureWantDeactivateAccount = "Are you sure want to deactivate account?";
         public const string AreYouSureWantDelete = "Are you sure want to delete?";
         public const string AreYouSureWantCancel = "Are you sure want to cancel?";
         public const string AreYouSureWantCancelReq = "Are you sure you want to cancel the requirement?";
         public const string AreYouSureWantDeleteReq = "Are you sure you want to delete the requirement?";
+        public const string AreYouSureWantDeleteNotification = "Are you sure you want to delete the notification?";
         public const string AreYouSureWantLogout = "Are you sure want to logout?";
         public const string DoYouWantToExit = "Do you really want to exit?";
 
@@ -75,9 +79,13 @@
 
         public const string InValid_Email = "Please enter valid email address!";
         public const string InValid_PhoneNumber = "Please enter valid phone number!";
-        public const string InValid_Pincode = "Please enter valid pincode!";
         public const string InValid_OTP = "Verification code is invalid! Try again!";
         public const string InValid_Nationality = "Please enter valid nationality!";
+
+        public const string InValid_Pincode = "Please enter valid pincode!";
+        public const string InValid_DeliveryPinCode = "Please enter valid delivery location pin code!";
+        public const string InValid_BillingPinCode = "Please enter valid billing address pin code!";
+        public const string InValid_ShillingPinCode = "Please enter valid shipping address pin code!";
 
         public const string Required_All = "Selected fields are required!";
         public const string Required_Email_Phone = "Please enter email address or phone number!";
@@ -99,7 +107,7 @@
         public const string Required_Description = "Please enter description!";
         public const string Required_Quantity = "Please enter quantity!";
         public const string Required_PriceEstimation = "Please enter Total Price Estimation!";
-        public const string Required_Delivery_PinCode = "Please enter location pin code!";
+        public const string Required_Delivery_PinCode = "Please enter delivery location pin code!";
 
         public const string Required_Billing_Name = "Please enter billing address name!";
         public const string Required_Billing_Building = "Please enter billing address building!";
@@ -113,11 +121,23 @@
         public const string Required_Shipping_City = "Please enter shipping address city!";
         public const string Required_Shipping_PinCode = "Please enter shipping address pin code!";
         public const string Required_Shipping_Landmark = "Please enter shipping address landmark!";
+
+        public const string Required_ComplainType = "Please select complaint type!";
+        public const string Required_Response = "Please enter your message!";
         #endregion
 
-        #region Success
+        #region [ Success ]
         public const string OTPSent = "OTP Verification Code Sent Successfully";
         public const string InstantVerification = "you don't get any code, it is instant verification. Please try to login with email address";
+        #endregion
+
+        #region [ Copy Message ]
+        public const string CopiedBuyerId = "Copied Buyer Id!";
+        public const string CopiedSellerId = "Copied Seller Id!";
+        public const string CopiedRequirementId = "Copied Requirement ID!";
+        public const string CopiedOrderId = "Copied Order Id!";
+        public const string CopiedQuoteRefNo = "Copied Quote Reference No!";
+        public const string CopiedGrievanceId = "Copied Grievance Id!";
         #endregion
     }
 }

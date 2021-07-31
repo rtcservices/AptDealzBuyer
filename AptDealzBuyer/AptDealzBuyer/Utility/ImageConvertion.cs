@@ -24,6 +24,13 @@ namespace AptDealzBuyer.Utility
         #endregion
 
         #region Methods
+        public static byte[] streamToByteArray(Stream input)
+        {
+            MemoryStream ms = new MemoryStream();
+            input.CopyTo(ms);
+            return ms.ToArray();
+        }
+
         public static byte[] CompressImage(byte[] imgBytes)
         {
             byte[] CompressimageBytes = null;
@@ -255,6 +262,21 @@ namespace AptDealzBuyer.Utility
             }
             finally { UserDialogs.Instance.HideLoading(); }
 #pragma warning restore CS0618 // Type or member is obsolete
+        }
+
+        public static ImageSource LoadBase64(string base64)
+        {
+            byte[] bytes = Convert.FromBase64String(base64);
+            ImageSource image;
+            using (MemoryStream ms = new MemoryStream(bytes))
+            {
+                image = ImageSource.FromStream(() =>
+                {
+                    return ms;
+                });
+            }
+
+            return image;
         }
         #endregion
     }

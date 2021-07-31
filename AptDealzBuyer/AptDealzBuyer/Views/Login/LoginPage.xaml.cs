@@ -58,15 +58,10 @@ namespace AptDealzBuyer.Views.Login
             return true;
         }
 
-        void BindProperties()
+        private void BindProperties()
         {
             try
             {
-                //if (isChecked)
-                //    imgCheck.Source = Constraints.CheckBox_Checked;
-                //else
-                //    imgCheck.Source = Constraints.CheckBox_UnChecked;
-
                 if (!Common.EmptyFiels(Settings.EmailAddress))
                     txtUserAuth.Text = Settings.EmailAddress;
             }
@@ -76,7 +71,7 @@ namespace AptDealzBuyer.Views.Login
             }
         }
 
-        bool Validations()
+        private bool Validations()
         {
             bool isValid = false;
             try
@@ -115,12 +110,12 @@ namespace AptDealzBuyer.Views.Login
             return isValid;
         }
 
-        void FieldsTrim()
+        private void FieldsTrim()
         {
             txtUserAuth.Text = txtUserAuth.Text.Trim();
         }
 
-        async void AuthenticateUser()
+        private async void AuthenticateUser()
         {
             try
             {
@@ -134,19 +129,9 @@ namespace AptDealzBuyer.Views.Login
                         var mResponse = await authenticationAPI.SendOtpByEmail(txtUserAuth.Text);
                         if (mResponse != null && mResponse.Succeeded)
                         {
-                            //if (isChecked)
-                            //{
-                            //    Settings.EmailAddress = txtUserAuth.Text;
-                            //}
-
                             Common.DisplaySuccessMessage(mResponse.Message);
-
                             await Navigation.PushAsync(new Views.Login.EnterOtpPage(txtUserAuth.Text));
-
                             txtUserAuth.Text = string.Empty;
-                            //isChecked = false;
-                            //imgCheck.Source = Constraints.CheckBox_UnChecked;
-
                         }
                         else
                         {
@@ -219,9 +204,9 @@ namespace AptDealzBuyer.Views.Login
             }
         }
 
-        Model.Request.Login FillLogin()
+        private Model.Request.AuthenticatePhone FillLogin()
         {
-            Model.Request.Login mLogin = new Model.Request.Login();
+            Model.Request.AuthenticatePhone mLogin = new Model.Request.AuthenticatePhone();
             try
             {
                 mLogin.PhoneNumber = txtUserAuth.Text;
@@ -246,7 +231,7 @@ namespace AptDealzBuyer.Views.Login
             return mLogin;
         }
 
-        void NavigateToDashboard(Response mResponse)
+        private void NavigateToDashboard(Response mResponse)
         {
             try
             {

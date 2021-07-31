@@ -2,7 +2,7 @@
 
 namespace AptDealzBuyer.Model.Request
 {
-    public class Login
+    public class AuthenticatePhone
     {
         [JsonProperty("phoneNumber")]
         public string PhoneNumber { get; set; }

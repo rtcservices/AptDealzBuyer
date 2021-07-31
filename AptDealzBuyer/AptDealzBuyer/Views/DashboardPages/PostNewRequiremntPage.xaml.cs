@@ -19,20 +19,43 @@ namespace AptDealzBuyer.Views.DashboardPages
     public partial class PostNewRequiremntPage : ContentPage
     {
         #region Objects     
+        private BuyerDetails mBuyerDetail;
         private List<Category> mCategories;
         private List<SubCategory> mSubCategories;
         private List<string> selectedSubCategory;
+
+        private string relativePath = string.Empty;
         private bool isIndiaProducts = false;
         private bool isPickupProduct = false;
         private bool isInsurance = false;
-        private string relativePath = string.Empty;
-        private BuyerDetails mBuyerDetail;
         #endregion
 
         #region Constructor
         public PostNewRequiremntPage()
         {
             InitializeComponent();
+            BindProperties();
+
+            MessagingCenter.Subscribe<string>(this, "NotificationCount", (count) =>
+            {
+                if (!Common.EmptyFiels(Common.NotificationCount))
+                {
+                    lblNotificationCount.Text = count;
+                    frmNotification.IsVisible = true;
+                }
+                else
+                {
+                    frmNotification.IsVisible = false;
+                    lblNotificationCount.Text = string.Empty;
+                }
+            });
+        }
+        #endregion
+
+        #region Methods    
+        #region [ Get / Bind Data ]
+        private void BindProperties()
+        {
             mCategories = new List<Category>();
             mSubCategories = new List<SubCategory>();
             selectedSubCategory = new List<string>();
@@ -42,10 +65,8 @@ namespace AptDealzBuyer.Views.DashboardPages
             dpExpectedDeliveryDate.NullableDate = null;
             dpExpectedDeliveryDate.MinimumDate = DateTime.Today;
         }
-        #endregion
 
-        #region Methods    
-        void CapitalizeWord()
+        private void CapitalizeWord()
         {
             txtTitle.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
             txtDescription.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
@@ -63,12 +84,7 @@ namespace AptDealzBuyer.Views.DashboardPages
             txtSALandmark.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
         }
 
-        protected override void OnAppearing()
-        {
-            base.OnAppearing();
-        }
-
-        async void BindBillingAddress()
+        private async void BindBillingAddress()
         {
             try
             {
@@ -110,7 +126,7 @@ namespace AptDealzBuyer.Views.DashboardPages
             }
         }
 
-        async void BindCategories()
+        private async void BindCategories()
         {
             try
             {
@@ -132,7 +148,7 @@ namespace AptDealzBuyer.Views.DashboardPages
             }
         }
 
-        async void GetSubCategoryByCategoryId(string categoryId)
+        private async void GetSubCategoryByCategoryId(string categoryId)
         {
             try
             {
@@ -144,8 +160,10 @@ namespace AptDealzBuyer.Views.DashboardPages
                 Common.DisplayErrorMessage("PostNewRequiremntPage/GetSubCategoryByCategoryId: " + ex.Message);
             }
         }
+        #endregion
 
-        public bool Validations()
+        #region [ Validations ]
+        private bool Validations()
         {
             bool isValid = false;
             try
@@ -210,6 +228,18 @@ namespace AptDealzBuyer.Views.DashboardPages
                 {
                     Common.DisplayErrorMessage(Constraints.Required_Billing_PinCode);
                 }
+                else if (Common.EmptyFiels(txtLocationPinCode.Text))
+                {
+                    if (!isPickupProduct)
+                    {
+                        BoxLocationPinCode.BackgroundColor = (Color)App.Current.Resources["LightRed"];
+                        Common.DisplayErrorMessage(Constraints.Required_Delivery_PinCode);
+                    }
+                    else
+                    {
+                        isValid = true;
+                    }
+                }
                 else
                 {
                     isValid = true;
@@ -219,7 +249,7 @@ namespace AptDealzBuyer.Views.DashboardPages
                 {
                     if (Common.EmptyFiels(txtSAName.Text) || Common.EmptyFiels(txtSABuilding.Text)
                         || Common.EmptyFiels(txtSAStreet.Text) || Common.EmptyFiels(txtSACity.Text)
-                        || Common.EmptyFiels(txtSAPinCode.Text) || Common.EmptyFiels(txtSALandmark.Text))
+                        || Common.EmptyFiels(txtSAPinCode.Text))
                     {
                         return RequiredShippingAddressFields();
                     }
@@ -230,18 +260,6 @@ namespace AptDealzBuyer.Views.DashboardPages
                         EmptyRedShippingAddress();
                 }
 
-                //else if (!Common.EmptyFiels(txtLocationPinCode.Text))
-                //{
-                //    if (!isPickupProduct)
-                //    {
-                //        BoxLocationPinCode.BackgroundColor = (Color)App.Current.Resources["LightRed"];
-                //        Common.DisplayErrorMessage(Constraints.Required_Delivery_PinCode);
-                //    }
-                //    else
-                //    {
-                //        isValid = true;
-                //    }
-                //}
             }
             catch (Exception ex)
             {
@@ -250,7 +268,7 @@ namespace AptDealzBuyer.Views.DashboardPages
             return isValid;
         }
 
-        void RequiredFields()
+        private void RequiredFields()
         {
             try
             {
@@ -333,7 +351,7 @@ namespace AptDealzBuyer.Views.DashboardPages
             }
         }
 
-        void EmptyRedShippingAddress()
+        private void EmptyRedShippingAddress()
         {
             if (Common.EmptyFiels(txtSAName.Text))
             {
@@ -360,23 +378,23 @@ namespace AptDealzBuyer.Views.DashboardPages
                 BoxSAPinCode.BackgroundColor = (Color)App.Current.Resources["LightRed"];
             }
 
-            if (Common.EmptyFiels(txtSALandmark.Text))
-            {
-                BoxSALandmark.BackgroundColor = (Color)App.Current.Resources["LightRed"];
-            }
+            //if (Common.EmptyFiels(txtSALandmark.Text))
+            //{
+            //    BoxSALandmark.BackgroundColor = (Color)App.Current.Resources["LightRed"];
+            //}
         }
 
-        void EmptyGreyShippingAddress()
+        private void EmptyGreyShippingAddress()
         {
             BoxSAName.BackgroundColor = (Color)App.Current.Resources["LightGray"];
             BoxSABuilding.BackgroundColor = (Color)App.Current.Resources["LightGray"];
             BoxSAStreet.BackgroundColor = (Color)App.Current.Resources["LightGray"];
             BoxSACity.BackgroundColor = (Color)App.Current.Resources["LightGray"];
             BoxSAPinCode.BackgroundColor = (Color)App.Current.Resources["LightGray"];
-            BoxSALandmark.BackgroundColor = (Color)App.Current.Resources["LightGray"];
+            //BoxSALandmark.BackgroundColor = (Color)App.Current.Resources["LightGray"];
         }
 
-        public bool RequiredShippingAddressFields()
+        private bool RequiredShippingAddressFields()
         {
             bool isValid = false;
 
@@ -402,234 +420,19 @@ namespace AptDealzBuyer.Views.DashboardPages
             {
                 Common.DisplayErrorMessage(Constraints.Required_Shipping_PinCode);
             }
-            else if (Common.EmptyFiels(txtSALandmark.Text))
-            {
-                Common.DisplayErrorMessage(Constraints.Required_Shipping_Landmark);
-            }
             else
             {
                 isValid = true;
             }
+            //else if (Common.EmptyFiels(txtSALandmark.Text))
+            //{
+            //    Common.DisplayErrorMessage(Constraints.Required_Shipping_Landmark);
+            //}
 
             return isValid;
         }
 
-        void FieldsTrim()
-        {
-            try
-            {
-                txtTitle.Text = txtTitle.Text.Trim();
-                txtDescription.Text = txtDescription.Text.Trim();
-                txtQuantity.Text = txtQuantity.Text.Trim();
-                txtEstimation.Text = txtEstimation.Text.Trim();
-
-                txtName.Text = txtName.Text.Trim();
-                txtBuilding.Text = txtBuilding.Text.Trim();
-                txtStreet.Text = txtStreet.Text.Trim();
-                txtCity.Text = txtCity.Text.Trim();
-                txtPinCode.Text = txtPinCode.Text.Trim();
-
-                if (!Common.EmptyFiels(txtSAName.Text))
-                    txtSAName.Text = txtSAName.Text.Trim();
-                if (!Common.EmptyFiels(txtSABuilding.Text))
-                    txtSABuilding.Text = txtSABuilding.Text.Trim();
-                if (!Common.EmptyFiels(txtSAStreet.Text))
-                    txtSAStreet.Text = txtSAStreet.Text.Trim();
-                if (!Common.EmptyFiels(txtSACity.Text))
-                    txtSACity.Text = txtSACity.Text.Trim();
-                if (!Common.EmptyFiels(txtSAPinCode.Text))
-                    txtSAPinCode.Text = txtSAPinCode.Text.Trim();
-                if (!Common.EmptyFiels(txtSALandmark.Text))
-                    txtSALandmark.Text = txtSALandmark.Text.Trim();
-
-                if (!Common.EmptyFiels(txtSourceSupply.Text))
-                    txtSourceSupply.Text = txtSourceSupply.Text.Trim();
-                if (!Common.EmptyFiels(txtLocationPinCode.Text))
-                    txtLocationPinCode.Text = txtLocationPinCode.Text.Trim();
-            }
-            catch (Exception ex)
-            {
-                Common.DisplayErrorMessage("PostNewRequiremntPage/FieldsTrim: " + ex.Message);
-            }
-        }
-
-        Model.Request.Requirement FillRequirement()
-        {
-            Requirement mRequirement = new Requirement();
-            try
-            {
-                mRequirement.UserId = Settings.UserId;
-                mRequirement.Title = txtTitle.Text;
-                mRequirement.Category = mCategories.Where(x => x.Name == pkCategory.SelectedItem.ToString()).FirstOrDefault()?.Name;
-                mRequirement.SubCategories = selectedSubCategory;
-                mRequirement.ProductDescription = txtDescription.Text;
-                mRequirement.Quantity = Convert.ToInt32(txtQuantity.Text);
-                mRequirement.Unit = pkQuantityUnits.SelectedItem.ToString();
-                mRequirement.TotalPriceEstimation = Convert.ToDecimal(txtEstimation.Text);
-
-                mRequirement.BillingAddressName = txtName.Text;
-                mRequirement.BillingAddressBuilding = txtBuilding.Text;
-                mRequirement.BillingAddressStreet = txtStreet.Text;
-                mRequirement.BillingAddressCity = txtCity.Text;
-                mRequirement.BillingAddressPinCode = txtPinCode.Text;
-
-                mRequirement.ShippingAddressName = txtSAName.Text;
-                mRequirement.ShippingAddressBuilding = txtSABuilding.Text;
-                mRequirement.ShippingAddressStreet = txtSAStreet.Text;
-                mRequirement.ShippingAddressCity = txtSACity.Text;
-                mRequirement.ShippingAddressPinCode = txtSAPinCode.Text;
-                mRequirement.ShippingAddressLandmark = txtSALandmark.Text;
-
-                mRequirement.PreferInIndiaProducts = isIndiaProducts;
-                mRequirement.PickupProductDirectly = isPickupProduct;
-                mRequirement.NeedInsuranceCoverage = isInsurance;
-
-                if (!Common.EmptyFiels(relativePath))
-                {
-                    string baseURL = (string)App.Current.Resources["BaseURL"];
-                    mRequirement.ProductImage = relativePath.Replace(baseURL, "");
-                }
-                if (!Common.EmptyFiels(txtSourceSupply.Text))
-                {
-                    mRequirement.PreferredSourceOfSupply = txtSourceSupply.Text;
-                }
-                if (dpExpectedDeliveryDate.NullableDate != null && dpExpectedDeliveryDate.NullableDate != DateTime.MinValue)
-                {
-                    mRequirement.ExpectedDeliveryDate = dpExpectedDeliveryDate.NullableDate.Value;
-                }
-                if (!Common.EmptyFiels(txtLocationPinCode.Text))
-                {
-                    mRequirement.DeliveryLocationPinCode = txtLocationPinCode.Text;
-                }
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-
-            return mRequirement;
-        }
-
-        async void SubmitRequirement()
-        {
-            try
-            {
-                //grdShippingAddress.IsVisible = true;
-                //imgShippingDown.Source = Constraints.Arrow_Up;
-                //await ScrPrimary.ScrollToAsync(StkShipping, ScrollToPosition.Start, true);
-
-                if (Validations())
-                {
-                    UserDialogs.Instance.ShowLoading(Constraints.Loading);
-                    if (!await PinCodeValidation(txtPinCode.Text, BoxPinCode))
-                        return;
-
-                    if (!Common.EmptyFiels(txtLocationPinCode.Text))
-                    {
-                        if (!await PinCodeValidation(txtLocationPinCode.Text, BoxLocationPinCode))
-                            return;
-                    }
-
-                    if (!isPickupProduct)
-                    {
-                        if (!await PinCodeValidation(txtSAPinCode.Text, BoxSAPinCode))
-                            return;
-                    }
-                    else
-                    {
-                        if (!Common.EmptyFiels(txtSAPinCode.Text))
-                        {
-                            if (!await PinCodeValidation(txtSAPinCode.Text, BoxSAPinCode))
-                                return;
-                        }
-                    }
-
-                    FieldsTrim();
-                    RequirementAPI requirementAPI = new RequirementAPI();
-                    var mRequirement = FillRequirement();
-
-                    var mResponse = await requirementAPI.CreateRequirement(mRequirement);
-                    if (mResponse != null && mResponse.Succeeded)
-                    {
-                        SuccessfullRequirement(mResponse.Message);
-                        ClearPropeties();
-                    }
-                    else
-                    {
-                        if (mResponse != null)
-                            Common.DisplayErrorMessage(mResponse.Message);
-                        else
-                            Common.DisplayErrorMessage(Constraints.Something_Wrong);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Common.DisplayErrorMessage("PostNewRequiremntPage/SubmitRequirement: " + ex.Message);
-            }
-            finally
-            {
-                UserDialogs.Instance.HideLoading();
-            }
-        }
-
-        void SuccessfullRequirement(string MessageString)
-        {
-            try
-            {
-                var successPopup = new PopupPages.SuccessPopup(MessageString);
-                successPopup.isRefresh += (s1, e1) =>
-                {
-                    bool res = (bool)s1;
-                    if (res)
-                    {
-                        Navigation.PopAsync();
-                    }
-                };
-
-                PopupNavigation.Instance.PushAsync(successPopup);
-            }
-            catch (Exception ex)
-            {
-                Common.DisplayErrorMessage("PostNewRequiremntPage/SuccessfullRequirement: " + ex.Message);
-            }
-        }
-
-        void ClearPropeties()
-        {
-            try
-            {
-                txtTitle.Text = string.Empty;
-                pkCategory.SelectedIndex = -1;
-                pkSubCategory.SelectedIndex = -1;
-                txtDescription.Text = string.Empty;
-                txtQuantity.Text = string.Empty;
-                txtLocationPinCode.Text = string.Empty;
-                txtEstimation.Text = string.Empty;
-                txtSourceSupply.Text = string.Empty;
-
-                txtName.Text = string.Empty;
-                txtBuilding.Text = string.Empty;
-                txtStreet.Text = string.Empty;
-                txtCity.Text = string.Empty;
-                txtPinCode.Text = string.Empty;
-
-                txtSAName.Text = string.Empty;
-                txtSABuilding.Text = string.Empty;
-                txtSAStreet.Text = string.Empty;
-                txtSACity.Text = string.Empty;
-                txtSAPinCode.Text = string.Empty;
-                txtSALandmark.Text = string.Empty;
-
-                ImgProductImage.Source = "imgUploadImage.png";
-            }
-            catch (Exception ex)
-            {
-                Common.DisplayErrorMessage("PostNewRequiremntPage/ClearPropeties: " + ex.Message);
-            }
-        }
-
-        void UnfocussedFields(Entry entry = null, Editor editor = null, Picker picker = null)
+        private void UnfocussedFields(Entry entry = null, Editor editor = null, Picker picker = null)
         {
             try
             {
@@ -691,10 +494,10 @@ namespace AptDealzBuyer.Views.DashboardPages
                     {
                         BoxSAPinCode.BackgroundColor = (Color)App.Current.Resources["LightGray"];
                     }
-                    else if (entry.ClassId == "SALandmark")
-                    {
-                        BoxSALandmark.BackgroundColor = (Color)App.Current.Resources["LightGray"];
-                    }
+                    //else if (entry.ClassId == "SALandmark")
+                    //{
+                    //    BoxSALandmark.BackgroundColor = (Color)App.Current.Resources["LightGray"];
+                    //}
                 }
 
                 if (editor != null)
@@ -727,84 +530,7 @@ namespace AptDealzBuyer.Views.DashboardPages
             }
         }
 
-        void PickupDirectlyFromSeller()
-        {
-            try
-            {
-                if (imgPickup.Source.ToString().Replace("File: ", "") == Constraints.CheckBox_Checked)
-                {
-                    imgPickup.Source = Constraints.CheckBox_UnChecked;
-                    lblLocationPINCode.Text = "Delivery Location PIN Code";
-                    lblDeliveryDate.Text = "Expected Delivery Date";
-                    StkDeliveryLocationPINCode.IsVisible = true;
-                    isPickupProduct = false;
-                    lblSAName.IsVisible = true;
-                    lblSABuilding.IsVisible = true;
-                    lblSAStreet.IsVisible = true;
-                    lblSACity.IsVisible = true;
-                    lblSAPINCode.IsVisible = true;
-                    lblSALandmark.IsVisible = true;
-                }
-                else
-                {
-                    imgPickup.Source = Constraints.CheckBox_Checked;
-                    lblLocationPINCode.Text = "Pickup Location PIN Code";
-                    lblDeliveryDate.Text = "Expected Pickup Date";
-                    StkDeliveryLocationPINCode.IsVisible = false;
-                    EmptyGreyShippingAddress();
-                    isPickupProduct = true;
-                    lblSAName.IsVisible = false;
-                    lblSABuilding.IsVisible = false;
-                    lblSAStreet.IsVisible = false;
-                    lblSACity.IsVisible = false;
-                    lblSAPINCode.IsVisible = false;
-                    lblSALandmark.IsVisible = false;
-                }
-            }
-            catch (Exception ex)
-            {
-                Common.DisplayErrorMessage("PostNewRequiremntPage/PickupDirectlyFromSeller: " + ex.Message);
-            }
-        }
-
-        void SameAsBillingAddress()
-        {
-            try
-            {
-                if (imgSameAddress.Source.ToString().Replace("File: ", "") == Constraints.CheckBox_Checked)
-                {
-                    imgSameAddress.Source = Constraints.CheckBox_UnChecked;
-                    txtSAName.Text = string.Empty;
-                    txtSABuilding.Text = string.Empty;
-                    txtSAStreet.Text = string.Empty;
-                    txtSACity.Text = string.Empty;
-                    txtSAPinCode.Text = string.Empty;
-                    txtSALandmark.Text = string.Empty;
-                }
-                else
-                {
-                    imgSameAddress.Source = Constraints.CheckBox_Checked;
-                    UnfocussedFields(entry: txtSAName);
-                    UnfocussedFields(entry: txtSABuilding);
-                    UnfocussedFields(entry: txtSAStreet);
-                    UnfocussedFields(entry: txtSACity);
-                    UnfocussedFields(entry: txtSAPinCode);
-                    UnfocussedFields(entry: txtSALandmark);
-                    txtSAName.Text = txtName.Text;
-                    txtSABuilding.Text = txtBuilding.Text;
-                    txtSAStreet.Text = txtStreet.Text;
-                    txtSACity.Text = txtCity.Text;
-                    txtSAPinCode.Text = txtPinCode.Text;
-                    txtSALandmark.Text = mBuyerDetail.Landmark;
-                }
-            }
-            catch (Exception ex)
-            {
-                Common.DisplayErrorMessage("PostNewRequiremntPage/StkSameAddress_Tapped: " + ex.Message);
-            }
-        }
-
-        async Task<bool> PinCodeValidation(string PinCode, BoxView boxView)
+        private async Task<bool> PinCodeValidation(string PinCode, BoxView boxView, string PincodeName)
         {
             bool isValid = false;
             try
@@ -812,7 +538,7 @@ namespace AptDealzBuyer.Views.DashboardPages
                 if (!Common.EmptyFiels(PinCode))
                 {
                     PinCode = PinCode.Trim();
-                    isValid = await DependencyService.Get<IProfileRepository>().ValidPincode(PinCode);
+                    isValid = await DependencyService.Get<IProfileRepository>().ValidPincode(PinCode, PincodeName);
                     if (isValid)
                     {
                         boxView.BackgroundColor = (Color)App.Current.Resources["LightGray"];
@@ -834,6 +560,297 @@ namespace AptDealzBuyer.Views.DashboardPages
             }
             return isValid;
         }
+
+        private void FieldsTrim()
+        {
+            try
+            {
+                txtTitle.Text = txtTitle.Text.Trim();
+                txtDescription.Text = txtDescription.Text.Trim();
+                txtQuantity.Text = txtQuantity.Text.Trim();
+                txtEstimation.Text = txtEstimation.Text.Trim();
+
+                txtName.Text = txtName.Text.Trim();
+                txtBuilding.Text = txtBuilding.Text.Trim();
+                txtStreet.Text = txtStreet.Text.Trim();
+                txtCity.Text = txtCity.Text.Trim();
+                txtPinCode.Text = txtPinCode.Text.Trim();
+
+                if (!Common.EmptyFiels(txtSAName.Text))
+                    txtSAName.Text = txtSAName.Text.Trim();
+                if (!Common.EmptyFiels(txtSABuilding.Text))
+                    txtSABuilding.Text = txtSABuilding.Text.Trim();
+                if (!Common.EmptyFiels(txtSAStreet.Text))
+                    txtSAStreet.Text = txtSAStreet.Text.Trim();
+                if (!Common.EmptyFiels(txtSACity.Text))
+                    txtSACity.Text = txtSACity.Text.Trim();
+                if (!Common.EmptyFiels(txtSAPinCode.Text))
+                    txtSAPinCode.Text = txtSAPinCode.Text.Trim();
+                if (!Common.EmptyFiels(txtSALandmark.Text))
+                    txtSALandmark.Text = txtSALandmark.Text.Trim();
+
+                if (!Common.EmptyFiels(txtSourceSupply.Text))
+                    txtSourceSupply.Text = txtSourceSupply.Text.Trim();
+                if (!Common.EmptyFiels(txtLocationPinCode.Text))
+                    txtLocationPinCode.Text = txtLocationPinCode.Text.Trim();
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("PostNewRequiremntPage/FieldsTrim: " + ex.Message);
+            }
+        }
+        #endregion
+
+        #region [ Submit Requirement ]
+        private Model.Request.Requirement FillRequirement()
+        {
+            Requirement mRequirement = new Requirement();
+            try
+            {
+                mRequirement.UserId = Settings.UserId;
+                mRequirement.Title = txtTitle.Text;
+                mRequirement.Category = mCategories.Where(x => x.Name == pkCategory.SelectedItem.ToString()).FirstOrDefault()?.Name;
+                mRequirement.SubCategories = selectedSubCategory;
+                mRequirement.ProductDescription = txtDescription.Text;
+                mRequirement.Quantity = Convert.ToInt32(txtQuantity.Text);
+                mRequirement.Unit = pkQuantityUnits.SelectedItem.ToString();
+                mRequirement.TotalPriceEstimation = Convert.ToDecimal(txtEstimation.Text);
+
+                mRequirement.BillingAddressName = txtName.Text;
+                mRequirement.BillingAddressBuilding = txtBuilding.Text;
+                mRequirement.BillingAddressStreet = txtStreet.Text;
+                mRequirement.BillingAddressCity = txtCity.Text;
+                mRequirement.BillingAddressPinCode = txtPinCode.Text;
+
+                mRequirement.ShippingAddressName = txtSAName.Text;
+                mRequirement.ShippingAddressBuilding = txtSABuilding.Text;
+                mRequirement.ShippingAddressStreet = txtSAStreet.Text;
+                mRequirement.ShippingAddressCity = txtSACity.Text;
+                mRequirement.ShippingAddressPinCode = txtSAPinCode.Text;
+                if (!Common.EmptyFiels(txtSALandmark.Text))
+                {
+                    mRequirement.ShippingAddressLandmark = txtSALandmark.Text;
+                }
+
+                mRequirement.PreferInIndiaProducts = isIndiaProducts;
+                mRequirement.PickupProductDirectly = isPickupProduct;
+                mRequirement.NeedInsuranceCoverage = isInsurance;
+
+                if (!Common.EmptyFiels(relativePath))
+                {
+                    string baseURL = (string)App.Current.Resources["BaseURL"];
+                    mRequirement.ProductImage = relativePath.Replace(baseURL, "");
+                }
+                if (!Common.EmptyFiels(txtSourceSupply.Text))
+                {
+                    mRequirement.PreferredSourceOfSupply = txtSourceSupply.Text;
+                }
+                if (dpExpectedDeliveryDate.NullableDate != null && dpExpectedDeliveryDate.NullableDate != DateTime.MinValue)
+                {
+                    mRequirement.ExpectedDeliveryDate = dpExpectedDeliveryDate.NullableDate.Value;
+                }
+                if (!Common.EmptyFiels(txtLocationPinCode.Text))
+                {
+                    mRequirement.DeliveryLocationPinCode = txtLocationPinCode.Text;
+                }
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+
+            return mRequirement;
+        }
+
+        private async void SubmitRequirement()
+        {
+            try
+            {
+                if (Validations())
+                {
+                    UserDialogs.Instance.ShowLoading(Constraints.Loading);
+                    if (!await PinCodeValidation(txtPinCode.Text, BoxPinCode, "Billing"))
+                        return;
+
+                    if (!isPickupProduct)
+                    {
+                        if (!await PinCodeValidation(txtLocationPinCode.Text, BoxLocationPinCode, "Delivery"))
+                            return;
+
+                        if (!await PinCodeValidation(txtSAPinCode.Text, BoxSAPinCode, "Shipping"))
+                            return;
+                    }
+                    else
+                    {
+                        if (!Common.EmptyFiels(txtSAPinCode.Text))
+                        {
+                            if (!await PinCodeValidation(txtSAPinCode.Text, BoxSAPinCode, "Shipping"))
+                                return;
+                        }
+                    }
+
+                    FieldsTrim();
+                    RequirementAPI requirementAPI = new RequirementAPI();
+                    var mRequirement = FillRequirement();
+
+                    var mResponse = await requirementAPI.CreateRequirement(mRequirement);
+                    if (mResponse != null && mResponse.Succeeded)
+                    {
+                        SuccessfullRequirement(mResponse.Message);
+                        ClearPropeties();
+                    }
+                    else
+                    {
+                        if (mResponse != null)
+                            Common.DisplayErrorMessage(mResponse.Message);
+                        else
+                            Common.DisplayErrorMessage(Constraints.Something_Wrong);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("PostNewRequiremntPage/SubmitRequirement: " + ex.Message);
+            }
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
+            }
+        }
+
+        private void SuccessfullRequirement(string MessageString)
+        {
+            try
+            {
+                var successPopup = new PopupPages.SuccessPopup(MessageString);
+                successPopup.isRefresh += (s1, e1) =>
+                {
+                    bool res = (bool)s1;
+                    if (res)
+                    {
+                        Navigation.PopAsync();
+                    }
+                };
+
+                PopupNavigation.Instance.PushAsync(successPopup);
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("PostNewRequiremntPage/SuccessfullRequirement: " + ex.Message);
+            }
+        }
+
+        private void ClearPropeties()
+        {
+            try
+            {
+                txtTitle.Text = string.Empty;
+                pkCategory.SelectedIndex = -1;
+                pkSubCategory.SelectedIndex = -1;
+                txtDescription.Text = string.Empty;
+                txtQuantity.Text = string.Empty;
+                txtLocationPinCode.Text = string.Empty;
+                txtEstimation.Text = string.Empty;
+                txtSourceSupply.Text = string.Empty;
+
+                txtName.Text = string.Empty;
+                txtBuilding.Text = string.Empty;
+                txtStreet.Text = string.Empty;
+                txtCity.Text = string.Empty;
+                txtPinCode.Text = string.Empty;
+
+                txtSAName.Text = string.Empty;
+                txtSABuilding.Text = string.Empty;
+                txtSAStreet.Text = string.Empty;
+                txtSACity.Text = string.Empty;
+                txtSAPinCode.Text = string.Empty;
+                txtSALandmark.Text = string.Empty;
+
+                ImgProductImage.Source = "imgUploadImage.png";
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("PostNewRequiremntPage/ClearPropeties: " + ex.Message);
+            }
+        }
+        #endregion
+
+        private void PickupDirectlyFromSeller()
+        {
+            try
+            {
+                if (imgPickup.Source.ToString().Replace("File: ", "") == Constraints.CheckBox_Checked)
+                {
+                    imgPickup.Source = Constraints.CheckBox_UnChecked;
+                    lblLocationPINCode.Text = "Delivery Location PIN Code";
+                    lblDeliveryDate.Text = "Expected Delivery Date";
+                    StkDeliveryLocationPINCode.IsVisible = true;
+                    isPickupProduct = false;
+                    lblSAName.IsVisible = true;
+                    lblSABuilding.IsVisible = true;
+                    lblSAStreet.IsVisible = true;
+                    lblSACity.IsVisible = true;
+                    lblSAPINCode.IsVisible = true;
+                    //lblSALandmark.IsVisible = true;
+                }
+                else
+                {
+                    imgPickup.Source = Constraints.CheckBox_Checked;
+                    lblLocationPINCode.Text = "Pickup Location PIN Code";
+                    lblDeliveryDate.Text = "Expected Pickup Date";
+                    StkDeliveryLocationPINCode.IsVisible = false;
+                    EmptyGreyShippingAddress();
+                    isPickupProduct = true;
+                    lblSAName.IsVisible = false;
+                    lblSABuilding.IsVisible = false;
+                    lblSAStreet.IsVisible = false;
+                    lblSACity.IsVisible = false;
+                    lblSAPINCode.IsVisible = false;
+                    //lblSALandmark.IsVisible = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("PostNewRequiremntPage/PickupDirectlyFromSeller: " + ex.Message);
+            }
+        }
+
+        private void SameAsBillingAddress()
+        {
+            try
+            {
+                if (imgSameAddress.Source.ToString().Replace("File: ", "") == Constraints.CheckBox_Checked)
+                {
+                    imgSameAddress.Source = Constraints.CheckBox_UnChecked;
+                    txtSAName.Text = string.Empty;
+                    txtSABuilding.Text = string.Empty;
+                    txtSAStreet.Text = string.Empty;
+                    txtSACity.Text = string.Empty;
+                    txtSAPinCode.Text = string.Empty;
+                    txtSALandmark.Text = string.Empty;
+                }
+                else
+                {
+                    imgSameAddress.Source = Constraints.CheckBox_Checked;
+                    UnfocussedFields(entry: txtSAName);
+                    UnfocussedFields(entry: txtSABuilding);
+                    UnfocussedFields(entry: txtSAStreet);
+                    UnfocussedFields(entry: txtSACity);
+                    UnfocussedFields(entry: txtSAPinCode);
+                    //UnfocussedFields(entry: txtSALandmark);
+                    txtSAName.Text = txtName.Text;
+                    txtSABuilding.Text = txtBuilding.Text;
+                    txtSAStreet.Text = txtStreet.Text;
+                    txtSACity.Text = txtCity.Text;
+                    txtSAPinCode.Text = txtPinCode.Text;
+                    txtSALandmark.Text = mBuyerDetail.Landmark;
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("PostNewRequiremntPage/StkSameAddress_Tapped: " + ex.Message);
+            }
+        }
         #endregion
 
         #region Events    
@@ -845,7 +862,7 @@ namespace AptDealzBuyer.Views.DashboardPages
 
         private void ImgNotification_Tapped(object sender, EventArgs e)
         {
-
+            Navigation.PushAsync(new DashboardPages.NotificationPage());
         }
 
         private void ImgQuestion_Tapped(object sender, EventArgs e)
@@ -859,6 +876,12 @@ namespace AptDealzBuyer.Views.DashboardPages
             Navigation.PopAsync();
         }
 
+        private void BtnUnits_Clicked(object sender, EventArgs e)
+        {
+            pkQuantityUnits.Focus();
+        }
+
+        #region [ Checkboxes ]
         private void StkPrefer_Tapped(object sender, EventArgs e)
         {
             try
@@ -927,13 +950,9 @@ namespace AptDealzBuyer.Views.DashboardPages
                 Common.DisplayErrorMessage("PostNewRequiremntPage/StkInsCoverage_Tapped: " + ex.Message);
             }
         }
+        #endregion
 
-        private void BtnSubmitRequirement_Clicked(object sender, EventArgs e)
-        {
-            Common.BindAnimation(button: BtnSubmitRequirement);
-            SubmitRequirement();
-        }
-
+        #region [ Category / SubCategory ]
         private void pkCategory_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
@@ -969,11 +988,12 @@ namespace AptDealzBuyer.Views.DashboardPages
             {
                 if (pkSubCategory.SelectedIndex > -1 && pkSubCategory.SelectedItem != null)
                 {
-                    if (selectedSubCategory.Where(x => x == pkSubCategory.SelectedItem.ToString()).Count() == 0)
-                    {
-                        selectedSubCategory.Add(pkSubCategory.SelectedItem.ToString());
-                    }
+                    selectedSubCategory.Clear();
+                    selectedSubCategory.Add(pkSubCategory.SelectedItem.ToString());
 
+                    //if (selectedSubCategory.Where(x => x == pkSubCategory.SelectedItem.ToString()).Count() == 0)
+                    //{
+                    //}
                 }
             }
             catch (Exception ex)
@@ -981,6 +1001,7 @@ namespace AptDealzBuyer.Views.DashboardPages
                 Common.DisplayErrorMessage("PostNewRequiremntPage/pkSubCategory_SelectedIndexChanged: " + ex.Message);
             }
         }
+        #endregion
 
         private void ExpectedDeliveryDate_Tapped(object sender, EventArgs e)
         {
@@ -991,19 +1012,33 @@ namespace AptDealzBuyer.Views.DashboardPages
         {
             try
             {
-                Common.BindAnimation(image: ImgUplode);
+
+                UserDialogs.Instance.ShowLoading(Constraints.Loading);
                 ImageConvertion.SelectedImagePath = ImgProductImage;
                 ImageConvertion.SetNullSource((int)FileUploadCategory.RequirementImages);
                 await ImageConvertion.SelectImage();
-                relativePath = await DependencyService.Get<IFileUploadRepository>().UploadFile((int)FileUploadCategory.ProfileDocuments);
 
+                if (ImageConvertion.SelectedImageByte != null)
+                {
+                    relativePath = await DependencyService.Get<IFileUploadRepository>().UploadFile((int)FileUploadCategory.RequirementImages);
+                }
             }
             catch (Exception ex)
             {
                 Common.DisplayErrorMessage("PostNewRequiremntPage/UploadProductImage: " + ex.Message);
             }
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
+            }
         }
 
+        private void StkSameAddress_Tapped(object sender, EventArgs e)
+        {
+            SameAsBillingAddress();
+        }
+
+        #region [ Unfocused ]
         private void Entry_Unfocused(object sender, FocusEventArgs e)
         {
             var entry = (ExtEntry)sender;
@@ -1030,15 +1065,12 @@ namespace AptDealzBuyer.Views.DashboardPages
                 UnfocussedFields(picker: picker);
             }
         }
+        #endregion
 
-        private void StkSameAddress_Tapped(object sender, EventArgs e)
+        private void BtnSubmitRequirement_Clicked(object sender, EventArgs e)
         {
-            SameAsBillingAddress();
-        }
-
-        private void BtnUnits_Clicked(object sender, EventArgs e)
-        {
-            pkQuantityUnits.Focus();
+            Common.BindAnimation(button: BtnSubmitRequirement);
+            SubmitRequirement();
         }
 
         private void BtnLogo_Clicked(object sender, EventArgs e)

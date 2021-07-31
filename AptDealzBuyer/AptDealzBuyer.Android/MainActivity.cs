@@ -1,4 +1,5 @@
 ﻿using Acr.UserDialogs;
+using Android;
 using Android.App;
 using Android.Content;
 using Android.Content.PM;
@@ -23,6 +24,7 @@ using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
@@ -32,10 +34,14 @@ namespace AptDealzBuyer.Droid
         ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity, IPaymentResultWithDataListener
     {
+        #region [ Properties ]
+        public string MerchantName = "AptDealz";
+        public string paymentColor = "#006027";
+        public bool isReveal = false;
+        #endregion
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-            Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             AppCompatDelegate.DefaultNightMode = AppCompatDelegate.ModeNightNo;
 
             FirebaseApp.InitializeApp(this);
@@ -44,7 +50,7 @@ namespace AptDealzBuyer.Droid
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
 
             FirebasePushNotificationManager.ProcessIntent(this, Intent);
-            CreateNotificationFromIntent(Intent);
+            //CreateNotificationFromIntent(Intent);
             Xamarin.Forms.DependencyService.Register<IFirebaseAuthenticator, FirebaseAuthenticator>();
 
             CachedImageRenderer.Init(true);
@@ -53,12 +59,25 @@ namespace AptDealzBuyer.Droid
             ZXing.Net.Mobile.Forms.Android.Platform.Init();
             Rg.Plugins.Popup.Popup.Init(this);
 
+            CameraPermission();
+            GetPermission();
+
             LoadApplication(new App());
 
             MessagingCenter.Subscribe<RazorPayload>(this, "PayNow", (payload) =>
             {
-                string username = "rzp_test_co1QTfvqLJyWXn";
-                string password = "iAhjtNtHYHrQOQPE09X5XBGC";
+                isReveal = false;
+                string username = "rzp_test_PUJtE9p3XLuGe8";
+                string password = "42HIrjeUTXOHNC84Ldl3aDzL";
+                PayViaRazor(payload, username, password);
+            });
+
+            MessagingCenter.Subscribe<RazorPayload>(this, "RevealPayNow", (payload) =>
+            {
+                isReveal = true;
+
+                string username = "rzp_test_PUJtE9p3XLuGe8";
+                string password = "42HIrjeUTXOHNC84Ldl3aDzL";
                 PayViaRazor(payload, username, password);
             });
         }
@@ -71,11 +90,23 @@ namespace AptDealzBuyer.Droid
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
 
+        public override void OnBackPressed()
+        {
+            if (Rg.Plugins.Popup.Popup.SendBackPressed(base.OnBackPressed))
+            {
+                // Do something if there are some pages in the `PopupStack`
+            }
+            else
+            {
+                // Do something if there are not any pages in the `PopupStack`
+            }
+        }
 
+        #region [ Firebase ]
         protected override void OnNewIntent(Intent intent)
         {
             FirebasePushNotificationManager.ProcessIntent(this, intent);
-            CreateNotificationFromIntent(intent);
+            //CreateNotificationFromIntent(intent);
         }
 
         void CreateNotificationFromIntent(Intent intent)
@@ -91,7 +122,9 @@ namespace AptDealzBuyer.Droid
                 }
             }
         }
+        #endregion
 
+        #region [ RazorPay ]
         public void OnPaymentError(int p0, string p1, PaymentData p2)
         {
             RazorResponse mRazorResponse = new RazorResponse()
@@ -102,7 +135,10 @@ namespace AptDealzBuyer.Droid
                 isPaid = false
             };
 
-            MessagingCenter.Send<RazorResponse>(mRazorResponse, "PaidResponse");
+            if (isReveal)
+                MessagingCenter.Send<RazorResponse>(mRazorResponse, "PaidRevealResponse");
+            else
+                MessagingCenter.Send<RazorResponse>(mRazorResponse, "PaidResponse");
         }
 
         public void OnPaymentSuccess(string p0, PaymentData p1)
@@ -114,9 +150,12 @@ namespace AptDealzBuyer.Droid
                 Signature = p1.Signature,
                 isPaid = true
             };
-            MessagingCenter.Send<RazorResponse>(mRazorResponse, "PaidResponse");
-        }
 
+            if (isReveal)
+                MessagingCenter.Send<RazorResponse>(mRazorResponse, "PaidRevealResponse");
+            else
+                MessagingCenter.Send<RazorResponse>(mRazorResponse, "PaidResponse");
+        }
 
         public async void PayViaRazor(RazorPayload payload, string username, string password)
         {
@@ -171,15 +210,15 @@ namespace AptDealzBuyer.Droid
 
                 JSONObject options = new JSONObject();
 
-                options.Put("name", "AptDealz"); //Merchant Name
-                options.Put("description", $"Reference No. {payload.receipt}");
+                options.Put("name", MerchantName); //Merchant Name
+                options.Put("description", $"Order Id. {payload.receipt}");
                 options.Put("image", "https://s3.amazonaws.com/rzp-mobile/images/rzp.png");
-                options.Put("order_id", orderId);//from response of step 3.
-                options.Put("theme.color", "#006027");
+                options.Put("order_id", orderId); //from response of step 3.
+                options.Put("theme.color", paymentColor);
                 options.Put("currency", payload.currency);
-                options.Put("amount", payload.amount);//pass amount in currency subunits 2000 
-                options.Put("prefill.email", "test@yopmail.com");
-                options.Put("prefill.contact", "1234567890");
+                options.Put("amount", payload.amount); //pass amount in currency subunits 2000 
+                options.Put("prefill.email", payload.email);
+                options.Put("prefill.contact", payload.contact);
 
                 checkout.Open(this, options);
             }
@@ -188,8 +227,98 @@ namespace AptDealzBuyer.Droid
                 // Log.e(TAG, "Error in starting Razorpay Checkout", e);
             }
         }
+        #endregion
+
+        #region [ Permissions ]
+        public async Task CameraPermission()
+        {
+            try
+            {
+                string version = Android.OS.Build.VERSION.Release; //Android Version No like 4.4.4 etc... 
+                var mver = string.Format("{0:0.00}", version.Substring(0, 3));
+                double ver = Convert.ToDouble(mver);
+                if (ver >= 5.0)
+                {
+                    var status = await CrossPermissions.Current.CheckPermissionStatusAsync(Plugin.Permissions.Abstractions.Permission.Camera);
+                    if (status != Plugin.Permissions.Abstractions.PermissionStatus.Granted)
+                    {
+                        var results = await CrossPermissions.Current.RequestPermissionsAsync(Plugin.Permissions.Abstractions.Permission.Camera);
+                        //Best practice to always check that the key exists
+                        if (results.ContainsKey(Plugin.Permissions.Abstractions.Permission.Camera))
+                        {
+                            status = results[Plugin.Permissions.Abstractions.Permission.Camera];
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                var error = ex.Message;
+            }
+        }
+
+        public void GetPermission()
+        {
+            //var name = Android.OS.Build.VERSION.SdkInt;     //Android Version Name like Kitkate etc... 
+            string version = Android.OS.Build.VERSION.Release;    //Android Version No like 4.4.4 etc... 
+
+            if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.Lollipop)
+            {
+                const string AccessFineLocationpermission = Manifest.Permission.AccessFineLocation;
+                const string AccessCoarseLocationpermission = Manifest.Permission.AccessCoarseLocation;
+                const string AccessLocationExtraCommandspermission = Manifest.Permission.AccessLocationExtraCommands;
+                const string AccessMockLocationpermission = Manifest.Permission.AccessMockLocation;
+                const string AccessNetworkStatepermission = Manifest.Permission.AccessNetworkState;
+                const string ChangeWifiStatepermission = Manifest.Permission.ChangeWifiState;
+                const string Internetpermission = Manifest.Permission.Internet;
+                const string Camerapermission = Manifest.Permission.Camera;
+                const string ReadExternalStoragepermission = Manifest.Permission.ReadExternalStorage;
+                const string WriteExternalStoragepermission = Manifest.Permission.WriteExternalStorage;
+                const string CallPhonepermission = Manifest.Permission.CallPhone;
+                const string ReadContactspermission = Manifest.Permission.ReadContacts;
+                const string WriteContactspermission = Manifest.Permission.WriteContacts;
+                const string ReadCallLogpermission = Manifest.Permission.ReadCallLog;
+
+                if (CheckSelfPermission(AccessFineLocationpermission) != (int)Android.Content.PM.Permission.Granted
+                   || CheckSelfPermission(AccessCoarseLocationpermission) != (int)Android.Content.PM.Permission.Granted
+                   || CheckSelfPermission(AccessLocationExtraCommandspermission) != (int)Android.Content.PM.Permission.Granted
+                   || CheckSelfPermission(AccessMockLocationpermission) != (int)Android.Content.PM.Permission.Granted
+                   || CheckSelfPermission(AccessNetworkStatepermission) != (int)Android.Content.PM.Permission.Granted
+                   || CheckSelfPermission(ChangeWifiStatepermission) != (int)Android.Content.PM.Permission.Granted
+                   || CheckSelfPermission(Internetpermission) != (int)Android.Content.PM.Permission.Granted
+                   || CheckSelfPermission(Camerapermission) != (int)Android.Content.PM.Permission.Granted
+                   || CheckSelfPermission(ReadExternalStoragepermission) != (int)Android.Content.PM.Permission.Granted
+                   || CheckSelfPermission(WriteExternalStoragepermission) != (int)Android.Content.PM.Permission.Granted
+                   || CheckSelfPermission(CallPhonepermission) != (int)Android.Content.PM.Permission.Granted
+                   || CheckSelfPermission(ReadContactspermission) != (int)Android.Content.PM.Permission.Granted
+                   || CheckSelfPermission(WriteContactspermission) != (int)Android.Content.PM.Permission.Granted
+                   || CheckSelfPermission(ReadCallLogpermission) != (int)Android.Content.PM.Permission.Granted
+                   )
+                {
+                    RequestPermissions(new string[]  {
+                        Manifest.Permission.AccessFineLocation,
+                        Manifest.Permission.AccessCoarseLocation,
+                        Manifest.Permission.AccessLocationExtraCommands,
+                        Manifest.Permission.AccessMockLocation,
+                        Manifest.Permission.AccessNetworkState,
+                        Manifest.Permission.ChangeWifiState,
+                        Manifest.Permission.Internet,
+                        Manifest.Permission.Camera,
+                        Manifest.Permission.ReadExternalStorage,
+                        Manifest.Permission.WriteExternalStorage,
+                        Manifest.Permission.CallPhone,
+                        Manifest.Permission.ReadContacts,
+                        Manifest.Permission.WriteContacts,
+                        Manifest.Permission.ReadCallLog,
+                    },
+                101);
+                }
+            }
+        }
+        #endregion
     }
 
+    #region [ RazorPay Helper Class ]
     public class Metadata
     {
     }
@@ -209,4 +338,5 @@ namespace AptDealzBuyer.Droid
     {
         public Error error { get; set; }
     }
+    #endregion
 }

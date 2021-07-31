@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 
@@ -12,16 +13,21 @@ namespace AptDealzBuyer.Utility
 {
     public static class Common
     {
-        #region Properties
+        #region [ Properties ]
         public static MasterDataPage MasterData { get; set; }
-        public static string Token { get; set; }
+        public static Model.Request.BuyerDetails mBuyerDetail { get; set; }
         public static List<Country> mCountries { get; set; }
+        public static string Token { get; set; }
+        public static string NotificationCount { get; set; }
+        #endregion
+
+        #region [ Regex Properties ]
         private static Regex PhoneNumber { get; set; } = new Regex(@"^[0-9]{10}$");
         private static Regex RegexPassword { get; set; } = new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{8,}$");
         private static Regex RegexPincode { get; set; } = new Regex(@"^[0-9]{6}$");
         #endregion
 
-        #region DisplayMessages
+        #region [ DisplayMessages ]
         public static void DisplayErrorMessage(string errormessage)
         {
             UserDialogs.Instance.Toast(new ToastConfig(errormessage)
@@ -56,7 +62,13 @@ namespace AptDealzBuyer.Utility
         }
         #endregion
 
-        #region Methods
+        #region [ Methods ]
+
+        public static string ToCamelCase(this string str)
+        {
+            return Regex.Replace(str, "(\\B[A-Z])", " $1");
+        }
+
         public static async void BindAnimation(ImageButton imageButton = null, Button button = null, Grid grid = null, StackLayout stackLayout = null, Label label = null, Image image = null, Frame frame = null)
         {
             try
@@ -175,10 +187,70 @@ namespace AptDealzBuyer.Utility
                 Common.DisplayErrorMessage("Common/OpenMenu: " + ex.Message);
             }
         }
+
+        public static int GetOrderStatus(string orderStatus)
+        {
+            orderStatus = orderStatus.Replace(" ", "");
+            switch (orderStatus)
+            {
+                case "Pending":
+                    return (int)OrderStatus.Pending;
+                case "Accepted":
+                    return (int)OrderStatus.Accepted;
+                case "ReadyForPickup":
+                    return (int)OrderStatus.ReadyForPickup;
+                case "Shipped":
+                    return (int)OrderStatus.Shipped;
+                case "Delivered":
+                    return (int)OrderStatus.Delivered;
+                case "Completed":
+                    return (int)OrderStatus.Completed;
+                case "Cancelled":
+                    return (int)OrderStatus.CancelledFromBuyer;
+                case "All":
+                    return (int)OrderStatus.All;
+                default:
+                    return 0;
+            }
+        }
+
+        public static int GetGrievanceStatus(string grievanceStatus)
+        {
+            switch (grievanceStatus)
+            {
+                case "Pending":
+                    return (int)GrievancesStatus.Pending;
+                case "Open":
+                    return (int)GrievancesStatus.Open;
+                case "Closed":
+                    return (int)GrievancesStatus.Closed;
+                case "All":
+                    return (int)GrievancesStatus.All;
+                default:
+                    return 0;
+            }
+        }
+
+        public static void CopyText(Label copyLabel, string message)
+        {
+            try
+            {
+                Clipboard.SetTextAsync(copyLabel.Text);
+                if (Clipboard.HasText)
+                {
+                    Common.BindAnimation(label: copyLabel);
+                    UserDialogs.Instance.Toast(message);
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("Common/CopyText: " + ex.Message);
+            }
+        }
         #endregion
     }
 
-    #region Enum   
+    #region [ Enum ]
     public enum FileUploadCategory
     {
         ProfilePicture = 0,
@@ -195,21 +267,21 @@ namespace AptDealzBuyer.Utility
         Cancelled = 5
     }
 
-    public enum RequirementSortBy
+    public enum SortByField
     {
         ID = 1,
         Date = 2,
         Quotes = 3,
-        TotalPriceEstimation = 4,
-        Validity = 5,
-        ASC = 6,
-        DSC = 7
+        Validity = 4,
+        Amount = 5,
+        TotalPriceEstimation = 6
     }
 
     public enum PaymentStatus
     {
-        Success = 1,
-        Failed = 2
+        Pending = 1,
+        Success = 2,
+        Failed = 3
     }
 
     public enum QuoteStatus
@@ -231,5 +303,37 @@ namespace AptDealzBuyer.Utility
         CancelledFromBuyer = 7,
         All = 8
     }
+
+    public enum GrievancesStatus
+    {
+        Pending = 0,
+        Open = 1,
+        Closed = 2,
+        All = 3
+    }
+
+    public enum GrievancesType
+    {
+        OrderRelated,
+        DelayedDelivery,
+        PaymentRelated
+    }
+
+    public enum GrievancesFrom
+    {
+        Buyer,
+        Seller,
+        MarkettingExecutive
+    }
+
+    public enum NavigationScreen
+    {
+        System,
+        RequirementDetails,
+        QuoteDetails,
+        OrderDetails,
+        GrievanceDetails,
+    }
+
     #endregion
 }

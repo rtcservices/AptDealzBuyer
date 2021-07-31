@@ -57,6 +57,32 @@
         public const string GetOrdersForBuyer = "api/v{0}/Order/GetOrdersForBuyer";
         public const string CancelOrder = "api/v{0}/Order/CancelOrder/{1}";
         public const string CreateOrder = "api/v{0}/Order/Create";
+        public const string OrderPayment = "api/v{0}/Order/Create/Payment";
+        public const string GetShippedOrdersForBuyer = "api/v{0}/Order/GetShippedOrdersForBuyer";
+        public const string GenerateQRCodeImageForBuyerApp = "api​/v{0}​/Order​/GenerateQRCodeImageForBuyerApp​/{1}";
+        #endregion
+
+        #region [ RateAndReview API ]
+        public const string ReviewSeller = "api/v{0}/RateAndReview/ReviewSeller";
+        public const string ReviewSellerProduct = "api/v{0}/RateAndReview/ReviewSellerProduct";
+        #endregion
+
+        #region [ Grievance API ]
+        public const string GetAllGrievancesByMe = "api/v{0}/Grievance/GetAllGrievancesByMe";
+        public const string GetGrievancesDetailsForBuyer = "api/v{0}/Grievance/GetGrievancesDetailsForBuyer/{1}";
+        public const string CreateGrievanceFromBuyer = "api/v{0}/Grievance/CreateGrievanceFromBuyer";
+        public const string SubmitGrievanceResponseFromBuyer = "api/v{0}/Grievance/SubmitGrievanceResponseFromBuyer";
+        #endregion
+
+        #region [ Notification API ]
+        public const string GetAllNotificationsForUser = "api/v{0}/Notifications/GetAllNotificationsForUser";
+        public const string GetNotificationsCountForUser = "api/v{0}/Notifications/GetNotificationsCountForUser";
+        public const string SetUserNoficiationAsRead = "api/v{0}/Notifications/SetUserNoficiationAsRead/{1}";
+        #endregion
+
+        #region [ SupportChat API ]
+        public const string GetAllMyChat = "api/v{0}/SupportChat/GetAllMyChat";
+        public const string SendChatSupportMessage = "api/v{0}/SupportChat/SendChatSupportMessage";
         #endregion
     }
 }

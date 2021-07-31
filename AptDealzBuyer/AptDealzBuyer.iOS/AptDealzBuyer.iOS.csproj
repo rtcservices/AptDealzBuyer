@@ -72,6 +72,7 @@
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
     <Compile Include="Service\FirebaseAuthenticator.cs" />
+    <Compile Include="Service\PhoneDialer.cs" />
     <None Include="Entitlements.plist" />
     <BundleResource Include="GoogleService-Info.plist" />
     <None Include="Info.plist" />
@@ -229,7 +230,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Implementations\" />
+    <BundleResource Include="Resources\iconSad.png" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\imgWelcomeTwo.png" />
@@ -464,6 +465,15 @@
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\iconGreenDownArrow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconFiles2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconMusic.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconVideo.png" />
   </ItemGroup>
   <ProjectExtensions>
     <VisualStudio>

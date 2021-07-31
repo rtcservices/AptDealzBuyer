@@ -7,6 +7,8 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -21,7 +23,6 @@ namespace AptDealzBuyer.Views.DashboardPages
         Requirement mRequirement;
         private List<string> subcaregories;
         private List<Quote> mQuoteList;
-        private bool isAccepteedQuote = false;
         #endregion
 
         #region Constructor
@@ -32,6 +33,20 @@ namespace AptDealzBuyer.Views.DashboardPages
             this.ReqId = ReqId;
             mRequirement = new Requirement();
             mQuoteList = new List<Quote>();
+
+            MessagingCenter.Subscribe<string>(this, "NotificationCount", (count) =>
+            {
+                if (!Common.EmptyFiels(Common.NotificationCount))
+                {
+                    lblNotificationCount.Text = count;
+                    frmNotification.IsVisible = true;
+                }
+                else
+                {
+                    frmNotification.IsVisible = false;
+                    lblNotificationCount.Text = string.Empty;
+                }
+            });
         }
         #endregion
 
@@ -60,7 +75,7 @@ namespace AptDealzBuyer.Views.DashboardPages
             }
         }
 
-        public async void GetRequirementsById()
+        private async Task GetRequirementsById()
         {
             try
             {
@@ -98,7 +113,7 @@ namespace AptDealzBuyer.Views.DashboardPages
             }
         }
 
-        void GetRequirementDetails()
+        private void GetRequirementDetails()
         {
             try
             {
@@ -140,7 +155,7 @@ namespace AptDealzBuyer.Views.DashboardPages
                 }
                 if (mRequirement.ExpectedDeliveryDate != null && mRequirement.ExpectedDeliveryDate != DateTime.MinValue)
                 {
-                    lblDeliveryDate.Text = mRequirement.ExpectedDeliveryDate.ToString("dd/MM/yyyy");
+                    lblDeliveryDateValue.Text = mRequirement.ExpectedDeliveryDate.ToString("dd/MM/yyyy");
                 }
                 if (!Common.EmptyFiels(mRequirement.DeliveryLocationPinCode))
                 {
@@ -171,10 +186,12 @@ namespace AptDealzBuyer.Views.DashboardPages
 
                 if (mRequirement.PickupProductDirectly)
                 {
+                    lblDeliveryDate.Text = "Expected Pickup Date";
                     lblPreferSeller.Text = "✓";
                 }
                 else
                 {
+                    lblDeliveryDate.Text = "Expected Delivery Date";
                     lblPreferSeller.Text = "✕";
                 }
 
@@ -214,15 +231,13 @@ namespace AptDealzBuyer.Views.DashboardPages
             }
         }
 
-        void GetListOfQuotes()
+        private void GetListOfQuotes()
         {
             try
             {
                 if (mQuoteList != null && mQuoteList.Count > 0)
                 {
                     var AccepteedQuote = mQuoteList.Where(x => x.Status == "Accepted");
-                    isAccepteedQuote = AccepteedQuote.Count() > 0;
-
                     if (ReqType == "active")
                     {
                         lblNoRecord.IsVisible = false;
@@ -248,9 +263,7 @@ namespace AptDealzBuyer.Views.DashboardPages
                             lstAcceptedQoutes.ItemsSource = null;
                             lstAcceptedQoutes.HeightRequest = 50;
                         }
-
                     }
-
                 }
                 else
                 {
@@ -282,7 +295,7 @@ namespace AptDealzBuyer.Views.DashboardPages
             }
         }
 
-        void QuoteListSorting()
+        private void QuoteListSorting()
         {
             try
             {
@@ -303,7 +316,27 @@ namespace AptDealzBuyer.Views.DashboardPages
             }
         }
 
-        async void CancelRequirement()
+        private async void DeleteRequirement(string requirmentId)
+        {
+            try
+            {
+                var isDelete = await DependencyService.Get<IDeleteRepository>().DeleteRequirement(requirmentId);
+                if (isDelete)
+                {
+                    Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("ActiveRequirements", isNavigate: true));
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("ViewRequirememntPage/DeleteRequirement: " + ex.Message);
+            }
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
+            }
+        }
+
+        private async void CancelRequirement()
         {
             try
             {
@@ -317,8 +350,7 @@ namespace AptDealzBuyer.Views.DashboardPages
                     if (mResponse != null && mResponse.Succeeded)
                     {
                         Common.DisplaySuccessMessage(mResponse.Message);
-                        //await Navigation.PushAsync(new MainTabbedPages.MainTabbedPage("ActiveRequirements", true));
-                        Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("ActiveRequirements", true));
+                        Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("ActiveRequirements", isNavigate: true));
                     }
                     else
                     {
@@ -338,33 +370,12 @@ namespace AptDealzBuyer.Views.DashboardPages
                 UserDialogs.Instance.HideLoading();
             }
         }
-
-        async void DeleteRequirement(string requirmentId)
-        {
-            try
-            {
-                var isDelete = await DependencyService.Get<IDeleteRepository>().DeleteRequirement(requirmentId);
-                if (isDelete)
-                {
-                    //await Navigation.PushAsync(new MainTabbedPages.MainTabbedPage("ActiveRequirements", true));
-                    Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("ActiveRequirements", true));
-                }
-            }
-            catch (Exception ex)
-            {
-                Common.DisplayErrorMessage("ViewRequirememntPage/DeleteRequirement: " + ex.Message);
-            }
-            finally
-            {
-                UserDialogs.Instance.HideLoading();
-            }
-        }
         #endregion
 
         #region Events
         private void ImgNotification_Tapped(object sender, EventArgs e)
         {
-
+            Navigation.PushAsync(new DashboardPages.NotificationPage());
         }
 
         private void ImgQuestion_Tapped(object sender, EventArgs e)
@@ -374,6 +385,7 @@ namespace AptDealzBuyer.Views.DashboardPages
 
         private void ImgBack_Tapped(object sender, EventArgs e)
         {
+            Common.BindAnimation(imageButton: ImgBack);
             Navigation.PopAsync();
         }
 
@@ -382,12 +394,6 @@ namespace AptDealzBuyer.Views.DashboardPages
             Common.BindAnimation(image: ImgMenu);
             //Common.OpenMenu();
         }
-
-        //private void BtnCancelRequirement_Tapped(object sender, EventArgs e)
-        //{
-        //    Common.BindAnimation(button: BtnCancelRequirement);
-        //    CancelRequirement();
-        //}
 
         private void BtnDeleteRequirement_Tapped(object sender, EventArgs e)
         {
@@ -406,7 +412,7 @@ namespace AptDealzBuyer.Views.DashboardPages
             {
                 var GridExp = (Grid)sender;
                 var mQuote = GridExp.BindingContext as Quote;
-                Navigation.PushAsync(new QuoteDetailsPage(mQuote.QuoteId, mQuote.IsSellerContactRevealed, isAccepteedQuote, mRequirement.PickupProductDirectly));
+                Navigation.PushAsync(new QuoteDetailsPage(mQuote.QuoteId));
             }
             catch (Exception ex)
             {
@@ -418,6 +424,50 @@ namespace AptDealzBuyer.Views.DashboardPages
         {
             Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
         }
+
+        private async void RefreshView_Refreshing(object sender, EventArgs e)
+        {
+            try
+            {
+                rfView.IsRefreshing = true;
+                if (ReqType == "active")
+                {
+                    grdPrevReq.IsVisible = false;
+                    grdActiveReq.IsVisible = true;
+                }
+                else
+                {
+                    grdActiveReq.IsVisible = false;
+                    grdPrevReq.IsVisible = true;
+                }
+
+                await GetRequirementsById();
+                rfView.IsRefreshing = false;
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("ViewRequirememntPage/RefreshView_Refreshing: " + ex.Message);
+            }
+        }
+
+        private void CopyString_Tapped(object sender, EventArgs e)
+        {
+            try
+            {
+                string message = Constraints.CopiedRequirementId;
+                Common.CopyText(lblRequirementId, message);
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("ViewRequirememntPage/CopyString_Tapped: " + ex.Message);
+            }
+        }
+
+        //private void BtnCancelRequirement_Tapped(object sender, EventArgs e)
+        //{
+        //    Common.BindAnimation(button: BtnCancelRequirement);
+        //    CancelRequirement();
+        //}
         #endregion
     }
 }

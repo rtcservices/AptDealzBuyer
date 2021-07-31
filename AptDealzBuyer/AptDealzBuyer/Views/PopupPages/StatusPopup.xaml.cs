@@ -15,11 +15,11 @@ namespace AptDealzBuyer.Views.PopupPages
         #endregion
 
         #region Constructor
-        public StatusPopup(string SortBy, string SortPageName)
+        public StatusPopup(int? StatusBy, string StatusPageName = null)
         {
             InitializeComponent();
-            PageName = SortPageName;
-            BindSource(SortBy);
+            PageName = StatusPageName;
+            BindSource(StatusBy);
         }
         #endregion
 
@@ -30,98 +30,130 @@ namespace AptDealzBuyer.Views.PopupPages
             BindLabel();
         }
 
-        void BindLabel()
+        protected override bool OnBackgroundClicked()
         {
-            if (PageName == "OrderSupplying")
+            base.OnBackgroundClicked();
+            return false;
+        }
+
+        private void BindLabel()
+        {
+            try
             {
-                StkThirdType.IsVisible = true;
-                lblFirstType.Text = "All";
-                lblSecondType.Text = "Accepted";
-                lblThirdType.Text = "Submitted";
+                lblFirstType.Text = GrievancesStatus.Pending.ToString();
+                lblSecondType.Text = GrievancesStatus.Open.ToString();
+                lblThirdType.Text = GrievancesStatus.Closed.ToString();
+                lblFourType.Text = GrievancesStatus.All.ToString();
             }
-            else if (PageName == "Previous")
+            catch (Exception ex)
             {
-                StkThirdType.IsVisible = false;
-                lblFirstType.Text = "ID";
-                lblSecondType.Text = "Quotes";
-            }
-            else if (PageName == "ViewReq")
-            {
-                StkThirdType.IsVisible = true;
-                lblFirstType.Text = "ID";
-                lblSecondType.Text = "Amount";
-                lblThirdType.Text = "Validity";
-            }
-            else
-            {
-                StkThirdType.IsVisible = true;
-                lblFirstType.Text = "All";
-                lblSecondType.Text = "Accepted";
-                lblThirdType.Text = "Submitted";
+                Common.DisplayErrorMessage("StatusPopup/BindLabel: " + ex.Message);
             }
         }
 
-        void BindSource(string viewSource)
+        private void BindSource(int? viewSource)
         {
-            if (!string.IsNullOrEmpty(viewSource))
+            try
             {
-                if (viewSource == QuoteStatus.All.ToString())
+                if (viewSource != null)
                 {
-                    ClearSource();
-                    imgFirstType.Source = Constraints.Radio_Selected;
+                    if (viewSource == (int)GrievancesStatus.Pending)
+                    {
+                        ClearSource();
+                        imgFirstType.Source = Constraints.Radio_Selected;
+                    }
+                    else if (viewSource == (int)GrievancesStatus.Open)
+                    {
+                        ClearSource();
+                        imgSecondType.Source = Constraints.Radio_Selected;
+                    }
+                    else if (viewSource == (int)GrievancesStatus.Closed)
+                    {
+                        ClearSource();
+                        imgThirdType.Source = Constraints.Radio_Selected;
+                    }
+                    else if (viewSource == (int)GrievancesStatus.All)
+                    {
+                        ClearSource();
+                        imgFourType.Source = Constraints.Radio_Selected;
+                    }
+                    else
+                    {
+                        ClearSource();
+                        imgFourType.Source = Constraints.Radio_Selected;
+                    }
                 }
-                else if (viewSource == QuoteStatus.Accepted.ToString())
-                {
-                    ClearSource();
-                    imgSecondType.Source = Constraints.Radio_Selected;
-                }
-                else if (viewSource == QuoteStatus.Submitted.ToString())
-                {
-                    ClearSource();
-                    imgThirdType.Source = Constraints.Radio_Selected;
-                }
-                else
-                {
-                    ClearSource();
-                    imgFirstType.Source = Constraints.Radio_Selected;
-                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("StatusPopup/BindSource: " + ex.Message);
             }
         }
 
-        void ClearSource()
+        private void ClearSource()
         {
             imgFirstType.Source = Constraints.Redio_UnSelected;
             imgSecondType.Source = Constraints.Redio_UnSelected;
             imgThirdType.Source = Constraints.Redio_UnSelected;
+            imgFourType.Source = Constraints.Redio_UnSelected;
         }
         #endregion
 
         #region Events
         private void StkFirstType_Tapped(object sender, EventArgs e)
         {
-
-            BindSource(QuoteStatus.All.ToString());
-            isRefresh?.Invoke(QuoteStatus.All.ToString(), null);
-
-            PopupNavigation.Instance.PopAsync();
+            try
+            {
+                BindSource((int)GrievancesStatus.Pending);
+                isRefresh?.Invoke(GrievancesStatus.Pending.ToString(), null);
+                PopupNavigation.Instance.PopAsync();
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("StatusPopup/StkFirstType_Tapped: " + ex.Message);
+            }
         }
 
         private void StkSecondType_Tapped(object sender, EventArgs e)
         {
-
-            BindSource(QuoteStatus.Accepted.ToString());
-            isRefresh?.Invoke(QuoteStatus.Accepted.ToString(), null);
-
-            PopupNavigation.Instance.PopAsync();
+            try
+            {
+                BindSource((int)GrievancesStatus.Open);
+                isRefresh?.Invoke(GrievancesStatus.Open.ToString(), null);
+                PopupNavigation.Instance.PopAsync();
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("StatusPopup/StkSecondType_Tapped: " + ex.Message);
+            }
         }
 
         private void StkThirdType_Tapped(object sender, EventArgs e)
         {
+            try
+            {
+                BindSource((int)GrievancesStatus.Closed);
+                isRefresh?.Invoke(GrievancesStatus.Closed.ToString(), null);
+                PopupNavigation.Instance.PopAsync();
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("StatusPopup/StkThirdType_Tapped: " + ex.Message);
+            }
+        }
 
-            BindSource(QuoteStatus.Submitted.ToString());
-            isRefresh?.Invoke(QuoteStatus.Submitted.ToString(), null);
-
-            PopupNavigation.Instance.PopAsync();
+        private void StkFourType_Tapped(object sender, EventArgs e)
+        {
+            try
+            {
+                BindSource((int)GrievancesStatus.All);
+                isRefresh?.Invoke(GrievancesStatus.All.ToString(), null);
+                PopupNavigation.Instance.PopAsync();
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("StatusPopup/StkFourType_Tapped: " + ex.Message);
+            }
         }
         #endregion
     }

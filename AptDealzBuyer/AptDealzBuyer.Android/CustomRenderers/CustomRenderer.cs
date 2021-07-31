@@ -41,7 +41,7 @@ namespace AptDealzBuyer.Droid.CustomRenderers
             }
             catch (Exception ex)
             {
-                Common.DisplayErrorMessage("Droid/CustomLabelRenderer: " + ex.Message);
+                Common.DisplayErrorMessage("Droid/LabelRenderer: " + ex.Message);
             }
         }
     }
@@ -79,7 +79,7 @@ namespace AptDealzBuyer.Droid.CustomRenderers
             }
             catch (Exception ex)
             {
-                Common.DisplayErrorMessage("Droid/CustomEntryRenderer: " + ex.Message);
+                Common.DisplayErrorMessage("Droid/EntryRenderer: " + ex.Message);
             }
         }
     }
@@ -110,7 +110,7 @@ namespace AptDealzBuyer.Droid.CustomRenderers
             }
             catch (Exception ex)
             {
-                Common.DisplayErrorMessage("Droid/CustomPickerRenderer: " + ex.Message);
+                Common.DisplayErrorMessage("Droid/PickerRenderer: " + ex.Message);
             }
         }
     }
@@ -141,7 +141,7 @@ namespace AptDealzBuyer.Droid.CustomRenderers
             }
             catch (Exception ex)
             {
-                Common.DisplayErrorMessage("Droid/CustomEditorRenderer: " + ex.Message);
+                Common.DisplayErrorMessage("Droid/EditorRenderer: " + ex.Message);
             }
         }
     }
@@ -187,7 +187,7 @@ namespace AptDealzBuyer.Droid.CustomRenderers
             }
             catch (Exception ex)
             {
-                Common.DisplayErrorMessage("Droid/CustomDatePickerRender: " + ex.Message);
+                Common.DisplayErrorMessage("Droid/DatePickerRender: " + ex.Message);
             }
         }
     }
@@ -213,7 +213,7 @@ namespace AptDealzBuyer.Droid.CustomRenderers
             }
             catch (Exception ex)
             {
-                Common.DisplayErrorMessage("Droid/CustomButtonRender: " + ex.Message);
+                Common.DisplayErrorMessage("Droid/ButtonRender: " + ex.Message);
             }
         }
     }

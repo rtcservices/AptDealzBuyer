@@ -75,6 +75,36 @@ namespace AptDealzBuyer.Services
             }
         }
 
+        public async Task<string> GenerateQRCodeImage(string orderId)
+        {
+            string imageBase64 = "";
+            try
+            {
+                UserDialogs.Instance.ShowLoading(Constraints.Loading);
+                var mResponse = await orderAPI.GenerateQRCodeImageForBuyerApp(orderId);
+                if (mResponse != null && mResponse.Succeeded)
+                {
+                    imageBase64 = (string)mResponse.Data;
+                }
+                else
+                {
+                    if (mResponse != null)
+                        Common.DisplayErrorMessage(mResponse.Message);
+                    else
+                        Common.DisplayErrorMessage(Constraints.Something_Wrong);
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("OrderRepository/GetOrderDetails: " + ex.Message);
+            }
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
+            }
+            return imageBase64;
+        }
+
         void SuccessfullSavedQuote(string MessageString)
         {
             try

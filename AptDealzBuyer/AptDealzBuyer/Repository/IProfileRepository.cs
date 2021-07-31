@@ -4,6 +4,6 @@ namespace AptDealzBuyer.Repository
 {
     public interface IProfileRepository
     {
-        Task<bool> ValidPincode(string pinCode);
+        Task<bool> ValidPincode(string pinCode, string pinCodeName = null);
     }
 }

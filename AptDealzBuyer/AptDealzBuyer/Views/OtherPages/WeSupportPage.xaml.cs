@@ -19,6 +19,20 @@ namespace AptDealzBuyer.Views.OtherPages
         public WeSupportPage()
         {
             InitializeComponent();
+
+            MessagingCenter.Subscribe<string>(this, "NotificationCount", (count) =>
+            {
+                if (!Common.EmptyFiels(Common.NotificationCount))
+                {
+                    lblNotificationCount.Text = count;
+                    frmNotification.IsVisible = true;
+                }
+                else
+                {
+                    frmNotification.IsVisible = false;
+                    lblNotificationCount.Text = string.Empty;
+                }
+            });
         }
         #endregion
 
@@ -29,15 +43,22 @@ namespace AptDealzBuyer.Views.OtherPages
             BindCarousallData();
         }
 
-        public void BindCarousallData()
+        private void BindCarousallData()
         {
-            mCarousellImages = new List<CarousellImage>()
+            try
             {
-                new CarousellImage{ImageName="imgMakeInIndia.png"},
-                new CarousellImage{ImageName="imgMakeInIndia.png"},
-                new CarousellImage{ImageName="imgMakeInIndia.png"},
-            };
-            Indicators.ItemsSource = cvWelcome.ItemsSource = mCarousellImages.ToList();
+                mCarousellImages = new List<CarousellImage>()
+                {
+                    new CarousellImage{ImageName="imgMakeInIndia.png"},
+                    new CarousellImage{ImageName="imgMakeInIndia.png"},
+                    new CarousellImage{ImageName="imgMakeInIndia.png"},
+                };
+                Indicators.ItemsSource = cvWelcome.ItemsSource = mCarousellImages.ToList();
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("WeSupportPage/BindCarousallData: " + ex.Message);
+            }
         }
         #endregion
 
@@ -49,7 +70,7 @@ namespace AptDealzBuyer.Views.OtherPages
 
         private void ImgNotification_Tapped(object sender, EventArgs e)
         {
-
+            Navigation.PushAsync(new DashboardPages.NotificationPage());
         }
 
         private void ImgQuestion_Tapped(object sender, EventArgs e)
@@ -59,6 +80,7 @@ namespace AptDealzBuyer.Views.OtherPages
 
         private void ImgBack_Tapped(object sender, EventArgs e)
         {
+            Common.BindAnimation(imageButton: ImgBack);
             Navigation.PopAsync();
         }
 

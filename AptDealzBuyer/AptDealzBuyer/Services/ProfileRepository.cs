@@ -8,9 +8,28 @@ namespace AptDealzBuyer.Services
 {
     public class ProfileRepository : IProfileRepository
     {
-        public async Task<bool> ValidPincode(string pinCode)
+        public async Task<bool> ValidPincode(string pinCode, string pinCodeName = null)
         {
             bool isValid = false;
+            string ValidationMsg = string.Empty;
+
+            if (pinCodeName == "Billing")
+            {
+                ValidationMsg = Constraints.InValid_BillingPinCode;
+            }
+            else if (pinCodeName == "Shipping")
+            {
+                ValidationMsg = Constraints.InValid_ShillingPinCode;
+            }
+            else if (pinCodeName == "Delivery")
+            {
+                ValidationMsg = Constraints.InValid_DeliveryPinCode;
+            }
+            else
+            {
+                ValidationMsg = Constraints.InValid_Pincode;
+            }
+
             try
             {
                 ProfileAPI profileAPI = new ProfileAPI();
@@ -23,12 +42,12 @@ namespace AptDealzBuyer.Services
                     }
                     else
                     {
-                        Common.DisplayErrorMessage(Constraints.InValid_Pincode);
+                        Common.DisplayErrorMessage(ValidationMsg);
                     }
                 }
                 else
                 {
-                    Common.DisplayErrorMessage(Constraints.InValid_Pincode);
+                    Common.DisplayErrorMessage(ValidationMsg);
                 }
             }
             catch (Exception ex)

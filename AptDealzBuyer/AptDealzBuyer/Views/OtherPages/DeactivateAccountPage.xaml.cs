@@ -10,19 +10,29 @@ namespace AptDealzBuyer.Views.OtherPages
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class DeactivateAccountPage : ContentPage
     {
-        #region Objects
-
-        #endregion
-
         #region Constructor
         public DeactivateAccountPage()
         {
             InitializeComponent();
+
+            MessagingCenter.Subscribe<string>(this, "NotificationCount", (count) =>
+            {
+                if (!Common.EmptyFiels(Common.NotificationCount))
+                {
+                    lblNotificationCount.Text = count;
+                    frmNotification.IsVisible = true;
+                }
+                else
+                {
+                    frmNotification.IsVisible = false;
+                    lblNotificationCount.Text = string.Empty;
+                }
+            });
         }
         #endregion
 
         #region Methods
-        async void DeactivateAccount()
+        private async void DeactivateAccount()
         {
             try
             {
@@ -65,7 +75,7 @@ namespace AptDealzBuyer.Views.OtherPages
 
         private void ImgNotification_Tapped(object sender, EventArgs e)
         {
-
+            Navigation.PushAsync(new DashboardPages.NotificationPage());
         }
 
         private void ImgQuestion_Tapped(object sender, EventArgs e)
@@ -75,18 +85,19 @@ namespace AptDealzBuyer.Views.OtherPages
 
         private void ImgBack_Tapped(object sender, EventArgs e)
         {
+            Common.BindAnimation(imageButton: ImgBack);
             Navigation.PopAsync();
         }
 
-        private void FrmConfirmDeactivation_Tapped(object sender, EventArgs e)
+        private void BtnDeactivation_Clicked(object sender, EventArgs e)
         {
             DeactivateAccount();
         }
-        #endregion
 
         private void BtnLogo_Clicked(object sender, EventArgs e)
         {
             Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
         }
+        #endregion
     }
 }

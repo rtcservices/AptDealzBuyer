@@ -62,10 +62,10 @@ namespace AptDealzBuyer.Droid.DependencService
             NotificationCompat.Builder builder = new NotificationCompat.Builder(AndroidApp.Context, channelId)
                 .SetContentIntent(pendingIntent)
                 .SetContentTitle(title)
-                .SetContentText(message);
+                .SetContentText(message)
+                .SetSmallIcon(Resource.Drawable.iconLogo);
             var notification = builder.Build();
             manager.Notify(messageId, notification);
-            //.SetSmallIcon(Resource.Drawable.icon);
 
             return messageId;
         }

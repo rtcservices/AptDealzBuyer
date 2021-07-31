@@ -2,7 +2,6 @@
 using AptDealzBuyer.API;
 using AptDealzBuyer.Model.Request;
 using AptDealzBuyer.Utility;
-using AptDealzBuyer.Views.MasterData;
 using AptDealzBuyer.Views.PopupPages;
 using Newtonsoft.Json.Linq;
 using Rg.Plugins.Popup.Services;
@@ -32,12 +31,26 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             InitializeComponent();
             mRequirements = new List<Requirement>();
             pageNo = 1;
-            GetPreviousRequirements(filterBy, title, sortBy, true);
+            GetPreviousRequirements(filterBy, title, sortBy);
+
+            MessagingCenter.Subscribe<string>(this, "NotificationCount", (count) =>
+            {
+                if (!Common.EmptyFiels(Common.NotificationCount))
+                {
+                    lblNotificationCount.Text = count;
+                    frmNotification.IsVisible = true;
+                }
+                else
+                {
+                    frmNotification.IsVisible = false;
+                    lblNotificationCount.Text = string.Empty;
+                }
+            });
         }
         #endregion
 
         #region Methods
-        public async void GetPreviousRequirements(string FilterBy = "", string Title = "", bool? SortBy = null, bool isLoader = false)
+        private async void GetPreviousRequirements(string FilterBy = "", string Title = "", bool? SortBy = null, bool isLoader = true)
         {
             try
             {
@@ -68,10 +81,10 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 {
                     lstRequirements.IsVisible = false;
                     lblNoRecord.IsVisible = true;
-                    if (mResponse != null && mResponse.Message != null)
-                    {
-                        lblNoRecord.Text = mResponse.Message;
-                    }
+                    //if (mResponse != null && mResponse.Message != null)
+                    //{
+                    //    lblNoRecord.Text = mResponse.Message;
+                    //}
                 }
             }
             catch (Exception ex)
@@ -84,18 +97,25 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             }
         }
 
-        void BindList(List<Requirement> mRequirementList)
+        private void BindList(List<Requirement> mRequirementList)
         {
-            if (mRequirementList != null && mRequirementList.Count > 0)
+            try
             {
-                lstRequirements.IsVisible = true;
-                lblNoRecord.IsVisible = false;
-                lstRequirements.ItemsSource = mRequirementList.ToList();
+                if (mRequirementList != null && mRequirementList.Count > 0)
+                {
+                    lstRequirements.IsVisible = true;
+                    lblNoRecord.IsVisible = false;
+                    lstRequirements.ItemsSource = mRequirementList.ToList();
+                }
+                else
+                {
+                    lstRequirements.IsVisible = false;
+                    lblNoRecord.IsVisible = true;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                lstRequirements.IsVisible = false;
-                lblNoRecord.IsVisible = true;
+                Common.DisplayErrorMessage("PreviousRequirementView/BindList: " + ex.Message);
             }
         }
         #endregion
@@ -109,7 +129,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
 
         private void ImgNotification_Tapped(object sender, EventArgs e)
         {
-
+            Navigation.PushAsync(new DashboardPages.NotificationPage());
         }
 
         private void ImgQuestion_Tapped(object sender, EventArgs e)
@@ -120,7 +140,8 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         private void ImgBack_Tapped(object sender, EventArgs e)
         {
             Common.BindAnimation(imageButton: ImgBack);
-            App.Current.MainPage = new MasterDataPage();
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
+
         }
 
         private void FrmSortBy_Tapped(object sender, EventArgs e)
@@ -139,7 +160,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 }
 
                 pageNo = 1;
-                GetPreviousRequirements(filterBy, title, sortBy, true);
+                GetPreviousRequirements(filterBy, title, sortBy);
             }
             catch (Exception ex)
             {
@@ -195,7 +216,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 }
                 else
                 {
-                    GetPreviousRequirements(filterBy, title, sortBy, true);
+                    GetPreviousRequirements(filterBy, title, sortBy);
                 }
             }
             catch (Exception ex)
@@ -230,7 +251,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
 
                         if (this.mRequirements.Count() >= totalAspectedRow)
                         {
-                            GetPreviousRequirements(filterBy, title, sortBy, true);
+                            GetPreviousRequirements(filterBy, title, sortBy, false);
                         }
                     }
                     else
@@ -255,11 +276,18 @@ namespace AptDealzBuyer.Views.MainTabbedPages
 
         private void lstRequirements_Refreshing(object sender, EventArgs e)
         {
-            lstRequirements.IsRefreshing = true;
-            pageNo = 1;
-            mRequirements.Clear();
-            GetPreviousRequirements(filterBy, title, sortBy, true);
-            lstRequirements.IsRefreshing = false;
+            try
+            {
+                lstRequirements.IsRefreshing = true;
+                pageNo = 1;
+                mRequirements.Clear();
+                GetPreviousRequirements(filterBy, title, sortBy);
+                lstRequirements.IsRefreshing = false;
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("PreviousRequirementView/Refreshing: " + ex.Message);
+            }
         }
 
         private void FrmFilterBy_Tapped(object sender, EventArgs e)
@@ -273,16 +301,9 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                     if (!Common.EmptyFiels(result))
                     {
                         filterBy = result;
-                        if (filterBy == RequirementSortBy.TotalPriceEstimation.ToString())
-                        {
-                            lblFilterBy.Text = "Amount";
-                        }
-                        else
-                        {
-                            lblFilterBy.Text = filterBy;
-                        }
+                        lblFilterBy.Text = filterBy.ToCamelCase();
                         pageNo = 1;
-                        GetPreviousRequirements(filterBy, title, sortBy, true);
+                        GetPreviousRequirements(filterBy, title, sortBy);
                     }
                 };
                 PopupNavigation.Instance.PushAsync(sortby);

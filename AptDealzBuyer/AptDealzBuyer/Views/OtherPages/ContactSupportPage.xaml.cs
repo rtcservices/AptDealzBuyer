@@ -1,11 +1,15 @@
-﻿using AptDealzBuyer.Model;
+﻿using Acr.UserDialogs;
+using AptDealzBuyer.API;
+using AptDealzBuyer.Model;
+using AptDealzBuyer.Model.Reponse;
+using AptDealzBuyer.Utility;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Xamarin.Forms;
-using AptDealzBuyer.Utility;
 using Xamarin.Forms.Xaml;
-using AptDealzBuyer.Views.MasterData;
 
 namespace AptDealzBuyer.Views.OtherPages
 {
@@ -13,84 +17,114 @@ namespace AptDealzBuyer.Views.OtherPages
     public partial class ContactSupportPage : ContentPage
     {
         #region Objects
-        // create objects here
-        List<MessageList> mMessageList = new List<MessageList>();
+        SupportChatAPI supportChatAPI;
+        private List<ChatSupport> mMessageList;
         #endregion
 
         #region Constructor
         public ContactSupportPage()
         {
             InitializeComponent();
+            supportChatAPI = new SupportChatAPI();
+            mMessageList = new List<ChatSupport>();
 
+            MessagingCenter.Subscribe<string>(this, "NotificationCount", (count) =>
+            {
+                if (!Common.EmptyFiels(Common.NotificationCount))
+                {
+                    lblNotificationCount.Text = count;
+                    frmNotification.IsVisible = true;
+                }
+                else
+                {
+                    frmNotification.IsVisible = false;
+                    lblNotificationCount.Text = string.Empty;
+                }
+            });
         }
         #endregion
 
         #region Methods
-        // write methods here
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            BindMessages();
+            GetMessages();
         }
 
-        public void BindMessages()
+        private async Task GetMessages(bool isGetChatList = true)
         {
-            mMessageList.Clear();
-            mMessageList.Add(new MessageList()
+            try
             {
-                Message = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                MessageMargin = new Thickness(20, 20, 0, 0),
-                MessagePosition = LayoutOptions.EndAndExpand,
-                UserName = "Michal Beven",
-                Time = "10:57 am",
-                IsBuyer = true
-            });
-            mMessageList.Add(new MessageList()
+                UserDialogs.Instance.ShowLoading(Constraints.Loading);
+                var mResponse = new Response();
+                if (isGetChatList)
+                {
+                    mResponse = await supportChatAPI.GetAllMyChat();
+                }
+                else
+                {
+                    mResponse = await supportChatAPI.SendChatSupportMessage(txtMessage.Text);
+
+                }
+
+                if (mResponse != null && mResponse.Succeeded)
+                {
+                    JArray result = (JArray)mResponse.Data;
+                    if (result != null)
+                    {
+                        txtMessage.Text = string.Empty;
+                        mMessageList = result.ToObject<List<ChatSupport>>();
+                        if (mMessageList != null && mMessageList.Count > 0)
+                        {
+                            foreach (var message in mMessageList)
+                            {
+                                if (!message.IsMessageFromSupportTeam)
+                                {
+                                    //User Data
+                                    message.IsContact = message.IsMessageFromSupportTeam;
+                                    message.IsUser = true;
+                                }
+                                if (message.ChatMessageFromUserProfileImage == "")
+                                {
+                                    if (message.IsMessageFromSupportTeam)
+                                    {
+                                        message.ChatMessageFromUserProfileImage = "imgContact.jpg";
+                                    }
+                                    else
+                                    {
+                                        message.ChatMessageFromUserProfileImage = "iconUserAccount.png";
+                                    }
+                                }
+                            }
+                            lstChar.IsVisible = true;
+                            lblNoRecord.IsVisible = false;
+                            lstChar.ItemsSource = mMessageList.ToList();
+                        }
+                        else
+                        {
+                            lstChar.IsVisible = false;
+                            lblNoRecord.IsVisible = true;
+                        }
+                    }
+                }
+                else
+                {
+                    lblNoRecord.IsVisible = true;
+                    if (mResponse != null && !Common.EmptyFiels(mResponse.Message))
+                        lblNoRecord.Text = mResponse.Message;
+                    else
+                        lblNoRecord.Text = Constraints.Something_Wrong;
+                }
+            }
+            catch (Exception ex)
             {
-                Message = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                MessageMargin = new Thickness(0, 20, 20, 0),
-                MessagePosition = LayoutOptions.StartAndExpand,
-                UserName = "Customer Support",
-                Time = "10:57 am",
-                IsContact = true
-            });
-            mMessageList.Add(new MessageList()
+                Common.DisplayErrorMessage("ContactSupportPage/GetMessages: " + ex.Message);
+            }
+            finally
             {
-                Message = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                MessageMargin = new Thickness(20, 20, 0, 0),
-                MessagePosition = LayoutOptions.EndAndExpand,
-                UserName = "Michal Beven",
-                Time = "10:57 am",
-                IsBuyer = true
-            });
-            mMessageList.Add(new MessageList()
-            {
-                Message = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                MessageMargin = new Thickness(0, 20, 20, 0),
-                MessagePosition = LayoutOptions.StartAndExpand,
-                UserName = "Customer Support",
-                Time = "10:57 am",
-                IsContact = true
-            });
-            mMessageList.Add(new MessageList()
-            {
-                Message = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                MessageMargin = new Thickness(20, 20, 0, 0),
-                MessagePosition = LayoutOptions.EndAndExpand,
-                UserName = "Michal Beven",
-                Time = "10:57 am",
-                IsBuyer = true
-            });
-            mMessageList.Add(new MessageList()
-            {
-                Message = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                MessageMargin = new Thickness(0, 20, 20, 0),
-                MessagePosition = LayoutOptions.StartAndExpand,
-                UserName = "Customer Support",
-                Time = "10:57 am",
-                IsContact = true
-            });
-            flvMain.FlowItemsSource = mMessageList.ToList();
+                UserDialogs.Instance.HideLoading();
+            }
+
         }
         #endregion
 
@@ -103,7 +137,7 @@ namespace AptDealzBuyer.Views.OtherPages
 
         private void ImgNotification_Tapped(object sender, EventArgs e)
         {
-
+            Navigation.PushAsync(new DashboardPages.NotificationPage());
         }
 
         private void ImgQuestion_Tapped(object sender, EventArgs e)
@@ -114,19 +148,39 @@ namespace AptDealzBuyer.Views.OtherPages
         private void ImgBack_Tapped(object sender, EventArgs e)
         {
             Common.BindAnimation(imageButton: ImgBack);
-            App.Current.MainPage = new MasterDataPage();
-            //Navigation.PopAsync();
+            Navigation.PopAsync();
         }
-
-        private void ImgSend_Tapped(object sender, EventArgs e)
-        {
-
-        }
-        #endregion
 
         private void BtnLogo_Clicked(object sender, EventArgs e)
         {
             Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
         }
+
+        private async void BtnSend_Clicked(object sender, EventArgs e)
+        {
+            Common.BindAnimation(imageButton: BtnSend);
+            await GetMessages(false);
+        }
+
+        private void lstChar_ItemTapped(object sender, ItemTappedEventArgs e)
+        {
+            lstChar.SelectedItem = null;
+        }
+
+        private async void lstChar_Refreshing(object sender, EventArgs e)
+        {
+            try
+            {
+                lstChar.IsRefreshing = true;
+                mMessageList.Clear();
+                await GetMessages();
+                lstChar.IsRefreshing = false;
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("ContactSupportPage/lstChar_Refreshing: " + ex.Message);
+            }
+        }
+        #endregion
     }
 }

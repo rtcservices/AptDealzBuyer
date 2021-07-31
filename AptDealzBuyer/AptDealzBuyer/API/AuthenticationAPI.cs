@@ -13,14 +13,14 @@ namespace AptDealzBuyer.API
     public class AuthenticationAPI
     {
         #region [ POST ]
-        public async Task<Response> BuyerAuthPhone(Login mRequestLogin)
+        public async Task<Response> BuyerAuthPhone(AuthenticatePhone mAuthenticatePhone)
         {
             Response mResponse = new Response();
             try
             {
                 if (CrossConnectivity.Current.IsConnected)
                 {
-                    var requestJson = JsonConvert.SerializeObject(mRequestLogin);
+                    var requestJson = JsonConvert.SerializeObject(mAuthenticatePhone);
                     using (var hcf = new HttpClientFactory())
                     {
                         string url = string.Format(EndPointURL.BuyerAuthenticatePhone, (int)App.Current.Resources["Version"]);
@@ -56,7 +56,7 @@ namespace AptDealzBuyer.API
                 {
                     if (await Common.InternetConnection())
                     {
-                        await BuyerAuthPhone(mRequestLogin);
+                        await BuyerAuthPhone(mAuthenticatePhone);
                     }
                 }
             }

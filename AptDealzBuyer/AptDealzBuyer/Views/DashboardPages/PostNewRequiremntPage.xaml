@@ -42,34 +42,54 @@
                     Clicked="BtnLogo_Clicked"
                     Style="{StaticResource imgLogo}" />
 
-                <StackLayout
+                <Grid
                     Grid.Column="2"
-                    Margin="0,0,20,0"
-                    HorizontalOptions="EndAndExpand"
-                    Orientation="Horizontal">
-                    <Image
-                        Margin="0"
-                        HeightRequest="30"
-                        HorizontalOptions="CenterAndExpand"
-                        Source="iconNotification.png"
-                        VerticalOptions="CenterAndExpand">
-                        <Image.GestureRecognizers>
+                    Margin="0,0,10,0"
+                    ColumnDefinitions="*,*"
+                    HorizontalOptions="EndAndExpand">
+                    <Grid>
+                        <Image
+                            Margin="0"
+                            HeightRequest="30"
+                            HorizontalOptions="CenterAndExpand"
+                            Source="iconNotification.png"
+                            VerticalOptions="CenterAndExpand"
+                            WidthRequest="30" />
+                        <Frame
+                            x:Name="frmNotification" HasShadow="False"
+                            Margin="10,5,0,0"
+                            Padding="0"
+                            BackgroundColor="{StaticResource Orange}"
+                            CornerRadius="10"
+                            HeightRequest="20"
+                            HorizontalOptions="CenterAndExpand"
+                            IsVisible="false"
+                            VerticalOptions="StartAndExpand"
+                            WidthRequest="20" />
+                        <Label
+                            x:Name="lblNotificationCount" FontSize="15"
+                            Margin="10,5,0,0"
+                            HorizontalOptions="CenterAndExpand"
+                            Style="{StaticResource lblMedium}"
+                            VerticalOptions="Start" />
+                        <Grid.GestureRecognizers>
                             <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgNotification_Tapped" />
-                        </Image.GestureRecognizers>
-                    </Image>
+                        </Grid.GestureRecognizers>
+                    </Grid>
 
                     <Image
+                        Grid.Column="1"
                         Margin="0"
                         HeightRequest="30"
                         HorizontalOptions="CenterAndExpand"
                         Source="iconQuestion.png"
-                        VerticalOptions="CenterAndExpand">
+                        VerticalOptions="CenterAndExpand"
+                        WidthRequest="30">
                         <Image.GestureRecognizers>
                             <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgQuestion_Tapped" />
                         </Image.GestureRecognizers>
                     </Image>
-                </StackLayout>
-
+                </Grid>
                 <BoxView Grid.ColumnSpan="3" Style="{StaticResource boxHorizontal}" />
             </Grid>
 
@@ -104,7 +124,7 @@
                     Grid.Row="1"
                     Style="{StaticResource scrPrimary}">
 
-                    <Grid Padding="20,0" RowSpacing="20">
+                    <Grid Padding="20,2" RowSpacing="20">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
@@ -247,18 +267,15 @@
                                     VerticalOptions="FillAndExpand"
                                     WidthRequest="1" />
 
-                                <Image
+                                <ImageButton
                                     x:Name="ImgUplode"
                                     Grid.Column="3"
-                                    Margin="10"
-                                    HeightRequest="35"
-                                    HorizontalOptions="EndAndExpand"
+                                    Padding="15"
+                                    BackgroundColor="Transparent"
+                                    Clicked="UploadProductImage_Tapped"
+                                    HeightRequest="60"
                                     Source="iconImageUpload.png"
-                                    VerticalOptions="CenterAndExpand">
-                                    <Image.GestureRecognizers>
-                                        <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="UploadProductImage_Tapped" />
-                                    </Image.GestureRecognizers>
-                                </Image>
+                                    WidthRequest="60" />
                             </Grid>
                         </Frame>
 
@@ -485,7 +502,7 @@
                                         x:Name="lblLocationPINCode"
                                         Style="{StaticResource lblPrimary13}"
                                         Text="Delivery Location PIN Code" />
-                                    <!--<Label Text="*" TextColor="{StaticResource Red}" />-->
+                                    <Label Text="*" TextColor="{StaticResource Red}" />
                                 </StackLayout>
                                 <ext:ExtEntry
                                     x:Name="txtLocationPinCode"
@@ -613,11 +630,8 @@
 
                             <Frame
                                 Grid.Row="0"
-                                Margin="0,0"
-                                Padding="0"
                                 BackgroundColor="{StaticResource LightGray}"
-                                CornerRadius="5"
-                                HasShadow="False">
+                                Style="{StaticResource frmBlank}">
                                 <StackLayout
                                     x:Name="StkShipping"
                                     Margin="0,10"
@@ -766,17 +780,13 @@
                                 <StackLayout Grid.Row="6" Spacing="{OnPlatform Android=0, iOS=7}">
                                     <StackLayout HorizontalOptions="StartAndExpand" Orientation="Horizontal">
                                         <Label Style="{StaticResource lblPrimary13}" Text="Landmark" />
-                                        <Label
-                                            x:Name="lblSALandmark"
-                                            Text="*"
-                                            TextColor="{StaticResource Red}" />
+                                        <!--<Label
+                                            x:Name="lblSALandmark"  Unfocused="Entry_Unfocused"
+                                            Text="*"  ClassId="SALandmark"
+                                            TextColor="{StaticResource Red}" />-->
                                     </StackLayout>
-                                    <ext:ExtEntry
-                                        x:Name="txtSALandmark"
-                                        ClassId="SALandmark"
-                                        Style="{StaticResource entrPrimary}"
-                                        Unfocused="Entry_Unfocused" />
-                                    <BoxView x:Name="BoxSALandmark" Style="{StaticResource boxHorizontal}" />
+                                    <ext:ExtEntry x:Name="txtSALandmark" Style="{StaticResource entrPrimary}" />
+                                    <BoxView Style="{StaticResource boxHorizontal}" />
                                 </StackLayout>
                             </Grid>
                         </Grid>
