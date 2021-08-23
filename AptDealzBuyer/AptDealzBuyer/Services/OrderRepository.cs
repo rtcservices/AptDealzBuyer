@@ -51,18 +51,22 @@ namespace AptDealzBuyer.Services
         {
             try
             {
-                UserDialogs.Instance.ShowLoading(Constraints.Loading);
-                var mResponse = await orderAPI.CancelOrder(orderId);
-                if (mResponse != null && mResponse.Succeeded)
+                var isCancel = await App.Current.MainPage.DisplayAlert(Constraints.Alert, Constraints.AreYouSureWantCancelOrder, Constraints.Yes, Constraints.No);
+                if (isCancel)
                 {
-                    SuccessfullSavedQuote(mResponse.Message);
-                }
-                else
-                {
-                    if (mResponse != null)
-                        Common.DisplayErrorMessage(mResponse.Message);
+                    UserDialogs.Instance.ShowLoading(Constraints.Loading);
+                    var mResponse = await orderAPI.CancelOrder(orderId);
+                    if (mResponse != null && mResponse.Succeeded)
+                    {
+                        SuccessfullSavedQuote(mResponse.Message);
+                    }
                     else
-                        Common.DisplayErrorMessage(Constraints.Something_Wrong);
+                    {
+                        if (mResponse != null)
+                            Common.DisplayErrorMessage(mResponse.Message);
+                        else
+                            Common.DisplayErrorMessage(Constraints.Something_Wrong);
+                    }
                 }
             }
             catch (Exception ex)
@@ -105,12 +109,40 @@ namespace AptDealzBuyer.Services
             return imageBase64;
         }
 
-        void SuccessfullSavedQuote(string MessageString)
+        public async Task ConfirmDelivery(string orderId)
+        {
+            try
+            {
+                UserDialogs.Instance.ShowLoading(Constraints.Loading);
+                var mResponse = await orderAPI.ConfirmDeliveryFromBuyer(orderId);
+                if (mResponse != null && mResponse.Succeeded)
+                {
+                    SuccessfullSavedQuote(mResponse.Message);
+                }
+                else
+                {
+                    if (mResponse != null)
+                        Common.DisplayErrorMessage(mResponse.Message);
+                    else
+                        Common.DisplayErrorMessage(Constraints.Something_Wrong);
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("OrderRepository/GetOrderDetails: " + ex.Message);
+            }
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
+            }
+        }
+
+        async void SuccessfullSavedQuote(string MessageString)
         {
             try
             {
                 var successPopup = new Views.PopupPages.SuccessPopup(MessageString);
-                PopupNavigation.Instance.PushAsync(successPopup);
+                await PopupNavigation.Instance.PushAsync(successPopup);
             }
             catch (Exception ex)
             {

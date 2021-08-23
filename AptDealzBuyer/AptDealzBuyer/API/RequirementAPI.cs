@@ -47,17 +47,13 @@ namespace AptDealzBuyer.API
                         }
                         else
                         {
-                            if (responseJson.Contains("TokenExpired"))
+                            if (responseJson.Contains("TokenExpired") || response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                             {
                                 var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
                                 if (!isRefresh)
                                 {
                                     Common.DisplayErrorMessage(Constraints.Session_Expired);
                                     App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                                }
-                                else
-                                {
-                                    await GetRequirementById(RequirmentId);
                                 }
                             }
                             else
@@ -125,17 +121,13 @@ namespace AptDealzBuyer.API
                         }
                         else
                         {
-                            if (responseJson.Contains("TokenExpired"))
+                            if (responseJson.Contains("TokenExpired") || response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                             {
                                 var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
                                 if (!isRefresh)
                                 {
                                     Common.DisplayErrorMessage(Constraints.Session_Expired);
                                     App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                                }
-                                else
-                                {
-                                    await GetAllMyActiveRequirements(SortBy, Title, IsAscending, PageNumber, PageSize);
                                 }
                             }
                             else
@@ -203,17 +195,13 @@ namespace AptDealzBuyer.API
                         }
                         else
                         {
-                            if (responseJson.Contains("TokenExpired"))
+                            if (responseJson.Contains("TokenExpired") || response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                             {
                                 var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
                                 if (!isRefresh)
                                 {
                                     Common.DisplayErrorMessage(Constraints.Session_Expired);
                                     App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                                }
-                                else
-                                {
-                                    await GetMyPreviousRequirements(SortBy, Title, IsAscending, PageNumber, PageSize);
                                 }
                             }
                             else
@@ -275,17 +263,13 @@ namespace AptDealzBuyer.API
                         }
                         else
                         {
-                            if (responseJson.Contains("TokenExpired"))
+                            if (responseJson.Contains("TokenExpired") || response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                             {
                                 var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
                                 if (!isRefresh)
                                 {
                                     Common.DisplayErrorMessage(Constraints.Session_Expired);
                                     App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                                }
-                                else
-                                {
-                                    await CreateRequirement(mRequirement);
                                 }
                             }
                             else
@@ -347,17 +331,13 @@ namespace AptDealzBuyer.API
                         }
                         else
                         {
-                            if (responseJson.Contains("TokenExpired"))
+                            if (responseJson.Contains("TokenExpired") || response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                             {
                                 var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
                                 if (!isRefresh)
                                 {
                                     Common.DisplayErrorMessage(Constraints.Session_Expired);
                                     App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                                }
-                                else
-                                {
-                                    await CancelRequirement(requirementId);
                                 }
                             }
                             else
@@ -421,17 +401,13 @@ namespace AptDealzBuyer.API
                         }
                         else
                         {
-                            if (responseJson.Contains("TokenExpired"))
+                            if (responseJson.Contains("TokenExpired") || response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                             {
                                 var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
                                 if (!isRefresh)
                                 {
                                     Common.DisplayErrorMessage(Constraints.Session_Expired);
                                     App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                                }
-                                else
-                                {
-                                    await DeleteRequirement(id);
                                 }
                             }
                             else
@@ -495,17 +471,13 @@ namespace AptDealzBuyer.API
                         }
                         else
                         {
-                            if (responseJson.Contains("TokenExpired"))
+                            if (responseJson.Contains("TokenExpired") || response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                             {
                                 var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
                                 if (!isRefresh)
                                 {
                                     Common.DisplayErrorMessage(Constraints.Session_Expired);
                                     App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                                }
-                                else
-                                {
-                                    await UpdateStatusRequirement(requirementId, status);
                                 }
                             }
                             else

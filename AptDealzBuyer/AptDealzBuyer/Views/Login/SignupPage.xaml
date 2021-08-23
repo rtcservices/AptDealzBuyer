@@ -34,43 +34,35 @@
             </Grid>
 
             <!--  Main Grid  -->
-            <Grid
-                Grid.Row="1"
-                Padding="0"
-                RowSpacing="0">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
+            <ContentView Grid.Row="1" IsClippedToBounds="True">
+                <ScrollView Style="{StaticResource scrPrimary}">
+                    <Grid Padding="20,0" RowSpacing="5">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
 
-                <!--  LOGO  -->
-                <StackLayout Grid.Row="0" Spacing="0">
-                    <Image
-                        Aspect="AspectFill"
-                        HeightRequest="120"
-                        HorizontalOptions="CenterAndExpand"
-                        Source="iconLogo.png"
-                        VerticalOptions="CenterAndExpand" />
+                        <!--  LOGO  -->
+                        <StackLayout Grid.Row="0" Spacing="0">
+                            <Image
+                                Aspect="AspectFit"
+                                HeightRequest="100"
+                                HorizontalOptions="CenterAndExpand"
+                                Source="iconLogo.png"
+                                VerticalOptions="CenterAndExpand"
+                                WidthRequest="100" />
 
-                    <Label
-                        FontSize="24"
-                        Style="{StaticResource lblBoldHeader}"
-                        Text="Create an Account" />
-                </StackLayout>
+                            <Label
+                                FontSize="24"
+                                Style="{StaticResource lblBoldHeader}"
+                                Text="Create an Account" />
+                        </StackLayout>
 
-                <!--  Entrys  -->
-                <ScrollView Grid.Row="1" Style="{StaticResource scrPrimary}">
-                    <Grid
-                        Padding="20,0"
-                        BackgroundColor="Transparent"
-                        HorizontalOptions="FillAndExpand"
-                        RowDefinitions="Auto,*"
-                        RowSpacing="20"
-                        VerticalOptions="CenterAndExpand">
-
+                        <!--  Entrys  -->
                         <Grid
-                            Grid.Row="0"
+                            Grid.Row="1"
                             HorizontalOptions="FillAndExpand"
                             RowDefinitions="Auto,Auto,Auto,auto"
                             RowSpacing="20"
@@ -120,7 +112,6 @@
 
                             <Grid
                                 Grid.Row="3"
-                                Margin="0"
                                 HorizontalOptions="StartAndExpand"
                                 VerticalOptions="CenterAndExpand">
                                 <Grid.ColumnDefinitions>
@@ -134,7 +125,8 @@
                                     HeightRequest="25"
                                     HorizontalOptions="StartAndExpand"
                                     Source="iconUnCheck.png"
-                                    VerticalOptions="CenterAndExpand" />
+                                    VerticalOptions="CenterAndExpand"
+                                    WidthRequest="25" />
 
                                 <Label
                                     Grid.Column="1"
@@ -155,41 +147,42 @@
                             </Grid>
                         </Grid>
 
+                        <!--  Get Otp BVUtton  -->
                         <Button
                             x:Name="BtnGetOtp"
-                            Grid.Row="1"
+                            Grid.Row="2"
                             Margin="0"
                             Clicked="BtnGetOtp_Clicked"
                             Style="{StaticResource btnPrimary}"
                             Text="Get OTP" />
+
+                        <!--  HaveAnAccount  -->
+                        <StackLayout
+                            Grid.Row="3"
+                            Padding="0,20"
+                            HorizontalOptions="CenterAndExpand"
+                            Orientation="Horizontal"
+                            VerticalOptions="EndAndExpand">
+
+                            <Label
+                                FontSize="15"
+                                HorizontalOptions="EndAndExpand"
+                                Style="{StaticResource lblMedium}"
+                                Text="Already have an account ?" />
+
+                            <Label
+                                FontSize="15"
+                                HorizontalOptions="StartAndExpand"
+                                Style="{StaticResource lblMedium}"
+                                Text="Login"
+                                TextColor="{StaticResource Green}" />
+                            <StackLayout.GestureRecognizers>
+                                <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="StkLogin_Tapped" />
+                            </StackLayout.GestureRecognizers>
+                        </StackLayout>
                     </Grid>
                 </ScrollView>
-
-                <!--  HaveAnAccount  -->
-                <StackLayout
-                    Grid.Row="2"
-                    Padding="0,20"
-                    HorizontalOptions="CenterAndExpand"
-                    Orientation="Horizontal"
-                    VerticalOptions="EndAndExpand">
-
-                    <Label
-                        FontSize="15"
-                        HorizontalOptions="EndAndExpand"
-                        Style="{StaticResource lblMedium}"
-                        Text="Already have an account ?" />
-
-                    <Label
-                        FontSize="15"
-                        HorizontalOptions="StartAndExpand"
-                        Style="{StaticResource lblMedium}"
-                        Text="Login"
-                        TextColor="{StaticResource Green}" />
-                    <StackLayout.GestureRecognizers>
-                        <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="StkLogin_Tapped" />
-                    </StackLayout.GestureRecognizers>
-                </StackLayout>
-            </Grid>
+            </ContentView>
         </Grid>
     </ContentPage.Content>
 </ContentPage>

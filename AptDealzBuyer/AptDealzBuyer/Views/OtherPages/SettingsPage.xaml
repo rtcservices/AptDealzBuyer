@@ -47,30 +47,13 @@
                     ColumnDefinitions="*,*"
                     HorizontalOptions="EndAndExpand">
                     <Grid>
-                        <Image
-                            Margin="0"
-                            HeightRequest="30"
-                            HorizontalOptions="CenterAndExpand"
-                            Source="iconNotification.png"
-                            VerticalOptions="CenterAndExpand"
-                            WidthRequest="30" />
+                        <Image Source="iconNotification.png" Style="{StaticResource imgNotification}" />
                         <Frame
-                            x:Name="frmNotification" HasShadow="False"
-                            Margin="10,5,0,0"
-                            Padding="0"
-                            BackgroundColor="{StaticResource Orange}"
-                            CornerRadius="10"
-                            HeightRequest="20"
-                            HorizontalOptions="CenterAndExpand"
+                            x:Name="frmNotification"
                             IsVisible="false"
-                            VerticalOptions="StartAndExpand"
-                            WidthRequest="20" />
-                        <Label
-                            x:Name="lblNotificationCount" FontSize="15"
-                            Margin="10,5,0,0"
-                            HorizontalOptions="CenterAndExpand"
-                            Style="{StaticResource lblMedium}"
-                            VerticalOptions="Start" />
+                            Style="{StaticResource frmNotification}">
+                            <Label x:Name="lblNotificationCount" Style="{StaticResource lblNotification}" />
+                        </Frame>
                         <Grid.GestureRecognizers>
                             <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgNotification_Tapped" />
                         </Grid.GestureRecognizers>
@@ -117,185 +100,177 @@
                         Text="Deactivate Account" />
                 </Grid>
 
-                <ScrollView Grid.Row="1" Style="{StaticResource scrPrimary}">
+                <ContentView Grid.Row="1" IsClippedToBounds="True">
+                    <ScrollView Style="{StaticResource scrPrimary}">
 
-                    <Grid Margin="0" RowDefinitions="Auto,Auto,Auto,Auto">
-
-                        <Grid
-                            Grid.Row="0"
-                            Margin="30,10"
-                            ColumnDefinitions="*,*">
-
-                            <Label
-                                Grid.Column="0"
-                                HorizontalOptions="StartAndExpand"
-                                LineBreakMode="WordWrap"
-                                Style="{StaticResource lblLight}"
-                                Text="Language" />
-
-                            <Frame
-                                Grid.Column="1"
-                                Margin="0"
-                                Padding="0"
-                                BorderColor="{StaticResource LightGray}"
-                                CornerRadius="5"
-                                HasShadow="False">
-                                <StackLayout Orientation="Horizontal">
-                                    <Picker
-                                        x:Name="pkLanguage"
-                                        Title="Language"
-                                        Margin="15,15,0,15"
-                                        FontFamily="Poppins"
-                                        FontSize="15"
-                                        HorizontalOptions="FillAndExpand"
-                                        TextColor="{StaticResource Black}"
-                                        TitleColor="{StaticResource Black}"
-                                        VerticalOptions="FillAndExpand" />
-
-                                    <Image
-                                        Margin="0,15,15,15"
-                                        HeightRequest="25"
-                                        HorizontalOptions="EndAndExpand"
-                                        Source="iconDownArrow.png"
-                                        VerticalOptions="CenterAndExpand">
-                                        <Image.GestureRecognizers>
-                                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgLanguage_Tapped" />
-                                        </Image.GestureRecognizers>
-                                    </Image>
-                                </StackLayout>
-                            </Frame>
-
-                        </Grid>
-
-                        <Grid
-                            Grid.Row="1"
-                            Margin="30,10"
-                            ColumnDefinitions="*,*">
-
-                            <Label
-                                Grid.Column="0"
-                                Margin="0"
-                                HorizontalOptions="StartAndExpand"
-                                LineBreakMode="WordWrap"
-                                Style="{StaticResource lblLight}"
-                                Text="Display Mode" />
+                        <Grid Margin="0" RowDefinitions="Auto,Auto,Auto,Auto">
 
                             <Grid
-                                Grid.Column="1"
-                                ColumnDefinitions="*,*"
-                                ColumnSpacing="20">
-                                <Frame
+                                Grid.Row="0"
+                                Margin="30,10"
+                                ColumnDefinitions="*,*">
+
+                                <Label
                                     Grid.Column="0"
-                                    Margin="0"
-                                    Padding="0"
-                                    BackgroundColor="#CAF3DB"
-                                    CornerRadius="5"
-                                    HasShadow="False">
-                                    <Label
-                                        Margin="0,10"
-                                        HorizontalOptions="CenterAndExpand"
-                                        LineBreakMode="WordWrap"
-                                        Style="{StaticResource lblLight}"
-                                        Text="Light" />
-                                </Frame>
+                                    HorizontalOptions="StartAndExpand"
+                                    LineBreakMode="WordWrap"
+                                    Style="{StaticResource lblLight}"
+                                    Text="Language" />
 
                                 <Frame
                                     Grid.Column="1"
                                     Margin="0"
                                     Padding="0"
-                                    BackgroundColor="{StaticResource Green}"
+                                    BorderColor="{StaticResource LightGray}"
                                     CornerRadius="5"
                                     HasShadow="False">
-                                    <Label
-                                        Margin="0,10"
-                                        HorizontalOptions="CenterAndExpand"
-                                        LineBreakMode="WordWrap"
-                                        Style="{StaticResource lblLight}"
-                                        Text="Dark"
-                                        TextColor="{StaticResource White}" />
+                                    <StackLayout Orientation="Horizontal">
+                                        <Picker
+                                            x:Name="pkLanguage"
+                                            Title="Language"
+                                            Margin="15,15,0,15"
+                                            Style="{StaticResource pkPrimary}" />
+
+                                        <Image
+                                            Margin="0,15,15,15"
+                                            HeightRequest="25"
+                                            HorizontalOptions="EndAndExpand"
+                                            Source="iconDownArrow.png"
+                                            VerticalOptions="CenterAndExpand">
+                                            <Image.GestureRecognizers>
+                                                <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgLanguage_Tapped" />
+                                            </Image.GestureRecognizers>
+                                        </Image>
+                                    </StackLayout>
                                 </Frame>
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="1"
+                                Margin="30,10"
+                                ColumnDefinitions="*,*">
+
+                                <Label
+                                    Grid.Column="0"
+                                    Margin="0"
+                                    HorizontalOptions="StartAndExpand"
+                                    LineBreakMode="WordWrap"
+                                    Style="{StaticResource lblLight}"
+                                    Text="Display Mode" />
+
+                                <Grid
+                                    Grid.Column="1"
+                                    ColumnDefinitions="*,*"
+                                    ColumnSpacing="20">
+                                    <Frame
+                                        Grid.Column="0"
+                                        Margin="0"
+                                        Padding="0"
+                                        BackgroundColor="#CAF3DB"
+                                        CornerRadius="5"
+                                        HasShadow="False">
+                                        <Label
+                                            Margin="0,10"
+                                            HorizontalOptions="CenterAndExpand"
+                                            LineBreakMode="WordWrap"
+                                            Style="{StaticResource lblLight}"
+                                            Text="Light" />
+                                    </Frame>
+
+                                    <Frame
+                                        Grid.Column="1"
+                                        Margin="0"
+                                        Padding="0"
+                                        BackgroundColor="{StaticResource Green}"
+                                        CornerRadius="5"
+                                        HasShadow="False">
+                                        <Label
+                                            Margin="0,10"
+                                            HorizontalOptions="CenterAndExpand"
+                                            LineBreakMode="WordWrap"
+                                            Style="{StaticResource lblLight}"
+                                            Text="Dark"
+                                            TextColor="{StaticResource White}" />
+                                    </Frame>
+                                </Grid>
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="2"
+                                Margin="30,10"
+                                ColumnDefinitions="*,*">
+
+                                <Label
+                                    Grid.Column="0"
+                                    Margin="0"
+                                    HorizontalOptions="StartAndExpand"
+                                    LineBreakMode="WordWrap"
+                                    Style="{StaticResource lblLight}"
+                                    Text="Alert Tone" />
+
+                                <Frame
+                                    Grid.Column="1"
+                                    Margin="0"
+                                    Padding="0"
+                                    BorderColor="{StaticResource LightGray}"
+                                    CornerRadius="5"
+                                    HasShadow="False">
+                                    <StackLayout Orientation="Horizontal">
+                                        <Picker
+                                            x:Name="pkAlertTone"
+                                            Title="Tone"
+                                            Margin="15,15,0,15"
+                                            Style="{StaticResource pkPrimary}" />
+
+                                        <Image
+                                            Margin="0,15,15,15"
+                                            HeightRequest="25"
+                                            HorizontalOptions="EndAndExpand"
+                                            Source="iconDownArrow.png"
+                                            VerticalOptions="CenterAndExpand">
+                                            <Image.GestureRecognizers>
+                                                <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgAlertTone_Tapped" />
+                                            </Image.GestureRecognizers>
+                                        </Image>
+                                    </StackLayout>
+                                </Frame>
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="3"
+                                Margin="30,10"
+                                ColumnDefinitions="*,*">
+
+                                <Label
+                                    Grid.Column="0"
+                                    HorizontalOptions="StartAndExpand"
+                                    LineBreakMode="WordWrap"
+                                    Style="{StaticResource lblLight}"
+                                    Text="Mute Notifications" />
+
+                                <Image
+                                    x:Name="imgSwitch"
+                                    Grid.Column="1"
+                                    Margin="0"
+                                    Aspect="AspectFill"
+                                    HeightRequest="30"
+                                    HorizontalOptions="EndAndExpand"
+                                    Source="iconSwitchOff.png"
+                                    VerticalOptions="CenterAndExpand">
+                                    <Image.GestureRecognizers>
+                                        <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgSwitch_Tapped" />
+                                    </Image.GestureRecognizers>
+                                </Image>
+
                             </Grid>
 
                         </Grid>
 
-                        <Grid
-                            Grid.Row="2"
-                            Margin="30,10"
-                            ColumnDefinitions="*,*">
-
-                            <Label
-                                Grid.Column="0"
-                                Margin="0"
-                                HorizontalOptions="StartAndExpand"
-                                LineBreakMode="WordWrap"
-                                Style="{StaticResource lblLight}"
-                                Text="Alert Tone" />
-
-                            <Frame
-                                Grid.Column="1"
-                                Margin="0"
-                                Padding="0"
-                                BorderColor="{StaticResource LightGray}"
-                                CornerRadius="5"
-                                HasShadow="False">
-                                <StackLayout Orientation="Horizontal">
-                                    <Picker
-                                        x:Name="pkAlertTone"
-                                        Title="Tone"
-                                        Margin="15,15,0,15"
-                                        FontFamily="Poppins"
-                                        FontSize="15"
-                                        HorizontalOptions="FillAndExpand"
-                                        TextColor="{StaticResource Black}"
-                                        TitleColor="{StaticResource Black}"
-                                        VerticalOptions="FillAndExpand" />
-
-                                    <Image
-                                        Margin="0,15,15,15"
-                                        HeightRequest="25"
-                                        HorizontalOptions="EndAndExpand"
-                                        Source="iconDownArrow.png"
-                                        VerticalOptions="CenterAndExpand">
-                                        <Image.GestureRecognizers>
-                                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgAlertTone_Tapped" />
-                                        </Image.GestureRecognizers>
-                                    </Image>
-                                </StackLayout>
-                            </Frame>
-
-                        </Grid>
-
-                        <Grid
-                            Grid.Row="3"
-                            Margin="30,10"
-                            ColumnDefinitions="*,*">
-
-                            <Label
-                                Grid.Column="0"
-                                HorizontalOptions="StartAndExpand"
-                                LineBreakMode="WordWrap"
-                                Style="{StaticResource lblLight}"
-                                Text="Mute Notifications" />
-
-                            <Image
-                                x:Name="imgSwitch"
-                                Grid.Column="1"
-                                Margin="0"
-                                Aspect="AspectFill"
-                                HeightRequest="30"
-                                HorizontalOptions="EndAndExpand"
-                                Source="iconSwitchOff.png"
-                                VerticalOptions="CenterAndExpand">
-                                <Image.GestureRecognizers>
-                                    <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgSwitch_Tapped" />
-                                </Image.GestureRecognizers>
-                            </Image>
-
-                        </Grid>
-
-                    </Grid>
-
-                </ScrollView>
+                    </ScrollView>
+                </ContentView>
 
             </Grid>
         </Grid>

@@ -56,14 +56,16 @@
 
         #region [ Alert Message ]
         public const string CouldNotSentOTP = "Could not send Verification Code to the given number!";
-        public const string AreYouSureWantDeactivateAccount = "Are you sure want to deactivate account?";
+        public const string DoYouWantToExit = "Do you really want to exit?";
+
+        public const string AreYouSureWantLogout = "Are you sure want to logout?";
         public const string AreYouSureWantDelete = "Are you sure want to delete?";
         public const string AreYouSureWantCancel = "Are you sure want to cancel?";
-        public const string AreYouSureWantCancelReq = "Are you sure you want to cancel the requirement?";
-        public const string AreYouSureWantDeleteReq = "Are you sure you want to delete the requirement?";
-        public const string AreYouSureWantDeleteNotification = "Are you sure you want to delete the notification?";
-        public const string AreYouSureWantLogout = "Are you sure want to logout?";
-        public const string DoYouWantToExit = "Do you really want to exit?";
+        public const string AreYouSureWantDeleteNotification = "Are you sure you want to delete this notification?";
+        public const string AreYouSureWantDeactivateAccount = "Are you sure want to deactivate account?";
+        public const string AreYouSureWantCancelReq = "Are you sure you want to cancel this requirement?";
+        public const string AreYouSureWantDeleteReq = "Are you sure you want to delete this requirement?";
+        public const string AreYouSureWantCancelOrder = "Are you sure you want to cancel this order?";
 
         public const string NoInternetConnection = "No internet connection!";
         public const string NoCameraAwailable = "No camera awailable!";

@@ -6,5 +6,6 @@ namespace AptDealzBuyer.Repository
     public interface IQuoteRepository
     {
         Task<string> RevealContact(RevealSellerContact mRevealSellerContact);
+        Task<Quote> GetQuoteById(string QuoteId);
     }
 }

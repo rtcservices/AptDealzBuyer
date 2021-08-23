@@ -3,6 +3,7 @@
     x:Class="AptDealzBuyer.Views.OtherPages.WeSupportPage"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:ffImage="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
     xmlns:iOS="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
     iOS:Page.UseSafeArea="True"
     BackgroundColor="{StaticResource White}"
@@ -46,30 +47,13 @@
                     ColumnDefinitions="*,*"
                     HorizontalOptions="EndAndExpand">
                     <Grid>
-                        <Image
-                            Margin="0"
-                            HeightRequest="30"
-                            HorizontalOptions="CenterAndExpand"
-                            Source="iconNotification.png"
-                            VerticalOptions="CenterAndExpand"
-                            WidthRequest="30" />
+                        <Image Source="iconNotification.png" Style="{StaticResource imgNotification}" />
                         <Frame
-                            x:Name="frmNotification" HasShadow="False"
-                            Margin="10,5,0,0"
-                            Padding="0"
-                            BackgroundColor="{StaticResource Orange}"
-                            CornerRadius="10"
-                            HeightRequest="20"
-                            HorizontalOptions="CenterAndExpand"
+                            x:Name="frmNotification"
                             IsVisible="false"
-                            VerticalOptions="StartAndExpand"
-                            WidthRequest="20" />
-                        <Label
-                            x:Name="lblNotificationCount" FontSize="15"
-                            Margin="10,5,0,0"
-                            HorizontalOptions="CenterAndExpand"
-                            Style="{StaticResource lblMedium}"
-                            VerticalOptions="Start" />
+                            Style="{StaticResource frmNotification}">
+                            <Label x:Name="lblNotificationCount" Style="{StaticResource lblNotification}" />
+                        </Frame>
                         <Grid.GestureRecognizers>
                             <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgNotification_Tapped" />
                         </Grid.GestureRecognizers>
@@ -114,56 +98,72 @@
                         Text="We Support" />
                 </Grid>
 
-                <Grid Grid.Row="1">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="250" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
+                <Grid
+                    x:Name="GrdList"
+                    Grid.Row="1"
+                    RowSpacing="0">
 
                     <CarouselView
                         x:Name="cvWelcome"
-                        Grid.Row="0"
                         BackgroundColor="Transparent"
                         HorizontalScrollBarVisibility="Never"
                         IndicatorView="Indicators"
                         IsSwipeEnabled="True"
                         VerticalOptions="FillAndExpand"
                         VerticalScrollBarVisibility="Never">
-
                         <CarouselView.ItemTemplate>
                             <DataTemplate>
-                                <StackLayout Margin="0" Padding="0">
-                                    <Image
+                                <Grid
+                                    Margin="0"
+                                    Padding="10,0"
+                                    RowSpacing="50">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="250" />
+                                        <RowDefinition />
+                                    </Grid.RowDefinitions>
+                                    <ffImage:CachedImage
+                                        Margin="0"
                                         Aspect="AspectFit"
-                                        Source="{Binding ImageName}"
-                                        VerticalOptions="CenterAndExpand" />
-                                </StackLayout>
+                                        ErrorPlaceholder="imgUploadImage.png"
+                                        LoadingPlaceholder="imgUploadImage.png"
+                                        Source="{Binding ImageUrl}"
+                                        VerticalOptions="FillAndExpand" />
+
+                                    <Label
+                                        x:Name="lblDescription"
+                                        Grid.Row="1"
+                                        Margin="5,0"
+                                        HorizontalOptions="FillAndExpand"
+                                        HorizontalTextAlignment="Center"
+                                        Style="{StaticResource lblLight}"
+                                        Text="{Binding Description}"
+                                        TextColor="{StaticResource DarkGray}"
+                                        VerticalOptions="StartAndExpand" />
+                                </Grid>
                             </DataTemplate>
                         </CarouselView.ItemTemplate>
                     </CarouselView>
 
                     <IndicatorView
                         x:Name="Indicators"
-                        Grid.Row="1"
+                        Margin="0,250,0,0"
                         HeightRequest="30"
                         IndicatorColor="{StaticResource DarkGray}"
                         IndicatorSize="15"
                         Position="{Binding Source={x:Reference cvWelcome}, Path=Position}"
                         SelectedIndicatorColor="{StaticResource Green}"
-                        VerticalOptions="CenterAndExpand"
+                        VerticalOptions="StartAndExpand"
                         WidthRequest="30" />
-
-                    <StackLayout Grid.Row="2" Padding="20">
-                        <Label
-                            HorizontalOptions="CenterAndExpand"
-                            Style="{StaticResource lblLight}"
-                            Text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
-                            TextColor="{StaticResource DarkGray}" />
-                    </StackLayout>
-
                 </Grid>
 
+                <Label
+                    x:Name="lblNoRecord"
+                    Grid.Row="1"
+                    FontSize="15"
+                    HorizontalOptions="CenterAndExpand"
+                    IsVisible="false"
+                    Style="{StaticResource lblMedium}"
+                    Text="No affiliations found" />
             </Grid>
 
         </Grid>

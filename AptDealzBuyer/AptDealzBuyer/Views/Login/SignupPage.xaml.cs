@@ -16,11 +16,11 @@ namespace AptDealzBuyer.Views.Login
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class SignupPage : ContentPage
     {
-        #region Objects
+        #region [ Objects ]
         private bool isChecked = false;
         #endregion
 
-        #region Constructor
+        #region [ Constructor ]
         public SignupPage()
         {
             InitializeComponent();
@@ -28,7 +28,19 @@ namespace AptDealzBuyer.Views.Login
         }
         #endregion
 
-        #region Methods
+        #region [ Methods ]
+        public void Dispose()
+        {
+            GC.Collect();
+            GC.SuppressFinalize(this);
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            Dispose();
+        }
+
         protected override void OnAppearing()
         {
             base.OnAppearing();
@@ -134,7 +146,7 @@ namespace AptDealzBuyer.Views.Login
                 mRegister.FullName = txtFullName.Text;
                 mRegister.Email = txtEmailAddress.Text;
                 mRegister.PhoneNumber = txtPhoneNumber.Text;
-                mRegister.FirebaseVerificationId = Settings.firebaseVerificationId;
+                mRegister.FirebaseVerificationId = Settings.PhoneAuthToken;
                 mRegister.Latitude = App.latitude;
                 mRegister.Longitude = App.longitude;
             }
@@ -146,7 +158,7 @@ namespace AptDealzBuyer.Views.Login
             return mRegister;
         }
 
-        private async void RegisterUser()
+        private async Task RegisterUser()
         {
             try
             {
@@ -185,8 +197,7 @@ namespace AptDealzBuyer.Views.Login
                                     }
                                     else
                                     {
-                                        //Common.DisplayWarningMessage(keyValue.Value);
-                                        Settings.firebaseVerificationId = keyValue.Value;
+                                        //Common.DisplayWarningMessage(keyValue.Value);                                       
                                         Settings.PhoneAuthToken = keyValue.Value;
 
                                         mRegister.FirebaseVerificationId = Settings.PhoneAuthToken;
@@ -276,80 +287,34 @@ namespace AptDealzBuyer.Views.Login
                 return keyValuePairs;
             }
         }
-
-        private void NavigateToDashboard(Response mResponse)
-        {
-            try
-            {
-                if (mResponse != null && mResponse.Succeeded)
-                {
-                    var jObject = (Newtonsoft.Json.Linq.JObject)mResponse.Data;
-                    if (jObject != null)
-                    {
-                        var mBuyer = jObject.ToObject<Model.Request.Buyer>();
-                        if (mBuyer != null)
-                        {
-                            Settings.UserId = mBuyer.Id;
-                            Settings.RefreshToken = mBuyer.RefreshToken;
-                            Settings.LoginTrackingKey = mBuyer.LoginTrackingKey == "00000000-0000-0000-0000-000000000000" ? Settings.LoginTrackingKey : mBuyer.LoginTrackingKey;
-                            Common.Token = mBuyer.JwToken;
-
-                            App.Current.MainPage = new MasterData.MasterDataPage();
-                        }
-                    }
-                }
-                else
-                {
-                    if (mResponse != null)
-                        Common.DisplayErrorMessage(mResponse.Message);
-                    else
-                        Common.DisplayErrorMessage(Constraints.Something_Wrong);
-                }
-            }
-            catch (Exception ex)
-            {
-                Common.DisplayErrorMessage("SignupPage/NavigateToDashboard: " + ex.Message);
-            }
-        }
-
-        private Model.Request.AuthenticatePhone FillLogin()
-        {
-            Model.Request.AuthenticatePhone mLogin = new Model.Request.AuthenticatePhone();
-            try
-            {
-                mLogin.PhoneNumber = txtPhoneNumber.Text;
-                if (!Common.EmptyFiels(Settings.fcm_token))
-                {
-                    mLogin.FcmToken = Settings.fcm_token;
-                }
-                if (!Common.EmptyFiels(Settings.firebaseVerificationId))
-                {
-                    mLogin.FirebaseVerificationId = Settings.PhoneAuthToken;
-                }
-                else
-                {
-                    Common.DisplayErrorMessage(Constraints.Something_Wrong);
-                    return null;
-                }
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-            return mLogin;
-        }
         #endregion
 
         #region Events
-        private void ImgBack_Tapped(object sender, EventArgs e)
+        private async void ImgBack_Tapped(object sender, EventArgs e)
         {
             Common.BindAnimation(image: ImgBack);
-            Navigation.PopAsync();
+            await Navigation.PopAsync();
         }
 
-        private void StkLogin_Tapped(object sender, EventArgs e)
+        private async void StkLogin_Tapped(object sender, EventArgs e)
         {
-            Navigation.PopAsync();
+            var Tab = (StackLayout)sender;
+            if (Tab.IsEnabled)
+            {
+                try
+                {
+                    Tab.IsEnabled = false;
+                    await Navigation.PopAsync();
+                }
+                catch (Exception ex)
+                {
+                    Common.DisplayErrorMessage("SignupPage/StkLogin_Tapped: " + ex.Message);
+                }
+                finally
+                {
+                    Tab.IsEnabled = true;
+                }
+            }
         }
 
         private void StkAgreeTC_Tapped(object sender, EventArgs e)
@@ -373,16 +338,25 @@ namespace AptDealzBuyer.Views.Login
             }
         }
 
-        private void BtnGetOtp_Clicked(object sender, EventArgs e)
+        private async void BtnGetOtp_Clicked(object sender, EventArgs e)
         {
-            try
+            var Tab = (Button)sender;
+            if (Tab.IsEnabled)
             {
-                Common.BindAnimation(button: BtnGetOtp);
-                RegisterUser();
-            }
-            catch (Exception ex)
-            {
-                Common.DisplayErrorMessage("SignupPage/GetOtp_Tapped: " + ex.Message);
+                try
+                {
+                    Tab.IsEnabled = false;
+                    Common.BindAnimation(button: BtnGetOtp);
+                    await RegisterUser();
+                }
+                catch (Exception ex)
+                {
+                    Common.DisplayErrorMessage("SignupPage/GetOtp_Tapped: " + ex.Message);
+                }
+                finally
+                {
+                    Tab.IsEnabled = true;
+                }
             }
         }
 

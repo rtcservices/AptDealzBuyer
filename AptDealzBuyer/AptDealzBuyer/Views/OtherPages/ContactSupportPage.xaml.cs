@@ -1,6 +1,5 @@
 ﻿using Acr.UserDialogs;
 using AptDealzBuyer.API;
-using AptDealzBuyer.Model;
 using AptDealzBuyer.Model.Reponse;
 using AptDealzBuyer.Utility;
 using Newtonsoft.Json.Linq;
@@ -16,19 +15,19 @@ namespace AptDealzBuyer.Views.OtherPages
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ContactSupportPage : ContentPage
     {
-        #region Objects
+        #region [ Objects ]
         SupportChatAPI supportChatAPI;
         private List<ChatSupport> mMessageList;
         #endregion
 
-        #region Constructor
+        #region [ Constructor ]
         public ContactSupportPage()
         {
             InitializeComponent();
             supportChatAPI = new SupportChatAPI();
             mMessageList = new List<ChatSupport>();
 
-            MessagingCenter.Subscribe<string>(this, "NotificationCount", (count) =>
+            MessagingCenter.Unsubscribe<string>(this, "NotificationCount"); MessagingCenter.Subscribe<string>(this, "NotificationCount", (count) =>
             {
                 if (!Common.EmptyFiels(Common.NotificationCount))
                 {
@@ -44,7 +43,19 @@ namespace AptDealzBuyer.Views.OtherPages
         }
         #endregion
 
-        #region Methods
+        #region [ Methods ]
+        public void Dispose()
+        {
+            GC.Collect();
+            GC.SuppressFinalize(this);
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            Dispose();
+        }
+
         protected override void OnAppearing()
         {
             base.OnAppearing();
@@ -63,8 +74,14 @@ namespace AptDealzBuyer.Views.OtherPages
                 }
                 else
                 {
-                    mResponse = await supportChatAPI.SendChatSupportMessage(txtMessage.Text);
-
+                    if (!Common.EmptyFiels(txtMessage.Text))
+                    {
+                        mResponse = await supportChatAPI.SendChatSupportMessage(txtMessage.Text);
+                    }
+                    else
+                    {
+                        return;
+                    }
                 }
 
                 if (mResponse != null && mResponse.Succeeded)
@@ -109,6 +126,7 @@ namespace AptDealzBuyer.Views.OtherPages
                 }
                 else
                 {
+                    lstChar.IsVisible = false;
                     lblNoRecord.IsVisible = true;
                     if (mResponse != null && !Common.EmptyFiels(mResponse.Message))
                         lblNoRecord.Text = mResponse.Message;
@@ -135,9 +153,26 @@ namespace AptDealzBuyer.Views.OtherPages
             //Common.OpenMenu();
         }
 
-        private void ImgNotification_Tapped(object sender, EventArgs e)
+        private async void ImgNotification_Tapped(object sender, EventArgs e)
         {
-            Navigation.PushAsync(new DashboardPages.NotificationPage());
+            var Tab = (Grid)sender;
+            if (Tab.IsEnabled)
+            {
+                try
+                {
+                    Tab.IsEnabled = false;
+                    await Navigation.PushAsync(new DashboardPages.NotificationPage());
+                }
+                catch (Exception ex)
+                {
+                    Common.DisplayErrorMessage("ContactSupportPage/ImgNotification_Tapped: " + ex.Message);
+                }
+                finally
+                {
+                    Tab.IsEnabled = true;
+                }
+            }
+
         }
 
         private void ImgQuestion_Tapped(object sender, EventArgs e)
@@ -145,10 +180,10 @@ namespace AptDealzBuyer.Views.OtherPages
 
         }
 
-        private void ImgBack_Tapped(object sender, EventArgs e)
+        private async void ImgBack_Tapped(object sender, EventArgs e)
         {
             Common.BindAnimation(imageButton: ImgBack);
-            Navigation.PopAsync();
+            await Navigation.PopAsync();
         }
 
         private void BtnLogo_Clicked(object sender, EventArgs e)
@@ -158,8 +193,24 @@ namespace AptDealzBuyer.Views.OtherPages
 
         private async void BtnSend_Clicked(object sender, EventArgs e)
         {
-            Common.BindAnimation(imageButton: BtnSend);
-            await GetMessages(false);
+            var Tab = (ImageButton)sender;
+            if (Tab.IsEnabled)
+            {
+                try
+                {
+                    Tab.IsEnabled = false;
+                    Common.BindAnimation(imageButton: BtnSend);
+                    await GetMessages(false);
+                }
+                catch (Exception ex)
+                {
+                    Common.DisplayErrorMessage("ContactSupportPage/BtnSend_Clicked: " + ex.Message);
+                }
+                finally
+                {
+                    Tab.IsEnabled = true;
+                }
+            }
         }
 
         private void lstChar_ItemTapped(object sender, ItemTappedEventArgs e)

@@ -3,13 +3,13 @@ using AptDealzBuyer.API;
 using AptDealzBuyer.Model.Request;
 using AptDealzBuyer.Repository;
 using AptDealzBuyer.Utility;
-using AptDealzBuyer.Views.MasterData;
 using AptDealzBuyer.Views.PopupPages;
 using Newtonsoft.Json.Linq;
 using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -19,41 +19,50 @@ namespace AptDealzBuyer.Views.MainTabbedPages
 
     public partial class ActiveRequirementView : ContentView
     {
-        #region Objects      
+        #region [ Objects ]      
         private List<Requirement> mRequirements;
-        private string filterBy = "";
+        private string filterBy = SortByField.Date.ToString();
         private string title = string.Empty;
-        private bool? sortBy = null;
+        private bool? isAssending = false;
         private readonly int pageSize = 10;
         private int pageNo;
         #endregion
 
-        #region Constructor
+        #region [ Constructor ]
         public ActiveRequirementView()
         {
-            InitializeComponent();
-            mRequirements = new List<Requirement>();
-            pageNo = 1;
-            GetActiveRequirements(filterBy, title, sortBy);
-
-            MessagingCenter.Subscribe<string>(this, "NotificationCount", (count) =>
+            try
             {
-                if (!Common.EmptyFiels(Common.NotificationCount))
+                InitializeComponent();
+                mRequirements = new List<Requirement>();
+                pageNo = 1;
+                mRequirements.Clear();
+                GetActiveRequirements(filterBy, title, isAssending);
+
+                MessagingCenter.Unsubscribe<string>(this, "NotificationCount");
+                MessagingCenter.Subscribe<string>(this, "NotificationCount", (count) =>
                 {
-                    lblNotificationCount.Text = count;
-                    frmNotification.IsVisible = true;
-                }
-                else
-                {
-                    frmNotification.IsVisible = false;
-                    lblNotificationCount.Text = string.Empty;
-                }
-            });
+                    if (!Common.EmptyFiels(Common.NotificationCount))
+                    {
+                        lblNotificationCount.Text = count;
+                        frmNotification.IsVisible = true;
+                    }
+                    else
+                    {
+                        frmNotification.IsVisible = false;
+                        lblNotificationCount.Text = string.Empty;
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("ActiveRequirementView/Ctor: " + ex.Message);
+            }
         }
         #endregion
 
-        #region Methods
-        private async void GetActiveRequirements(string FilterBy = "", string Title = "", bool? SortBy = null, bool isLoader = true)
+        #region [ Methods ]
+        private async Task GetActiveRequirements(string FilterBy = "", string Title = "", bool? SortBy = null, bool isLoader = true)
         {
             try
             {
@@ -83,10 +92,10 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 {
                     lstRequirements.IsVisible = false;
                     lblNoRecord.IsVisible = true;
-                    //if (mResponse != null && mResponse.Message != null)
-                    //{
-                    //    lblNoRecord.Text = mResponse.Message;
-                    //}
+                    if (mResponse != null && mResponse.Message != null)
+                    {
+                        lblNoRecord.Text = mResponse.Message;
+                    }
                 }
             }
             catch (Exception ex)
@@ -121,16 +130,16 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             }
         }
 
-        private async void DeleteRequirement(string requirmentId)
+        private async Task DeleteRequirement(string requirmentId)
         {
             try
             {
-                var isDelete = await DependencyService.Get<IDeleteRepository>().DeleteRequirement(requirmentId);
+                var isDelete = await DependencyService.Get<IRequirementRepository>().DeleteRequirement(requirmentId);
                 if (isDelete)
                 {
                     pageNo = 1;
                     mRequirements.Clear();
-                    GetActiveRequirements(filterBy, title, sortBy);
+                    await GetActiveRequirements(filterBy, title, isAssending);
                 }
             }
             catch (Exception ex)
@@ -144,16 +153,34 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         }
         #endregion
 
-        #region Events
+        #region [ Events ]
+        #region [ Header Navigation ]
         private void ImgMenu_Tapped(object sender, EventArgs e)
         {
             Common.BindAnimation(image: ImgMenu);
             //Common.OpenMenu();
         }
 
-        private void ImgNotification_Tapped(object sender, EventArgs e)
+        private async void ImgNotification_Tapped(object sender, EventArgs e)
         {
-            Navigation.PushAsync(new DashboardPages.NotificationPage());
+            var Tab = (Grid)sender;
+            if (Tab.IsEnabled)
+            {
+                try
+                {
+                    Tab.IsEnabled = false;
+                    await Navigation.PushAsync(new DashboardPages.NotificationPage());
+                }
+                catch (Exception ex)
+                {
+                    Common.DisplayErrorMessage("ActiveRequirementView/ImgNotification_Tapped: " + ex.Message);
+                }
+                finally
+                {
+                    Tab.IsEnabled = true;
+                }
+            }
+
         }
 
         private void ImgQuestion_Tapped(object sender, EventArgs e)
@@ -167,29 +194,107 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
         }
 
-        private void FrmSortBy_Tapped(object sender, EventArgs e)
+        private void BtnLogo_Clicked(object sender, EventArgs e)
+        {
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
+        }
+        #endregion
+
+        #region [ Filtering ]
+        private async void FrmSortBy_Tapped(object sender, EventArgs e)
         {
             try
             {
                 if (ImgSort.Source.ToString().Replace("File: ", "") == Constraints.Sort_ASC)
                 {
                     ImgSort.Source = Constraints.Sort_DSC;
-                    sortBy = false;
+                    isAssending = false;
                 }
                 else
                 {
                     ImgSort.Source = Constraints.Sort_ASC;
-                    sortBy = true;
+                    isAssending = true;
                 }
 
                 pageNo = 1;
-                GetActiveRequirements(filterBy, title, sortBy);
+                mRequirements.Clear();
+                await GetActiveRequirements(filterBy, title, isAssending);
             }
             catch (Exception ex)
             {
                 Common.DisplayErrorMessage("ActiveRequirementView/FrmSortBy_Tapped: " + ex.Message);
             }
         }
+
+        private async void FrmFilterBy_Tapped(object sender, EventArgs e)
+        {
+            var Tab = (Frame)sender;
+            if (Tab.IsEnabled)
+            {
+                try
+                {
+                    Tab.IsEnabled = false;
+                    var sortby = new FilterPopup(filterBy, "Active");
+                    sortby.isRefresh += async (s1, e1) =>
+                    {
+                        string result = s1.ToString();
+                        if (!Common.EmptyFiels(result))
+                        {
+                            filterBy = result;
+                            if (filterBy == SortByField.ID.ToString())
+                            {
+                                lblFilterBy.Text = filterBy;
+                            }
+                            else
+                            {
+                                lblFilterBy.Text = filterBy.ToCamelCase();
+                            }
+                            pageNo = 1;
+                            mRequirements.Clear();
+                            await GetActiveRequirements(filterBy, title, isAssending);
+                        }
+                    };
+                    await PopupNavigation.Instance.PushAsync(sortby);
+                }
+                catch (Exception ex)
+                {
+                    Common.DisplayErrorMessage("ActiveRequirementView/CustomEntry_Unfocused: " + ex.Message);
+                }
+                finally
+                {
+                    Tab.IsEnabled = true;
+                }
+            }
+        }
+
+        private async void entrSearch_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                pageNo = 1;
+                if (!Common.EmptyFiels(entrSearch.Text))
+                {
+                    await GetActiveRequirements(filterBy, entrSearch.Text, isAssending, false);
+                }
+                else
+                {
+                    pageNo = 1;
+                    mRequirements.Clear();
+                    await GetActiveRequirements(filterBy, title, isAssending);
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("ActiveRequirementView/CustomEntry_Unfocused: " + ex.Message);
+            }
+        }
+
+        private void BtnClose_Clicked(object sender, EventArgs e)
+        {
+            entrSearch.Text = string.Empty;
+            BindList(mRequirements);
+        }
+        #endregion
 
         private void ImgExpand_Tapped(object sender, EventArgs e)
         {
@@ -226,50 +331,75 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             }
         }
 
-        private void GrdViewRequirement_Tapped(object sender, EventArgs e)
+        private async void GrdViewRequirement_Tapped(object sender, EventArgs e)
         {
-            try
+            var GridExp = (Grid)sender;
+            if (GridExp.IsEnabled)
             {
-                var GridExp = (Grid)sender;
-                var mRequirement = GridExp.BindingContext as Requirement;
-                Navigation.PushAsync(new DashboardPages.ViewRequirememntPage("active", mRequirement.RequirementId));
+                try
+                {
+                    GridExp.IsEnabled = false;
+                    var mRequirement = GridExp.BindingContext as Requirement;
+                    await Navigation.PushAsync(new DashboardPages.ViewRequirememntPage(mRequirement.RequirementId));
 
-            }
-            catch (Exception ex)
-            {
-                Common.DisplayErrorMessage("ActiveRequirementView/GrdViewRequirement_Tapped: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    Common.DisplayErrorMessage("ActiveRequirementView/GrdViewRequirement_Tapped: " + ex.Message);
+                }
+                finally
+                {
+                    GridExp.IsEnabled = true;
+                }
             }
         }
 
-        private void ImgDelete_Tapped(object sender, EventArgs e)
+        #region [ Listing ]
+        private async void ImgDelete_Tapped(object sender, EventArgs e)
         {
-            try
+            var imgExp = (Image)sender;
+            if (imgExp.IsEnabled)
             {
-                var imgExp = (Image)sender;
-                var mRequirement = imgExp.BindingContext as Requirement;
-                DeleteRequirement(mRequirement.RequirementId);
-            }
-            catch (Exception ex)
-            {
-                Common.DisplayErrorMessage("ActiveRequirementView/ImgDelete_Tapped: " + ex.Message);
+                try
+                {
+                    imgExp.IsEnabled = false;
+                    var mRequirement = imgExp.BindingContext as Requirement;
+                    await DeleteRequirement(mRequirement.RequirementId);
+                }
+                catch (Exception ex)
+                {
+                    Common.DisplayErrorMessage("ActiveRequirementView/ImgDelete_Tapped: " + ex.Message);
+                }
+                finally
+                {
+                    imgExp.IsEnabled = true;
+                }
             }
         }
 
-        private void FrmDelete_Tapped(object sender, EventArgs e)
+        private async void FrmDelete_Tapped(object sender, EventArgs e)
         {
-            try
+            var Tab = (Frame)sender;
+            if (Tab.IsEnabled)
             {
-                var imgExp = (Frame)sender;
-                var mRequirement = imgExp.BindingContext as Requirement;
-                DeleteRequirement(mRequirement.RequirementId);
-            }
-            catch (Exception ex)
-            {
-                Common.DisplayErrorMessage("ActiveRequirementView/FrmDelete_Tapped: " + ex.Message);
+                try
+                {
+                    Tab.IsEnabled = false;
+                    var mRequirement = Tab.BindingContext as Requirement;
+                    await DeleteRequirement(mRequirement.RequirementId);
+                }
+                catch (Exception ex)
+                {
+                    Common.DisplayErrorMessage("ActiveRequirementView/FrmDelete_Tapped: " + ex.Message);
+                }
+                finally
+                {
+                    Tab.IsEnabled = true;
+                }
             }
         }
 
-        private void lstRequirements_ItemAppearing(object sender, ItemVisibilityEventArgs e)
+        private async void lstRequirements_ItemAppearing(object sender, ItemVisibilityEventArgs e)
         {
             try
             {
@@ -289,7 +419,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
 
                         if (this.mRequirements.Count() >= totalAspectedRow)
                         {
-                            GetActiveRequirements(filterBy, title, sortBy, false);
+                            await GetActiveRequirements(filterBy, title, isAssending, false);
                         }
                     }
                     else
@@ -309,69 +439,21 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             }
         }
 
-        private void lstRequirements_Refreshing(object sender, EventArgs e)
+        private async void lstRequirements_Refreshing(object sender, EventArgs e)
         {
             lstRequirements.IsRefreshing = true;
             pageNo = 1;
             mRequirements.Clear();
-            GetActiveRequirements(filterBy, title, sortBy);
+            await GetActiveRequirements(filterBy, title, isAssending);
             lstRequirements.IsRefreshing = false;
         }
-
-        private void entrSearch_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            try
-            {
-                pageNo = 1;
-                if (!Common.EmptyFiels(entrSearch.Text))
-                {
-                    GetActiveRequirements(filterBy, entrSearch.Text, sortBy, false);
-                }
-                else
-                {
-                    GetActiveRequirements(filterBy, title, sortBy);
-                }
-            }
-            catch (Exception ex)
-            {
-                Common.DisplayErrorMessage("ActiveRequirementView/CustomEntry_Unfocused: " + ex.Message);
-            }
-        }
-
-        private void BtnClose_Clicked(object sender, EventArgs e)
-        {
-            entrSearch.Text = string.Empty;
-            BindList(mRequirements);
-        }
-
-        private void FrmFilterBy_Tapped(object sender, EventArgs e)
-        {
-            try
-            {
-                var sortby = new FilterPopup(filterBy, "Active");
-                sortby.isRefresh += (s1, e1) =>
-                {
-                    string result = s1.ToString();
-                    if (!Common.EmptyFiels(result))
-                    {
-                        filterBy = result;
-                        lblFilterBy.Text = filterBy.ToCamelCase();
-                        pageNo = 1;
-                        GetActiveRequirements(filterBy, title, sortBy);
-                    }
-                };
-                PopupNavigation.Instance.PushAsync(sortby);
-            }
-            catch (Exception ex)
-            {
-                Common.DisplayErrorMessage("ActiveRequirementView/CustomEntry_Unfocused: " + ex.Message);
-            }
-        }
-
-        private void BtnLogo_Clicked(object sender, EventArgs e)
-        {
-            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
-        }
         #endregion
+
+        #endregion
+
+        private void lstRequirements_ItemTapped(object sender, ItemTappedEventArgs e)
+        {
+            lstRequirements.SelectedItem = null;
+        }
     }
 }

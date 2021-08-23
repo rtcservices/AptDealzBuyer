@@ -1,7 +1,5 @@
-﻿using Newtonsoft.Json;
-using Polly;
+﻿using Polly;
 using System;
-using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -25,7 +23,6 @@ namespace AptDealzBuyer.Utility
                         var auth = sender?.Headers?.Authorization;
                         return true;
                     },
-
                     MaxRequestContentBufferSize = 2097151,  // 2097151Kb = 2Gb.
                 }, false);
 

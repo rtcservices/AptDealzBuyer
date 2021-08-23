@@ -45,30 +45,13 @@
                     ColumnDefinitions="*,*"
                     HorizontalOptions="EndAndExpand">
                     <Grid>
-                        <Image
-                            Margin="0"
-                            HeightRequest="30"
-                            HorizontalOptions="CenterAndExpand"
-                            Source="iconNotification.png"
-                            VerticalOptions="CenterAndExpand"
-                            WidthRequest="30" />
+                        <Image Source="iconNotification.png" Style="{StaticResource imgNotification}" />
                         <Frame
-                            x:Name="frmNotification" HasShadow="False"
-                            Margin="10,5,0,0"
-                            Padding="0"
-                            BackgroundColor="{StaticResource Orange}"
-                            CornerRadius="10"
-                            HeightRequest="20"
-                            HorizontalOptions="CenterAndExpand"
+                            x:Name="frmNotification"
                             IsVisible="false"
-                            VerticalOptions="StartAndExpand"
-                            WidthRequest="20" />
-                        <Label
-                            x:Name="lblNotificationCount" FontSize="15"
-                            Margin="10,5,0,0"
-                            HorizontalOptions="CenterAndExpand"
-                            Style="{StaticResource lblMedium}"
-                            VerticalOptions="Start" />
+                            Style="{StaticResource frmNotification}">
+                            <Label x:Name="lblNotificationCount" Style="{StaticResource lblNotification}" />
+                        </Frame>
                         <Grid.GestureRecognizers>
                             <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgNotification_Tapped" />
                         </Grid.GestureRecognizers>
@@ -114,49 +97,51 @@
                         Text="Deactivate Account" />
                 </Grid>
 
-                <ScrollView Grid.Row="1" Style="{StaticResource scrPrimary}">
+                <ContentView Grid.Row="1" IsClippedToBounds="True">
+                    <ScrollView Style="{StaticResource scrPrimary}">
 
-                    <Grid
-                        Padding="20,0,20,20"
-                        RowDefinitions="Auto,Auto,*"
-                        RowSpacing="15">
+                        <Grid
+                            Padding="20,0,20,20"
+                            RowDefinitions="Auto,Auto,*"
+                            RowSpacing="15">
 
-                        <Label
-                            Grid.Row="0"
-                            HorizontalOptions="FillAndExpand"
-                            LineBreakMode="WordWrap"
-                            Style="{StaticResource lblLight}"
-                            Text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged."
-                            VerticalOptions="FillAndExpand" />
+                            <Label
+                                Grid.Row="0"
+                                HorizontalOptions="FillAndExpand"
+                                LineBreakMode="WordWrap"
+                                Style="{StaticResource lblLight}"
+                                Text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged."
+                                VerticalOptions="FillAndExpand" />
 
-                        <Frame
-                            Grid.Row="1"
-                            Margin="0"
-                            Padding="10"
-                            BackgroundColor="Transparent"
-                            BorderColor="{StaticResource LightGray}"
-                            CornerRadius="5"
-                            HasShadow="False"
-                            HorizontalOptions="FillAndExpand"
-                            VerticalOptions="FillAndExpand">
-                            <Editor
-                                x:Name="txtReason"
-                                AutoSize="TextChanges"
-                                Placeholder="Reason for Deactivation:"
-                                Style="{StaticResource edPrimary}" />
-                        </Frame>
+                            <Frame
+                                Grid.Row="1"
+                                Margin="0"
+                                Padding="10"
+                                BackgroundColor="Transparent"
+                                BorderColor="{StaticResource LightGray}"
+                                CornerRadius="5"
+                                HasShadow="False"
+                                HorizontalOptions="FillAndExpand"
+                                VerticalOptions="FillAndExpand">
+                                <Editor
+                                    x:Name="txtReason"
+                                    AutoSize="TextChanges"
+                                    Placeholder="Reason for Deactivation:"
+                                    Style="{StaticResource edPrimary}" />
+                            </Frame>
 
-                        <Button
-                            x:Name="BtnDeactivation"
-                            Grid.Row="2"
-                            Clicked="BtnDeactivation_Clicked"
-                            Style="{StaticResource btnPrimary}"
-                            Text="Confirm Account Deactivation"
-                            VerticalOptions="EndAndExpand" />
+                            <Button
+                                x:Name="BtnDeactivation"
+                                Grid.Row="2"
+                                Clicked="BtnDeactivation_Clicked"
+                                Style="{StaticResource btnPrimary}"
+                                Text="Confirm Account Deactivation"
+                                VerticalOptions="EndAndExpand" />
 
-                    </Grid>
+                        </Grid>
 
-                </ScrollView>
+                    </ScrollView>
+                </ContentView>
 
             </Grid>
         </Grid>

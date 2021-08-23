@@ -18,7 +18,7 @@ namespace AptDealzBuyer.Views.DashboardPages
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class PostNewRequiremntPage : ContentPage
     {
-        #region Objects     
+        #region [ Objects ]     
         private BuyerDetails mBuyerDetail;
         private List<Category> mCategories;
         private List<SubCategory> mSubCategories;
@@ -30,29 +30,48 @@ namespace AptDealzBuyer.Views.DashboardPages
         private bool isInsurance = false;
         #endregion
 
-        #region Constructor
+        #region [ Constructor ]
         public PostNewRequiremntPage()
         {
             InitializeComponent();
             BindProperties();
 
-            MessagingCenter.Subscribe<string>(this, "NotificationCount", (count) =>
+            try
             {
-                if (!Common.EmptyFiels(Common.NotificationCount))
-                {
-                    lblNotificationCount.Text = count;
-                    frmNotification.IsVisible = true;
-                }
-                else
-                {
-                    frmNotification.IsVisible = false;
-                    lblNotificationCount.Text = string.Empty;
-                }
-            });
+                MessagingCenter.Unsubscribe<string>(this, "NotificationCount"); MessagingCenter.Subscribe<string>(this, "NotificationCount", (count) =>
+                   {
+                       if (!Common.EmptyFiels(Common.NotificationCount))
+                       {
+                           lblNotificationCount.Text = count;
+                           frmNotification.IsVisible = true;
+                       }
+                       else
+                       {
+                           frmNotification.IsVisible = false;
+                           lblNotificationCount.Text = string.Empty;
+                       }
+                   });
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("PostNewRequiremntPage/Ctor: " + ex.Message);
+            }
         }
         #endregion
 
-        #region Methods    
+        #region [ Methods ]    
+        public void Dispose()
+        {
+            GC.Collect();
+            GC.SuppressFinalize(this);
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            Dispose();
+        }
+
         #region [ Get / Bind Data ]
         private void BindProperties()
         {
@@ -130,7 +149,7 @@ namespace AptDealzBuyer.Views.DashboardPages
         {
             try
             {
-                mCategories = await DependencyService.Get<ICategoryRepository>().GetCategory();
+                mCategories = await DependencyService.Get<IProfileRepository>().GetCategory();
                 if (mCategories != null || mCategories.Count > 0)
                 {
                     pkCategory.ItemsSource = mCategories.Select(x => x.Name).ToList();
@@ -152,7 +171,7 @@ namespace AptDealzBuyer.Views.DashboardPages
         {
             try
             {
-                mSubCategories = await DependencyService.Get<ICategoryRepository>().GetSubCategory(categoryId);
+                mSubCategories = await DependencyService.Get<IProfileRepository>().GetSubCategory(categoryId);
                 pkSubCategory.ItemsSource = mSubCategories.Select(x => x.Name).ToList();
             }
             catch (Exception ex)
@@ -662,7 +681,7 @@ namespace AptDealzBuyer.Views.DashboardPages
             return mRequirement;
         }
 
-        private async void SubmitRequirement()
+        private async Task SubmitRequirement()
         {
             try
             {
@@ -696,7 +715,7 @@ namespace AptDealzBuyer.Views.DashboardPages
                     var mResponse = await requirementAPI.CreateRequirement(mRequirement);
                     if (mResponse != null && mResponse.Succeeded)
                     {
-                        SuccessfullRequirement(mResponse.Message);
+                        SuccessfullRequirementAsync(mResponse.Message);
                         ClearPropeties();
                     }
                     else
@@ -718,21 +737,21 @@ namespace AptDealzBuyer.Views.DashboardPages
             }
         }
 
-        private void SuccessfullRequirement(string MessageString)
+        private async Task SuccessfullRequirementAsync(string MessageString)
         {
             try
             {
                 var successPopup = new PopupPages.SuccessPopup(MessageString);
-                successPopup.isRefresh += (s1, e1) =>
+                successPopup.isRefresh += async (s1, e1) =>
                 {
                     bool res = (bool)s1;
                     if (res)
                     {
-                        Navigation.PopAsync();
+                        await Navigation.PopAsync();
                     }
                 };
 
-                PopupNavigation.Instance.PushAsync(successPopup);
+                await PopupNavigation.Instance.PushAsync(successPopup);
             }
             catch (Exception ex)
             {
@@ -853,16 +872,33 @@ namespace AptDealzBuyer.Views.DashboardPages
         }
         #endregion
 
-        #region Events    
+        #region [ Events ]   
+        #region [ Header Navigation ]
         private void ImgMenu_Tapped(object sender, EventArgs e)
         {
             Common.BindAnimation(image: ImgMenu);
             //Common.OpenMenu();
         }
 
-        private void ImgNotification_Tapped(object sender, EventArgs e)
+        private async void ImgNotification_Tapped(object sender, EventArgs e)
         {
-            Navigation.PushAsync(new DashboardPages.NotificationPage());
+            var Tab = (Grid)sender;
+            if (Tab.IsEnabled)
+            {
+                try
+                {
+                    Tab.IsEnabled = false;
+                    await Navigation.PushAsync(new NotificationPage());
+                }
+                catch (Exception ex)
+                {
+                    Common.DisplayErrorMessage("PostNewRequiremntPage/ImgNotification_Tapped: " + ex.Message);
+                }
+                finally
+                {
+                    Tab.IsEnabled = true;
+                }
+            }
         }
 
         private void ImgQuestion_Tapped(object sender, EventArgs e)
@@ -870,11 +906,12 @@ namespace AptDealzBuyer.Views.DashboardPages
 
         }
 
-        private void ImgBack_Tapped(object sender, EventArgs e)
+        private async void ImgBack_Tapped(object sender, EventArgs e)
         {
             Common.BindAnimation(imageButton: ImgBack);
-            Navigation.PopAsync();
+            await Navigation.PopAsync();
         }
+        #endregion
 
         private void BtnUnits_Clicked(object sender, EventArgs e)
         {
@@ -972,16 +1009,6 @@ namespace AptDealzBuyer.Views.DashboardPages
             }
         }
 
-        private void BtnCategory_Clicked(object sender, EventArgs e)
-        {
-            pkCategory.Focus();
-        }
-
-        private void BtnSubCategory_Clicked(object sender, EventArgs e)
-        {
-            pkSubCategory.Focus();
-        }
-
         private void pkSubCategory_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
@@ -990,16 +1017,22 @@ namespace AptDealzBuyer.Views.DashboardPages
                 {
                     selectedSubCategory.Clear();
                     selectedSubCategory.Add(pkSubCategory.SelectedItem.ToString());
-
-                    //if (selectedSubCategory.Where(x => x == pkSubCategory.SelectedItem.ToString()).Count() == 0)
-                    //{
-                    //}
                 }
             }
             catch (Exception ex)
             {
                 Common.DisplayErrorMessage("PostNewRequiremntPage/pkSubCategory_SelectedIndexChanged: " + ex.Message);
             }
+        }
+
+        private void BtnCategory_Clicked(object sender, EventArgs e)
+        {
+            pkCategory.Focus();
+        }
+
+        private void BtnSubCategory_Clicked(object sender, EventArgs e)
+        {
+            pkSubCategory.Focus();
         }
         #endregion
 
@@ -1012,7 +1045,6 @@ namespace AptDealzBuyer.Views.DashboardPages
         {
             try
             {
-
                 UserDialogs.Instance.ShowLoading(Constraints.Loading);
                 ImageConvertion.SelectedImagePath = ImgProductImage;
                 ImageConvertion.SetNullSource((int)FileUploadCategory.RequirementImages);
@@ -1067,10 +1099,26 @@ namespace AptDealzBuyer.Views.DashboardPages
         }
         #endregion
 
-        private void BtnSubmitRequirement_Clicked(object sender, EventArgs e)
+        private async void BtnSubmitRequirement_Clicked(object sender, EventArgs e)
         {
-            Common.BindAnimation(button: BtnSubmitRequirement);
-            SubmitRequirement();
+            var Tab = (Button)sender;
+            if (Tab.IsEnabled)
+            {
+                try
+                {
+                    Tab.IsEnabled = false;
+                    Common.BindAnimation(button: BtnSubmitRequirement);
+                    await SubmitRequirement();
+                }
+                catch (Exception ex)
+                {
+                    Common.DisplayErrorMessage("PostNewRequiremntPage/BtnSubmitRequirement: " + ex.Message);
+                }
+                finally
+                {
+                    Tab.IsEnabled = true;
+                }
+            }
         }
 
         private void BtnLogo_Clicked(object sender, EventArgs e)

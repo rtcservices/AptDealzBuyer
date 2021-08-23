@@ -15,7 +15,7 @@ namespace AptDealzBuyer.Views.Orders
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class RaiseGrievancePage : ContentPage
     {
-        #region Objects
+        #region [ Objects ]
         private string relativePath = string.Empty;
         private string ErrorMessage = string.Empty;
         private List<string> mComplaintTypeList;
@@ -23,34 +23,53 @@ namespace AptDealzBuyer.Views.Orders
         private string OrderId;
         #endregion
 
-        #region Constructor
+        #region [ Constructor ]
         public RaiseGrievancePage(string OrderId)
         {
-            InitializeComponent();
-            this.OrderId = OrderId;
-            mComplaintTypeList = new List<string>();
-            documentList = new List<string>();
-
-            BindComplaintType();
-            GetGrievancesDetails();
-
-            MessagingCenter.Subscribe<string>(this, "NotificationCount", (count) =>
+            try
             {
-                if (!Common.EmptyFiels(Common.NotificationCount))
+                InitializeComponent();
+                this.OrderId = OrderId;
+                mComplaintTypeList = new List<string>();
+                documentList = new List<string>();
+
+                BindComplaintType();
+                GetOrderDetails();
+
+                MessagingCenter.Unsubscribe<string>(this, "NotificationCount"); MessagingCenter.Subscribe<string>(this, "NotificationCount", (count) =>
                 {
-                    lblNotificationCount.Text = count;
-                    frmNotification.IsVisible = true;
-                }
-                else
-                {
-                    frmNotification.IsVisible = false;
-                    lblNotificationCount.Text = string.Empty;
-                }
-            });
+                    if (!Common.EmptyFiels(Common.NotificationCount))
+                    {
+                        lblNotificationCount.Text = count;
+                        frmNotification.IsVisible = true;
+                    }
+                    else
+                    {
+                        frmNotification.IsVisible = false;
+                        lblNotificationCount.Text = string.Empty;
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("RaiseGrievancePage/Ctor: " + ex.Message);
+            }
         }
         #endregion
 
-        #region Methods
+        #region [ Methods ]
+        public void Dispose()
+        {
+            GC.Collect();
+            GC.SuppressFinalize(this);
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            Dispose();
+        }
+
         public void BindComplaintType()
         {
             try
@@ -62,18 +81,14 @@ namespace AptDealzBuyer.Views.Orders
             }
             catch (Exception ex)
             {
-                Common.DisplayErrorMessage("OrderDetailsPage/OrderStatusList: " + ex.Message);
+                Common.DisplayErrorMessage("RaiseGrievancePage/OrderStatusList: " + ex.Message);
             }
         }
 
-        private async Task GetGrievancesDetails()
+        private async Task GetOrderDetails()
         {
             try
             {
-
-                //mGrievance = await DependencyService.Get<IGrievanceRepository>().GetGrievancesDetails(OrderId);
-                //if (mGrievance != null)
-                //{
                 var mOrder = await DependencyService.Get<IOrderRepository>().GetOrderDetails(OrderId);
                 if (mOrder != null)
                 {
@@ -93,11 +108,11 @@ namespace AptDealzBuyer.Views.Orders
                     lblTotalAmount.Text = "Rs " + mOrder.TotalAmount;
                     lblOrderStatus.Text = mOrder.OrderStatusDescr;
                 }
-                //}
+
             }
             catch (Exception ex)
             {
-                Common.DisplayErrorMessage("GrievanceDetailsPage/GetGrievancesDetails: " + ex.Message);
+                Common.DisplayErrorMessage("RaiseGrievancePage/GetGrievancesDetails: " + ex.Message);
             }
         }
 
@@ -157,6 +172,7 @@ namespace AptDealzBuyer.Views.Orders
                 return null;
             }
         }
+
         public async Task CreateGrievance()
         {
             try
@@ -201,16 +217,32 @@ namespace AptDealzBuyer.Views.Orders
         }
         #endregion
 
-        #region MyRegion       
+        #region [ Events ]     
         private void ImgMenu_Tapped(object sender, EventArgs e)
         {
             Common.BindAnimation(image: ImgMenu);
             //Common.OpenMenu();
         }
 
-        private void ImgNotification_Tapped(object sender, EventArgs e)
+        private async void ImgNotification_Tapped(object sender, EventArgs e)
         {
-            Navigation.PushAsync(new DashboardPages.NotificationPage());
+            var Tab = (Grid)sender;
+            if (Tab.IsEnabled)
+            {
+                try
+                {
+                    Tab.IsEnabled = false;
+                    await Navigation.PushAsync(new DashboardPages.NotificationPage());
+                }
+                catch (Exception ex)
+                {
+                    Common.DisplayErrorMessage("RaiseGrievancePage/ImgNotification_Tapped: " + ex.Message);
+                }
+                finally
+                {
+                    Tab.IsEnabled = true;
+                }
+            }
         }
 
         private void ImgQuestion_Tapped(object sender, EventArgs e)
@@ -218,10 +250,10 @@ namespace AptDealzBuyer.Views.Orders
 
         }
 
-        private void ImgBack_Tapped(object sender, EventArgs e)
+        private async void ImgBack_Tapped(object sender, EventArgs e)
         {
             Common.BindAnimation(imageButton: ImgBack);
-            Navigation.PopAsync();
+            await Navigation.PopAsync();
         }
 
         private void ImgType_Tapped(object sender, EventArgs e)
@@ -231,8 +263,24 @@ namespace AptDealzBuyer.Views.Orders
 
         private async void BtnSubmit_Clicked(object sender, EventArgs e)
         {
-            Common.BindAnimation(button: BtnSubmit);
-            await CreateGrievance();
+            var Tab = (Button)sender;
+            if (Tab.IsEnabled)
+            {
+                try
+                {
+                    Tab.IsEnabled = false;
+                    Common.BindAnimation(button: BtnSubmit);
+                    await CreateGrievance();
+                }
+                catch (Exception ex)
+                {
+                    Common.DisplayErrorMessage("RaiseGrievancePage/BtnSubmit_Clicked: " + ex.Message);
+                }
+                finally
+                {
+                    Tab.IsEnabled = true;
+                }
+            }
         }
 
         private async void UploadProductImage_Tapped(object sender, EventArgs e)
@@ -267,15 +315,29 @@ namespace AptDealzBuyer.Views.Orders
         {
             Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
         }
-        #endregion
 
         private void Picker_Unfocused(object sender, FocusEventArgs e)
         {
-            var picker = (Picker)sender;
-            if (picker.SelectedIndex != -1)
+            try
             {
-                FrmType.BorderColor = (Color)App.Current.Resources["LightGray"];
+                var picker = (Picker)sender;
+                if (picker.SelectedIndex != -1)
+                {
+                    FrmType.BorderColor = (Color)App.Current.Resources["LightGray"];
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("RaiseGrievancePage/Picker_Unfocused: " + ex.Message);
             }
         }
+
+        private async void RefreshView_Refreshing(object sender, EventArgs e)
+        {
+            rfView.IsRefreshing = true;
+            await GetOrderDetails();
+            rfView.IsRefreshing = false;
+        }
+        #endregion
     }
 }

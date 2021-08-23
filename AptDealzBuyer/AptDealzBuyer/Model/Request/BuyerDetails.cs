@@ -5,7 +5,6 @@ namespace AptDealzBuyer.Model.Request
 {
     public class BuyerDetails
     {
-
         [JsonProperty("userId")]
         public string UserId { get; set; }
 

@@ -45,32 +45,13 @@
                     ColumnDefinitions="*,*"
                     HorizontalOptions="EndAndExpand">
                     <Grid>
-                        <Image
-                            Margin="0"
-                            HeightRequest="30"
-                            HorizontalOptions="CenterAndExpand"
-                            Source="iconNotification.png"
-                            VerticalOptions="CenterAndExpand"
-                            WidthRequest="30" />
+                        <Image Source="iconNotification.png" Style="{StaticResource imgNotification}" />
                         <Frame
                             x:Name="frmNotification"
-                            Margin="10,5,0,0"
-                            Padding="0"
-                            BackgroundColor="{StaticResource Orange}"
-                            CornerRadius="10"
-                            HasShadow="False"
-                            HeightRequest="20"
-                            HorizontalOptions="CenterAndExpand"
                             IsVisible="false"
-                            VerticalOptions="StartAndExpand"
-                            WidthRequest="20" />
-                        <Label
-                            x:Name="lblNotificationCount"
-                            Margin="10,5,0,0"
-                            FontSize="15"
-                            HorizontalOptions="CenterAndExpand"
-                            Style="{StaticResource lblMedium}"
-                            VerticalOptions="Start" />
+                            Style="{StaticResource frmNotification}">
+                            <Label x:Name="lblNotificationCount" Style="{StaticResource lblNotification}" />
+                        </Frame>
                         <Grid.GestureRecognizers>
                             <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgNotification_Tapped" />
                         </Grid.GestureRecognizers>
@@ -131,13 +112,8 @@
                     <Frame
                         x:Name="FrmSearchBy"
                         Grid.Row="0"
-                        Margin="0"
-                        Padding="0"
-                        BackgroundColor="Transparent"
                         BorderColor="Transparent"
-                        CornerRadius="5"
-                        HasShadow="False"
-                        IsClippedToBounds="True">
+                        Style="{StaticResource frmBlank}">
 
                         <Grid BackgroundColor="Transparent">
                             <Grid.ColumnDefinitions>
@@ -185,7 +161,7 @@
                                 <Image
                                     x:Name="ImgSort"
                                     Grid.Column="0"
-                                    Source="iconSortASC.png"
+                                    Source="iconSortDSC.png"
                                     Style="{StaticResource imgSorting}" />
                                 <Label
                                     Grid.Column="1"
@@ -234,6 +210,7 @@
                     Margin="0,5"
                     IsPullToRefreshEnabled="True"
                     ItemAppearing="lstRequirements_ItemAppearing"
+                    ItemTapped="lstRequirements_ItemTapped"
                     Refreshing="lstRequirements_Refreshing"
                     Style="{StaticResource lstPrimary}">
                     <ListView.ItemTemplate>
@@ -309,13 +286,13 @@
                                                     FontSize="{Binding NameFont, Mode=TwoWay}"
                                                     HorizontalOptions="StartAndExpand"
                                                     Style="{StaticResource lblLight}"
-                                                    Text="{Binding CreatedDate, StringFormat='{}{0:dd/MM/yyyy}'}" />
+                                                    Text="{Binding CreatedDate, StringFormat='{0:dd/MM/yyyy}'}" />
 
                                                 <Image
                                                     x:Name="ImgDelete"
                                                     Grid.Column="1"
                                                     Margin="0,0,0,0"
-                                                    Aspect="Fill"
+                                                    Aspect="AspectFit"
                                                     HeightRequest="25"
                                                     HorizontalOptions="EndAndExpand"
                                                     Source="iconDelete.png"
@@ -359,13 +336,13 @@
                                                     Margin="0"
                                                     HorizontalOptions="StartAndExpand"
                                                     Style="{StaticResource lblLight}"
-                                                    Text="{Binding CreatedDate, StringFormat='{}{0:dd/MM/yyyy}'}" />
+                                                    Text="{Binding CreatedDate, StringFormat='{0:dd/MM/yyyy}'}" />
 
                                                 <Label
                                                     Margin="0"
                                                     HorizontalOptions="EndAndExpand"
                                                     Style="{StaticResource lblLight}"
-                                                    Text="{Binding TotalQuotes}" />
+                                                    Text="{Binding Quotes, Converter={converter:IntToTotalQuotes}}" />
 
                                             </StackLayout>
 

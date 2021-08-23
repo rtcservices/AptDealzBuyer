@@ -284,6 +284,13 @@ namespace AptDealzBuyer.Utility
         Failed = 3
     }
 
+    public enum RevealContactStatus
+    {
+        Pending = 1,
+        Success = 2,
+        Failure = 3
+    }
+
     public enum QuoteStatus
     {
         Submitted = 1,

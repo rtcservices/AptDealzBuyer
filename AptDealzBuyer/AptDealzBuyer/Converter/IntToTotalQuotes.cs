@@ -1,26 +1,25 @@
-﻿using AptDealzBuyer.Utility;
-using System;
+﻿using System;
 using System.Globalization;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 namespace AptDealzBuyer.Converter
 {
-    public class StringToArrowImage : IValueConverter, IMarkupExtension
+    public class IntToTotalQuotes : IValueConverter, IMarkupExtension
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value != null)
             {
-                var UpDownArrow = string.Empty;
-                if (UpDownArrow == Constraints.Arrow_Right)
-                    return Constraints.Arrow_Down;
+                var QuoteCount = (int)value;
+                if (QuoteCount > 1)
+                    return QuoteCount + " Quotes";
                 else
-                    return Constraints.Arrow_Right;
+                    return QuoteCount + " Quote";
             }
             else
             {
-                return Constraints.Arrow_Right;
+                return value + " Quote";
             }
         }
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

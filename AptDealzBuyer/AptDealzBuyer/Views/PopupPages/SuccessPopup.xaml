@@ -31,12 +31,11 @@
 
             <Label
                 Grid.Row="1"
-                FontFamily="Poppins-Medium"
                 FontSize="18"
                 HorizontalOptions="CenterAndExpand"
+                Style="{StaticResource lblMedium}"
                 Text="Success"
-                TextColor="{StaticResource Green}"
-                VerticalOptions="CenterAndExpand" />
+                TextColor="{StaticResource Green}" />
 
             <Label
                 x:Name="lblMessage"

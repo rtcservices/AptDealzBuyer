@@ -19,14 +19,12 @@ namespace AptDealzBuyer.Views.MainTabbedPages
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class AccountView : ContentView, INotifyPropertyChanged
     {
-        #region Properties
+        #region [ Properties ]
         public event PropertyChangedEventHandler PropertyChanged;
-
         protected void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
 
         private ObservableCollection<string> _mCountriesData;
         public ObservableCollection<string> mCountriesData
@@ -40,7 +38,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         }
         #endregion
 
-        #region Objects          
+        #region [ Objects ]          
         private ProfileAPI profileAPI;
         private BuyerDetails mBuyerDetail;
         private string relativePath;
@@ -48,31 +46,39 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         private bool isUpdatPhoto = false;
         #endregion
 
-        #region Constructor
+        #region [ Constructor ]
         public AccountView()
         {
-            InitializeComponent();
-            txtFullName.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
-            BtnUpdate.IsEnabled = false;
-            BindProperties();
-
-            MessagingCenter.Subscribe<string>(this, "NotificationCount", (count) =>
+            try
             {
-                if (!Common.EmptyFiels(Common.NotificationCount))
+                InitializeComponent();
+                txtFullName.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
+                BtnUpdate.IsEnabled = false;
+                BindProperties();
+
+                MessagingCenter.Unsubscribe<string>(this, "NotificationCount");
+                MessagingCenter.Subscribe<string>(this, "NotificationCount", (count) =>
                 {
-                    lblNotificationCount.Text = count;
-                    frmNotification.IsVisible = true;
-                }
-                else
-                {
-                    frmNotification.IsVisible = false;
-                    lblNotificationCount.Text = string.Empty;
-                }
-            });
+                    if (!Common.EmptyFiels(Common.NotificationCount))
+                    {
+                        lblNotificationCount.Text = count;
+                        frmNotification.IsVisible = true;
+                    }
+                    else
+                    {
+                        frmNotification.IsVisible = false;
+                        lblNotificationCount.Text = string.Empty;
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("AccountView/Ctor: " + ex.Message);
+            }
         }
         #endregion
 
-        #region Methods       
+        #region [ Methods ]       
         private async void BindProperties()
         {
             try
@@ -376,7 +382,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             }
         }
 
-        private async void UpdateProfile()
+        private async Task UpdateProfile()
         {
             try
             {
@@ -395,9 +401,9 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                         var updateId = mResponse.Data;
                         if (updateId != null)
                         {
+                            BtnUpdate.IsEnabled = false;
                             var successPopup = new PopupPages.SuccessPopup(mResponse.Message);
                             await PopupNavigation.Instance.PushAsync(successPopup);
-                            BtnUpdate.IsEnabled = false;
                         }
                     }
                     else
@@ -406,6 +412,8 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                             Common.DisplayErrorMessage(mResponse.Message);
                         else
                             Common.DisplayErrorMessage(Constraints.Something_Wrong);
+
+                        BtnUpdate.IsEnabled = true;
                     }
                 }
             }
@@ -419,7 +427,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             }
         }
 
-        private async void DoLogout()
+        private async Task DoLogout()
         {
             try
             {
@@ -431,7 +439,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                     var mResponse = await authenticationAPI.Logout(Settings.RefreshToken, Settings.LoginTrackingKey);
                     if (mResponse != null && mResponse.Succeeded)
                     {
-                        Common.DisplaySuccessMessage(mResponse.Message);
+                        //Common.DisplaySuccessMessage(mResponse.Message);
                     }
                     else
                     {
@@ -440,10 +448,13 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                     }
 
                     Settings.EmailAddress = string.Empty;
-                    Settings.UserToken = string.Empty;
                     Settings.RefreshToken = string.Empty;
                     Settings.LoginTrackingKey = string.Empty;
+                    Settings.UserToken = string.Empty;
+                    Settings.PhoneAuthToken = string.Empty;
+                    Settings.UserId = string.Empty;
 
+                    //Settings.fcm_token = string.Empty; don't empty this token
                     App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
                 }
             }
@@ -523,16 +534,33 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         }
         #endregion
 
-        #region Events       
+        #region [ Events ]        
         private void ImgMenu_Tapped(object sender, EventArgs e)
         {
             Common.BindAnimation(image: ImgMenu);
             //Common.OpenMenu();
         }
 
-        private void ImgNotification_Tapped(object sender, EventArgs e)
+        private async void ImgNotification_Tapped(object sender, EventArgs e)
         {
-            Navigation.PushAsync(new DashboardPages.NotificationPage());
+            var Tab = (Grid)sender;
+            if (Tab.IsEnabled)
+            {
+                try
+                {
+                    Tab.IsEnabled = false;
+                    await Navigation.PushAsync(new DashboardPages.NotificationPage());
+                }
+                catch (Exception ex)
+                {
+                    Common.DisplayErrorMessage("AccountView/ImgNotification_Tapped: " + ex.Message);
+                }
+                finally
+                {
+                    Tab.IsEnabled = true;
+                }
+            }
+
         }
 
         private void ImgQuestion_Tapped(object sender, EventArgs e)
@@ -546,16 +574,40 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
         }
 
-        private void BtnUpdate_Clicked(object sender, EventArgs e)
+        private async void BtnUpdate_Clicked(object sender, EventArgs e)
         {
-            Common.BindAnimation(button: BtnUpdate);
-            UpdateProfile();
+            try
+            {
+                BtnUpdate.IsEnabled = false;
+                Common.BindAnimation(button: BtnUpdate);
+                await UpdateProfile();
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("AccountView/BtnUpdate_Clicked: " + ex.Message);
+            }
         }
 
-        private void BtnDeactivate_Clicked(object sender, EventArgs e)
+        private async void BtnDeactivate_Clicked(object sender, EventArgs e)
         {
-            Common.BindAnimation(button: BtnDeactivate);
-            Navigation.PushAsync(new OtherPages.DeactivateAccountPage());
+            var Tab = (Button)sender;
+            if (Tab.IsEnabled)
+            {
+                try
+                {
+                    Tab.IsEnabled = false;
+                    Common.BindAnimation(button: BtnDeactivate);
+                    await Navigation.PushAsync(new OtherPages.DeactivateAccountPage());
+                }
+                catch (Exception ex)
+                {
+                    Common.DisplayErrorMessage("AccountView/BtnDeactivate_Clicked: " + ex.Message);
+                }
+                finally
+                {
+                    Tab.IsEnabled = true;
+                }
+            }
         }
 
         private async void ImgCamera_Tapped(object sender, EventArgs e)
@@ -585,10 +637,26 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             }
         }
 
-        private void Logout_Tapped(object sender, EventArgs e)
+        private async void Logout_Tapped(object sender, EventArgs e)
         {
-            Common.BindAnimation(button: BtnLogout);
-            DoLogout();
+            var Tab = (Button)sender;
+            if (Tab.IsEnabled)
+            {
+                try
+                {
+                    Tab.IsEnabled = false;
+                    Common.BindAnimation(button: BtnLogout);
+                    await DependencyService.Get<IAuthenticationRepository>().DoLogout();
+                }
+                catch (Exception ex)
+                {
+                    Common.DisplayErrorMessage("AccountView/Logout_Tapped: " + ex.Message);
+                }
+                finally
+                {
+                    Tab.IsEnabled = true;
+                }
+            }
         }
 
         int i = 0;
@@ -639,6 +707,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                     // User hit Enter from the search box. Use args.QueryText to determine what to do.
                     pkNationality.Unfocus();
                 }
+                HasUpdateProfileDetail();
             }
             catch (Exception ex)
             {

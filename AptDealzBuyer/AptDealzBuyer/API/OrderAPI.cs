@@ -5,8 +5,6 @@ using AptDealzBuyer.Utility;
 using Newtonsoft.Json;
 using Plugin.Connectivity;
 using System;
-using System.IO;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -60,17 +58,13 @@ namespace AptDealzBuyer.API
                         }
                         else
                         {
-                            if (responseJson.Contains("TokenExpired"))
+                            if (responseJson.Contains("TokenExpired") || response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                             {
                                 var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
                                 if (!isRefresh)
                                 {
                                     Common.DisplayErrorMessage(Constraints.Session_Expired);
                                     App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                                }
-                                else
-                                {
-                                    await GetOrdersForBuyer(Status, Title, SortBy, IsAscending, PageNumber, PageSize);
                                 }
                             }
                             else
@@ -130,17 +124,13 @@ namespace AptDealzBuyer.API
                         }
                         else
                         {
-                            if (responseJson.Contains("TokenExpired"))
+                            if (responseJson.Contains("TokenExpired") || response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                             {
                                 var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
                                 if (!isRefresh)
                                 {
                                     Common.DisplayErrorMessage(Constraints.Session_Expired);
                                     App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                                }
-                                else
-                                {
-                                    await GetOrderDetailsForBuyer(orderId);
                                 }
                             }
                             else
@@ -208,17 +198,13 @@ namespace AptDealzBuyer.API
                         }
                         else
                         {
-                            if (responseJson.Contains("TokenExpired"))
+                            if (responseJson.Contains("TokenExpired") || response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                             {
                                 var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
                                 if (!isRefresh)
                                 {
                                     Common.DisplayErrorMessage(Constraints.Session_Expired);
                                     App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                                }
-                                else
-                                {
-                                    await GetShippedOrdersForBuyer(Title, SortBy, IsAscending, PageNumber, PageSize);
                                 }
                             }
                             else
@@ -333,21 +319,24 @@ namespace AptDealzBuyer.API
                         }
                         else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
                         {
-                            Common.DisplayErrorMessage(Constraints.Something_Wrong_Server);
+                            if (responseJson.Contains("duplicate"))
+                            {
+                                mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
+                            }
+                            else
+                            {
+                                Common.DisplayErrorMessage(Constraints.Something_Wrong_Server);
+                            }
                         }
                         else
                         {
-                            if (responseJson.Contains("TokenExpired"))
+                            if (responseJson.Contains("TokenExpired") || response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                             {
                                 var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
                                 if (!isRefresh)
                                 {
                                     Common.DisplayErrorMessage(Constraints.Session_Expired);
                                     App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                                }
-                                else
-                                {
-                                    await CreateOrder(mCreateOrder);
                                 }
                             }
                             else
@@ -409,17 +398,13 @@ namespace AptDealzBuyer.API
                         }
                         else
                         {
-                            if (responseJson.Contains("TokenExpired"))
+                            if (responseJson.Contains("TokenExpired") || response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                             {
                                 var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
                                 if (!isRefresh)
                                 {
                                     Common.DisplayErrorMessage(Constraints.Session_Expired);
                                     App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                                }
-                                else
-                                {
-                                    await CreateOrderPayment(mOrderPayment);
                                 }
                             }
                             else
@@ -483,17 +468,13 @@ namespace AptDealzBuyer.API
                         }
                         else
                         {
-                            if (responseJson.Contains("TokenExpired"))
+                            if (responseJson.Contains("TokenExpired") || response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                             {
                                 var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
                                 if (!isRefresh)
                                 {
                                     Common.DisplayErrorMessage(Constraints.Session_Expired);
                                     App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                                }
-                                else
-                                {
-                                    await CancelOrder(orderId);
                                 }
                             }
                             else
@@ -516,6 +497,74 @@ namespace AptDealzBuyer.API
                 mResponse.Succeeded = false;
                 mResponse.Errors = ex.Message;
                 Common.DisplayErrorMessage("OrderAPI/CancelOrder: " + ex.Message);
+            }
+            return mResponse;
+        }
+
+        public async Task<Response> ConfirmDeliveryFromBuyer(string orderId)
+        {
+            Response mResponse = new Response();
+            try
+            {
+                if (CrossConnectivity.Current.IsConnected)
+                {
+                    string requestJson = "{\"orderId\":\"" + orderId + "\"}";
+                    using (var hcf = new HttpClientFactory(token: Common.Token))
+                    {
+                        string url = string.Format(EndPointURL.ConfirmDeliveryFromBuyer, (int)App.Current.Resources["Version"], orderId);
+                        var response = await hcf.PutAsync(url, requestJson);
+                        var responseJson = await response.Content.ReadAsStringAsync();
+                        if (response.IsSuccessStatusCode)
+                        {
+                            mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
+                        }
+                        else if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                        {
+                            var errorString = JsonConvert.DeserializeObject<string>(responseJson);
+                            if (errorString == Constraints.Session_Expired)
+                            {
+                                App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
+                            }
+                        }
+                        else if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
+                        {
+                            Common.DisplayErrorMessage(Constraints.ServiceUnavailable);
+                        }
+                        else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
+                        {
+                            Common.DisplayErrorMessage(Constraints.Something_Wrong_Server);
+                        }
+                        else
+                        {
+                            if (responseJson.Contains("TokenExpired") || response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                            {
+                                var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
+                                if (!isRefresh)
+                                {
+                                    Common.DisplayErrorMessage(Constraints.Session_Expired);
+                                    App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
+                                }
+                            }
+                            else
+                            {
+                                mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    if (await Common.InternetConnection())
+                    {
+                        await ConfirmDeliveryFromBuyer(orderId);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                mResponse.Succeeded = false;
+                mResponse.Errors = ex.Message;
+                Common.DisplayErrorMessage("OrderAPI/ConfirmDeliveryFromBuyer: " + ex.Message);
             }
             return mResponse;
         }

@@ -49,17 +49,13 @@ namespace AptDealzBuyer.API
                         }
                         else
                         {
-                            if (responseJson.Contains("TokenExpired"))
+                            if (responseJson.Contains("TokenExpired") || response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                             {
                                 var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
                                 if (!isRefresh)
                                 {
                                     Common.DisplayErrorMessage(Constraints.Session_Expired);
                                     App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                                }
-                                else
-                                {
-                                    await GetMyProfileData();
                                 }
                             }
                             else
@@ -227,17 +223,13 @@ namespace AptDealzBuyer.API
                         }
                         else
                         {
-                            if (responseJson.Contains("TokenExpired"))
+                            if (responseJson.Contains("TokenExpired") || response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                             {
                                 var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
                                 if (!isRefresh)
                                 {
                                     Common.DisplayErrorMessage(Constraints.Session_Expired);
                                     App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                                }
-                                else
-                                {
-                                    await DeactiviateUser(userId);
                                 }
                             }
                             else
@@ -299,17 +291,13 @@ namespace AptDealzBuyer.API
                         }
                         else
                         {
-                            if (responseJson.Contains("TokenExpired"))
+                            if (responseJson.Contains("TokenExpired") || response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                             {
                                 var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
                                 if (!isRefresh)
                                 {
                                     Common.DisplayErrorMessage(Constraints.Session_Expired);
                                     App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                                }
-                                else
-                                {
-                                    await FileUpload(mFileUpload);
                                 }
                             }
                             else
@@ -332,79 +320,6 @@ namespace AptDealzBuyer.API
                 mResponse.Succeeded = false;
                 mResponse.Errors = ex.Message;
                 Common.DisplayErrorMessage("ProfileAPI/FileUpload: " + ex.Message);
-            }
-            return mResponse;
-        }
-
-        public async Task<Response> GetUserProfileByEmail(string email)
-        {
-            Response mResponse = new Response();
-            try
-            {
-                if (CrossConnectivity.Current.IsConnected)
-                {
-                    string requestJson = "{\"email\":\"" + email + "\"}";
-
-                    using (var hcf = new HttpClientFactory(token: Common.Token))
-                    {
-                        string url = string.Format(EndPointURL.GetUserProfileByEmail, (int)App.Current.Resources["Version"]);
-                        var response = await hcf.PostAsync(url, requestJson);
-                        var responseJson = await response.Content.ReadAsStringAsync();
-                        if (response.IsSuccessStatusCode)
-                        {
-                            mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
-                        {
-                            var errorString = JsonConvert.DeserializeObject<string>(responseJson);
-                            if (errorString == Constraints.Session_Expired)
-                            {
-                                App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                            }
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
-                        {
-                            Common.DisplayErrorMessage(Constraints.ServiceUnavailable);
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
-                        {
-                            Common.DisplayErrorMessage(Constraints.Something_Wrong_Server);
-                        }
-                        else
-                        {
-                            if (responseJson.Contains("TokenExpired"))
-                            {
-                                var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
-                                if (!isRefresh)
-                                {
-                                    Common.DisplayErrorMessage(Constraints.Session_Expired);
-                                    App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                                }
-                                else
-                                {
-                                    await GetUserProfileByEmail(email);
-                                }
-                            }
-                            else
-                            {
-                                mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    if (await Common.InternetConnection())
-                    {
-                        await GetUserProfileByEmail(email);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                mResponse.Succeeded = false;
-                mResponse.Errors = ex.Message;
-                Common.DisplayErrorMessage("ProfileAPI/GetUserProfileByEmail: " + ex.Message);
             }
             return mResponse;
         }
@@ -446,17 +361,13 @@ namespace AptDealzBuyer.API
                         }
                         else
                         {
-                            if (responseJson.Contains("TokenExpired"))
+                            if (responseJson.Contains("TokenExpired") || response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                             {
                                 var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
                                 if (!isRefresh)
                                 {
                                     Common.DisplayErrorMessage(Constraints.Session_Expired);
                                     App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                                }
-                                else
-                                {
-                                    await SaveProfile(mBuyerDetails);
                                 }
                             }
                             else

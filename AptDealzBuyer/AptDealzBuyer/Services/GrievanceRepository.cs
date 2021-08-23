@@ -46,5 +46,35 @@ namespace AptDealzBuyer.Services
             }
             return mGrievance;
         }
+
+        public async Task SubmitGrievanceResponse(string GrievanceId, string Message)
+        {
+            try
+            {
+                UserDialogs.Instance.ShowLoading(Constraints.Loading);
+                var mResponse = await grievanceAPI.SubmitGrievanceResponseFromBuyer(GrievanceId, Message);
+                if (mResponse != null && mResponse.Succeeded)
+                {
+                    if (!(bool)mResponse.Data)                        
+                        Common.DisplayErrorMessage(mResponse.Message);
+                }
+                else
+                {
+                    if (mResponse != null && !Common.EmptyFiels(mResponse.Message))
+                        Common.DisplayErrorMessage(mResponse.Message);
+                    else
+                        Common.DisplayErrorMessage(Constraints.Something_Wrong);
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("GrievanceRepository/SubmitGrievanceResponse: " + ex.Message);
+            }
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
+            }
+
+        }
     }
 }

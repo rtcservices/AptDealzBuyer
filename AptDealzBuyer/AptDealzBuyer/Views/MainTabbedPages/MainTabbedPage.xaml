@@ -38,6 +38,7 @@
                 <Grid
                     x:Name="stkHome"
                     Grid.Column="0"
+                    ClassId="Home"
                     HorizontalOptions="FillAndExpand"
                     RowSpacing="0">
                     <Grid.RowDefinitions>
@@ -61,13 +62,14 @@
                         Style="{StaticResource lblLight}"
                         Text="Home" />
                     <Grid.GestureRecognizers>
-                        <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="StkHome_Tapped" />
+                        <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="Tab_Tapped" />
                     </Grid.GestureRecognizers>
                 </Grid>
 
                 <Grid
                     x:Name="stkRequirements"
                     Grid.Column="1"
+                    ClassId="Requirements"
                     HorizontalOptions="FillAndExpand"
                     RowSpacing="0">
                     <Grid.RowDefinitions>
@@ -91,13 +93,14 @@
                         Style="{StaticResource lblLight}"
                         Text="Requirements" />
                     <Grid.GestureRecognizers>
-                        <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="StkRequirements_Tapped" />
+                        <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="Tab_Tapped" />
                     </Grid.GestureRecognizers>
                 </Grid>
 
                 <Grid
                     x:Name="stkOrders"
                     Grid.Column="2"
+                    ClassId="Order"
                     HorizontalOptions="FillAndExpand"
                     RowSpacing="0">
                     <Grid.RowDefinitions>
@@ -121,13 +124,14 @@
                         Style="{StaticResource lblLight}"
                         Text="Orders" />
                     <Grid.GestureRecognizers>
-                        <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="StkOrders_Tapped" />
+                        <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="Tab_Tapped" />
                     </Grid.GestureRecognizers>
                 </Grid>
 
                 <Grid
                     x:Name="stkAccount"
                     Grid.Column="3"
+                    ClassId="Profile"
                     HorizontalOptions="FillAndExpand"
                     RowSpacing="0">
                     <Grid.RowDefinitions>
@@ -151,7 +155,7 @@
                         Style="{StaticResource lblLight}"
                         Text="Account" />
                     <Grid.GestureRecognizers>
-                        <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="StkAccount_Tapped" />
+                        <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="Tab_Tapped" />
                     </Grid.GestureRecognizers>
                 </Grid>
             </Grid>

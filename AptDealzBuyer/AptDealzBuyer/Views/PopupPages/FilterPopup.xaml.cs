@@ -9,12 +9,12 @@ namespace AptDealzBuyer.Views.PopupPages
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class FilterPopup : PopupPage
     {
-        #region Objects       
+        #region [ Objects ]      
         public event EventHandler isRefresh;
         private string PageName;
         #endregion
 
-        #region Constructor        
+        #region [ Constructor ]       
         public FilterPopup(string SortBy, string SortPageName)
         {
             InitializeComponent();
@@ -23,7 +23,7 @@ namespace AptDealzBuyer.Views.PopupPages
         }
         #endregion
 
-        #region Methos
+        #region [ Methos ]
         protected override bool OnBackgroundClicked()
         {
             base.OnBackgroundClicked();
@@ -128,7 +128,7 @@ namespace AptDealzBuyer.Views.PopupPages
         }
         #endregion
 
-        #region Events
+        #region [ Events ]
         private void StkFirstType_Tapped(object sender, EventArgs e)
         {
             try

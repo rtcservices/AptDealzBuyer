@@ -1,6 +1,4 @@
-﻿using AptDealzBuyer.Model.Reponse;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace AptDealzBuyer.Repository
 {

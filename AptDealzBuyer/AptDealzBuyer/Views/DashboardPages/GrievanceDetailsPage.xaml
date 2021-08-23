@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:converter="clr-namespace:AptDealzBuyer.Converter"
     xmlns:ffImage="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+    xmlns:ffTransformer="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
     xmlns:iOS="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
     xmlns:pan="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
     iOS:Page.UseSafeArea="True"
@@ -42,39 +43,21 @@
                     Grid.Column="1"
                     Clicked="BtnLogo_Clicked"
                     Style="{StaticResource imgLogo}" />
-
+                <!--  FontFamily="Poppins-Medium"  -->
                 <Grid
                     Grid.Column="2"
                     Margin="0,0,10,0"
                     ColumnDefinitions="*,*"
                     HorizontalOptions="EndAndExpand">
                     <Grid>
-                        <Image
-                            Margin="0"
-                            HeightRequest="30"
-                            HorizontalOptions="CenterAndExpand"
-                            Source="iconNotification.png"
-                            VerticalOptions="CenterAndExpand"
-                            WidthRequest="30" />
+                        <Image Source="iconNotification.png" Style="{StaticResource imgNotification}" />
                         <Frame
                             x:Name="frmNotification"
-                            Margin="10,5,0,0"
-                            Padding="0"
-                            BackgroundColor="{StaticResource Orange}"
-                            CornerRadius="10"
-                            HasShadow="False"
-                            HeightRequest="20"
-                            HorizontalOptions="CenterAndExpand"
                             IsVisible="false"
-                            VerticalOptions="StartAndExpand"
-                            WidthRequest="20" />
-                        <Label
-                            x:Name="lblNotificationCount"
-                            Margin="10,5,0,0"
-                            FontSize="15"
-                            HorizontalOptions="CenterAndExpand"
-                            Style="{StaticResource lblMedium}"
-                            VerticalOptions="Start" />
+                            Style="{StaticResource frmNotification}">
+                            <Label x:Name="lblNotificationCount" Style="{StaticResource lblNotification}" />
+                        </Frame>
+
                         <Grid.GestureRecognizers>
                             <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgNotification_Tapped" />
                         </Grid.GestureRecognizers>
@@ -124,7 +107,7 @@
                     Grid.Row="1"
                     Refreshing="RefreshView_Refreshing">
                     <ScrollView Style="{StaticResource scrPrimary}">
-                        <Grid RowDefinitions="Auto,*" RowSpacing="0">
+                        <Grid RowDefinitions="Auto,Auto,*" RowSpacing="0">
 
                             <!--  Details  -->
                             <Grid
@@ -227,20 +210,16 @@
                                 <!--  Buyer Name  -->
                                 <StackLayout Grid.Row="4">
                                     <StackLayout Margin="20,0" Orientation="Horizontal">
-
                                         <Label
                                             HorizontalOptions="StartAndExpand"
                                             Style="{StaticResource lblLight}"
-                                            Text="Buyer Name" />
-
+                                            Text="Seller Name" />
                                         <Label
-                                            x:Name="lblBuyeName"
+                                            x:Name="lblSellerName"
                                             FontSize="15"
                                             HorizontalOptions="EndAndExpand"
                                             Style="{StaticResource lblMedium}" />
-
                                     </StackLayout>
-
                                     <BoxView Style="{StaticResource boxHorizontal}" />
                                 </StackLayout>
 
@@ -287,10 +266,14 @@
                                 <StackLayout Grid.Row="7" Spacing="0">
                                     <Label
                                         Margin="20,0"
+                                        HorizontalOptions="StartAndExpand"
                                         Style="{StaticResource lblLight}"
                                         Text="Attached documents" />
 
-                                    <Grid Padding="20,0" HeightRequest="40">
+                                    <Grid
+                                        Padding="20,0"
+                                        HeightRequest="40"
+                                        HorizontalOptions="StartAndExpand">
                                         <Label
                                             x:Name="lblAttachDocument"
                                             Style="{StaticResource lblLight}"
@@ -319,17 +302,12 @@
                                 </StackLayout>
                             </Grid>
 
+                            <!--  Description / Msg list  -->
                             <Grid
                                 Grid.Row="1"
-                                Padding="20"
-                                RowSpacing="15">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="*" />
-                                    <RowDefinition Height="*" />
-                                </Grid.RowDefinitions>
-
+                                Padding="20,20,20,0"
+                                RowDefinitions="Auto,Auto"
+                                RowSpacing="0">
                                 <!--  Description  -->
                                 <Frame
                                     Grid.Row="0"
@@ -342,8 +320,7 @@
                                 <ListView
                                     x:Name="lstResponse"
                                     Grid.Row="1"
-                                    Margin="0"
-                                    ItemSelected="lstResponse_ItemSelected"
+                                    ItemTapped="lstResponse_ItemTapped"
                                     Style="{StaticResource lstPrimary}">
                                     <ListView.ItemTemplate>
                                         <DataTemplate>
@@ -359,31 +336,22 @@
 
                                                     <Grid Margin="0" ColumnDefinitions="Auto,*,Auto">
 
-                                                        <Frame
+                                                        <ffImage:CachedImage
                                                             Grid.Column="0"
                                                             Margin="0"
-                                                            Padding="0"
-                                                            BackgroundColor="Transparent"
-                                                            BorderColor="Transparent"
-                                                            CornerRadius="25"
-                                                            HasShadow="False"
+                                                            Aspect="AspectFill"
+                                                            ErrorPlaceholder="iconUserAccount.png"
                                                             HeightRequest="50"
-                                                            HorizontalOptions="CenterAndExpand"
-                                                            IsClippedToBounds="True"
+                                                            HorizontalOptions="FillAndExpand"
                                                             IsVisible="{Binding IsContact}"
-                                                            VerticalOptions="CenterAndExpand"
+                                                            LoadingPlaceholder="iconUserAccount.png"
+                                                            Source="{Binding ResponseFromUserProfileImage}"
+                                                            VerticalOptions="StartAndExpand"
                                                             WidthRequest="50">
-                                                            <ffImage:CachedImage
-                                                                Margin="0"
-                                                                Aspect="AspectFill"
-                                                                ErrorPlaceholder="iconUserAccount.png"
-                                                                HeightRequest="50"
-                                                                HorizontalOptions="CenterAndExpand"
-                                                                LoadingPlaceholder="iconUserAccount.png"
-                                                                Source="{Binding ResponseFromUserProfileImage}"
-                                                                VerticalOptions="CenterAndExpand"
-                                                                WidthRequest="50" />
-                                                        </Frame>
+                                                            <ffImage:CachedImage.Transformations>
+                                                                <ffTransformer:CircleTransformation BorderHexColor="006027" BorderSize="20" />
+                                                            </ffImage:CachedImage.Transformations>
+                                                        </ffImage:CachedImage>
 
                                                         <Grid
                                                             Grid.Column="1"
@@ -423,31 +391,22 @@
                                                             </StackLayout>
                                                         </Grid>
 
-                                                        <Frame
+                                                        <ffImage:CachedImage
                                                             Grid.Column="2"
                                                             Margin="0"
-                                                            Padding="0"
-                                                            BackgroundColor="Transparent"
-                                                            BorderColor="Transparent"
-                                                            CornerRadius="25"
-                                                            HasShadow="False"
+                                                            Aspect="AspectFill"
+                                                            ErrorPlaceholder="iconUserAccount.png"
                                                             HeightRequest="50"
-                                                            HorizontalOptions="CenterAndExpand"
-                                                            IsClippedToBounds="True"
+                                                            HorizontalOptions="FillAndExpand"
                                                             IsVisible="{Binding IsUser}"
-                                                            VerticalOptions="CenterAndExpand"
+                                                            LoadingPlaceholder="iconUserAccount.png"
+                                                            Source="{Binding ResponseFromUserProfileImage}"
+                                                            VerticalOptions="StartAndExpand"
                                                             WidthRequest="50">
-                                                            <ffImage:CachedImage
-                                                                Margin="0"
-                                                                Aspect="AspectFill"
-                                                                ErrorPlaceholder="iconUserAccount.png"
-                                                                HeightRequest="50"
-                                                                HorizontalOptions="CenterAndExpand"
-                                                                LoadingPlaceholder="iconUserAccount.png"
-                                                                Source="{Binding ResponseFromUserProfileImage}"
-                                                                VerticalOptions="CenterAndExpand"
-                                                                WidthRequest="50" />
-                                                        </Frame>
+                                                            <ffImage:CachedImage.Transformations>
+                                                                <ffTransformer:CircleTransformation BorderHexColor="006027" BorderSize="20" />
+                                                            </ffImage:CachedImage.Transformations>
+                                                        </ffImage:CachedImage>
                                                     </Grid>
                                                 </pan:PancakeView>
                                             </ViewCell>
@@ -459,15 +418,23 @@
                                 <Label
                                     x:Name="lblNoRecord"
                                     Grid.Row="1"
+                                    Margin="0,10"
                                     FontSize="15"
                                     HorizontalOptions="CenterAndExpand"
                                     IsVisible="false"
                                     Style="{StaticResource lblMedium}"
                                     Text="No response found" />
+                            </Grid>
 
-                                <!--  Message  -->
+                            <!--  Enter Message / Submit button  -->
+                            <Grid
+                                Grid.Row="2"
+                                Padding="20,0,20,20"
+                                RowDefinitions="Auto,Auto"
+                                RowSpacing="15"
+                                VerticalOptions="EndAndExpand">
                                 <StackLayout
-                                    Grid.Row="2"
+                                    Grid.Row="0"
                                     Spacing="5"
                                     VerticalOptions="EndAndExpand">
                                     <StackLayout HorizontalOptions="StartAndExpand" Orientation="Horizontal">
@@ -486,7 +453,7 @@
                                 <!--  SubmitButton  -->
                                 <Button
                                     x:Name="BtnSubmit"
-                                    Grid.Row="3"
+                                    Grid.Row="1"
                                     Clicked="BtnSubmit_Tapped"
                                     Style="{StaticResource btnPrimary}"
                                     Text="Submit"

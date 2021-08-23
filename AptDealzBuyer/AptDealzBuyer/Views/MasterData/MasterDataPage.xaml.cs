@@ -15,13 +15,12 @@ namespace AptDealzBuyer.Views.MasterData
             InitializeComponent();
             BindNavigation(isNotification);
 
-
             BackgroundWorker backgroundWorker = new BackgroundWorker();
             backgroundWorker.DoWork += delegate
             {
                 if (App.stoppableTimer == null)
                 {
-                    App.stoppableTimer = new StoppableTimer(TimeSpan.FromSeconds(5), () =>
+                    App.stoppableTimer = new StoppableTimer(TimeSpan.FromSeconds(10), () =>
                     {
                         GetNotificationCount();
                     });
@@ -65,7 +64,7 @@ namespace AptDealzBuyer.Views.MasterData
             }
             catch (Exception ex)
             {
-                Common.DisplayErrorMessage("NotificationPage/GetNotificationCount: " + ex.Message);
+                Common.DisplayErrorMessage("MasterDataPage/GetNotificationCount: " + ex.Message);
             }
         }
 

@@ -7,6 +7,7 @@
     <Application.Resources>
 
         <!--#region [ BaseURL / HardCodes ]-->
+        <x:String x:Key="GreenColorCode">006027</x:String>
         <x:String x:Key="Currency">INR</x:String>
         <x:String x:Key="CountryCode">+91</x:String>
         <x:String x:Key="BaseURL">https://aptdealzapidev.azurewebsites.net/</x:String>
@@ -80,6 +81,20 @@
             <Setter Property="HasShadow" Value="False" />
             <Setter Property="IsClippedToBounds" Value="True" />
             <Setter Property="VerticalOptions" Value="CenterAndExpand" />
+        </Style>
+
+        <Style x:Key="frmNotification" TargetType="Frame">
+            <Setter Property="Margin" Value="10,5,0,0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="BackgroundColor" Value="{StaticResource Orange}" />
+            <Setter Property="BorderColor" Value="Transparent" />
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="HasShadow" Value="False" />
+            <Setter Property="IsClippedToBounds" Value="True" />
+            <Setter Property="VerticalOptions" Value="StartAndExpand" />
+            <Setter Property="HorizontalOptions" Value="CenterAndExpand" />
+            <Setter Property="HeightRequest" Value="20" />
+            <Setter Property="WidthRequest" Value="20" />
         </Style>
         <!--#endregion-->
 
@@ -171,6 +186,16 @@
             <Setter Property="VerticalOptions" Value="CenterAndExpand" />
             <Setter Property="FontFamily" Value="Poppins-SemiBold" />
         </Style>
+
+        <Style x:Key="lblNotification" TargetType="Label">
+            <Setter Property="TextColor" Value="{StaticResource Black}" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="VerticalTextAlignment" Value="Center" />
+            <Setter Property="VerticalOptions" Value="FillAndExpand" />
+            <Setter Property="HorizontalTextAlignment" Value="Center" />
+            <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+            <Setter Property="FontFamily" Value="Poppins-Medium" />
+        </Style>
         <!--#endregion-->
 
         <!--#region [ Views ]-->
@@ -213,7 +238,7 @@
             <Setter Property="Margin" Value="0" />
             <Setter Property="BackgroundColor" Value="{StaticResource Green}" />
             <Setter Property="FontSize" Value="17" />
-            <Setter Property="FontFamily" Value="Poppins-SemiBold" />
+            <Setter Property="FontFamily" Value="Poppins-Medium" />
             <Setter Property="TextColor" Value="{StaticResource White}" />
         </Style>
 
@@ -297,6 +322,16 @@
             <Setter Property="Aspect" Value="AspectFit" />
             <Setter Property="HorizontalOptions" Value="Center" />
             <Setter Property="VerticalOptions" Value="Center" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="BackgroundColor" Value="Transparent" />
+        </Style>
+
+        <Style x:Key="imgNotification" TargetType="Image">
+            <Setter Property="HeightRequest" Value="30" />
+            <Setter Property="WidthRequest" Value="30" />
+            <Setter Property="Aspect" Value="AspectFit" />
+            <Setter Property="HorizontalOptions" Value="CenterAndExpand" />
+            <Setter Property="VerticalOptions" Value="CenterAndExpand" />
             <Setter Property="Margin" Value="0" />
             <Setter Property="BackgroundColor" Value="Transparent" />
         </Style>

@@ -44,30 +44,13 @@
                     ColumnDefinitions="*,*"
                     HorizontalOptions="EndAndExpand">
                     <Grid>
-                        <Image
-                            Margin="0"
-                            HeightRequest="30"
-                            HorizontalOptions="CenterAndExpand"
-                            Source="iconNotification.png"
-                            VerticalOptions="CenterAndExpand"
-                            WidthRequest="30" />
+                        <Image Source="iconNotification.png" Style="{StaticResource imgNotification}" />
                         <Frame
-                            x:Name="frmNotification" HasShadow="False"
-                            Margin="10,5,0,0"
-                            Padding="0"
-                            BackgroundColor="{StaticResource Orange}"
-                            CornerRadius="10"
-                            HeightRequest="20"
-                            HorizontalOptions="CenterAndExpand"
+                            x:Name="frmNotification"
                             IsVisible="false"
-                            VerticalOptions="StartAndExpand"
-                            WidthRequest="20" />
-                        <Label
-                            x:Name="lblNotificationCount" FontSize="15"
-                            Margin="10,5,0,0"
-                            HorizontalOptions="CenterAndExpand"
-                            Style="{StaticResource lblMedium}"
-                            VerticalOptions="Start" />
+                            Style="{StaticResource frmNotification}">
+                            <Label x:Name="lblNotificationCount" Style="{StaticResource lblNotification}" />
+                        </Frame>
                         <Grid.GestureRecognizers>
                             <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgNotification_Tapped" />
                         </Grid.GestureRecognizers>
@@ -112,57 +95,57 @@
                         Text="About AptDealz" />
                 </Grid>
 
-                <ScrollView Grid.Row="1" Style="{StaticResource scrPrimary}">
+                <ContentView Grid.Row="1" IsClippedToBounds="True">
+                    <ScrollView Style="{StaticResource scrPrimary}">
 
-                    <Grid
-                        Padding="20,0,20,20"
-                        RowDefinitions="Auto,Auto"
-                        RowSpacing="20">
-                        <Label
-                            Grid.Row="0"
-                            HorizontalOptions="FillAndExpand"
-                            LineBreakMode="WordWrap"
-                            Style="{StaticResource lblLight}"
-                            Text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
-                            VerticalOptions="StartAndExpand" />
+                        <Grid
+                            Padding="20,0,20,20"
+                            RowDefinitions="Auto,Auto"
+                            RowSpacing="20">
+                            <Label
+                                Grid.Row="0"
+                                HorizontalOptions="FillAndExpand"
+                                LineBreakMode="WordWrap"
+                                Style="{StaticResource lblLight}"
+                                Text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+                                VerticalOptions="StartAndExpand" />
 
-                        <Frame
-                            Grid.Row="1"
-                            Margin="0"
-                            Padding="15"
-                            BackgroundColor="Transparent"
-                            BorderColor="{StaticResource LightGray}"
-                            CornerRadius="5"
-                            HasShadow="False"
-                            HorizontalOptions="FillAndExpand"
-                            VerticalOptions="StartAndExpand">
-                            <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="10">
+                            <Frame
+                                Grid.Row="1"
+                                Margin="0"
+                                Padding="15"
+                                BackgroundColor="Transparent"
+                                BorderColor="{StaticResource LightGray}"
+                                CornerRadius="5"
+                                HasShadow="False"
+                                HorizontalOptions="FillAndExpand"
+                                VerticalOptions="StartAndExpand">
+                                <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="10">
 
-                                <Label
-                                    Grid.Row="0"
-                                    FontFamily="Poppins-Medium"
-                                    FontSize="20"
-                                    HorizontalOptions="StartAndExpand"
-                                    Text="Contact Info"
-                                    TextColor="{StaticResource Black}"
-                                    VerticalOptions="CenterAndExpand" />
+                                    <Label
+                                        Grid.Row="0"
+                                        FontSize="20"
+                                        HorizontalOptions="StartAndExpand"
+                                        Style="{StaticResource lblMedium}"
+                                        Text="Contact Info" />
 
-                                <Label
-                                    Grid.Row="1"
-                                    HorizontalOptions="StartAndExpand"
-                                    Style="{StaticResource lblLight}"
-                                    Text="30, ABC, XYZ Road &#x0a;Kochi, Kerala, &#x0a;PIN - 682024" />
+                                    <Label
+                                        Grid.Row="1"
+                                        HorizontalOptions="StartAndExpand"
+                                        Style="{StaticResource lblLight}"
+                                        Text="30, ABC, XYZ Road &#x0a;Kochi, Kerala, &#x0a;PIN - 682024" />
 
-                                <Label
-                                    Grid.Row="2"
-                                    HorizontalOptions="StartAndExpand"
-                                    Style="{StaticResource lblLight}"
-                                    Text="Phone: +91 012345678" />
+                                    <Label
+                                        Grid.Row="2"
+                                        HorizontalOptions="StartAndExpand"
+                                        Style="{StaticResource lblLight}"
+                                        Text="Phone: +91 012345678" />
 
-                            </Grid>
-                        </Frame>
-                    </Grid>
-                </ScrollView>
+                                </Grid>
+                            </Frame>
+                        </Grid>
+                    </ScrollView>
+                </ContentView>
 
             </Grid>
         </Grid>

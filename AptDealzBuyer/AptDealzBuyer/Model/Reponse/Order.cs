@@ -11,6 +11,12 @@ namespace AptDealzBuyer.Model.Reponse
         [JsonProperty("orderId")]
         public string OrderId { get; set; }
 
+        [JsonProperty("requirementId")]
+        public string RequirementId { get; set; }
+
+        [JsonProperty("quoteId")]
+        public string QuoteId { get; set; }
+
         [JsonProperty("orderNo")]
         public string OrderNo { get; set; }
 
@@ -125,31 +131,22 @@ namespace AptDealzBuyer.Model.Reponse
         [JsonProperty("productRating")]
         public int ProductRating { get; set; }
 
+        [JsonProperty("shippingAddressDetails")]
+        public ShippingAddressDetails ShippingAddressDetails { get; set; }
+
+        [JsonProperty("isDeliveryConfirmedFromBuyer")]
+        public bool IsDeliveryConfirmedFromBuyer { get; set; }
+
         #region [ Extra Properties ]
         [JsonIgnore]
-        public bool isSelectGrievance { get; set; } = false;
+        public bool IsSelectGrievance { get; set; } = false;
+
         [JsonIgnore]
         public string OrderSuccessMessage { get; set; }
         [JsonIgnore]
         public string OrderErrorMessage { get; set; }
         [JsonIgnore]
         public bool IsSuccess { get; set; }
-
-        [JsonIgnore]
-        public string ExpectedDeliveryDate
-        {
-            get
-            {
-                if (ExpectedDelivery != null && ExpectedDelivery != DateTime.MinValue)
-                {
-                    return ExpectedDelivery.Date.ToString("dd/MM/yyyy");
-                }
-                else
-                {
-                    return string.Empty;
-                }
-            }
-        }
 
         [JsonIgnore]
         public string OrderAction

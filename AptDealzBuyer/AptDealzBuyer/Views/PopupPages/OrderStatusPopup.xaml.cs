@@ -9,11 +9,11 @@ namespace AptDealzBuyer.Views.PopupPages
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class OrderStatusPopup : PopupPage
     {
-        #region Objects
+        #region [ Objects ]
         public event EventHandler isRefresh;
         #endregion
 
-        #region Constructor
+        #region [ Constructor ]
         public OrderStatusPopup(int? StatusBy)
         {
             InitializeComponent();
@@ -21,13 +21,13 @@ namespace AptDealzBuyer.Views.PopupPages
         }
         #endregion
 
+        #region [ Methods ]
         protected override bool OnBackgroundClicked()
         {
             base.OnBackgroundClicked();
             return false;
         }
 
-        #region Methods
         protected override void OnAppearing()
         {
             base.OnAppearing();
@@ -125,7 +125,7 @@ namespace AptDealzBuyer.Views.PopupPages
         }
         #endregion
 
-        #region Events
+        #region [ Events ]
         private void StkFirstType_Tapped(object sender, EventArgs e)
         {
             try

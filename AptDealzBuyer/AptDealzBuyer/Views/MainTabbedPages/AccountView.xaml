@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:ext="clr-namespace:AptDealzBuyer.Extention"
     xmlns:ffImage="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+    xmlns:ffTransformer="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
     xmlns:panCake="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
     x:Name="page1"
     BackgroundColor="{StaticResource White}"
@@ -47,32 +48,13 @@
                     ColumnDefinitions="*,*"
                     HorizontalOptions="EndAndExpand">
                     <Grid>
-                        <Image
-                            Margin="0"
-                            HeightRequest="30"
-                            HorizontalOptions="CenterAndExpand"
-                            Source="iconNotification.png"
-                            VerticalOptions="CenterAndExpand"
-                            WidthRequest="30" />
+                        <Image Source="iconNotification.png" Style="{StaticResource imgNotification}" />
                         <Frame
                             x:Name="frmNotification"
-                            Margin="10,5,0,0"
-                            Padding="0"
-                            BackgroundColor="{StaticResource Orange}"
-                            CornerRadius="10"
-                            HasShadow="False"
-                            HeightRequest="20"
-                            HorizontalOptions="CenterAndExpand"
                             IsVisible="false"
-                            VerticalOptions="StartAndExpand"
-                            WidthRequest="20" />
-                        <Label
-                            x:Name="lblNotificationCount"
-                            Margin="10,5,0,0"
-                            FontSize="15"
-                            HorizontalOptions="CenterAndExpand"
-                            Style="{StaticResource lblMedium}"
-                            VerticalOptions="Start" />
+                            Style="{StaticResource frmNotification}">
+                            <Label x:Name="lblNotificationCount" Style="{StaticResource lblNotification}" />
+                        </Frame>
                         <Grid.GestureRecognizers>
                             <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgNotification_Tapped" />
                         </Grid.GestureRecognizers>
@@ -141,7 +123,7 @@
                                     HorizontalOptions="FillAndExpand"
                                     VerticalOptions="FillAndExpand">
                                     <Grid HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
-                                        <Frame
+                                        <!--<Frame
                                             Margin="0"
                                             Padding="0"
                                             BackgroundColor="Transparent"
@@ -150,18 +132,22 @@
                                             HasShadow="False"
                                             HeightRequest="100"
                                             IsClippedToBounds="True"
+                                            WidthRequest="100">-->
+                                        <ffImage:CachedImage
+                                            x:Name="imgUser"
+                                            Margin="0"
+                                            Aspect="AspectFill"
+                                            ErrorPlaceholder="iconUserAccount.png"
+                                            HeightRequest="100"
+                                            HorizontalOptions="FillAndExpand"
+                                            LoadingPlaceholder="iconUserAccount.png"
+                                            VerticalOptions="FillAndExpand"
                                             WidthRequest="100">
-                                            <ffImage:CachedImage
-                                                x:Name="imgUser"
-                                                Margin="0"
-                                                Aspect="Fill"
-                                                ErrorPlaceholder="iconUserAccount.png"
-                                                HeightRequest="100"
-                                                HorizontalOptions="CenterAndExpand"
-                                                LoadingPlaceholder="iconUserAccount.png"
-                                                VerticalOptions="CenterAndExpand"
-                                                WidthRequest="100" />
-                                        </Frame>
+                                            <ffImage:CachedImage.Transformations>
+                                                <ffTransformer:CircleTransformation BorderHexColor="{StaticResource GreenColorCode}" BorderSize="20" />
+                                            </ffImage:CachedImage.Transformations>
+                                        </ffImage:CachedImage>
+                                        <!--</Frame>-->
                                         <Image
                                             x:Name="ImgCamera"
                                             Margin="0"
@@ -396,42 +382,38 @@
                                     x:Name="BtnUpdate"
                                     Grid.Row="0"
                                     Clicked="BtnUpdate_Clicked"
+                                    IsEnabled="False"
                                     Style="{StaticResource btnPrimary}"
                                     Text="Update" />
 
                                 <Button
                                     x:Name="BtnLogout"
                                     Grid.Row="1"
-                                    Margin="0"
-                                    Padding="10"
+                                    Padding="10,0"
                                     BackgroundColor="Transparent"
                                     Clicked="Logout_Tapped"
-                                    FontFamily="Poppins-Medium"
-                                    FontSize="15"
+                                    HeightRequest="45"
                                     HorizontalOptions="CenterAndExpand"
+                                    Style="{StaticResource btnSmall}"
                                     Text="Logout"
-                                    TextColor="{StaticResource Black}"
-                                    VerticalOptions="CenterAndExpand" />
+                                    TextColor="{StaticResource Black}" />
 
                                 <Button
                                     x:Name="BtnDeactivate"
                                     Grid.Row="2"
-                                    Margin="0"
-                                    Padding="10"
+                                    Padding="10,0"
                                     BackgroundColor="Transparent"
                                     Clicked="BtnDeactivate_Clicked"
-                                    FontFamily="Poppins-Medium"
-                                    FontSize="15"
+                                    HeightRequest="45"
                                     HorizontalOptions="CenterAndExpand"
+                                    Style="{StaticResource btnSmall}"
                                     Text="Deactivate Account"
-                                    TextColor="{StaticResource Black}"
-                                    VerticalOptions="CenterAndExpand" />
+                                    TextColor="{StaticResource Black}" />
                             </Grid>
                         </Grid>
                     </ScrollView>
                 </RefreshView>
             </Grid>
         </Grid>
-
     </ContentView.Content>
 </ContentView>

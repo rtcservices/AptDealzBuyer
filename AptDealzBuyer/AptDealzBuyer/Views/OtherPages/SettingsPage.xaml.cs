@@ -1,8 +1,7 @@
-﻿using System;
-
+﻿using AptDealzBuyer.Utility;
+using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using AptDealzBuyer.Utility;
 
 namespace AptDealzBuyer.Views.OtherPages
 {
@@ -14,7 +13,7 @@ namespace AptDealzBuyer.Views.OtherPages
         {
             InitializeComponent();
 
-            MessagingCenter.Subscribe<string>(this, "NotificationCount", (count) =>
+            MessagingCenter.Unsubscribe<string>(this, "NotificationCount"); MessagingCenter.Subscribe<string>(this, "NotificationCount", (count) =>
             {
                 if (!Common.EmptyFiels(Common.NotificationCount))
                 {
@@ -30,6 +29,18 @@ namespace AptDealzBuyer.Views.OtherPages
         }
         #endregion
 
+        public void Dispose()
+        {
+            GC.Collect();
+            GC.SuppressFinalize(this);
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            Dispose();
+        }
+
         #region Events
         private void ImgMenu_Tapped(object sender, EventArgs e)
         {
@@ -37,9 +48,28 @@ namespace AptDealzBuyer.Views.OtherPages
             //Common.OpenMenu();
         }
 
-        private void ImgNotification_Tapped(object sender, EventArgs e)
+        private async void ImgNotification_Tapped(object sender, EventArgs e)
         {
-            Navigation.PushAsync(new DashboardPages.NotificationPage());
+            var Tab = (Grid)sender;
+            if (Tab.IsEnabled)
+            {
+                try
+                {
+                    Tab.IsEnabled = false;
+                    await Navigation.PushAsync(new DashboardPages.NotificationPage());
+                }
+                catch (Exception ex)
+                {
+                    Common.DisplayErrorMessage("SettingsPage/ImgNotification_Tapped: " + ex.Message);
+                }
+                finally
+                {
+                    Tab.IsEnabled = true;
+                }
+            }
+
+
+
         }
 
         private void ImgQuestion_Tapped(object sender, EventArgs e)
@@ -47,10 +77,10 @@ namespace AptDealzBuyer.Views.OtherPages
 
         }
 
-        private void ImgBack_Tapped(object sender, EventArgs e)
+        private async void ImgBack_Tapped(object sender, EventArgs e)
         {
             Common.BindAnimation(imageButton: ImgBack);
-            Navigation.PopAsync();
+            await Navigation.PopAsync();
         }
 
         private void ImgLanguage_Tapped(object sender, EventArgs e)

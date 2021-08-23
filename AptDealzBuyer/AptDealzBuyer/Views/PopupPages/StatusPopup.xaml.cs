@@ -9,16 +9,14 @@ namespace AptDealzBuyer.Views.PopupPages
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class StatusPopup : PopupPage
     {
-        #region Objects
+        #region [ Objects ]
         public event EventHandler isRefresh;
-        private string PageName;
         #endregion
 
         #region Constructor
-        public StatusPopup(int? StatusBy, string StatusPageName = null)
+        public StatusPopup(int? StatusBy)
         {
             InitializeComponent();
-            PageName = StatusPageName;
             BindSource(StatusBy);
         }
         #endregion

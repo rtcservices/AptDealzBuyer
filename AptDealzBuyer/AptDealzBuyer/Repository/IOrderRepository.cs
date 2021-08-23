@@ -1,5 +1,4 @@
-﻿using AptDealzBuyer.Model;
-using AptDealzBuyer.Model.Reponse;
+﻿using AptDealzBuyer.Model.Reponse;
 using System.Threading.Tasks;
 
 namespace AptDealzBuyer.Repository
@@ -8,6 +7,7 @@ namespace AptDealzBuyer.Repository
     {
         Task<Order> GetOrderDetails(string orderId);
         Task CancelOrder(string orderId);
+        Task ConfirmDelivery(string orderId);
         Task<string> GenerateQRCodeImage(string orderId);
     }
 }

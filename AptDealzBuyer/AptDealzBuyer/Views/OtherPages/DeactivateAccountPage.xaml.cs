@@ -1,5 +1,6 @@
 ﻿using Acr.UserDialogs;
 using AptDealzBuyer.API;
+using AptDealzBuyer.Repository;
 using AptDealzBuyer.Utility;
 using System;
 using Xamarin.Forms;
@@ -10,12 +11,12 @@ namespace AptDealzBuyer.Views.OtherPages
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class DeactivateAccountPage : ContentPage
     {
-        #region Constructor
+        #region [ Constructor ]
         public DeactivateAccountPage()
         {
             InitializeComponent();
 
-            MessagingCenter.Subscribe<string>(this, "NotificationCount", (count) =>
+            MessagingCenter.Unsubscribe<string>(this, "NotificationCount"); MessagingCenter.Subscribe<string>(this, "NotificationCount", (count) =>
             {
                 if (!Common.EmptyFiels(Common.NotificationCount))
                 {
@@ -31,51 +32,46 @@ namespace AptDealzBuyer.Views.OtherPages
         }
         #endregion
 
-        #region Methods
-        private async void DeactivateAccount()
+        #region [ Methods ]
+        public void Dispose()
         {
-            try
-            {
-                var result = await DisplayAlert(Constraints.Alert, Constraints.AreYouSureWantDeactivateAccount, Constraints.Yes, Constraints.No);
-                if (result)
-                {
-                    ProfileAPI profileAPI = new ProfileAPI();
-                    UserDialogs.Instance.ShowLoading(Constraints.Loading);
-                    var mResponse = await profileAPI.DeactiviateUser(Settings.UserId);
-                    if (mResponse != null && mResponse.Succeeded)
-                    {
-                        App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                    }
-                    else
-                    {
-                        if (mResponse != null)
-                            Common.DisplayErrorMessage(mResponse.Message);
-                        else
-                            Common.DisplayErrorMessage(Constraints.Something_Wrong);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Common.DisplayErrorMessage("DeactivateAccountPage/DeactivateAccount: " + ex.Message);
-            }
-            finally
-            {
-                UserDialogs.Instance.HideLoading();
-            }
+            GC.Collect();
+            GC.SuppressFinalize(this);
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            Dispose();
         }
         #endregion
 
-        #region Events
+        #region [ Events ]
         private void ImgMenu_Tapped(object sender, EventArgs e)
         {
             Common.BindAnimation(image: ImgMenu);
             //Common.OpenMenu();
         }
 
-        private void ImgNotification_Tapped(object sender, EventArgs e)
+        private async void ImgNotification_Tapped(object sender, EventArgs e)
         {
-            Navigation.PushAsync(new DashboardPages.NotificationPage());
+            var Tab = (Grid)sender;
+            if (Tab.IsEnabled)
+            {
+                try
+                {
+                    Tab.IsEnabled = false;
+                    await Navigation.PushAsync(new DashboardPages.NotificationPage());
+                }
+                catch (Exception ex)
+                {
+                    Common.DisplayErrorMessage("DeactivateAccountPage/ImgNotification_Tapped: " + ex.Message);
+                }
+                finally
+                {
+                    Tab.IsEnabled = true;
+                }
+            }
         }
 
         private void ImgQuestion_Tapped(object sender, EventArgs e)
@@ -83,15 +79,32 @@ namespace AptDealzBuyer.Views.OtherPages
 
         }
 
-        private void ImgBack_Tapped(object sender, EventArgs e)
+        private async void ImgBack_Tapped(object sender, EventArgs e)
         {
             Common.BindAnimation(imageButton: ImgBack);
-            Navigation.PopAsync();
+            await Navigation.PopAsync();
         }
 
-        private void BtnDeactivation_Clicked(object sender, EventArgs e)
+        private async void BtnDeactivation_Clicked(object sender, EventArgs e)
         {
-            DeactivateAccount();
+            var Tab = (Button)sender;
+            if (Tab.IsEnabled)
+            {
+                try
+                {
+                    Tab.IsEnabled = false;
+                    Common.BindAnimation(button: BtnDeactivation);
+                    await DependencyService.Get<IProfileRepository>().DeactivateAccount();
+                }
+                catch (Exception ex)
+                {
+                    Common.DisplayErrorMessage("DeactivateAccountPage/BtnDeactivation_Clicked: " + ex.Message);
+                }
+                finally
+                {
+                    Tab.IsEnabled = true;
+                }
+            }
         }
 
         private void BtnLogo_Clicked(object sender, EventArgs e)

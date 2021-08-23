@@ -60,6 +60,7 @@
         public const string OrderPayment = "api/v{0}/Order/Create/Payment";
         public const string GetShippedOrdersForBuyer = "api/v{0}/Order/GetShippedOrdersForBuyer";
         public const string GenerateQRCodeImageForBuyerApp = "api​/v{0}​/Order​/GenerateQRCodeImageForBuyerApp​/{1}";
+        public const string ConfirmDeliveryFromBuyer = "api/v{0}/Order/ConfirmDeliveryFromBuyer";
         #endregion
 
         #region [ RateAndReview API ]
@@ -83,6 +84,10 @@
         #region [ SupportChat API ]
         public const string GetAllMyChat = "api/v{0}/SupportChat/GetAllMyChat";
         public const string SendChatSupportMessage = "api/v{0}/SupportChat/SendChatSupportMessage";
+        #endregion
+
+        #region [ Affiliations API ]
+        public const string GetAllAffiliations = "api/v{0}/Affiliations/GetAllAffiliations";
         #endregion
     }
 }

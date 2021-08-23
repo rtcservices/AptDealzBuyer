@@ -19,93 +19,74 @@ namespace AptDealzBuyer.Views.DashboardPages
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class QuoteDetailsPage : ContentPage
     {
-        #region Objects
+        #region [ Objects ]
         private QuoteAPI quoteAPI;
         private OrderAPI orderAPI;
-
         private Quote mQuote;
+
         private string QuoteId;
         #endregion
 
-        #region Constructor
+        #region [ Constructor ]
         public QuoteDetailsPage(string quoteId)
-        {
-            InitializeComponent();
-
-            quoteAPI = new QuoteAPI();
-            orderAPI = new OrderAPI();
-
-            QuoteId = quoteId;
-            mQuote = new Quote();
-
-            MessagingCenter.Subscribe<string>(this, "NotificationCount", (count) =>
-            {
-                if (!Common.EmptyFiels(Common.NotificationCount))
-                {
-                    lblNotificationCount.Text = count;
-                    frmNotification.IsVisible = true;
-                }
-                else
-                {
-                    frmNotification.IsVisible = false;
-                    lblNotificationCount.Text = string.Empty;
-                }
-            });
-        }
-        #endregion
-
-        #region Methods        
-        protected override void OnAppearing()
-        {
-            base.OnAppearing();
-            GetQuoteById();
-        }
-
-
-        private async Task GetQuoteById()
         {
             try
             {
-                UserDialogs.Instance.ShowLoading(Constraints.Loading);
-                var mResponse = await quoteAPI.GetQuoteById(QuoteId);
-                if (mResponse != null && mResponse.Succeeded)
-                {
-                    var jObject = (JObject)mResponse.Data;
-                    if (jObject != null)
-                    {
-                        mQuote = jObject.ToObject<Quote>();
-                        if (mQuote != null)
-                        {
-                            BindQuoteDetails();
-                            GetRequirementsById();
+                InitializeComponent();
+                quoteAPI = new QuoteAPI();
+                orderAPI = new OrderAPI();
+                QuoteId = quoteId;
+                mQuote = new Quote();
 
-                        }
-                    }
-                }
-                else
+                MessagingCenter.Unsubscribe<string>(this, "NotificationCount"); MessagingCenter.Subscribe<string>(this, "NotificationCount", (count) =>
                 {
-                    if (mResponse != null)
-                        Common.DisplayErrorMessage(mResponse.Message);
+                    if (!Common.EmptyFiels(Common.NotificationCount))
+                    {
+                        lblNotificationCount.Text = count;
+                        frmNotification.IsVisible = true;
+                    }
                     else
-                        Common.DisplayErrorMessage(Constraints.Something_Wrong);
-                }
+                    {
+                        frmNotification.IsVisible = false;
+                        lblNotificationCount.Text = string.Empty;
+                    }
+                });
             }
             catch (Exception ex)
             {
-                Common.DisplayErrorMessage("QuoteDetailsPage/GetQuoteById: " + ex.Message);
-            }
-            finally
-            {
-                UserDialogs.Instance.HideLoading();
+                Common.DisplayErrorMessage("QuoteDetailsPage/Ctor: " + ex.Message);
             }
         }
+        #endregion
 
-        private void BindQuoteDetails()
+        #region [ Methods ]        
+        public void Dispose()
+        {
+            GC.Collect();
+            GC.SuppressFinalize(this);
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            Dispose();
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            GetQuoteDetails();
+        }
+
+        private async Task GetQuoteDetails()
         {
             try
             {
+                mQuote = await DependencyService.Get<IQuoteRepository>().GetQuoteById(QuoteId);
                 if (mQuote != null)
                 {
+                    await GetRequirementsDetails();
+
                     lblRequirementId.Text = mQuote.RequirementNo;
                     lblQuoteRefNo.Text = mQuote.QuoteNo;
                     lblBuyerId.Text = mQuote.BuyerId;
@@ -146,15 +127,8 @@ namespace AptDealzBuyer.Views.DashboardPages
 
                     if (mQuote.IsSellerContactRevealed)
                     {
-                        RevealSellerContact mRevealSellerContact = new RevealSellerContact();
-                        var jObject = (JObject)mQuote.SellerContact;
-                        if (jObject != null)
-                        {
-                            mRevealSellerContact = jObject.ToObject<RevealSellerContact>();
-                        }
-
-                        if (mRevealSellerContact != null)
-                            BtnRevealContact.Text = mRevealSellerContact.PhoneNumber;
+                        if (mQuote.SellerContact != null)
+                            BtnRevealContact.Text = mQuote.SellerContact.PhoneNumber;
                     }
                     else
                     {
@@ -163,7 +137,7 @@ namespace AptDealzBuyer.Views.DashboardPages
 
                     if (mQuote.Days.Contains("Expired"))
                     {
-                        BtnAcceptQuote.IsEnabled = false;
+
                         lblDate.Text = mQuote.ValidityDate.Date.ToString("dd/MM/yyyy") + " ( Expired )";
                     }
                     else
@@ -171,7 +145,8 @@ namespace AptDealzBuyer.Views.DashboardPages
                         lblDate.Text = mQuote.ValidityDate.Date.ToString("dd/MM/yyyy");
                     }
 
-                    if (mQuote.Status == "Accepted")
+                    //if (mQuote.Status == "Accepted")
+                    if (mQuote.Status == "Accepted" || mQuote.Days.Contains("Expired"))
                     {
                         BtnAcceptQuote.IsEnabled = false;
                     }
@@ -187,42 +162,27 @@ namespace AptDealzBuyer.Views.DashboardPages
             }
         }
 
-        private async void GetRequirementsById()
+        private async Task GetRequirementsDetails()
         {
             try
             {
-                RequirementAPI requirementAPI = new RequirementAPI();
-                var mResponse = await requirementAPI.GetRequirementById(mQuote.RequirementId);
-                if (mResponse != null && mResponse.Succeeded)
+                var mRequirement = await DependencyService.Get<IRequirementRepository>().GetRequirementById(mQuote.RequirementId);
+                if (mRequirement != null)
                 {
-                    var jObject = (JObject)mResponse.Data;
-                    if (jObject != null)
+                    if (mRequirement.PickupProductDirectly)
                     {
-                        var mRequirement = jObject.ToObject<Requirement>();
-                        if (mRequirement != null)
-                        {
-                            if (mRequirement.PickupProductDirectly)
-                            {
-                                lblShippingPinCode.Text = "Product Pickup PIN Code";
-                            }
-                            else
-                            {
-                                lblShippingPinCode.Text = "Shipping PIN Code";
-                            }
-                        }
+                        lblShippingPinCode.Text = "Product Pickup PIN Code";
+                    }
+                    else
+                    {
+                        lblShippingPinCode.Text = "Shipping PIN Code";
                     }
                 }
-                else
-                {
-                    if (mResponse != null)
-                        Common.DisplayErrorMessage(mResponse.Message);
-                    else
-                        Common.DisplayErrorMessage(Constraints.Something_Wrong);
-                }
+
             }
             catch (Exception ex)
             {
-                Common.DisplayErrorMessage("QuoteDetailsPage/GetRequirementsById: " + ex.Message);
+                Common.DisplayErrorMessage("QuoteDetailsPage/GetRequirementsDetails: " + ex.Message);
             }
             finally
             {
@@ -238,7 +198,6 @@ namespace AptDealzBuyer.Views.DashboardPages
                 CreateOrder mCreateOrder = new CreateOrder();
                 mCreateOrder.QuoteId = mQuote.QuoteId;
                 mCreateOrder.PaidAmount = mQuote.TotalQuoteAmount;
-                mCreateOrder.PaymentStatus = (int)Utility.PaymentStatus.Pending;
 
                 UserDialogs.Instance.ShowLoading(Constraints.Loading);
                 var mResponse = await orderAPI.CreateOrder(mCreateOrder);
@@ -295,7 +254,14 @@ namespace AptDealzBuyer.Views.DashboardPages
                 }
                 else
                 {
-                    Common.DisplayErrorMessage(mOrder.OrderErrorMessage);
+                    if (mOrder.OrderErrorMessage.Contains("duplicate"))
+                    {
+                        OpenRazorPayQuote(mOrder);
+                    }
+                    else
+                    {
+                        Common.DisplayErrorMessage(mOrder.OrderErrorMessage);
+                    }
                 }
             }
             catch (Exception ex)
@@ -307,7 +273,7 @@ namespace AptDealzBuyer.Views.DashboardPages
         /// <summary>
         /// [ Step 1 - CreateOrder ]
         /// </summary>
-        private void QuotePayment(bool isRevealContact)
+        private async Task QuotePayment(bool isRevealContact)
         {
             try
             {
@@ -329,7 +295,6 @@ namespace AptDealzBuyer.Views.DashboardPages
                    {
                        if (DeviceInfo.Platform == DevicePlatform.Android)
                        {
-
                            if (isRevealContact)
                            {
                                RevealSellerContact();
@@ -345,7 +310,7 @@ namespace AptDealzBuyer.Views.DashboardPages
                        }
                    }
                };
-                PopupNavigation.Instance.PushAsync(contactPopup);
+                await PopupNavigation.Instance.PushAsync(contactPopup);
             }
             catch (Exception ex)
             {
@@ -428,6 +393,8 @@ namespace AptDealzBuyer.Views.DashboardPages
                         var contactPopup = new PopupPages.SuccessPopup(message, false);
                         await PopupNavigation.Instance.PushAsync(contactPopup);
                     }
+
+                    MessagingCenter.Unsubscribe<RazorResponse>(this, "PaidResponse");
                 });
             }
             catch (Exception ex)
@@ -479,8 +446,6 @@ namespace AptDealzBuyer.Views.DashboardPages
         {
             try
             {
-                //if (BtnRevealContact.Text == "Reveal Contact")
-                //{
                 long amount = (long)App.Current.Resources["RevealContact"];
                 RazorPayload payload = new RazorPayload();
                 payload.amount = amount * 100;
@@ -501,25 +466,21 @@ namespace AptDealzBuyer.Views.DashboardPages
                         if (!Common.EmptyFiels(razorResponse.PaymentId))
                             message += "PaymentId: " + razorResponse.PaymentId + " ";
 
-                        //var contactPopup = new PopupPages.SuccessPopup(message, false);
-                        //await PopupNavigation.Instance.PushAsync(contactPopup);
                         if (message != null)
                             Common.DisplayErrorMessage(message);
                     }
 
                     RevealSellerContact mRevealSellerContact = new RevealSellerContact();
                     mRevealSellerContact.QuoteId = QuoteId;
-                    mRevealSellerContact.PaymentStatus = razorResponse.isPaid ? (int)PaymentStatus.Success : (int)PaymentStatus.Failed;
-                    mRevealSellerContact.RazorPayOrderId = razorResponse.OrderNo;
+                    mRevealSellerContact.PaymentStatus = razorResponse.isPaid ? (int)RevealContactStatus.Success : (int)RevealContactStatus.Failure;
+                    mRevealSellerContact.RazorPayOrderId = razorResponse.OrderId;
                     mRevealSellerContact.RazorPayPaymentId = razorResponse.PaymentId;
 
                     BtnRevealContact.Text = await DependencyService.Get<IQuoteRepository>().RevealContact(mRevealSellerContact);
+
+                    MessagingCenter.Unsubscribe<RazorResponse>(this, "PaidRevealResponse");
                 });
-                //}
-                //else
-                //{
-                //    DependencyService.Get<IDialer>().Dial(App.Current.Resources["CountryCode"] + BtnRevealContact.Text);
-                //}
+
             }
             catch (Exception ex)
             {
@@ -560,16 +521,32 @@ namespace AptDealzBuyer.Views.DashboardPages
         }
         #endregion
 
-        #region Events        
+        #region [ Events ]        
         private void ImgMenu_Tapped(object sender, EventArgs e)
         {
             Common.BindAnimation(image: ImgMenu);
             //Common.OpenMenu();
         }
 
-        private void ImgNotification_Tapped(object sender, EventArgs e)
+        private async void ImgNotification_Tapped(object sender, EventArgs e)
         {
-            Navigation.PushAsync(new DashboardPages.NotificationPage());
+            var Tab = (Grid)sender;
+            if (Tab.IsEnabled)
+            {
+                try
+                {
+                    Tab.IsEnabled = false;
+                    await Navigation.PushAsync(new NotificationPage());
+                }
+                catch (Exception ex)
+                {
+                    Common.DisplayErrorMessage("QuoteDetailsPage/ImgNotification_Tapped: " + ex.Message);
+                }
+                finally
+                {
+                    Tab.IsEnabled = true;
+                }
+            }
         }
 
         private void ImgQuestion_Tapped(object sender, EventArgs e)
@@ -577,42 +554,84 @@ namespace AptDealzBuyer.Views.DashboardPages
 
         }
 
-        private void ImgBack_Tapped(object sender, EventArgs e)
+        private async void ImgBack_Tapped(object sender, EventArgs e)
         {
             Common.BindAnimation(imageButton: ImgBack);
-            Navigation.PopAsync();
+            await Navigation.PopAsync();
         }
 
-        private void BtnRevealContact_Clicked(object sender, EventArgs e)
+        private async void BtnRevealContact_Clicked(object sender, EventArgs e)
         {
-            try
+            var Tab = (Button)sender;
+            if (Tab.IsEnabled)
             {
-                Common.BindAnimation(button: BtnRevealContact);
-                if (BtnRevealContact.Text == "Reveal Contact")
+                try
                 {
-                    QuotePayment(true);
+                    Tab.IsEnabled = false;
+                    Common.BindAnimation(button: BtnRevealContact);
+                    if (BtnRevealContact.Text == "Reveal Contact")
+                    {
+                        await QuotePayment(true);
+                    }
+                    else
+                    {
+                        DependencyService.Get<IDialer>().Dial(App.Current.Resources["CountryCode"] + BtnRevealContact.Text);
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    DependencyService.Get<IDialer>().Dial(App.Current.Resources["CountryCode"] + BtnRevealContact.Text);
+                    Common.DisplayErrorMessage("QuoteDetailsPage/BtnRevealContact_Clicked: " + ex.Message);
+                }
+                finally
+                {
+                    Tab.IsEnabled = true;
                 }
             }
-            catch (Exception ex)
+        }
+
+        private async void BtnAcceptQuote_Clicked(object sender, EventArgs e)
+        {
+            var Tab = (Button)sender;
+            if (Tab.IsEnabled)
             {
-                Common.DisplayErrorMessage("QuoteDetailsPage/BtnRevealContact_Clicked: " + ex.Message);
+                try
+                {
+                    Tab.IsEnabled = false;
+                    Common.BindAnimation(button: BtnAcceptQuote);
+                    await QuotePayment(false);
+                }
+                catch (Exception ex)
+                {
+                    Common.DisplayErrorMessage("QuoteDetailsPage/BtnAcceptQuote_Clicked: " + ex.Message);
+                }
+                finally
+                {
+                    Tab.IsEnabled = true;
+                }
             }
+
         }
 
-        private void BtnAcceptQuote_Clicked(object sender, EventArgs e)
+        private async void BtnBackToQuote_Clicked(object sender, EventArgs e)
         {
-            Common.BindAnimation(button: BtnAcceptQuote);
-            QuotePayment(false);
-        }
-
-        private void BtnBackToQuote_Clicked(object sender, EventArgs e)
-        {
-            Common.BindAnimation(button: BtnBackToQuote);
-            Navigation.PopAsync();
+            var Tab = (Button)sender;
+            if (Tab.IsEnabled)
+            {
+                try
+                {
+                    Tab.IsEnabled = false;
+                    Common.BindAnimation(button: BtnBackToQuote);
+                    await Navigation.PopAsync();
+                }
+                catch (Exception ex)
+                {
+                    Common.DisplayErrorMessage("QuoteDetailsPage/BtnBackToQuote_Clicked: " + ex.Message);
+                }
+                finally
+                {
+                    Tab.IsEnabled = true;
+                }
+            }
         }
 
         private void BtnLogo_Clicked(object sender, EventArgs e)
@@ -625,7 +644,7 @@ namespace AptDealzBuyer.Views.DashboardPages
             try
             {
                 rfView.IsRefreshing = true;
-                await GetQuoteById();
+                await GetQuoteDetails();
                 rfView.IsRefreshing = false;
             }
             catch (Exception ex)
@@ -669,11 +688,11 @@ namespace AptDealzBuyer.Views.DashboardPages
             }
         }
 
-        //private void BtnRejectQuote_Clicked(object sender, EventArgs e)
+        //private async void BtnRejectQuote_Clicked(object sender, EventArgs e)
         //{
         //    Common.BindAnimation(button: BtnRejectQuote);
         //    RejectQuote();
-        //    Navigation.PopAsync();
+        //    await Navigation.PopAsync();
         //}
         #endregion
     }

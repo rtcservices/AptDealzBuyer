@@ -25,13 +25,11 @@
 
             <Label
                 Grid.Row="0"
-                Margin="0"
-                FontFamily="Poppins-Medium"
                 FontSize="18"
                 HorizontalOptions="CenterAndExpand"
+                Style="{StaticResource lblMedium}"
                 Text="Alert"
-                TextColor="{StaticResource Green}"
-                VerticalOptions="CenterAndExpand" />
+                TextColor="{StaticResource Green}" />
 
             <Label
                 x:Name="lblMessage"
@@ -59,6 +57,7 @@
                     Grid.Column="1"
                     Clicked="FrmBack_Tapped"
                     CornerRadius="25"
+                    HeightRequest="50"
                     Style="{StaticResource btnBorder}"
                     Text="Back" />
             </Grid>

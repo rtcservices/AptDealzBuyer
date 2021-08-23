@@ -1,5 +1,8 @@
-﻿using AptDealzBuyer.Model;
+﻿using Acr.UserDialogs;
+using AptDealzBuyer.API;
+using AptDealzBuyer.Model.Reponse;
 using AptDealzBuyer.Utility;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,16 +14,12 @@ namespace AptDealzBuyer.Views.OtherPages
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class WeSupportPage : ContentPage
     {
-        #region Objecst      
-        public List<CarousellImage> mCarousellImages = new List<CarousellImage>();
-        #endregion
-
-        #region Constructor
+        #region [ Constructor ]
         public WeSupportPage()
         {
             InitializeComponent();
 
-            MessagingCenter.Subscribe<string>(this, "NotificationCount", (count) =>
+            MessagingCenter.Unsubscribe<string>(this, "NotificationCount"); MessagingCenter.Subscribe<string>(this, "NotificationCount", (count) =>
             {
                 if (!Common.EmptyFiels(Common.NotificationCount))
                 {
@@ -36,41 +35,94 @@ namespace AptDealzBuyer.Views.OtherPages
         }
         #endregion
 
-        #region Methods      
+        #region [ Methods ]      
+        public void Dispose()
+        {
+            GC.Collect();
+            GC.SuppressFinalize(this);
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            Dispose();
+        }
+
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            BindCarousallData();
+            GetAffiliations();
         }
 
-        private void BindCarousallData()
+        private async void GetAffiliations()
         {
             try
             {
-                mCarousellImages = new List<CarousellImage>()
+                AffiliationsAPI affiliationsAPI = new AffiliationsAPI();
+                List<Affiliations> mAffiliations = new List<Affiliations>();
+                UserDialogs.Instance.ShowLoading(Constraints.Loading);
+
+                var mResponse = await affiliationsAPI.GetAllAffiliations();
+                if (mResponse != null && mResponse.Succeeded)
                 {
-                    new CarousellImage{ImageName="imgMakeInIndia.png"},
-                    new CarousellImage{ImageName="imgMakeInIndia.png"},
-                    new CarousellImage{ImageName="imgMakeInIndia.png"},
-                };
-                Indicators.ItemsSource = cvWelcome.ItemsSource = mCarousellImages.ToList();
+                    JArray result = (JArray)mResponse.Data;
+                    var affiliations = result.ToObject<List<Affiliations>>();
+                    if (affiliations != null && affiliations.Count > 0)
+                    {
+                        GrdList.IsVisible = true;
+                        lblNoRecord.IsVisible = false;
+                        Indicators.ItemsSource = cvWelcome.ItemsSource = affiliations.ToList();
+                    }
+                    else
+                    {
+                        GrdList.IsVisible = false;
+                        lblNoRecord.IsVisible = true;
+                    }
+                }
+                else
+                {
+                    GrdList.IsVisible = false;
+                    lblNoRecord.IsVisible = true;
+                }
             }
             catch (Exception ex)
             {
-                Common.DisplayErrorMessage("WeSupportPage/BindCarousallData: " + ex.Message);
+                Common.DisplayErrorMessage("WeSupportPage/GetAffiliations: " + ex.Message);
+            }
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
             }
         }
+
         #endregion
 
+        #region [ Events ]
         private void ImgMenu_Tapped(object sender, EventArgs e)
         {
             Common.BindAnimation(image: ImgMenu);
             //Common.OpenMenu();
         }
 
-        private void ImgNotification_Tapped(object sender, EventArgs e)
+        private async void ImgNotification_Tapped(object sender, EventArgs e)
         {
-            Navigation.PushAsync(new DashboardPages.NotificationPage());
+            var Tab = (Grid)sender;
+            if (Tab.IsEnabled)
+            {
+                try
+                {
+                    Tab.IsEnabled = false;
+                    await Navigation.PushAsync(new DashboardPages.NotificationPage());
+                }
+                catch (Exception ex)
+                {
+                    Common.DisplayErrorMessage("WeSupportPage/ImgNotification_Tapped: " + ex.Message);
+                }
+                finally
+                {
+                    Tab.IsEnabled = true;
+                }
+            }
         }
 
         private void ImgQuestion_Tapped(object sender, EventArgs e)
@@ -78,15 +130,16 @@ namespace AptDealzBuyer.Views.OtherPages
 
         }
 
-        private void ImgBack_Tapped(object sender, EventArgs e)
+        private async void ImgBack_Tapped(object sender, EventArgs e)
         {
             Common.BindAnimation(imageButton: ImgBack);
-            Navigation.PopAsync();
+            await Navigation.PopAsync();
         }
 
         private void BtnLogo_Clicked(object sender, EventArgs e)
         {
             Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
         }
-    }
+    } 
+    #endregion
 }

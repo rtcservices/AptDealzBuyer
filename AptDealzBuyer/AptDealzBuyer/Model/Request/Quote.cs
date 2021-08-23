@@ -95,7 +95,7 @@ namespace AptDealzBuyer.Model.Request
         public bool IsSellerContactRevealed { get; set; }
 
         [JsonProperty("sellerContact")]
-        public object SellerContact { get; set; }
+        public SellerContact SellerContact { get; set; }
 
         [JsonProperty("buyerContact")]
         public BuyerContact BuyerContact { get; set; }

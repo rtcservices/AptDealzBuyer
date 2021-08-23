@@ -14,11 +14,11 @@ namespace AptDealzBuyer.Views.SplashScreen
 
     public partial class WelcomePage : ContentPage
     {
-        #region Objecst      
+        #region [ Objecst ]      
         public List<CarousellImage> mCarousellImages = new List<CarousellImage>();
         #endregion
 
-        #region Constructor
+        #region [ Constructor ]
         public WelcomePage()
         {
             InitializeComponent();
@@ -26,7 +26,19 @@ namespace AptDealzBuyer.Views.SplashScreen
         }
         #endregion
 
-        #region Methods       
+        #region [ Methods ]  
+        public void Dispose()
+        {
+            GC.Collect();
+            GC.SuppressFinalize(this);
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            Dispose();
+        }
+
         protected override void OnAppearing()
         {
             base.OnAppearing();
@@ -76,16 +88,27 @@ namespace AptDealzBuyer.Views.SplashScreen
         }
         #endregion
 
-        #region Events
-        private void SkipTapped_Tapped(object sender, EventArgs e)
+        #region [ Events ]  
+        private async void BtnLogin_Clicked(object sender, EventArgs e)
         {
-            Navigation.PushAsync(new Login.LoginPage());
-        }
-
-        private void BtnLogin_Clicked(object sender, EventArgs e)
-        {
-            Common.BindAnimation(button: BtnLogin);
-            Navigation.PushAsync(new Login.LoginPage());
+            var Tab = (Button)sender;
+            if (Tab.IsEnabled)
+            {
+                try
+                {
+                    Tab.IsEnabled = false;
+                    Common.BindAnimation(button: BtnLogin);
+                    await Navigation.PushAsync(new Login.LoginPage());
+                }
+                catch (Exception ex)
+                {
+                    Common.DisplayErrorMessage("WelcomePage/BtnLogin_Clicked: " + ex.Message);
+                }
+                finally
+                {
+                    Tab.IsEnabled = true;
+                }
+            }
         }
         #endregion
     }

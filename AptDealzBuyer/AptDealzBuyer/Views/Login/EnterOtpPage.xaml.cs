@@ -7,6 +7,7 @@ using AptDealzBuyer.Utility;
 using AptDealzBuyer.Views.MasterData;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -15,7 +16,7 @@ namespace AptDealzBuyer.Views.Login
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class EnterOtpPage : ContentPage
     {
-        #region Objects
+        #region [ Objects ]
         private string UserAuth;
         private bool isEmail;
         private bool IsRegister;
@@ -23,7 +24,7 @@ namespace AptDealzBuyer.Views.Login
         private Register mRegister;
         #endregion
 
-        #region Constructor
+        #region [ Constructor ]
         public EnterOtpPage(string UserAuth, bool isEmail = true)
         {
             InitializeComponent();
@@ -40,7 +41,19 @@ namespace AptDealzBuyer.Views.Login
         }
         #endregion
 
-        #region Methods        
+        #region [ Methods ]    
+        public void Dispose()
+        {
+            GC.Collect();
+            GC.SuppressFinalize(this);
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            Dispose();
+        }
+
         private void ResendButtonEnable()
         {
             try
@@ -169,7 +182,7 @@ namespace AptDealzBuyer.Views.Login
                 {
                     mAuthenticatePhone.FcmToken = Settings.fcm_token;
                 }
-                if (!Common.EmptyFiels(Settings.firebaseVerificationId))
+                if (!Common.EmptyFiels(Settings.PhoneAuthToken))
                 {
                     mAuthenticatePhone.FirebaseVerificationId = Settings.PhoneAuthToken;
                 }
@@ -206,7 +219,7 @@ namespace AptDealzBuyer.Views.Login
             return mAuthenticateEmail;
         }
 
-        private async void SubmitOTP()
+        private async Task SubmitOTP()
         {
             try
             {
@@ -218,6 +231,8 @@ namespace AptDealzBuyer.Views.Login
                     Response mResponse = new Response();
                     if (!this.isEmail)
                     {
+                        OTPString = TxtOtpOne.Text + TxtOtpTwo.Text + TxtOtpThree.Text + TxtOtpFour.Text + TxtOtpFive.Text + TxtOtpSix.Text;
+
                         var token = await Xamarin.Forms.DependencyService.Get<IFirebaseAuthenticator>().VerifyOtpCodeAsync(OTPString);
                         if (!Common.EmptyFiels(token))
                         {
@@ -267,7 +282,7 @@ namespace AptDealzBuyer.Views.Login
             }
         }
 
-        private async void ResentOTP()
+        private async Task ResentOTP()
         {
             try
             {
@@ -309,7 +324,6 @@ namespace AptDealzBuyer.Views.Login
                     {
                         if (keyValue.Value != Constraints.OTPSent)
                         {
-                            Settings.firebaseVerificationId = keyValue.Value;
                             Settings.PhoneAuthToken = keyValue.Value;
 
                             var mLogin = FillPhoneAuthentication();
@@ -332,22 +346,39 @@ namespace AptDealzBuyer.Views.Login
         }
         #endregion
 
-        #region Events
-        private void ImgBack_Tapped(object sender, EventArgs e)
+        #region [ Events ]
+        private async void ImgBack_Tapped(object sender, EventArgs e)
         {
             Common.BindAnimation(image: ImgBack);
-            Navigation.PopAsync();
+            await Navigation.PopAsync();
         }
 
-        private void BtnSubmit_Tapped(object sender, EventArgs e)
+        private async void BtnSubmit_Tapped(object sender, EventArgs e)
         {
-            Common.BindAnimation(button: BtnSubmit);
-            SubmitOTP();
+            var Tab = (Button)sender;
+            if (Tab.IsEnabled)
+            {
+                try
+                {
+                    Tab.IsEnabled = false;
+                    Common.BindAnimation(button: BtnSubmit);
+                    await SubmitOTP();
+                }
+                catch (Exception ex)
+                {
+                    Common.DisplayErrorMessage("EnterOtpPage/BtnSubmit_Tapped: " + ex.Message);
+                }
+                finally
+                {
+                    Tab.IsEnabled = true;
+                }
+            }
+
         }
 
-        private void BtnResentOtp_Tapped(object sender, EventArgs e)
+        private async void BtnResentOtp_Tapped(object sender, EventArgs e)
         {
-            ResentOTP();
+            await ResentOTP();
         }
 
         private void TxtOtpOne_TextChanged(object sender, TextChangedEventArgs e)

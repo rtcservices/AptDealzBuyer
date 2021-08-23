@@ -1,5 +1,4 @@
 ﻿using Acr.UserDialogs;
-using AptDealzBuyer.API;
 using AptDealzBuyer.Model.Request;
 using AptDealzBuyer.Repository;
 using AptDealzBuyer.Utility;
@@ -14,34 +13,54 @@ namespace AptDealzBuyer.Views.DashboardPages
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class GrievanceDetailsPage : ContentPage
     {
-        #region Objects
+        #region [ Objects ]
         private Grievance mGrievance;
         private string GrievanceId;
         #endregion
 
-        #region Constructor
+        #region [ Constructor ]
         public GrievanceDetailsPage(string GrievanceId)
         {
-            InitializeComponent();
-            this.GrievanceId = GrievanceId;
-
-            MessagingCenter.Subscribe<string>(this, "NotificationCount", (count) =>
+            try
             {
-                if (!Common.EmptyFiels(Common.NotificationCount))
+                InitializeComponent();
+                this.GrievanceId = GrievanceId;
+
+                MessagingCenter.Unsubscribe<string>(this, "NotificationCount");
+                MessagingCenter.Subscribe<string>(this, "NotificationCount", (count) =>
                 {
-                    lblNotificationCount.Text = count;
-                    frmNotification.IsVisible = true;
-                }
-                else
-                {
-                    frmNotification.IsVisible = false;
-                    lblNotificationCount.Text = string.Empty;
-                }
-            });
+                    if (!Common.EmptyFiels(Common.NotificationCount))
+                    {
+                        lblNotificationCount.Text = count;
+                        frmNotification.IsVisible = true;
+                    }
+                    else
+                    {
+                        frmNotification.IsVisible = false;
+                        lblNotificationCount.Text = string.Empty;
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("GrievanceDetailsPage/Ctor: " + ex.Message);
+            }
         }
         #endregion
 
-        #region Methods
+        #region [ Methods ]
+        public void Dispose()
+        {
+            GC.Collect();
+            GC.SuppressFinalize(this);
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            Dispose();
+        }
+
         protected override void OnAppearing()
         {
             base.OnAppearing();
@@ -59,7 +78,7 @@ namespace AptDealzBuyer.Views.DashboardPages
                     lblOrderId.Text = mGrievance.OrderNo;
                     lblOrderDate.Text = mGrievance.OrderDate.ToString("dd/MM/yyyy");
                     lblGrievanceDate.Text = mGrievance.Created.ToString("dd/MM/yyyy");
-                    lblBuyeName.Text = mGrievance.GrievanceFromUserName;
+                    lblSellerName.Text = mGrievance.SellerName;
                     lblGrievanceType.Text = mGrievance.GrievanceTypeDescr.ToCamelCase();
                     lblStatus.Text = mGrievance.StatusDescr.ToCamelCase();
                     if (Common.EmptyFiels(mGrievance.IssueDescription))
@@ -88,7 +107,7 @@ namespace AptDealzBuyer.Views.DashboardPages
                         lstResponse.IsVisible = true;
                         lblNoRecord.IsVisible = false;
                         lstResponse.ItemsSource = mGrievance.GrievanceResponses.ToList();
-                        lstResponse.HeightRequest = mGrievance.GrievanceResponses.Count * 100;
+                        lstResponse.HeightRequest = mGrievance.GrievanceResponses.Count * 95; //50+10+10+20+extra 5
                     }
                     else
                     {
@@ -110,29 +129,11 @@ namespace AptDealzBuyer.Views.DashboardPages
         {
             try
             {
-                GrievanceAPI grievanceAPI = new GrievanceAPI();
-                UserDialogs.Instance.ShowLoading(Constraints.Loading);
-
-
                 if (!Common.EmptyFiels(txtMessage.Text))
                 {
-                    var mResponse = await grievanceAPI.SubmitGrievanceResponseFromBuyer(GrievanceId, txtMessage.Text);
-                    if (mResponse != null && mResponse.Succeeded)
-                    {
-                        txtMessage.Text = string.Empty;
-                        if ((bool)mResponse.Data)
-                            Common.DisplaySuccessMessage(mResponse.Message);
-                        else
-                            Common.DisplayErrorMessage(mResponse.Message);
-                        await GetGrievancesDetails();
-                    }
-                    else
-                    {
-                        if (mResponse != null && !Common.EmptyFiels(mResponse.Message))
-                            Common.DisplayErrorMessage(mResponse.Message);
-                        else
-                            Common.DisplayErrorMessage(Constraints.Something_Wrong);
-                    }
+                    await DependencyService.Get<IGrievanceRepository>().SubmitGrievanceResponse(GrievanceId, txtMessage.Text);
+                    txtMessage.Text = string.Empty;
+                    await GetGrievancesDetails();
                 }
                 else
                 {
@@ -175,16 +176,32 @@ namespace AptDealzBuyer.Views.DashboardPages
         }
         #endregion
 
-        #region Events
+        #region [ Events ]
         private void ImgMenu_Tapped(object sender, EventArgs e)
         {
             Common.BindAnimation(image: ImgMenu);
             //Common.OpenMenu();
         }
 
-        private void ImgNotification_Tapped(object sender, EventArgs e)
+        private async void ImgNotification_Tapped(object sender, EventArgs e)
         {
-            Navigation.PushAsync(new DashboardPages.NotificationPage());
+            var Tab = (Grid)sender;
+            if (Tab.IsEnabled)
+            {
+                try
+                {
+                    Tab.IsEnabled = false;
+                    await Navigation.PushAsync(new DashboardPages.NotificationPage());
+                }
+                catch (Exception ex)
+                {
+                    Common.DisplayErrorMessage("GrievanceDetailsPage/ImgNotification_Tapped: " + ex.Message);
+                }
+                finally
+                {
+                    Tab.IsEnabled = true;
+                }
+            }
         }
 
         private void ImgQuestion_Tapped(object sender, EventArgs e)
@@ -192,16 +209,32 @@ namespace AptDealzBuyer.Views.DashboardPages
 
         }
 
-        private void ImgBack_Tapped(object sender, EventArgs e)
+        private async void ImgBack_Tapped(object sender, EventArgs e)
         {
             Common.BindAnimation(imageButton: ImgBack);
-            Navigation.PopAsync();
+            await Navigation.PopAsync();
         }
 
         private async void BtnSubmit_Tapped(object sender, EventArgs e)
         {
-            Common.BindAnimation(button: BtnSubmit);
-            await SubmitGrievanceResponse();
+            var Tab = (Button)sender;
+            if (Tab.IsEnabled)
+            {
+                try
+                {
+                    Tab.IsEnabled = false;
+                    Common.BindAnimation(button: BtnSubmit);
+                    await SubmitGrievanceResponse();
+                }
+                catch (Exception ex)
+                {
+                    Common.DisplayErrorMessage("GrievanceDetailsPage/BtnSubmit_Tapped: " + ex.Message);
+                }
+                finally
+                {
+                    Tab.IsEnabled = true;
+                }
+            }
         }
 
         private void BtnLogo_Clicked(object sender, EventArgs e)
@@ -216,11 +249,6 @@ namespace AptDealzBuyer.Views.DashboardPages
             rfView.IsRefreshing = false;
         }
 
-        private void lstResponse_ItemSelected(object sender, SelectedItemChangedEventArgs e)
-        {
-            lstResponse.SelectedItem = null;
-        }
-
         private void txtMessage_Unfocused(object sender, FocusEventArgs e)
         {
             if (!Common.EmptyFiels(txtMessage.Text))
@@ -228,7 +256,6 @@ namespace AptDealzBuyer.Views.DashboardPages
                 BoxMessage.BackgroundColor = (Color)App.Current.Resources["LightGray"];
             }
         }
-        #endregion
 
         private void CopyString_Tapped(object sender, EventArgs e)
         {
@@ -254,5 +281,11 @@ namespace AptDealzBuyer.Views.DashboardPages
                 Common.DisplayErrorMessage("GrievanceDetailsPage/CopyString_Tapped: " + ex.Message);
             }
         }
+
+        private void lstResponse_ItemTapped(object sender, ItemTappedEventArgs e)
+        {
+            lstResponse.SelectedItem = null;
+        }
+        #endregion
     }
 }

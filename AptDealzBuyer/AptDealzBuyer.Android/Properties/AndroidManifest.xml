@@ -9,6 +9,7 @@
 	<application android:label="AptDealz - Buyer"
 				 android:theme="@android:style/Theme.DeviceDefault.Light"
 				 android:usesCleartextTraffic="true"
+				 android:largeHeap="true"
 				 android:hardwareAccelerated="true"
 				 android:requestLegacyExternalStorage="true">
 		<meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyD9tpGpEeVAZmxgsinpD-PfxdwNExwiy94" />

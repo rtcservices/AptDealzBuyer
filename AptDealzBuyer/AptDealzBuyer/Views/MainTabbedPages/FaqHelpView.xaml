@@ -45,30 +45,13 @@
                     ColumnDefinitions="*,*"
                     HorizontalOptions="EndAndExpand">
                     <Grid>
-                        <Image
-                            Margin="0"
-                            HeightRequest="30"
-                            HorizontalOptions="CenterAndExpand"
-                            Source="iconNotification.png"
-                            VerticalOptions="CenterAndExpand"
-                            WidthRequest="30" />
+                        <Image Source="iconNotification.png" Style="{StaticResource imgNotification}" />
                         <Frame
-                            x:Name="frmNotification" HasShadow="False"
-                            Margin="10,5,0,0"
-                            Padding="0"
-                            BackgroundColor="{StaticResource Orange}"
-                            CornerRadius="10"
-                            HeightRequest="20"
-                            HorizontalOptions="CenterAndExpand"
+                            x:Name="frmNotification"
                             IsVisible="false"
-                            VerticalOptions="StartAndExpand"
-                            WidthRequest="20" />
-                        <Label
-                            x:Name="lblNotificationCount" FontSize="15"
-                            Margin="10,5,0,0"
-                            HorizontalOptions="CenterAndExpand"
-                            Style="{StaticResource lblMedium}"
-                            VerticalOptions="Start" />
+                            Style="{StaticResource frmNotification}">
+                            <Label x:Name="lblNotificationCount" Style="{StaticResource lblNotification}" />
+                        </Frame>
                         <Grid.GestureRecognizers>
                             <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgNotification_Tapped" />
                         </Grid.GestureRecognizers>
@@ -116,12 +99,9 @@
                 <ListView
                     x:Name="lstFaq"
                     Grid.Row="1"
-                    HasUnevenRows="True"
-                    HorizontalOptions="FillAndExpand"
-                    HorizontalScrollBarVisibility="Never"
-                    SeparatorVisibility="None"
+                    Style="{StaticResource lstPrimary}" ItemTapped="lstFaq_ItemTapped"
                     VerticalOptions="StartAndExpand"
-                    VerticalScrollBarVisibility="Never">
+                    >
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
@@ -146,13 +126,11 @@
 
                                             <Label
                                                 Grid.Column="0"
-                                                Margin="0"
-                                                FontFamily="Poppins-Medium"
                                                 FontSize="15"
                                                 HorizontalOptions="StartAndExpand"
+                                                Style="{StaticResource lblMedium}"
                                                 Text="{Binding FaqTitle}"
-                                                TextColor="{StaticResource Green}"
-                                                VerticalOptions="CenterAndExpand" />
+                                                TextColor="{StaticResource Green}" />
 
                                             <Image
                                                 Grid.Column="1"

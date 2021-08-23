@@ -16,84 +16,88 @@
             </Grid.RowDefinitions>
 
             <!--  Main Content  -->
-            <Grid Grid.Row="1" RowSpacing="0">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
+            <ContentView Grid.Row="1" IsClippedToBounds="True">
+                <ScrollView Style="{StaticResource scrPrimary}">
+                    <Grid Padding="20,0" RowSpacing="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
 
-                <!--  LOGO / welcome Label  -->
-                <StackLayout Grid.Row="0" Spacing="0">
-                    <Image
-                        Aspect="AspectFill"
-                        HeightRequest="120"
-                        HorizontalOptions="CenterAndExpand"
-                        Source="iconLogo.png"
-                        VerticalOptions="CenterAndExpand" />
+                        <!--  LOGO / welcome Label  -->
+                        <StackLayout Grid.Row="0" Spacing="0">
+                            <Image
+                                Aspect="AspectFit"
+                                HeightRequest="100"
+                                HorizontalOptions="CenterAndExpand"
+                                Source="iconLogo.png"
+                                VerticalOptions="CenterAndExpand"
+                                WidthRequest="100" />
 
-                    <Label
-                        FontSize="24"
-                        Style="{StaticResource lblBoldHeader}"
-                        Text="Welcome Back" />
+                            <Label
+                                FontSize="24"
+                                Style="{StaticResource lblBoldHeader}"
+                                Text="Welcome Back" />
 
-                    <Label
-                        HorizontalOptions="CenterAndExpand"
-                        HorizontalTextAlignment="Center"
-                        Style="{StaticResource lblLight}"
-                        Text="Login to your AptDealz Account" />
-                </StackLayout>
+                            <Label
+                                HorizontalOptions="CenterAndExpand"
+                                HorizontalTextAlignment="Center"
+                                Style="{StaticResource lblLight}"
+                                Text="Login to your AptDealz Account" />
+                        </StackLayout>
 
-                <!--  Entry / Keep Login / Get Otp  -->
-                <Grid
-                    Grid.Row="1"
-                    Padding="20,0"
-                    RowDefinitions="Auto,*"
-                    RowSpacing="25"
-                    VerticalOptions="CenterAndExpand">
+                        <!--  Entry / Get Otp  Button  -->
+                        <Grid
+                            Grid.Row="1"
+                            RowDefinitions="Auto,Auto"
+                            RowSpacing="20"
+                            VerticalOptions="CenterAndExpand">
+                            <StackLayout Grid.Row="0" Spacing="{OnPlatform Android=0, iOS=7}">
+                                <Label Style="{StaticResource lblPrimary13}" Text="Email / Phone Number" />
+                                <ext:ExtEntry
+                                    x:Name="txtUserAuth"
+                                    Style="{StaticResource entrGray}"
+                                    Unfocused="txtUserAuth_Unfocused" />
+                                <BoxView x:Name="BoxUserAuth" Style="{StaticResource boxHorizontal}" />
+                            </StackLayout>
 
-                    <StackLayout Grid.Row="0" Spacing="{OnPlatform Android=0, iOS=7}">
-                        <Label Style="{StaticResource lblPrimary13}" Text="Email / Phone Number" />
-                        <ext:ExtEntry
-                            x:Name="txtUserAuth"
-                            Style="{StaticResource entrGray}"
-                            Unfocused="txtUserAuth_Unfocused" />
-                        <BoxView x:Name="BoxUserAuth" Style="{StaticResource boxHorizontal}" />
-                    </StackLayout>
+                            <!--  Get Otp  -->
+                            <Button
+                                x:Name="BtnGetOtp"
+                                Grid.Row="1"
+                                Margin="0"
+                                Clicked="BtnGetOtp_Clicked"
+                                Style="{StaticResource btnPrimary}"
+                                Text="Get OTP" />
+                        </Grid>
 
-                    <Button
-                        x:Name="BtnGetOtp"
-                        Grid.Row="1"
-                        Margin="0"
-                        Clicked="BtnGetOtp_Clicked"
-                        Style="{StaticResource btnPrimary}"
-                        Text="Get OTP" />
-                </Grid>
+                        <!--  Dont have Accoutn  -->
+                        <StackLayout
+                            Grid.Row="2"
+                            Padding="20"
+                            HorizontalOptions="CenterAndExpand"
+                            Orientation="Horizontal">
 
-                <!--  Dont have Accoutn  -->
-                <StackLayout
-                    Grid.Row="2"
-                    Padding="0,20"
-                    HorizontalOptions="CenterAndExpand"
-                    Orientation="Horizontal">
+                            <Label
+                                FontSize="15"
+                                HorizontalOptions="EndAndExpand"
+                                Style="{StaticResource lblMedium}"
+                                Text="Don't have an Account ?" />
 
-                    <Label
-                        FontSize="15"
-                        HorizontalOptions="EndAndExpand"
-                        Style="{StaticResource lblMedium}"
-                        Text="Don't have an Account ?" />
-
-                    <Label
-                        FontSize="15"
-                        HorizontalOptions="StartAndExpand"
-                        Style="{StaticResource lblMedium}"
-                        Text="Sign Up"
-                        TextColor="{StaticResource Green}" />
-                    <StackLayout.GestureRecognizers>
-                        <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="StkSignup_Tapped" />
-                    </StackLayout.GestureRecognizers>
-                </StackLayout>
-            </Grid>
+                            <Label
+                                FontSize="15"
+                                HorizontalOptions="StartAndExpand"
+                                Style="{StaticResource lblMedium}"
+                                Text="Sign Up"
+                                TextColor="{StaticResource Green}" />
+                            <StackLayout.GestureRecognizers>
+                                <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="StkSignup_Tapped" />
+                            </StackLayout.GestureRecognizers>
+                        </StackLayout>
+                    </Grid>
+                </ScrollView>
+            </ContentView>
         </Grid>
     </ContentPage.Content>
 </ContentPage>

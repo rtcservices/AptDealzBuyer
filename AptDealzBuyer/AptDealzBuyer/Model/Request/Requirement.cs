@@ -1,5 +1,4 @@
-﻿using AptDealzBuyer.Model.Reponse;
-using AptDealzBuyer.Utility;
+﻿using AptDealzBuyer.Utility;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -200,7 +199,7 @@ namespace AptDealzBuyer.Model.Request
         {
             get
             {
-                string quotes;
+                string quotes; 
                 if (Quotes > 1)
                 {
                     quotes = Quotes + " Quotes";
@@ -210,22 +209,6 @@ namespace AptDealzBuyer.Model.Request
                     quotes = Quotes + " Quote";
                 }
                 return quotes;
-            }
-        }
-
-        [JsonIgnore]
-        public string DeliveryDate
-        {
-            get
-            {
-                if (ExpectedDeliveryDate != null && ExpectedDeliveryDate != DateTime.MinValue)
-                {
-                    return ExpectedDeliveryDate.Date.ToString("dd/MM/yyyy");
-                }
-                else
-                {
-                    return string.Empty;
-                }
             }
         }
 

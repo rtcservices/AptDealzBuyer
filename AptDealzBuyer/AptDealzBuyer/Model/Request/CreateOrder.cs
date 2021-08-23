@@ -10,7 +10,7 @@ namespace AptDealzBuyer.Model.Request
         [JsonProperty("paidAmount")]
         public decimal PaidAmount { get; set; }
 
-        [JsonProperty("paymentStatus")]
-        public int PaymentStatus { get; set; }
+        //[JsonProperty("paymentStatus")]
+        //public int PaymentStatus { get; set; }
     }
 }

@@ -55,17 +55,8 @@
 		<string>This app needs access to microphone.</string>
 		<key>NSPhotoLibraryAddUsageDescription</key>
 		<string>This app needs access to the photo gallery.</string>
-		<!--<key>CFBundleURLTypes</key>
-		<array>
-			<dict>
-				<key>CFBundleTypeRole</key>
-				<string>Editor</string>
-				<key>CFBundleURLSchemes</key>
-				<array>
-					<string>com.googleusercontent.apps.50126607707-gpsov6051q8mks4835boqan44e72p57p</string>
-				</array>
-			</dict>
-		</array>-->
+		<key>NSContactsUsageDescription</key>
+		<string>Contacts</string>
 		<key>NSLocationWhenInUseUsageDescription</key>
 		<string>AptDealz need to access your location for better application experience</string>
 	</dict>

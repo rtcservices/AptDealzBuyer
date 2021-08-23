@@ -38,6 +38,7 @@ namespace AptDealzBuyer.Droid.CustomRenderers
                     Typeface font = Typeface.CreateFromAsset(Forms.Context.Assets, fontFamily + ".otf");
                     label.Typeface = font;
                 }
+
             }
             catch (Exception ex)
             {

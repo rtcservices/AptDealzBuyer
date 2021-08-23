@@ -32,18 +32,6 @@ namespace AptDealzBuyer.Utility
             }
         }
 
-        public string _firebaseVerificationId;
-        public string firebaseVerificationId
-        {
-            get { return firebaseVerificationId; }
-            set
-            {
-                _firebaseVerificationId = value;
-                PropertyChanged(this, new PropertyChangedEventArgs("firebaseVerificationId"));
-                Settings.firebaseVerificationId = value;
-            }
-        }
-
         public string _userToken;
         public string UserToken
         {
@@ -126,7 +114,6 @@ namespace AptDealzBuyer.Utility
 
         private const string EmailAddressKey = "email_address_key";
         private const string fcm_tokenKey = "fcm_token_key";
-        private const string firebaseVerificationIdKey = "firebaseVerificationId_key";
         private const string UserTokenKey = "userToken_key";
         private const string UserIdKey = "userId_key";
         private const string PhoneAuthTokenKey = "phoneAuthToken_key";
@@ -147,12 +134,6 @@ namespace AptDealzBuyer.Utility
         {
             get { return AppSettings.GetValueOrDefault(fcm_tokenKey, SettingsDefault); }
             set { AppSettings.AddOrUpdateValue(fcm_tokenKey, value); }
-        }
-
-        public static string firebaseVerificationId
-        {
-            get { return AppSettings.GetValueOrDefault(firebaseVerificationIdKey, SettingsDefault); }
-            set { AppSettings.AddOrUpdateValue(firebaseVerificationIdKey, value); }
         }
 
         public static string UserToken

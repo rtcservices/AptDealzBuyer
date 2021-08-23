@@ -17,11 +17,11 @@ namespace AptDealzBuyer.Views.DashboardPages
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class NotificationPage : ContentPage
     {
-        #region Objects
+        #region [ Objects ]
         private List<NotificationData> mNotificationsList;
         #endregion
 
-        #region Constructor
+        #region [ Constructor ]
         public NotificationPage()
         {
             try
@@ -30,12 +30,24 @@ namespace AptDealzBuyer.Views.DashboardPages
             }
             catch (Exception ex)
             {
-
+                Common.DisplayErrorMessage("NotificationPage/Ctor: " + ex.Message);
             }
         }
         #endregion
 
         #region Methods
+        public void Dispose()
+        {
+            GC.Collect();
+            GC.SuppressFinalize(this);
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            Dispose();
+        }
+
         protected override void OnAppearing()
         {
             try
@@ -45,7 +57,7 @@ namespace AptDealzBuyer.Views.DashboardPages
             }
             catch (Exception ex)
             {
-
+                Common.DisplayErrorMessage("NotificationPage/Appearing: " + ex.Message);
             }
         }
 
@@ -58,16 +70,24 @@ namespace AptDealzBuyer.Views.DashboardPages
             }
             catch (Exception ex)
             {
-                Common.DisplayErrorMessage("MainTabbedPage/OnBackButtonPressed: " + ex.Message);
+                Common.DisplayErrorMessage("NotificationPage/OnBackButtonPressed: " + ex.Message);
             }
             return true;
         }
 
         private async Task GetNotification()
         {
-            NotificationAPI notificationAPI = new NotificationAPI();
             try
             {
+                if (!Common.EmptyFiels(Settings.UserToken))
+                {
+                    if (Common.EmptyFiels(Common.Token))
+                    {
+                        Common.Token = Settings.UserToken;
+                    }
+                }
+
+                NotificationAPI notificationAPI = new NotificationAPI();
                 UserDialogs.Instance.ShowLoading(Constraints.Loading);
                 var mResponse = await notificationAPI.GetAllNotificationsForUser();
                 if (mResponse != null && mResponse.Succeeded)
@@ -133,11 +153,6 @@ namespace AptDealzBuyer.Views.DashboardPages
             //Common.OpenMenu();
         }
 
-        private void ImgNotification_Tapped(object sender, EventArgs e)
-        {
-
-        }
-
         private void ImgQuestion_Tapped(object sender, EventArgs e)
         {
 
@@ -168,11 +183,6 @@ namespace AptDealzBuyer.Views.DashboardPages
             }
         }
 
-        private void lstNotification_ItemSelected(object sender, SelectedItemChangedEventArgs e)
-        {
-            lstNotification.SelectedItem = null;
-        }
-
         private async void lstNotification_Refreshing(object sender, EventArgs e)
         {
             try
@@ -189,33 +199,46 @@ namespace AptDealzBuyer.Views.DashboardPages
         }
         #endregion
 
-        private void GrdList_Tapped(object sender, EventArgs e)
+        private async void GrdList_Tapped(object sender, EventArgs e)
         {
-            try
+            var Tab = (Grid)sender;
+            if (Tab.IsEnabled)
             {
-                var GridExp = (Grid)sender;
-                var mNotification = GridExp.BindingContext as NotificationData;
-                if (mNotification.NavigationScreen == (int)NavigationScreen.RequirementDetails)
+                try
                 {
-                    Navigation.PushAsync(new DashboardPages.ViewRequirememntPage("active", mNotification.ParentKeyId));
+                    Tab.IsEnabled = false;
+                    var mNotification = Tab.BindingContext as NotificationData;
+                    if (mNotification.NavigationScreen == (int)NavigationScreen.RequirementDetails)
+                    {
+                        await Navigation.PushAsync(new DashboardPages.ViewRequirememntPage(mNotification.ParentKeyId));
+                    }
+                    else if (mNotification.NavigationScreen == (int)NavigationScreen.QuoteDetails)
+                    {
+                        await Navigation.PushAsync(new QuoteDetailsPage(mNotification.ParentKeyId));
+                    }
+                    else if (mNotification.NavigationScreen == (int)NavigationScreen.OrderDetails)
+                    {
+                        await Navigation.PushAsync(new Orders.OrderDetailsPage(mNotification.ParentKeyId));
+                    }
+                    else if (mNotification.NavigationScreen == (int)NavigationScreen.GrievanceDetails)
+                    {
+                        await Navigation.PushAsync(new GrievanceDetailsPage(mNotification.ParentKeyId));
+                    }
                 }
-                else if (mNotification.NavigationScreen == (int)NavigationScreen.QuoteDetails)
+                catch (Exception ex)
                 {
-                    Navigation.PushAsync(new QuoteDetailsPage(mNotification.ParentKeyId));
+                    Common.DisplayErrorMessage("NotificationPage/GrdList_Tapped: " + ex.Message);
                 }
-                else if (mNotification.NavigationScreen == (int)NavigationScreen.OrderDetails)
+                finally
                 {
-                    Navigation.PushAsync(new Orders.OrderDetailsPage(mNotification.ParentKeyId));
-                }
-                else if (mNotification.NavigationScreen == (int)NavigationScreen.GrievanceDetails)
-                {
-                    Navigation.PushAsync(new GrievanceDetailsPage(mNotification.ParentKeyId));
+                    Tab.IsEnabled = true;
                 }
             }
-            catch (Exception ex)
-            {
-                Common.DisplayErrorMessage("NotificationPage/GrdList_Tapped: " + ex.Message);
-            }
+        }
+
+        private void lstNotification_ItemTapped(object sender, ItemTappedEventArgs e)
+        {
+            lstNotification.SelectedItem = null;
         }
     }
 }

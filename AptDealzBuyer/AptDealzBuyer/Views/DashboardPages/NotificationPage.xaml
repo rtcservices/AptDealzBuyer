@@ -89,7 +89,7 @@
                     x:Name="lstNotification"
                     Grid.Row="1"
                     IsPullToRefreshEnabled="True"
-                    ItemSelected="lstNotification_ItemSelected"
+                    ItemTapped="lstNotification_ItemTapped"
                     Refreshing="lstNotification_Refreshing"
                     Style="{StaticResource lstPrimary}">
                     <ListView.ItemTemplate>

@@ -6,6 +6,7 @@ using AptDealzBuyer.Utility;
 using AptDealzBuyer.Views.MasterData;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -15,19 +16,30 @@ namespace AptDealzBuyer.Views.Login
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class LoginPage : ContentPage
     {
-        #region Objects
+        #region [ Objects ]
         private bool isEmail = false;
         #endregion
 
-        #region Constructor
+        #region [ Constructor ]
         public LoginPage()
         {
             InitializeComponent();
-            //txtUserAuth.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeNone);
         }
         #endregion
 
-        #region Methods
+        #region [ Methods ]
+        public void Dispose()
+        {
+            GC.Collect();
+            GC.SuppressFinalize(this);
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            Dispose();
+        }
+
         protected override void OnAppearing()
         {
             base.OnAppearing();
@@ -115,7 +127,7 @@ namespace AptDealzBuyer.Views.Login
             txtUserAuth.Text = txtUserAuth.Text.Trim();
         }
 
-        private async void AuthenticateUser()
+        private async Task AuthenticateUser()
         {
             try
             {
@@ -162,7 +174,6 @@ namespace AptDealzBuyer.Views.Login
                                     }
                                     else
                                     {
-                                        Settings.firebaseVerificationId = keyValue.Value;
                                         Settings.PhoneAuthToken = keyValue.Value;
 
                                         var mLogin = FillLogin();
@@ -214,7 +225,7 @@ namespace AptDealzBuyer.Views.Login
                 {
                     mLogin.FcmToken = Settings.fcm_token;
                 }
-                if (!Common.EmptyFiels(Settings.firebaseVerificationId))
+                if (!Common.EmptyFiels(Settings.PhoneAuthToken))
                 {
                     mLogin.FirebaseVerificationId = Settings.PhoneAuthToken;
                 }
@@ -268,16 +279,50 @@ namespace AptDealzBuyer.Views.Login
         }
         #endregion
 
-        #region Events   
-        private void StkSignup_Tapped(object sender, EventArgs e)
+        #region [ Events ]  
+        private async void StkSignup_Tapped(object sender, EventArgs e)
         {
-            Navigation.PushAsync(new Login.SignupPage());
+            var Tab = (StackLayout)sender;
+            if (Tab.IsEnabled)
+            {
+                try
+                {
+                    Tab.IsEnabled = false;
+                    await Navigation.PushAsync(new Login.SignupPage());
+                }
+                catch (Exception ex)
+                {
+                    Common.DisplayErrorMessage("LoginPage/StkSignup_Tapped: " + ex.Message);
+                }
+                finally
+                {
+                    Tab.IsEnabled = true;
+                }
+            }
+
         }
 
-        private void BtnGetOtp_Clicked(object sender, EventArgs e)
+        private async void BtnGetOtp_Clicked(object sender, EventArgs e)
         {
-            Common.BindAnimation(button: BtnGetOtp);
-            AuthenticateUser();
+            var Tab = (Button)sender;
+            if (Tab.IsEnabled)
+            {
+                try
+                {
+                    Tab.IsEnabled = false;
+                    Common.BindAnimation(button: BtnGetOtp);
+                    await AuthenticateUser();
+                }
+                catch (Exception ex)
+                {
+                    Common.DisplayErrorMessage("LoginPage/BtnGetOtp_Clicked: " + ex.Message);
+                }
+                finally
+                {
+                    Tab.IsEnabled = true;
+                }
+            }
+
         }
 
         private void txtUserAuth_Unfocused(object sender, FocusEventArgs e)

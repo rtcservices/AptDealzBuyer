@@ -9,25 +9,25 @@ namespace AptDealzBuyer.Views.PopupPages
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class PaymentPopup : PopupPage
     {
-        #region Objects
-        // create objects here
+        #region [ Objects ]       
         public event EventHandler isRefresh;
         #endregion
 
-        #region Constructor
+        #region [ Constructor ]
         public PaymentPopup(string message)
         {
             InitializeComponent();
             lblMessage.Text = message;
         }
         #endregion
+
+        #region [ Events ]        
         protected override bool OnBackgroundClicked()
         {
             base.OnBackgroundClicked();
             return false;
         }
 
-        #region Events        
         private void FrmPay_Tapped(object sender, EventArgs e)
         {
             try

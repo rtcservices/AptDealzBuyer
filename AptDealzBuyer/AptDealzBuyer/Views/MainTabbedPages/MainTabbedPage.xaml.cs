@@ -12,12 +12,12 @@ namespace AptDealzBuyer.Views.MainTabbedPages
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class MainTabbedPage : ContentPage
     {
-        #region Objects
+        #region [ Objects ]
         private string selectedView;
         private bool isNavigate = false;
         #endregion
 
-        #region Constructor
+        #region [ Constructor ]
         public MainTabbedPage(string OpenView, bool isNavigate = false)
         {
             InitializeComponent();
@@ -29,7 +29,19 @@ namespace AptDealzBuyer.Views.MainTabbedPages
 
         #endregion
 
-        #region Methods
+        #region [ Methods ]
+        public void Dispose()
+        {
+            GC.Collect();
+            GC.SuppressFinalize(this);
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            Dispose();
+        }
+
         protected override bool OnBackButtonPressed()
         {
             base.OnBackButtonPressed();
@@ -122,76 +134,61 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         {
             try
             {
+                UnselectTab();
                 if (view == "Home")
                 {
-                    UnselectTab();
                     imgHome.Source = "iconHomeActive.png";
                     lblHome.TextColor = (Color)App.Current.Resources["Orange"];
                     grdMain.Children.Add(new HomeView());
                 }
                 else if (view == "PreviousRequirements")
                 {
-                    UnselectTab();
                     imgRequirements.Source = "iconRequirementsActive.png";
                     lblRequirements.TextColor = (Color)App.Current.Resources["Orange"];
                     grdMain.Children.Add(new PreviousRequirementView());
                 }
                 else if (view == "ActiveRequirements")
                 {
-                    UnselectTab();
                     imgRequirements.Source = "iconRequirementsActive.png";
                     lblRequirements.TextColor = (Color)App.Current.Resources["Orange"];
                     grdMain.Children.Add(new ActiveRequirementView());
                 }
                 else if (view == "Order")
                 {
-                    UnselectTab();
                     imgOrders.Source = "iconOrdersActive.png";
                     lblOrders.TextColor = (Color)App.Current.Resources["Orange"];
                     grdMain.Children.Add(new OrderView());
                 }
                 else if (view == "RaiseGrievances")
                 {
-                    UnselectTab();
                     grdMain.Children.Add(new OrderView(true));
                 }
                 else if (view == "ShippingDetails")
                 {
-                    UnselectTab();
                     imgOrders.Source = "iconOrdersActive.png";
                     lblOrders.TextColor = (Color)App.Current.Resources["Orange"];
                     grdMain.Children.Add(new ShippingDetailsView());
                 }
                 else if (view == "Profile")
                 {
-                    UnselectTab();
                     imgAccount.Source = "iconAccountActive.png";
                     lblAccount.TextColor = (Color)App.Current.Resources["Orange"];
                     grdMain.Children.Add(new AccountView());
                 }
                 else if (view == "AboutAptDealz")
                 {
-                    UnselectTab();
                     grdMain.Children.Add(new AboutView());
                 }
                 else if (view == "TermsPolicies")
                 {
-                    UnselectTab();
                     grdMain.Children.Add(new TermsAndPoliciesView());
                 }
                 else if (view == "FAQHelp")
                 {
-                    UnselectTab();
                     grdMain.Children.Add(new FaqHelpView());
-                }
-                else if (view == "PostNewRequirements")
-                {
-                    UnselectTab();
-                    Navigation.PushAsync(new DashboardPages.PostNewRequiremntPage());
                 }
                 else
                 {
-                    UnselectTab();
                     imgHome.Source = "iconHomeActive.png";
                     lblHome.TextColor = (Color)App.Current.Resources["Orange"];
                     grdMain.Children.Add(new HomeView());
@@ -206,28 +203,47 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         }
         #endregion
 
-        #region Events
-        private void StkHome_Tapped(object sender, EventArgs e)
+        #region [ Events ]
+        private void Tab_Tapped(object sender, EventArgs e)
         {
-            BindViews("Home");
-        }
-
-        private void StkRequirements_Tapped(object sender, EventArgs e)
-        {
-            this.isNavigate = true;
-            BindViews("ActiveRequirements");
-        }
-
-        private void StkOrders_Tapped(object sender, EventArgs e)
-        {
-            this.isNavigate = true;
-            BindViews("Order");
-        }
-
-        private void StkAccount_Tapped(object sender, EventArgs e)
-        {
-            this.isNavigate = true;
-            BindViews("Profile");
+            var grid = (Grid)sender;
+            if (grid.IsEnabled)
+            {
+                try
+                {
+                    grid.IsEnabled = false;
+                    if (!Common.EmptyFiels(grid.ClassId))
+                    {
+                        if (grid.ClassId == "Home")
+                        {
+                            BindViews("Home");
+                        }
+                        else if (grid.ClassId == "Requirements")
+                        {
+                            this.isNavigate = true;
+                            BindViews("ActiveRequirements");
+                        }
+                        else if (grid.ClassId == "Order")
+                        {
+                            this.isNavigate = true;
+                            BindViews("Order");
+                        }
+                        else if (grid.ClassId == "Profile")
+                        {
+                            this.isNavigate = true;
+                            BindViews("Profile");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Common.DisplayErrorMessage("MainTabbedPage/Tab_Tapped: " + ex.Message);
+                }
+                finally
+                {
+                    grid.IsEnabled = true;
+                }
+            }
         }
         #endregion
     }

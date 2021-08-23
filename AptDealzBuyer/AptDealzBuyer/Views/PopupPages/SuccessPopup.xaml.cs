@@ -9,11 +9,11 @@ namespace AptDealzBuyer.Views.PopupPages
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class SuccessPopup : PopupPage
     {
-        #region Objects        
+        #region [ Objects ]        
         public event EventHandler isRefresh;
         #endregion
 
-        #region Constructor
+        #region [ Constructor ]
         public SuccessPopup(string ReqMessage, bool isSuccess = true)
         {
             try
@@ -42,7 +42,7 @@ namespace AptDealzBuyer.Views.PopupPages
             return false;
         }
 
-        #region Events
+        #region [ Events ]
         private void FrmHome_Tapped(object sender, EventArgs e)
         {
             try
