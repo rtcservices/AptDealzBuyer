@@ -4,7 +4,7 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:ext="clr-namespace:AptDealzBuyer.Extention"
-    BackgroundColor="{StaticResource White}"
+    BackgroundColor="{StaticResource appColor6}"
     NavigationPage.HasNavigationBar="False">
     <ContentView.Content>
         <Grid RowSpacing="0">
@@ -204,9 +204,10 @@
 
                 <ListView
                     x:Name="lstRequirements"
-                    Grid.Row="2" ItemTapped="lstRequirements_ItemTapped"
+                    Grid.Row="2"
                     IsPullToRefreshEnabled="True"
                     ItemAppearing="lstRequirements_ItemAppearing"
+                    ItemTapped="lstRequirements_ItemTapped"
                     Refreshing="lstRequirements_Refreshing"
                     Style="{StaticResource lstPrimary}">
                     <ListView.ItemTemplate>
@@ -256,7 +257,7 @@
                                                 HorizontalOptions="StartAndExpand"
                                                 Style="{StaticResource lblMedium}"
                                                 Text="{Binding TotalPriceEstimation, StringFormat='RS {0:}'}"
-                                                TextColor="{StaticResource Green}" />
+                                                TextColor="{StaticResource appColor1}" />
 
                                             <!--  Hide Grid  -->
                                             <Grid

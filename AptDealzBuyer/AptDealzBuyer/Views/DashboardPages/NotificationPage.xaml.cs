@@ -66,7 +66,7 @@ namespace AptDealzBuyer.Views.DashboardPages
             base.OnBackButtonPressed();
             try
             {
-                Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
+                Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_Home));
             }
             catch (Exception ex)
             {
@@ -161,12 +161,12 @@ namespace AptDealzBuyer.Views.DashboardPages
         private void ImgBack_Tapped(object sender, EventArgs e)
         {
             Common.BindAnimation(imageButton: ImgBack);
-            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_Home));
         }
 
         private void BtnLogo_Clicked(object sender, EventArgs e)
         {
-            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_Home));
         }
 
         private async void ImgClose_Tapped(object sender, EventArgs e)

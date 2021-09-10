@@ -1,8 +1,11 @@
 ﻿using Acr.UserDialogs;
 using AptDealzBuyer.API;
+using AptDealzBuyer.Model.Reponse;
 using AptDealzBuyer.Model.Request;
 using AptDealzBuyer.Repository;
 using AptDealzBuyer.Utility;
+using AptDealzBuyer.Views.PopupPages;
+using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,14 +21,17 @@ namespace AptDealzBuyer.Views.DashboardPages
         #region [ Objects ]
         private string ReqType = string.Empty;
         private string RequirementId;
+        private string ProductImageUrl = string.Empty;
+        private string filterBy = Constraints.Str_ReceivedDate;
+        private bool isAssending = false;
 
         Requirement mRequirement;
         private List<string> subcaregories;
-        private List<Quote> mQuoteList;
+        private List<ReceivedQuote> mQuoteList;
         #endregion
 
         #region [ Constructor ]
-        public ViewRequirememntPage(string RequirementId, string ReqType = "active")
+        public ViewRequirememntPage(string RequirementId, string ReqType = Constraints.Str_Active)
         {
             try
             {
@@ -33,9 +39,9 @@ namespace AptDealzBuyer.Views.DashboardPages
                 this.ReqType = ReqType;
                 this.RequirementId = RequirementId;
                 mRequirement = new Requirement();
-                mQuoteList = new List<Quote>();
+                mQuoteList = new List<ReceivedQuote>();
 
-                MessagingCenter.Unsubscribe<string>(this, "NotificationCount"); MessagingCenter.Subscribe<string>(this, "NotificationCount", (count) =>
+                MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount); MessagingCenter.Subscribe<string>(this, Constraints.Str_NotificationCount, (count) =>
                 {
                     if (!Common.EmptyFiels(Common.NotificationCount))
                     {
@@ -74,22 +80,27 @@ namespace AptDealzBuyer.Views.DashboardPages
             try
             {
                 base.OnAppearing();
-                if (ReqType == "active")
-                {
-                    grdPrevReq.IsVisible = false;
-                    grdActiveReq.IsVisible = true;
-                }
-                else
-                {
-                    grdActiveReq.IsVisible = false;
-                    grdPrevReq.IsVisible = true;
-                }
-
+                BindGrids();
                 GetRequirementDetails();
             }
             catch (Exception ex)
             {
                 Common.DisplayErrorMessage("ViewRequirememntPage/OnAppearing: " + ex.Message);
+            }
+        }
+
+        private void BindGrids()
+        {
+            if (ReqType == Constraints.Str_Active)
+            {
+                grdPrevReq.IsVisible = false;
+                grdActiveReq.IsVisible = true;
+
+            }
+            else
+            {
+                grdActiveReq.IsVisible = false;
+                grdPrevReq.IsVisible = true;
             }
         }
 
@@ -103,10 +114,11 @@ namespace AptDealzBuyer.Views.DashboardPages
                     if (!Common.EmptyFiels(mRequirement.ProductImage))
                     {
                         imgProductImage.Source = mRequirement.ProductImage;
+                        ProductImageUrl = mRequirement.ProductImage;
                     }
                     else
                     {
-                        imgProductImage.Source = "iconProductBanner.png";
+                        imgProductImage.Source = Constraints.Img_ProductBanner;
                     }
 
                     lblDescription.Text = mRequirement.ProductDescription;
@@ -151,36 +163,36 @@ namespace AptDealzBuyer.Views.DashboardPages
 
                     if (mRequirement.NeedInsuranceCoverage)
                     {
-                        lblNeedInsurance.Text = "✓";
+                        lblNeedInsurance.Text = Constraints.Str_Right;
                     }
                     else
                     {
-                        lblNeedInsurance.Text = "✕";
+                        lblNeedInsurance.Text = Constraints.Str_Wrong;
                     }
 
                     if (mRequirement.PreferInIndiaProducts)
                     {
-                        lblPreferInIndiaProducts.Text = "✓";
+                        lblPreferInIndiaProducts.Text = Constraints.Str_Right;
                     }
                     else
                     {
-                        lblPreferInIndiaProducts.Text = "✕";
+                        lblPreferInIndiaProducts.Text = Constraints.Str_Wrong;
                     }
 
                     if (mRequirement.PickupProductDirectly)
                     {
-                        lblDeliveryDate.Text = "Expected Pickup Date";
-                        lblPreferSeller.Text = "✓";
+                        lblDeliveryDate.Text = Constraints.Str_ExpectedPickupDate;
+                        lblPreferSeller.Text = Constraints.Str_Right;
                     }
                     else
                     {
-                        lblDeliveryDate.Text = "Expected Delivery Date";
-                        lblPreferSeller.Text = "✕";
+                        lblDeliveryDate.Text = Constraints.Str_ReceivedDate;
+                        lblPreferSeller.Text = Constraints.Str_Wrong;
                     }
 
                     //List of Quote
                     mQuoteList = mRequirement.ReceivedQuotes;
-                    GetListOfQuotes();
+                    GetListOfQuotes(filterBy, false);
 
                     #region [ Address ]
                     lblBillingAddress.Text = mRequirement.BillingAddressName + "\n"
@@ -215,19 +227,34 @@ namespace AptDealzBuyer.Views.DashboardPages
             }
         }
 
-        private void GetListOfQuotes()
+        private void GetListOfQuotes(string filterBy, bool sortBy)
         {
             try
             {
                 if (mQuoteList != null && mQuoteList.Count > 0)
                 {
-                    var AccepteedQuote = mQuoteList.Where(x => x.Status == "Accepted");
-                    if (ReqType == "active")
+                    var AccepteedQuote = mQuoteList.Where(x => x.Status == QuoteStatus.Accepted.ToString());
+                    if (ReqType == Constraints.Str_Active)
                     {
                         lblNoRecord.IsVisible = false;
                         lstQoutes.IsVisible = true;
                         FrmSortBy.IsVisible = true;
-                        lstQoutes.ItemsSource = mQuoteList.OrderByDescending(x => x.QuoteId).ToList();
+                        if (filterBy == Constraints.Str_Amount && sortBy)
+                        {
+                            lstQoutes.ItemsSource = mQuoteList.OrderBy(x => x.Amount).ToList();
+                        }
+                        else if (filterBy == Constraints.Str_Amount && !sortBy)
+                        {
+                            lstQoutes.ItemsSource = mQuoteList.OrderByDescending(x => x.Amount).ToList();
+                        }
+                        else if (filterBy == Constraints.Str_ReceivedDate && sortBy)
+                        {
+                            lstQoutes.ItemsSource = mQuoteList.OrderBy(x => x.ReceivedDate).ToList();
+                        }
+                        else
+                        {
+                            lstQoutes.ItemsSource = mQuoteList.OrderByDescending(x => x.ReceivedDate).ToList();
+                        }
                         lstQoutes.HeightRequest = mQuoteList.Count * 100;
                     }
                     else
@@ -251,7 +278,7 @@ namespace AptDealzBuyer.Views.DashboardPages
                 }
                 else
                 {
-                    if (ReqType == "active")
+                    if (ReqType == Constraints.Str_Active)
                     {
                         lblNoRecord.IsVisible = true;
                         FrmSortBy.IsVisible = false;
@@ -279,27 +306,6 @@ namespace AptDealzBuyer.Views.DashboardPages
             }
         }
 
-        private void QuoteListSorting()
-        {
-            try
-            {
-                if (ImgSort.Source.ToString().Replace("File: ", "") == Constraints.Sort_ASC)
-                {
-                    ImgSort.Source = Constraints.Sort_DSC;
-                    lstQoutes.ItemsSource = mQuoteList.OrderByDescending(x => x.QuoteId).ToList();
-                }
-                else
-                {
-                    ImgSort.Source = Constraints.Sort_ASC;
-                    lstQoutes.ItemsSource = mQuoteList.OrderBy(x => x.QuoteId).ToList();
-                }
-            }
-            catch (Exception ex)
-            {
-                Common.DisplayErrorMessage("ViewRequirememntPage/QuotesListSorting: " + ex.Message);
-            }
-        }
-
         private async Task DeleteRequirement(string requirmentId)
         {
             try
@@ -307,47 +313,12 @@ namespace AptDealzBuyer.Views.DashboardPages
                 var isDelete = await DependencyService.Get<IRequirementRepository>().DeleteRequirement(requirmentId);
                 if (isDelete)
                 {
-                    Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("ActiveRequirements", isNavigate: true));
+                    Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_Requirements, isNavigate: true));
                 }
             }
             catch (Exception ex)
             {
                 Common.DisplayErrorMessage("ViewRequirememntPage/DeleteRequirement: " + ex.Message);
-            }
-            finally
-            {
-                UserDialogs.Instance.HideLoading();
-            }
-        }
-
-        private async void CancelRequirement()
-        {
-            try
-            {
-                var isCancel = await App.Current.MainPage.DisplayAlert(Constraints.Alert, Constraints.AreYouSureWantCancelReq, Constraints.Yes, Constraints.No);
-                if (isCancel)
-                {
-                    RequirementAPI requirementAPI = new RequirementAPI();
-                    UserDialogs.Instance.ShowLoading(Constraints.Loading);
-
-                    var mResponse = await requirementAPI.CancelRequirement(mRequirement.RequirementId);
-                    if (mResponse != null && mResponse.Succeeded)
-                    {
-                        Common.DisplaySuccessMessage(mResponse.Message);
-                        Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("ActiveRequirements", isNavigate: true));
-                    }
-                    else
-                    {
-                        if (mResponse != null)
-                            Common.DisplayErrorMessage(mResponse.Message);
-                        else
-                            Common.DisplayErrorMessage(Constraints.Something_Wrong);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Common.DisplayErrorMessage("ViewRequirememntPage/CancelRequirement: " + ex.Message);
             }
             finally
             {
@@ -398,7 +369,7 @@ namespace AptDealzBuyer.Views.DashboardPages
 
         private void BtnLogo_Clicked(object sender, EventArgs e)
         {
-            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_Home));
         }
         #endregion
 
@@ -427,54 +398,17 @@ namespace AptDealzBuyer.Views.DashboardPages
 
         private void FrmSortBy_Tapped(object sender, EventArgs e)
         {
-            QuoteListSorting();
-        }
-
-        private async void RefreshView_Refreshing(object sender, EventArgs e)
-        {
-            try
+            if (ImgSort.Source.ToString().Replace("File: ", "") == Constraints.Img_SortASC)
             {
-                rfView.IsRefreshing = true;
-                if (ReqType == "active")
-                {
-                    grdPrevReq.IsVisible = false;
-                    grdActiveReq.IsVisible = true;
-                }
-                else
-                {
-                    grdActiveReq.IsVisible = false;
-                    grdPrevReq.IsVisible = true;
-                }
-
-                await GetRequirementDetails();
-                rfView.IsRefreshing = false;
+                ImgSort.Source = Constraints.Img_SortDSC;
+                isAssending = false;
             }
-            catch (Exception ex)
+            else
             {
-                Common.DisplayErrorMessage("ViewRequirememntPage/RefreshView_Refreshing: " + ex.Message);
+                ImgSort.Source = Constraints.Img_SortASC;
+                isAssending = true;
             }
-        }
-
-        private async void GrdViewQuote_Tapped(object sender, EventArgs e)
-        {
-            var GridTab = (Grid)sender;
-            if (GridTab.IsEnabled)
-            {
-                try
-                {
-                    GridTab.IsEnabled = false;
-                    var mQuote = GridTab.BindingContext as Quote;
-                    await Navigation.PushAsync(new QuoteDetailsPage(mQuote.QuoteId));
-                }
-                catch (Exception ex)
-                {
-                    Common.DisplayErrorMessage("ViewRequirememntPage/GrdViewQuote_Tapped: " + ex.Message);
-                }
-                finally
-                {
-                    GridTab.IsEnabled = true;
-                }
-            }
+            GetListOfQuotes(filterBy, isAssending);
         }
 
         private void CopyString_Tapped(object sender, EventArgs e)
@@ -490,13 +424,43 @@ namespace AptDealzBuyer.Views.DashboardPages
             }
         }
 
+        #region [ Listing ]
+        private async void GrdViewQuote_Tapped(object sender, EventArgs e)
+        {
+            var GridTab = (Grid)sender;
+            if (GridTab.IsEnabled)
+            {
+                try
+                {
+                    GridTab.IsEnabled = false;
+                    var mQuote = GridTab.BindingContext as ReceivedQuote;
+                    await Navigation.PushAsync(new QuoteDetailsPage(mQuote.QuoteId));
+                }
+                catch (Exception ex)
+                {
+                    Common.DisplayErrorMessage("ViewRequirememntPage/GrdViewQuote_Tapped: " + ex.Message);
+                }
+                finally
+                {
+                    GridTab.IsEnabled = true;
+                }
+            }
+        }
 
-        //private void BtnCancelRequirement_Tapped(object sender, EventArgs e)
-        //{
-        //    Common.BindAnimation(button: BtnCancelRequirement);
-        //    CancelRequirement();
-        //}
-        #endregion
+        private async void RefreshView_Refreshing(object sender, EventArgs e)
+        {
+            try
+            {
+                rfView.IsRefreshing = true;
+                BindGrids();
+                await GetRequirementDetails();
+                rfView.IsRefreshing = false;
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("ViewRequirememntPage/RefreshView_Refreshing: " + ex.Message);
+            }
+        }
 
         private void lstQoutes_ItemTapped(object sender, ItemTappedEventArgs e)
         {
@@ -506,6 +470,58 @@ namespace AptDealzBuyer.Views.DashboardPages
         private void lstAcceptedQoutes_ItemTapped(object sender, ItemTappedEventArgs e)
         {
             lstAcceptedQoutes.SelectedItem = null;
+        }
+        #endregion
+
+        #endregion
+
+        private async void FrmProductImage_Tapped(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!Common.EmptyFiels(ProductImageUrl))
+                {
+                    var successPopup = new PopupPages.ShowImagePopup(ProductImageUrl);
+                    await PopupNavigation.Instance.PushAsync(successPopup);
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("ViewRequirememntPage/FrmProductImage_Tapped: " + ex.Message);
+            }
+        }
+
+        private async void FrmFilter_Tapped(object sender, EventArgs e)
+        {
+            var Tab = (Frame)sender;
+            if (Tab.IsEnabled)
+            {
+                try
+                {
+                    Tab.IsEnabled = false;
+                    var sortby = new QuotesPopup(filterBy);
+                    sortby.isRefresh += (s1, e1) =>
+                    {
+                        string result = s1.ToString();
+                        if (!Common.EmptyFiels(result))
+                        {
+                            filterBy = result;
+                            lblFilterBy.Text = filterBy;
+
+                            GetListOfQuotes(filterBy, isAssending);
+                        }
+                    };
+                    await PopupNavigation.Instance.PushAsync(sortby);
+                }
+                catch (Exception ex)
+                {
+                    Common.DisplayErrorMessage("ActiveRequirementView/CustomEntry_Unfocused: " + ex.Message);
+                }
+                finally
+                {
+                    Tab.IsEnabled = true;
+                }
+            }
         }
     }
 }

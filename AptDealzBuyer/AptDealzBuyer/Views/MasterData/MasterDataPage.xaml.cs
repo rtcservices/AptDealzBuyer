@@ -37,7 +37,7 @@ namespace AptDealzBuyer.Views.MasterData
                 Common.MasterData = this;
                 Common.MasterData.Master = new MenuPage();
                 if (isNotification == false)
-                    Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
+                    Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_Home));
                 else
                     Common.MasterData.Detail = new NavigationPage(new Views.DashboardPages.NotificationPage());
 
@@ -59,7 +59,7 @@ namespace AptDealzBuyer.Views.MasterData
                 if (!Common.EmptyFiels(notificationCount))
                 {
                     Common.NotificationCount = notificationCount;
-                    MessagingCenter.Send<string>(Common.NotificationCount, "NotificationCount");
+                    MessagingCenter.Send<string>(Common.NotificationCount, Constraints.Str_NotificationCount);
                 }
             }
             catch (Exception ex)

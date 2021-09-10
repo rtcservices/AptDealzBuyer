@@ -75,9 +75,9 @@ namespace AptDealzBuyer.Views.SplashScreen
             {
                 mCarousellImages = new List<CarousellImage>()
             {
-                new CarousellImage{ImageName="imgWelcomeOne.png"},
-                new CarousellImage{ImageName="imgWelcomeTwo.png"},
-                new CarousellImage{ImageName="imgWelcomeThree.png"},
+                new CarousellImage{ImageName=Constraints.Img_WelcomeOne},
+                new CarousellImage{ImageName=Constraints.Img_WelcomeTwo},
+                new CarousellImage{ImageName=Constraints.Img_WelcomeThree},
             };
                 Indicators.ItemsSource = cvWelcome.ItemsSource = mCarousellImages.ToList();
             }

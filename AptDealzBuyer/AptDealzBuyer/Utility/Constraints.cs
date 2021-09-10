@@ -5,29 +5,111 @@
 
         public const int LargeBufferSize = 4096;
 
+        #region [ String ]
+        public const string Str_DateFormate = "dd/MM/yyyy";
+        public const string Str_TokenExpired = "TokenExpired3";
+        public const string Str_Active = "Active";
+        public const string Str_Amount = "Amount";
+        public const string Str_NotificationCount = "NotificationCount";
+        public const string Str_ReceivedDate = "Received Date";
+
+        public const string Str_Home = "Home";
+        public const string Str_Requirements = "Requirements";
+        public const string Str_Order = "Order";
+        public const string Str_Profile = "Profile";
+        public const string Str_Grievances = "Grievances";
+        public const string Str_PreviousRequirements = "PreviousRequirements";
+        public const string Str_PostNewRequirements = "PostNewRequirements";
+        public const string Str_ShippingDetails = "ShippingDetails";
+        public const string Str_AboutAptDealz = "AboutAptDealz";
+        public const string Str_TermsPolicies = "TermsPolicies";
+        public const string Str_FAQHelp = "FAQHelp";
+        public const string Str_RaiseGrievances = "RaiseGrievances";
+        public const string Str_Notifications = "Notifications";
+        public const string Str_ContactSupport = "ContactSupport";
+        public const string Str_WeSupport = "WeSupport";
+
+        public const string Str_ProductPickupPINCode = "Product Pickup PIN Code";
+        public const string Str_ShippingPINCode = "Shipping PIN Code";
+        public const string Str_ExpectedPickupDate = "Expected Pickup Date";
+        public const string Str_ExpectedDeliveryDate = "Expected Delivery Date";
+        public const string Str_DeliveryLocationPINCode = "Delivery Location PIN Code";
+        public const string Str_PickupLocationPINCode = "Pickup Location PIN Code";
+        public const string Str_RevealContact = "Reveal Contact";
+        public const string Str_NotRevealContact = "Contact was not revealed";
+
+        public const string Str_Right = "✓";
+        public const string Str_Wrong = "✕";
+
+        public const string RP_UserName = "rzp_test_PUJtE9p3XLuGe8";
+        public const string RP_Password = "42HIrjeUTXOHNC84Ldl3aDzL";
+        public const string RP_PayNow = "PayNow";
+        public const string RP_PaidResponse = "PaidResponse";
+        public const string RP_RevealPayNow = "RevealPayNow";
+        public const string RP_PaidRevealResponse = "PaidRevealResponse";
+        #endregion
+
         #region [ Images ]
-        public const string Password_Hide = "iconHidePass.png";
-        public const string Password_Visible = "iconVisiblepass.png";
+        public const string Img_PasswordHide = "iconHidePass.png";
+        public const string Img_PasswordVisible = "iconVisiblepass.png";
 
-        public const string Redio_UnSelected = "iconRadioUnselect.png";
-        public const string Radio_Selected = "iconRadioSelect.png";
+        public const string Img_RedioUnSelected = "iconRadioUnselect.png";
+        public const string Img_RadioSelected = "iconRadioSelect.png";
 
-        public const string Switch_Off = "iconSwitchOff.png";
-        public const string Switch_On = "iconSwitchOn.png";
+        public const string Img_SwitchOff = "iconSwitchOff.png";
+        public const string Img_SwitchOn = "iconSwitchOn.png";
 
-        public const string Arrow_Right = "iconRightArrow.png";
-        public const string Arrow_Left = "iconLeftArrow.png";
-        public const string Arrow_Down = "iconDownArrow.png";
-        public const string Arrow_Up = "iconUpArrow.png";
+        public const string Img_ArrowRight = "iconRightArrow.png";
+        public const string Img_ArrowDown = "iconDownArrow.png";
+        public const string Img_ArrowUp = "iconUpArrow.png";
 
-        public const string Sort_ASC = "iconSortASC.png";
-        public const string Sort_DSC = "iconSortDSC.png";
+        public const string Img_SortASC = "iconSortASC.png";
+        public const string Img_SortDSC = "iconSortDSC.png";
 
-        public const string CheckBox_UnChecked = "iconUncheck.png";
-        public const string CheckBox_Checked = "iconCheck.png";
+        public const string Img_CheckBoxUnChecked = "iconUncheck.png";
+        public const string Img_CheckBoxChecked = "iconCheck.png";
 
-        public const string GreenArrow_Down = "iconGreenDownArrow.png";
-        public const string GreenArrow_Up = "iconGreenUpArrow.png";
+        public const string Img_GreenArrowDown = "iconGreenDownArrow.png";
+        public const string Img_GreenArrowUp = "iconGreenUpArrow.png";
+
+        public const string Img_WelcomeOne = "imgWelcomeOne.png";
+        public const string Img_WelcomeTwo = "imgWelcomeTwo.png";
+        public const string Img_WelcomeThree = "imgWelcomeThree.png";
+
+        public const string Img_Sad = "iconSad.png";
+        public const string Img_Smile = "iconSmile.png";
+
+        public const string Img_UserAccount = "iconUserAccount.png";
+        public const string Img_Contact = "imgContact.jpg";
+        public const string Img_UploadImage = "imgUploadImage.png";
+        public const string Img_ProductBanner = "iconProductBanner.png";
+        public const string Img_Music = "iconMusic.png";
+        public const string Img_Video = "iconVideo.png";
+        public const string Img_File = "iconFiles2.png";
+
+        public const string Img_HomeActive = "iconHomeActive.png";
+        public const string Img_RequirementsActive = "iconRequirementsActive.png";
+        public const string Img_OrdersActive = "iconOrdersActive.png";
+        public const string Img_AccountActive = "iconAccountActive.png";
+
+        public const string Img_Home = "iconHome.png";
+        public const string Img_Requirements = "iconRequirements.png";
+        public const string Img_Orders = "iconOrders.png";
+        public const string Img_Account = "iconAccount.png";
+
+        public const string Img_ActiveRequirements = "imgActiveRequirements.png";
+        public const string Img_PostRequirements = "imgPostRequirements.png";
+        public const string Img_PreviousRequirements = "imgPreviousRequirements.png";
+        public const string Img_OrderHistory = "imgOrderHistory.png";
+        public const string Img_ShippingDetails = "imgShippingDetails.png";
+        public const string Img_Notifications = "imgNotifications.png";
+        public const string Img_Profile = "imgProfile.png";
+        public const string Img_Grievances = "imgGrievances.png";
+        public const string Img_ContactSupport = "imgContactSupport.png";
+        public const string Img_AboutAptDealz = "imgAboutAptDealz.png";
+        public const string Img_TermsAndPolicies = "iconTandP.png";
+        public const string Img_FAQHelp = "imgFAQHelp.png";
+        public const string Img_WeSupport = "imgWeSupport.png";
         #endregion
 
         #region [ Error Message ]
@@ -59,9 +141,7 @@
         public const string DoYouWantToExit = "Do you really want to exit?";
 
         public const string AreYouSureWantLogout = "Are you sure want to logout?";
-        public const string AreYouSureWantDelete = "Are you sure want to delete?";
         public const string AreYouSureWantCancel = "Are you sure want to cancel?";
-        public const string AreYouSureWantDeleteNotification = "Are you sure you want to delete this notification?";
         public const string AreYouSureWantDeactivateAccount = "Are you sure want to deactivate account?";
         public const string AreYouSureWantCancelReq = "Are you sure you want to cancel this requirement?";
         public const string AreYouSureWantDeleteReq = "Are you sure you want to delete this requirement?";
@@ -110,6 +190,7 @@
         public const string Required_Quantity = "Please enter quantity!";
         public const string Required_PriceEstimation = "Please enter Total Price Estimation!";
         public const string Required_Delivery_PinCode = "Please enter delivery location pin code!";
+        public const string Same_Delivery_Shipping_PinCode = "Delivery location and Shipping pin code should be same!";
 
         public const string Required_Billing_Name = "Please enter billing address name!";
         public const string Required_Billing_Building = "Please enter billing address building!";

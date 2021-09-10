@@ -24,7 +24,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 InitializeComponent();
                 BindFaq();
 
-                MessagingCenter.Unsubscribe<string>(this, "NotificationCount"); MessagingCenter.Subscribe<string>(this, "NotificationCount", (count) =>
+                MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount); MessagingCenter.Subscribe<string>(this, Constraints.Str_NotificationCount, (count) =>
                 {
                     if (!Common.EmptyFiels(Common.NotificationCount))
                     {
@@ -55,7 +55,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             {
                 new FaqM{ FaqTitle="How do I post requirement?", FaqDesc="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text."},
                 new FaqM{ FaqTitle="How do I view the quotes receive", FaqDesc="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text."},
-                new FaqM{ FaqTitle="Do I have to pay to submit require", FaqDesc="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text."},
+                new FaqM{ FaqTitle="Do I have to pay to submit requirement", FaqDesc="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text."},
                 new FaqM{ FaqTitle="How long will my requirement be", FaqDesc="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text."}
             };
                 lstFaq.ItemsSource = FaqMs.ToList();
@@ -104,7 +104,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         private void ImgBack_Tapped(object sender, EventArgs e)
         {
             Common.BindAnimation(imageButton: ImgBack);
-            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_Home));
         }
 
         private void ImgExpand_Tapped(object sender, EventArgs e)
@@ -118,14 +118,14 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                     viewCell.ForceUpdateSize();
                 }
                 var faqModel = imgExp.BindingContext as FaqM;
-                if (faqModel != null && faqModel.ArrowImage == Constraints.GreenArrow_Down)
+                if (faqModel != null && faqModel.ArrowImage == Constraints.Img_GreenArrowDown)
                 {
-                    faqModel.ArrowImage = Constraints.GreenArrow_Up;
+                    faqModel.ArrowImage = Constraints.Img_GreenArrowUp;
                     faqModel.ShowFaqDesc = true;
                 }
                 else
                 {
-                    faqModel.ArrowImage = Constraints.GreenArrow_Down;
+                    faqModel.ArrowImage = Constraints.Img_GreenArrowDown;
                     faqModel.ShowFaqDesc = false;
                 }
             }
@@ -137,7 +137,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
 
         private void BtnLogo_Clicked(object sender, EventArgs e)
         {
-            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_Home));
         }
         #endregion
 

@@ -175,7 +175,7 @@ namespace AptDealzBuyer.Model.Reponse
         public bool OrderTrackVisibility { get; set; }
 
         [JsonIgnore]
-        private string _ArrowImage { get; set; } = Constraints.Arrow_Right;
+        private string _ArrowImage { get; set; } = Constraints.Img_ArrowRight;
 
         [JsonIgnore]
         public string ArrowImage

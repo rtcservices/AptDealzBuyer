@@ -58,27 +58,27 @@ namespace AptDealzBuyer.Views.PopupPages
                     if (viewSource == (int)GrievancesStatus.Pending)
                     {
                         ClearSource();
-                        imgFirstType.Source = Constraints.Radio_Selected;
+                        imgFirstType.Source = Constraints.Img_RadioSelected;
                     }
                     else if (viewSource == (int)GrievancesStatus.Open)
                     {
                         ClearSource();
-                        imgSecondType.Source = Constraints.Radio_Selected;
+                        imgSecondType.Source = Constraints.Img_RadioSelected;
                     }
                     else if (viewSource == (int)GrievancesStatus.Closed)
                     {
                         ClearSource();
-                        imgThirdType.Source = Constraints.Radio_Selected;
+                        imgThirdType.Source = Constraints.Img_RadioSelected;
                     }
                     else if (viewSource == (int)GrievancesStatus.All)
                     {
                         ClearSource();
-                        imgFourType.Source = Constraints.Radio_Selected;
+                        imgFourType.Source = Constraints.Img_RadioSelected;
                     }
                     else
                     {
                         ClearSource();
-                        imgFourType.Source = Constraints.Radio_Selected;
+                        imgFourType.Source = Constraints.Img_RadioSelected;
                     }
                 }
             }
@@ -90,10 +90,10 @@ namespace AptDealzBuyer.Views.PopupPages
 
         private void ClearSource()
         {
-            imgFirstType.Source = Constraints.Redio_UnSelected;
-            imgSecondType.Source = Constraints.Redio_UnSelected;
-            imgThirdType.Source = Constraints.Redio_UnSelected;
-            imgFourType.Source = Constraints.Redio_UnSelected;
+            imgFirstType.Source = Constraints.Img_RedioUnSelected;
+            imgSecondType.Source = Constraints.Img_RedioUnSelected;
+            imgThirdType.Source = Constraints.Img_RedioUnSelected;
+            imgFourType.Source = Constraints.Img_RedioUnSelected;
         }
         #endregion
 

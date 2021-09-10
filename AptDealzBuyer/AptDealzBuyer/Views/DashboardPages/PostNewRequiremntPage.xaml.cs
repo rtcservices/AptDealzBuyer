@@ -38,7 +38,7 @@ namespace AptDealzBuyer.Views.DashboardPages
 
             try
             {
-                MessagingCenter.Unsubscribe<string>(this, "NotificationCount"); MessagingCenter.Subscribe<string>(this, "NotificationCount", (count) =>
+                MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount); MessagingCenter.Subscribe<string>(this, Constraints.Str_NotificationCount, (count) =>
                    {
                        if (!Common.EmptyFiels(Common.NotificationCount))
                        {
@@ -251,7 +251,7 @@ namespace AptDealzBuyer.Views.DashboardPages
                 {
                     if (!isPickupProduct)
                     {
-                        BoxLocationPinCode.BackgroundColor = (Color)App.Current.Resources["LightRed"];
+                        BoxLocationPinCode.BackgroundColor = (Color)App.Current.Resources["appColor3"];
                         Common.DisplayErrorMessage(Constraints.Required_Delivery_PinCode);
                     }
                     else
@@ -291,76 +291,74 @@ namespace AptDealzBuyer.Views.DashboardPages
         {
             try
             {
-                //Common.DisplayErrorMessage(Constraints.Required_All);
-
                 if (Common.EmptyFiels(txtTitle.Text))
                 {
-                    BoxTitle.BackgroundColor = (Color)App.Current.Resources["LightRed"];
+                    BoxTitle.BackgroundColor = (Color)App.Current.Resources["appColor3"];
                 }
 
                 if (pkCategory.SelectedIndex == -1)
                 {
-                    BoxCategory.BackgroundColor = (Color)App.Current.Resources["LightRed"];
+                    BoxCategory.BackgroundColor = (Color)App.Current.Resources["appColor3"];
                 }
 
                 if (pkSubCategory.SelectedIndex == -1)
                 {
-                    BoxSubCategory.BackgroundColor = (Color)App.Current.Resources["LightRed"];
+                    BoxSubCategory.BackgroundColor = (Color)App.Current.Resources["appColor3"];
                 }
 
                 if (pkQuantityUnits.SelectedIndex == -1)
                 {
-                    BoxQuantityUnits.BackgroundColor = (Color)App.Current.Resources["LightRed"];
+                    BoxQuantityUnits.BackgroundColor = (Color)App.Current.Resources["appColor3"];
                 }
 
                 if (Common.EmptyFiels(txtDescription.Text))
                 {
-                    BoxDescription.BackgroundColor = (Color)App.Current.Resources["LightRed"];
+                    BoxDescription.BackgroundColor = (Color)App.Current.Resources["appColor3"];
                 }
 
                 if (Common.EmptyFiels(txtQuantity.Text))
                 {
-                    BoxQuantity.BackgroundColor = (Color)App.Current.Resources["LightRed"];
+                    BoxQuantity.BackgroundColor = (Color)App.Current.Resources["appColor3"];
                 }
 
                 //if (Common.EmptyFiels(txtLocationPinCode.Text))
                 //{
-                //    BoxLocationPinCode.BackgroundColor = (Color)App.Current.Resources["LightRed"];
+                //    BoxLocationPinCode.BackgroundColor = (Color)App.Current.Resources["appColor3"];
                 //}
 
                 //if (Common.EmptyFiels(txtSourceSupply.Text))
                 //{
-                //    BoxSourceSupply.BackgroundColor = (Color)App.Current.Resources["LightRed"];
+                //    BoxSourceSupply.BackgroundColor = (Color)App.Current.Resources["appColor3"];
                 //}
 
                 if (Common.EmptyFiels(txtEstimation.Text))
                 {
-                    BoxPriceEstimation.BackgroundColor = (Color)App.Current.Resources["LightRed"];
+                    BoxPriceEstimation.BackgroundColor = (Color)App.Current.Resources["appColor3"];
                 }
 
                 if (Common.EmptyFiels(txtName.Text))
                 {
-                    BoxName.BackgroundColor = (Color)App.Current.Resources["LightRed"];
+                    BoxName.BackgroundColor = (Color)App.Current.Resources["appColor3"];
                 }
 
                 if (Common.EmptyFiels(txtBuilding.Text))
                 {
-                    BoxBuilding.BackgroundColor = (Color)App.Current.Resources["LightRed"];
+                    BoxBuilding.BackgroundColor = (Color)App.Current.Resources["appColor3"];
                 }
 
                 if (Common.EmptyFiels(txtStreet.Text))
                 {
-                    BoxStreet.BackgroundColor = (Color)App.Current.Resources["LightRed"];
+                    BoxStreet.BackgroundColor = (Color)App.Current.Resources["appColor3"];
                 }
 
                 if (Common.EmptyFiels(txtCity.Text))
                 {
-                    BoxCity.BackgroundColor = (Color)App.Current.Resources["LightRed"];
+                    BoxCity.BackgroundColor = (Color)App.Current.Resources["appColor3"];
                 }
 
                 if (Common.EmptyFiels(txtPinCode.Text))
                 {
-                    BoxPinCode.BackgroundColor = (Color)App.Current.Resources["LightRed"];
+                    BoxPinCode.BackgroundColor = (Color)App.Current.Resources["appColor3"];
                 }
 
             }
@@ -374,43 +372,37 @@ namespace AptDealzBuyer.Views.DashboardPages
         {
             if (Common.EmptyFiels(txtSAName.Text))
             {
-                BoxSAName.BackgroundColor = (Color)App.Current.Resources["LightRed"];
+                BoxSAName.BackgroundColor = (Color)App.Current.Resources["appColor3"];
             }
 
             if (Common.EmptyFiels(txtSABuilding.Text))
             {
-                BoxSABuilding.BackgroundColor = (Color)App.Current.Resources["LightRed"];
+                BoxSABuilding.BackgroundColor = (Color)App.Current.Resources["appColor3"];
             }
 
             if (Common.EmptyFiels(txtSAStreet.Text))
             {
-                BoxSAStreet.BackgroundColor = (Color)App.Current.Resources["LightRed"];
+                BoxSAStreet.BackgroundColor = (Color)App.Current.Resources["appColor3"];
             }
 
             if (Common.EmptyFiels(txtSACity.Text))
             {
-                BoxSACity.BackgroundColor = (Color)App.Current.Resources["LightRed"];
+                BoxSACity.BackgroundColor = (Color)App.Current.Resources["appColor3"];
             }
 
             if (Common.EmptyFiels(txtSAPinCode.Text))
             {
-                BoxSAPinCode.BackgroundColor = (Color)App.Current.Resources["LightRed"];
+                BoxSAPinCode.BackgroundColor = (Color)App.Current.Resources["appColor3"];
             }
-
-            //if (Common.EmptyFiels(txtSALandmark.Text))
-            //{
-            //    BoxSALandmark.BackgroundColor = (Color)App.Current.Resources["LightRed"];
-            //}
         }
 
         private void EmptyGreyShippingAddress()
         {
-            BoxSAName.BackgroundColor = (Color)App.Current.Resources["LightGray"];
-            BoxSABuilding.BackgroundColor = (Color)App.Current.Resources["LightGray"];
-            BoxSAStreet.BackgroundColor = (Color)App.Current.Resources["LightGray"];
-            BoxSACity.BackgroundColor = (Color)App.Current.Resources["LightGray"];
-            BoxSAPinCode.BackgroundColor = (Color)App.Current.Resources["LightGray"];
-            //BoxSALandmark.BackgroundColor = (Color)App.Current.Resources["LightGray"];
+            BoxSAName.BackgroundColor = (Color)App.Current.Resources["appColor8"];
+            BoxSABuilding.BackgroundColor = (Color)App.Current.Resources["appColor8"];
+            BoxSAStreet.BackgroundColor = (Color)App.Current.Resources["appColor8"];
+            BoxSACity.BackgroundColor = (Color)App.Current.Resources["appColor8"];
+            BoxSAPinCode.BackgroundColor = (Color)App.Current.Resources["appColor8"];
         }
 
         private bool RequiredShippingAddressFields()
@@ -443,10 +435,6 @@ namespace AptDealzBuyer.Views.DashboardPages
             {
                 isValid = true;
             }
-            //else if (Common.EmptyFiels(txtSALandmark.Text))
-            //{
-            //    Common.DisplayErrorMessage(Constraints.Required_Shipping_Landmark);
-            //}
 
             return isValid;
         }
@@ -459,71 +447,67 @@ namespace AptDealzBuyer.Views.DashboardPages
                 {
                     if (entry.ClassId == "Title")
                     {
-                        BoxTitle.BackgroundColor = (Color)App.Current.Resources["LightGray"];
+                        BoxTitle.BackgroundColor = (Color)App.Current.Resources["appColor8"];
                     }
                     else if (entry.ClassId == "Quantity")
                     {
-                        BoxQuantity.BackgroundColor = (Color)App.Current.Resources["LightGray"];
+                        BoxQuantity.BackgroundColor = (Color)App.Current.Resources["appColor8"];
                     }
                     else if (entry.ClassId == "LocationPinCode")
                     {
-                        BoxLocationPinCode.BackgroundColor = (Color)App.Current.Resources["LightGray"];
+                        BoxLocationPinCode.BackgroundColor = (Color)App.Current.Resources["appColor8"];
                     }
                     else if (entry.ClassId == "PriceEstimation")
                     {
-                        BoxPriceEstimation.BackgroundColor = (Color)App.Current.Resources["LightGray"];
+                        BoxPriceEstimation.BackgroundColor = (Color)App.Current.Resources["appColor8"];
                     }
                     else if (entry.ClassId == "Name")
                     {
-                        BoxName.BackgroundColor = (Color)App.Current.Resources["LightGray"];
+                        BoxName.BackgroundColor = (Color)App.Current.Resources["appColor8"];
                     }
                     else if (entry.ClassId == "Building")
                     {
-                        BoxBuilding.BackgroundColor = (Color)App.Current.Resources["LightGray"];
+                        BoxBuilding.BackgroundColor = (Color)App.Current.Resources["appColor8"];
                     }
                     else if (entry.ClassId == "Street")
                     {
-                        BoxStreet.BackgroundColor = (Color)App.Current.Resources["LightGray"];
+                        BoxStreet.BackgroundColor = (Color)App.Current.Resources["appColor8"];
                     }
                     else if (entry.ClassId == "City")
                     {
-                        BoxCity.BackgroundColor = (Color)App.Current.Resources["LightGray"];
+                        BoxCity.BackgroundColor = (Color)App.Current.Resources["appColor8"];
                     }
                     else if (entry.ClassId == "PinCode")
                     {
-                        BoxPinCode.BackgroundColor = (Color)App.Current.Resources["LightGray"];
+                        BoxPinCode.BackgroundColor = (Color)App.Current.Resources["appColor8"];
                     }
                     else if (entry.ClassId == "SAName")
                     {
-                        BoxSAName.BackgroundColor = (Color)App.Current.Resources["LightGray"];
+                        BoxSAName.BackgroundColor = (Color)App.Current.Resources["appColor8"];
                     }
                     else if (entry.ClassId == "SABuilding")
                     {
-                        BoxSABuilding.BackgroundColor = (Color)App.Current.Resources["LightGray"];
+                        BoxSABuilding.BackgroundColor = (Color)App.Current.Resources["appColor8"];
                     }
                     else if (entry.ClassId == "SAStreet")
                     {
-                        BoxSAStreet.BackgroundColor = (Color)App.Current.Resources["LightGray"];
+                        BoxSAStreet.BackgroundColor = (Color)App.Current.Resources["appColor8"];
                     }
                     else if (entry.ClassId == "SACity")
                     {
-                        BoxSACity.BackgroundColor = (Color)App.Current.Resources["LightGray"];
+                        BoxSACity.BackgroundColor = (Color)App.Current.Resources["appColor8"];
                     }
                     else if (entry.ClassId == "SAPinCode")
                     {
-                        BoxSAPinCode.BackgroundColor = (Color)App.Current.Resources["LightGray"];
+                        BoxSAPinCode.BackgroundColor = (Color)App.Current.Resources["appColor8"];
                     }
-                    //else if (entry.ClassId == "SALandmark")
-                    //{
-                    //    BoxSALandmark.BackgroundColor = (Color)App.Current.Resources["LightGray"];
-                    //}
                 }
 
                 if (editor != null)
                 {
                     if (editor.ClassId == "Description")
                     {
-                        BoxDescription.BackgroundColor = (Color)App.Current.Resources["LightGray"];
+                        BoxDescription.BackgroundColor = (Color)App.Current.Resources["appColor8"];
                     }
                 }
 
@@ -531,15 +515,15 @@ namespace AptDealzBuyer.Views.DashboardPages
                 {
                     if (picker.ClassId == "Category")
                     {
-                        BoxCategory.BackgroundColor = (Color)App.Current.Resources["LightGray"];
+                        BoxCategory.BackgroundColor = (Color)App.Current.Resources["appColor8"];
                     }
                     else if (picker.ClassId == "SubCategory")
                     {
-                        BoxSubCategory.BackgroundColor = (Color)App.Current.Resources["LightGray"];
+                        BoxSubCategory.BackgroundColor = (Color)App.Current.Resources["appColor8"];
                     }
                     else if (picker.ClassId == "QuantityUnits")
                     {
-                        BoxQuantityUnits.BackgroundColor = (Color)App.Current.Resources["LightGray"];
+                        BoxQuantityUnits.BackgroundColor = (Color)App.Current.Resources["appColor8"];
                     }
                 }
             }
@@ -560,17 +544,17 @@ namespace AptDealzBuyer.Views.DashboardPages
                     isValid = await DependencyService.Get<IProfileRepository>().ValidPincode(PinCode, PincodeName);
                     if (isValid)
                     {
-                        boxView.BackgroundColor = (Color)App.Current.Resources["LightGray"];
+                        boxView.BackgroundColor = (Color)App.Current.Resources["appColor8"];
                     }
                     else
                     {
-                        boxView.BackgroundColor = (Color)App.Current.Resources["LightRed"];
+                        boxView.BackgroundColor = (Color)App.Current.Resources["appColor3"];
                     }
                 }
                 else
                 {
                     Common.DisplayErrorMessage(Constraints.Required_PinCode);
-                    boxView.BackgroundColor = (Color)App.Current.Resources["LightGray"];
+                    boxView.BackgroundColor = (Color)App.Current.Resources["appColor8"];
                 }
             }
             catch (Exception ex)
@@ -695,18 +679,22 @@ namespace AptDealzBuyer.Views.DashboardPages
                     {
                         if (!await PinCodeValidation(txtLocationPinCode.Text, BoxLocationPinCode, "Delivery"))
                             return;
-
+                        else if (!await PinCodeValidation(txtSAPinCode.Text, BoxSAPinCode, "Shipping"))
+                            return;
+                        else if (txtLocationPinCode.Text != txtSAPinCode.Text)
+                        {
+                            BoxLocationPinCode.BackgroundColor = (Color)App.Current.Resources["appColor3"];
+                            BoxSAPinCode.BackgroundColor = (Color)App.Current.Resources["appColor3"];
+                            Common.DisplayErrorMessage(Constraints.Same_Delivery_Shipping_PinCode);
+                            return;
+                        }
+                    }
+                    else if (!Common.EmptyFiels(txtSAPinCode.Text))
+                    {
                         if (!await PinCodeValidation(txtSAPinCode.Text, BoxSAPinCode, "Shipping"))
                             return;
                     }
-                    else
-                    {
-                        if (!Common.EmptyFiels(txtSAPinCode.Text))
-                        {
-                            if (!await PinCodeValidation(txtSAPinCode.Text, BoxSAPinCode, "Shipping"))
-                                return;
-                        }
-                    }
+
 
                     FieldsTrim();
                     RequirementAPI requirementAPI = new RequirementAPI();
@@ -715,7 +703,7 @@ namespace AptDealzBuyer.Views.DashboardPages
                     var mResponse = await requirementAPI.CreateRequirement(mRequirement);
                     if (mResponse != null && mResponse.Succeeded)
                     {
-                        SuccessfullRequirementAsync(mResponse.Message);
+                        await SuccessfullRequirementAsync(mResponse.Message);
                         ClearPropeties();
                     }
                     else
@@ -785,7 +773,7 @@ namespace AptDealzBuyer.Views.DashboardPages
                 txtSAPinCode.Text = string.Empty;
                 txtSALandmark.Text = string.Empty;
 
-                ImgProductImage.Source = "imgUploadImage.png";
+                ImgProductImage.Source = Constraints.Img_UploadImage;
             }
             catch (Exception ex)
             {
@@ -798,11 +786,11 @@ namespace AptDealzBuyer.Views.DashboardPages
         {
             try
             {
-                if (imgPickup.Source.ToString().Replace("File: ", "") == Constraints.CheckBox_Checked)
+                if (imgPickup.Source.ToString().Replace("File: ", "") == Constraints.Img_CheckBoxChecked)
                 {
-                    imgPickup.Source = Constraints.CheckBox_UnChecked;
-                    lblLocationPINCode.Text = "Delivery Location PIN Code";
-                    lblDeliveryDate.Text = "Expected Delivery Date";
+                    imgPickup.Source = Constraints.Img_CheckBoxUnChecked;
+                    lblLocationPINCode.Text = Constraints.Str_DeliveryLocationPINCode;
+                    lblDeliveryDate.Text = Constraints.Str_ExpectedDeliveryDate;
                     StkDeliveryLocationPINCode.IsVisible = true;
                     isPickupProduct = false;
                     lblSAName.IsVisible = true;
@@ -814,9 +802,9 @@ namespace AptDealzBuyer.Views.DashboardPages
                 }
                 else
                 {
-                    imgPickup.Source = Constraints.CheckBox_Checked;
-                    lblLocationPINCode.Text = "Pickup Location PIN Code";
-                    lblDeliveryDate.Text = "Expected Pickup Date";
+                    imgPickup.Source = Constraints.Img_CheckBoxChecked;
+                    lblLocationPINCode.Text = Constraints.Str_PickupLocationPINCode;
+                    lblDeliveryDate.Text = Constraints.Str_ExpectedPickupDate;
                     StkDeliveryLocationPINCode.IsVisible = false;
                     EmptyGreyShippingAddress();
                     isPickupProduct = true;
@@ -838,9 +826,9 @@ namespace AptDealzBuyer.Views.DashboardPages
         {
             try
             {
-                if (imgSameAddress.Source.ToString().Replace("File: ", "") == Constraints.CheckBox_Checked)
+                if (imgSameAddress.Source.ToString().Replace("File: ", "") == Constraints.Img_CheckBoxChecked)
                 {
-                    imgSameAddress.Source = Constraints.CheckBox_UnChecked;
+                    imgSameAddress.Source = Constraints.Img_CheckBoxUnChecked;
                     txtSAName.Text = string.Empty;
                     txtSABuilding.Text = string.Empty;
                     txtSAStreet.Text = string.Empty;
@@ -850,7 +838,7 @@ namespace AptDealzBuyer.Views.DashboardPages
                 }
                 else
                 {
-                    imgSameAddress.Source = Constraints.CheckBox_Checked;
+                    imgSameAddress.Source = Constraints.Img_CheckBoxChecked;
                     UnfocussedFields(entry: txtSAName);
                     UnfocussedFields(entry: txtSABuilding);
                     UnfocussedFields(entry: txtSAStreet);
@@ -923,15 +911,15 @@ namespace AptDealzBuyer.Views.DashboardPages
         {
             try
             {
-                if (imgPrefer.Source.ToString().Replace("File: ", "") == Constraints.CheckBox_Checked)
+                if (imgPrefer.Source.ToString().Replace("File: ", "") == Constraints.Img_CheckBoxChecked)
                 {
                     isIndiaProducts = false;
-                    imgPrefer.Source = Constraints.CheckBox_UnChecked;
+                    imgPrefer.Source = Constraints.Img_CheckBoxUnChecked;
                 }
                 else
                 {
                     isIndiaProducts = true;
-                    imgPrefer.Source = Constraints.CheckBox_Checked;
+                    imgPrefer.Source = Constraints.Img_CheckBoxChecked;
                 }
             }
             catch (Exception ex)
@@ -949,15 +937,15 @@ namespace AptDealzBuyer.Views.DashboardPages
         {
             try
             {
-                if (imgShippingDown.Source.ToString().Replace("File: ", "") == Constraints.Arrow_Down)
+                if (imgShippingDown.Source.ToString().Replace("File: ", "") == Constraints.Img_ArrowDown)
                 {
-                    imgShippingDown.Source = Constraints.Arrow_Up;
+                    imgShippingDown.Source = Constraints.Img_ArrowUp;
                     grdShippingAddress.IsVisible = true;
                     ScrPrimary.ScrollToAsync(StkShipping, ScrollToPosition.Start, true);
                 }
                 else
                 {
-                    imgShippingDown.Source = Constraints.Arrow_Down;
+                    imgShippingDown.Source = Constraints.Img_ArrowDown;
                     grdShippingAddress.IsVisible = false;
                 }
             }
@@ -971,15 +959,15 @@ namespace AptDealzBuyer.Views.DashboardPages
         {
             try
             {
-                if (imgInsCoverage.Source.ToString().Replace("File: ", "") == Constraints.CheckBox_Checked)
+                if (imgInsCoverage.Source.ToString().Replace("File: ", "") == Constraints.Img_CheckBoxChecked)
                 {
                     isInsurance = false;
-                    imgInsCoverage.Source = Constraints.CheckBox_UnChecked;
+                    imgInsCoverage.Source = Constraints.Img_CheckBoxUnChecked;
                 }
                 else
                 {
                     isInsurance = true;
-                    imgInsCoverage.Source = Constraints.CheckBox_Checked;
+                    imgInsCoverage.Source = Constraints.Img_CheckBoxChecked;
                 }
             }
             catch (Exception ex)
@@ -990,7 +978,7 @@ namespace AptDealzBuyer.Views.DashboardPages
         #endregion
 
         #region [ Category / SubCategory ]
-        private void pkCategory_SelectedIndexChanged(object sender, EventArgs e)
+        private void PkCategory_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
             {
@@ -1009,7 +997,7 @@ namespace AptDealzBuyer.Views.DashboardPages
             }
         }
 
-        private void pkSubCategory_SelectedIndexChanged(object sender, EventArgs e)
+        private void PkSubCategory_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
             {
@@ -1123,7 +1111,7 @@ namespace AptDealzBuyer.Views.DashboardPages
 
         private void BtnLogo_Clicked(object sender, EventArgs e)
         {
-            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_Home));
         }
         #endregion
     }

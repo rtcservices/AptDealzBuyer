@@ -90,7 +90,7 @@ namespace AptDealzBuyer.Views.Login
             {
                 if (Common.EmptyFiels(txtUserAuth.Text))
                 {
-                    BoxUserAuth.BackgroundColor = (Color)App.Current.Resources["LightRed"];
+                    BoxUserAuth.BackgroundColor = (Color)App.Current.Resources["appColor3"];
                     Common.DisplayErrorMessage(Constraints.Required_Email_Phone);
                 }
                 else if (txtUserAuth.Text.Contains("@") || txtUserAuth.Text.Contains("."))
@@ -330,7 +330,7 @@ namespace AptDealzBuyer.Views.Login
             var entry = (Extention.ExtEntry)sender;
             if (!Common.EmptyFiels(entry.Text))
             {
-                BoxUserAuth.BackgroundColor = (Color)App.Current.Resources["LightGray"];
+                BoxUserAuth.BackgroundColor = (Color)App.Current.Resources["appColor8"];
             }
         }
         #endregion

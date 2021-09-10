@@ -1,5 +1,5 @@
-﻿using AptDealzBuyer.API;
-using AptDealzBuyer.Interfaces;
+﻿using AptDealzBuyer.Interfaces;
+using AptDealzBuyer.Repository;
 using AptDealzBuyer.Utility;
 using System;
 using System.Threading.Tasks;
@@ -49,17 +49,17 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             {
                 if (!Common.EmptyFiels(selectedView))
                 {
-                    if (selectedView == "ActiveRequirements" || selectedView == "PreviousRequirements"
-                        || selectedView == "Order" || selectedView == "ShippingDetails"
-                        || selectedView == "Profile" || selectedView == "AboutAptDealz"
-                        || selectedView == "TermsPolicies" || selectedView == "FAQHelp"
+                    if (selectedView == Constraints.Str_Requirements || selectedView == Constraints.Str_PreviousRequirements
+                        || selectedView == Constraints.Str_Order || selectedView == Constraints.Str_ShippingDetails
+                        || selectedView == Constraints.Str_Profile || selectedView == Constraints.Str_AboutAptDealz
+                        || selectedView == Constraints.Str_TermsPolicies || selectedView == Constraints.Str_FAQHelp
                         )
                     {
                         isNavigate = true;
-                        selectedView = "Home";
-                        BindViews("Home");
+                        selectedView = Constraints.Str_Home;
+                        BindViews(Constraints.Str_Home);
                     }
-                    else if (selectedView == "RaiseGrievances")
+                    else if (selectedView == Constraints.Str_RaiseGrievances)
                     {
                         Navigation.PopAsync();
                     }
@@ -93,23 +93,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         {
             try
             {
-                ProfileAPI profileAPI = new ProfileAPI();
-                var mResponse = await profileAPI.GetMyProfileData();
-                if (mResponse != null && mResponse.Succeeded)
-                {
-                    var jObject = (Newtonsoft.Json.Linq.JObject)mResponse.Data;
-                    if (jObject != null)
-                    {
-                        Common.mBuyerDetail = jObject.ToObject<Model.Request.BuyerDetails>();
-                    }
-                }
-                else
-                {
-                    if (mResponse != null)
-                        Common.DisplayErrorMessage(mResponse.Message);
-                    else
-                        Common.DisplayErrorMessage(Constraints.Something_Wrong);
-                }
+                await DependencyService.Get<IProfileRepository>().GetMyProfileData();
             }
             catch (Exception ex)
             {
@@ -120,14 +104,14 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         private void UnselectTab()
         {
             grdMain.Children.Clear();
-            imgHome.Source = "iconHome.png";
-            imgRequirements.Source = "iconRequirements.png";
-            imgOrders.Source = "iconOrders.png";
-            imgAccount.Source = "iconAccount.png";
-            lblHome.TextColor = (Color)App.Current.Resources["Black"];
-            lblRequirements.TextColor = (Color)App.Current.Resources["Black"];
-            lblOrders.TextColor = (Color)App.Current.Resources["Black"];
-            lblAccount.TextColor = (Color)App.Current.Resources["Black"];
+            imgHome.Source = Constraints.Img_Home;
+            imgRequirements.Source = Constraints.Img_Requirements;
+            imgOrders.Source = Constraints.Img_Orders;
+            imgAccount.Source = Constraints.Img_Account;
+            lblHome.TextColor = (Color)App.Current.Resources["appColor4"];
+            lblRequirements.TextColor = (Color)App.Current.Resources["appColor4"];
+            lblOrders.TextColor = (Color)App.Current.Resources["appColor4"];
+            lblAccount.TextColor = (Color)App.Current.Resources["appColor4"];
         }
 
         private void BindViews(string view)
@@ -135,62 +119,62 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             try
             {
                 UnselectTab();
-                if (view == "Home")
+                if (view == Constraints.Str_Home)
                 {
-                    imgHome.Source = "iconHomeActive.png";
-                    lblHome.TextColor = (Color)App.Current.Resources["Orange"];
+                    imgHome.Source = Constraints.Img_HomeActive;
+                    lblHome.TextColor = (Color)App.Current.Resources["appColor5"];
                     grdMain.Children.Add(new HomeView());
                 }
-                else if (view == "PreviousRequirements")
+                else if (view == Constraints.Str_PreviousRequirements)
                 {
-                    imgRequirements.Source = "iconRequirementsActive.png";
-                    lblRequirements.TextColor = (Color)App.Current.Resources["Orange"];
+                    imgRequirements.Source = Constraints.Img_RequirementsActive;
+                    lblRequirements.TextColor = (Color)App.Current.Resources["appColor5"];
                     grdMain.Children.Add(new PreviousRequirementView());
                 }
-                else if (view == "ActiveRequirements")
+                else if (view == Constraints.Str_Requirements)
                 {
-                    imgRequirements.Source = "iconRequirementsActive.png";
-                    lblRequirements.TextColor = (Color)App.Current.Resources["Orange"];
+                    imgRequirements.Source = Constraints.Img_RequirementsActive;
+                    lblRequirements.TextColor = (Color)App.Current.Resources["appColor5"];
                     grdMain.Children.Add(new ActiveRequirementView());
                 }
-                else if (view == "Order")
+                else if (view == Constraints.Str_Order)
                 {
-                    imgOrders.Source = "iconOrdersActive.png";
-                    lblOrders.TextColor = (Color)App.Current.Resources["Orange"];
+                    imgOrders.Source = Constraints.Img_OrdersActive;
+                    lblOrders.TextColor = (Color)App.Current.Resources["appColor5"];
                     grdMain.Children.Add(new OrderView());
                 }
-                else if (view == "RaiseGrievances")
+                else if (view == Constraints.Str_RaiseGrievances)
                 {
                     grdMain.Children.Add(new OrderView(true));
                 }
-                else if (view == "ShippingDetails")
+                else if (view == Constraints.Str_ShippingDetails)
                 {
-                    imgOrders.Source = "iconOrdersActive.png";
-                    lblOrders.TextColor = (Color)App.Current.Resources["Orange"];
+                    imgOrders.Source = Constraints.Img_OrdersActive;
+                    lblOrders.TextColor = (Color)App.Current.Resources["appColor5"];
                     grdMain.Children.Add(new ShippingDetailsView());
                 }
-                else if (view == "Profile")
+                else if (view == Constraints.Str_Profile)
                 {
-                    imgAccount.Source = "iconAccountActive.png";
-                    lblAccount.TextColor = (Color)App.Current.Resources["Orange"];
+                    imgAccount.Source = Constraints.Img_AccountActive;
+                    lblAccount.TextColor = (Color)App.Current.Resources["appColor5"];
                     grdMain.Children.Add(new AccountView());
                 }
-                else if (view == "AboutAptDealz")
+                else if (view == Constraints.Str_AboutAptDealz)
                 {
                     grdMain.Children.Add(new AboutView());
                 }
-                else if (view == "TermsPolicies")
+                else if (view == Constraints.Str_TermsPolicies)
                 {
                     grdMain.Children.Add(new TermsAndPoliciesView());
                 }
-                else if (view == "FAQHelp")
+                else if (view == Constraints.Str_FAQHelp)
                 {
                     grdMain.Children.Add(new FaqHelpView());
                 }
                 else
                 {
-                    imgHome.Source = "iconHomeActive.png";
-                    lblHome.TextColor = (Color)App.Current.Resources["Orange"];
+                    imgHome.Source = Constraints.Img_HomeActive;
+                    lblHome.TextColor = (Color)App.Current.Resources["appColor5"];
                     grdMain.Children.Add(new HomeView());
                 }
 
@@ -214,24 +198,24 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                     grid.IsEnabled = false;
                     if (!Common.EmptyFiels(grid.ClassId))
                     {
-                        if (grid.ClassId == "Home")
+                        if (grid.ClassId == Constraints.Str_Home)
                         {
-                            BindViews("Home");
+                            BindViews(Constraints.Str_Home);
                         }
-                        else if (grid.ClassId == "Requirements")
+                        else if (grid.ClassId == Constraints.Str_Requirements)
                         {
                             this.isNavigate = true;
-                            BindViews("ActiveRequirements");
+                            BindViews(Constraints.Str_Requirements);
                         }
-                        else if (grid.ClassId == "Order")
+                        else if (grid.ClassId == Constraints.Str_Order)
                         {
                             this.isNavigate = true;
-                            BindViews("Order");
+                            BindViews(Constraints.Str_Order);
                         }
-                        else if (grid.ClassId == "Profile")
+                        else if (grid.ClassId == Constraints.Str_Profile)
                         {
                             this.isNavigate = true;
-                            BindViews("Profile");
+                            BindViews(Constraints.Str_Profile);
                         }
                     }
                 }

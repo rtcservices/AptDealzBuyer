@@ -1,6 +1,7 @@
 ﻿using Acr.UserDialogs;
 using AptDealzBuyer.API;
 using AptDealzBuyer.Model.Reponse;
+using AptDealzBuyer.Model.Request;
 using AptDealzBuyer.Repository;
 using AptDealzBuyer.Utility;
 using AptDealzBuyer.Views.Login;
@@ -14,6 +15,8 @@ namespace AptDealzBuyer.Services
     public class ProfileRepository : IProfileRepository
     {
         CategoryAPI categoryAPI = new CategoryAPI();
+        ProfileAPI profileAPI = new ProfileAPI();
+
         public async Task<bool> ValidPincode(string pinCode, string pinCodeName = null)
         {
             bool isValid = false;
@@ -38,7 +41,6 @@ namespace AptDealzBuyer.Services
 
             try
             {
-                ProfileAPI profileAPI = new ProfileAPI();
                 if (Common.IsValidPincode(pinCode))
                 {
                     var response = await profileAPI.GetPincodeInfo(pinCode);
@@ -101,6 +103,41 @@ namespace AptDealzBuyer.Services
             return subCategories;
         }
 
+        public async Task<BuyerDetails> GetMyProfileData()
+        {
+            BuyerDetails mBuyerDetails = new BuyerDetails();
+            try
+            {
+                UserDialogs.Instance.ShowLoading(Constraints.Loading);
+                var mResponse = await profileAPI.GetMyProfileData();
+                if (mResponse != null && mResponse.Succeeded)
+                {
+                    var jObject = (Newtonsoft.Json.Linq.JObject)mResponse.Data;
+                    if (jObject != null)
+                    {
+                        mBuyerDetails = jObject.ToObject<BuyerDetails>();
+                        Common.mBuyerDetail = mBuyerDetails;
+                    }
+                }
+                else
+                {
+                    if (mResponse != null && !Common.EmptyFiels(mResponse.Message))
+                        Common.DisplayErrorMessage(mResponse.Message);
+                    else
+                        Common.DisplayErrorMessage(Constraints.Something_Wrong);
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("ProfileRepository/GetMyProfileData: " + ex.Message);
+            }
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
+            }
+            return mBuyerDetails;
+        }
+
         public async Task DeactivateAccount()
         {
             try
@@ -119,7 +156,7 @@ namespace AptDealzBuyer.Services
                         Settings.UserId = string.Empty;
                         Settings.LoginTrackingKey = string.Empty;
                         Settings.fcm_token = string.Empty;
-                        MessagingCenter.Unsubscribe<string>(this, "NotificationCount");
+                        MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount);
                         App.stoppableTimer.Stop();
 
                         App.Current.MainPage = new NavigationPage(new LoginPage());

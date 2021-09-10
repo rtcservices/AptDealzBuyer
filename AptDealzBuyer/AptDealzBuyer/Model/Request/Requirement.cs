@@ -1,4 +1,5 @@
-﻿using AptDealzBuyer.Utility;
+﻿using AptDealzBuyer.Model.Reponse;
+using AptDealzBuyer.Utility;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -118,7 +119,7 @@ namespace AptDealzBuyer.Model.Request
         public bool CanRevealContact { get; set; }
 
         [JsonProperty("receivedQuotes")]
-        public List<Quote> ReceivedQuotes { get; set; }
+        public List<ReceivedQuote> ReceivedQuotes { get; set; }
 
         [JsonProperty("buyerContact")]
         public object BuyerContact { get; set; }
@@ -149,7 +150,7 @@ namespace AptDealzBuyer.Model.Request
 
         #region [ Extra Properties ]
         [JsonIgnore]
-        private string _ArrowImage { get; set; } = Constraints.Arrow_Right;
+        private string _ArrowImage { get; set; } = Constraints.Img_ArrowRight;
 
         [JsonIgnore]
         public string ArrowImage
@@ -199,7 +200,7 @@ namespace AptDealzBuyer.Model.Request
         {
             get
             {
-                string quotes; 
+                string quotes;
                 if (Quotes > 1)
                 {
                     quotes = Quotes + " Quotes";
@@ -219,19 +220,19 @@ namespace AptDealzBuyer.Model.Request
             {
                 if (Status == RequirementStatus.Completed.ToString())
                 {
-                    return (Color)App.Current.Resources["Green"];
+                    return (Color)App.Current.Resources["appColor1"];
                 }
                 else if (Status == RequirementStatus.Rejected.ToString())
                 {
-                    return (Color)App.Current.Resources["Red"];
+                    return (Color)App.Current.Resources["appColor2"];
                 }
                 else if (Status == RequirementStatus.Inactive.ToString())
                 {
-                    return (Color)App.Current.Resources["Orange"];
+                    return (Color)App.Current.Resources["appColor5"];
                 }
                 else
                 {
-                    return (Color)App.Current.Resources["Black"];
+                    return (Color)App.Current.Resources["appColor4"];
                 }
             }
         }

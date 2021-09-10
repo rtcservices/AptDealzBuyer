@@ -38,7 +38,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 this.isGrievance = isGrievance;
                 GetOrders(statusBy, title, filterBy, isAssending);
 
-                MessagingCenter.Unsubscribe<string>(this, "NotificationCount"); MessagingCenter.Subscribe<string>(this, "NotificationCount", (count) =>
+                MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount); MessagingCenter.Subscribe<string>(this, Constraints.Str_NotificationCount, (count) =>
                 {
                     if (!Common.EmptyFiels(Common.NotificationCount))
                     {
@@ -191,7 +191,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 if (isGrievance)
                     await Navigation.PopAsync();
                 else
-                    Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
+                    Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_Home));
             }
             catch (Exception ex)
             {
@@ -201,7 +201,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
 
         private void BtnLogo_Clicked(object sender, EventArgs e)
         {
-            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_Home));
         }
         #endregion
 
@@ -244,14 +244,14 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         {
             try
             {
-                if (ImgSort.Source.ToString().Replace("File: ", "") == Constraints.Sort_ASC)
+                if (ImgSort.Source.ToString().Replace("File: ", "") == Constraints.Img_SortASC)
                 {
-                    ImgSort.Source = Constraints.Sort_DSC;
+                    ImgSort.Source = Constraints.Img_SortDSC;
                     isAssending = false;
                 }
                 else
                 {
-                    ImgSort.Source = Constraints.Sort_ASC;
+                    ImgSort.Source = Constraints.Img_SortASC;
                     isAssending = true;
                 }
 
@@ -273,7 +273,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 try
                 {
                     Tab.IsEnabled = false;
-                    var sortby = new FilterPopup(filterBy, "Order");
+                    var sortby = new FilterPopup(filterBy, Constraints.Str_Order);
                     sortby.isRefresh += (s1, e1) =>
                     {
                         string result = s1.ToString();

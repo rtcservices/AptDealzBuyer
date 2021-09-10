@@ -40,7 +40,7 @@ namespace AptDealzBuyer.Views.PopupPages
         {
             try
             {
-                if (PageName == "Active")
+                if (PageName == Constraints.Str_Active)
                 {
                     StkThirdType.IsVisible = true;
                     StkFourType.IsVisible = true;
@@ -49,7 +49,7 @@ namespace AptDealzBuyer.Views.PopupPages
                     lblThirdType.Text = Utility.SortByField.Quotes.ToString();
                     lblFourType.Text = Utility.SortByField.TotalPriceEstimation.ToString().ToCamelCase();
                 }
-                else if (PageName == "Order")
+                else if (PageName == Constraints.Str_Order)
                 {
                     StkThirdType.IsVisible = true;
                     StkFourType.IsVisible = false;
@@ -57,7 +57,7 @@ namespace AptDealzBuyer.Views.PopupPages
                     lblSecondType.Text = Utility.SortByField.Date.ToString();
                     lblThirdType.Text = Utility.SortByField.TotalPriceEstimation.ToString().ToCamelCase();
                 }
-                else if (PageName == "Grievances")
+                else if (PageName == Constraints.Str_Grievances)
                 {
                     StkFourType.IsVisible = false;
                     StkThirdType.IsVisible = false;
@@ -89,27 +89,27 @@ namespace AptDealzBuyer.Views.PopupPages
                     if (viewSource == SortByField.ID.ToString())
                     {
                         ClearSource();
-                        imgFirstType.Source = Constraints.Radio_Selected;
+                        imgFirstType.Source = Constraints.Img_RadioSelected;
                     }
                     else if (viewSource == SortByField.Date.ToString())
                     {
                         ClearSource();
-                        imgSecondType.Source = Constraints.Radio_Selected;
+                        imgSecondType.Source = Constraints.Img_RadioSelected;
                     }
                     else if (viewSource == SortByField.Quotes.ToString() || viewSource == SortByField.Amount.ToString())
                     {
                         ClearSource();
-                        imgThirdType.Source = Constraints.Radio_Selected;
+                        imgThirdType.Source = Constraints.Img_RadioSelected;
                     }
                     else if (viewSource == SortByField.TotalPriceEstimation.ToString())
                     {
                         ClearSource();
-                        imgFourType.Source = Constraints.Radio_Selected;
+                        imgFourType.Source = Constraints.Img_RadioSelected;
                     }
                     else
                     {
                         ClearSource();
-                        imgFirstType.Source = Constraints.Radio_Selected;
+                        imgFirstType.Source = Constraints.Img_RadioSelected;
                     }
                 }
             }
@@ -121,10 +121,10 @@ namespace AptDealzBuyer.Views.PopupPages
 
         private void ClearSource()
         {
-            imgFirstType.Source = Constraints.Redio_UnSelected;
-            imgSecondType.Source = Constraints.Redio_UnSelected;
-            imgThirdType.Source = Constraints.Redio_UnSelected;
-            imgFourType.Source = Constraints.Redio_UnSelected;
+            imgFirstType.Source = Constraints.Img_RedioUnSelected;
+            imgSecondType.Source = Constraints.Img_RedioUnSelected;
+            imgThirdType.Source = Constraints.Img_RedioUnSelected;
+            imgFourType.Source = Constraints.Img_RedioUnSelected;
         }
         #endregion
 
@@ -161,7 +161,7 @@ namespace AptDealzBuyer.Views.PopupPages
         {
             try
             {
-                if (PageName == "Active")
+                if (PageName == Constraints.Str_Active)
                 {
                     BindSource(SortByField.Quotes.ToString());
                     isRefresh?.Invoke(SortByField.Quotes.ToString(), null);

@@ -4,7 +4,7 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:flv="clr-namespace:DLToolkit.Forms.Controls;assembly=DLToolkit.Forms.Controls.FlowListView"
-    BackgroundColor="{StaticResource White}"
+    BackgroundColor="{StaticResource appColor6}"
     NavigationPage.HasNavigationBar="False">
     <ContentView.Content>
         <Grid RowSpacing="0">
@@ -37,7 +37,6 @@
                 <ImageButton
                     x:Name="BtnLogo"
                     Grid.Column="1"
-                    Clicked="BtnLogo_Clicked"
                     Style="{StaticResource imgLogo}" />
 
                 <Grid
@@ -98,10 +97,10 @@
                     <flv:FlowListView.FlowColumnTemplate>
                         <DataTemplate>
                             <Frame
-                                Margin="6,0,6,12"
+                                Margin="6,1,6,12"
                                 Padding="0"
-                                BackgroundColor="{StaticResource LightGray}"
-                                BorderColor="{StaticResource Gray}"
+                                BackgroundColor="{StaticResource appColor8}"
+                                BorderColor="{StaticResource appColor7}"
                                 CornerRadius="10"
                                 HasShadow="False"
                                 HeightRequest="100"

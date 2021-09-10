@@ -9,8 +9,8 @@
     <Frame
         Margin="30,0"
         Padding="0"
-        BackgroundColor="{StaticResource White}"
-        BorderColor="{StaticResource White}"
+        BackgroundColor="{StaticResource appColor6}"
+        BorderColor="{StaticResource appColor6}"
         CornerRadius="10"
         HasShadow="{OnPlatform Android=true,
                                iOS=false}"
@@ -29,7 +29,7 @@
                 HorizontalOptions="CenterAndExpand"
                 Style="{StaticResource lblMedium}"
                 Text="Alert"
-                TextColor="{StaticResource Green}" />
+                TextColor="{StaticResource appColor1}" />
 
             <Label
                 x:Name="lblMessage"
@@ -38,7 +38,7 @@
                 HorizontalTextAlignment="Center"
                 Style="{StaticResource lblLight}"
                 Text=""
-                TextColor="{StaticResource Green}" />
+                TextColor="{StaticResource appColor1}" />
 
             <Grid
                 Grid.Row="2"

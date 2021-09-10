@@ -6,7 +6,7 @@
     xmlns:ffImage="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
     xmlns:iOS="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
     iOS:Page.UseSafeArea="True"
-    BackgroundColor="{StaticResource White}"
+    BackgroundColor="{StaticResource appColor6}"
     NavigationPage.HasNavigationBar="False">
     <ContentPage.Content>
         <Grid RowSpacing="0">
@@ -130,6 +130,9 @@
                                     HorizontalOptions="FillAndExpand"
                                     LoadingPlaceholder="iconProductBanner.png"
                                     VerticalOptions="FillAndExpand" />
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmProductImage_Tapped" />
+                                </Frame.GestureRecognizers>
                             </Frame>
 
                             <!--  Details  -->
@@ -169,7 +172,7 @@
                                                 FontSize="15"
                                                 HorizontalOptions="EndAndExpand"
                                                 Style="{StaticResource lblMedium}"
-                                                TextColor="{StaticResource Green}" />
+                                                TextColor="{StaticResource appColor1}" />
                                         </StackLayout>
 
                                         <BoxView Style="{StaticResource boxHorizontal}" />
@@ -223,7 +226,7 @@
                                         <Label
                                             HorizontalOptions="StartAndExpand"
                                             Style="{StaticResource lblLight}"
-                                            Text="Sub-category" />
+                                            Text="Sub-Category" />
 
                                         <Label
                                             x:Name="lblSubCategory"
@@ -334,7 +337,7 @@
                                             HorizontalOptions="StartAndExpand"
                                             Style="{StaticResource lblLight}"
                                             Text="Preferred Source"
-                                            TextColor="{StaticResource Black}"
+                                            TextColor="{StaticResource appColor4}"
                                             VerticalOptions="CenterAndExpand" />
 
                                         <Label
@@ -364,7 +367,7 @@
                                             FontSize="15"
                                             HorizontalOptions="EndAndExpand"
                                             Style="{StaticResource lblMedium}"
-                                            TextColor="{StaticResource Green}" />
+                                            TextColor="{StaticResource appColor1}" />
                                     </StackLayout>
 
                                     <BoxView Style="{StaticResource boxHorizontal}" />
@@ -380,7 +383,7 @@
                                             HorizontalOptions="StartAndExpand"
                                             Style="{StaticResource lblLight}"
                                             Text="Prefer Make In India Products"
-                                            TextColor="{StaticResource Black}"
+                                            TextColor="{StaticResource appColor4}"
                                             VerticalOptions="CenterAndExpand" />
 
                                         <Label
@@ -388,7 +391,7 @@
                                             FontSize="15"
                                             HorizontalOptions="EndAndExpand"
                                             Style="{StaticResource lblMedium}"
-                                            TextColor="{StaticResource Green}" />
+                                            TextColor="{StaticResource appColor1}" />
                                     </StackLayout>
 
                                     <BoxView Style="{StaticResource boxHorizontal}" />
@@ -404,7 +407,7 @@
                                             HorizontalOptions="StartAndExpand"
                                             Style="{StaticResource lblLight}"
                                             Text="Pickup Product Directly From Seller"
-                                            TextColor="{StaticResource Black}"
+                                            TextColor="{StaticResource appColor4}"
                                             VerticalOptions="CenterAndExpand" />
 
                                         <Label
@@ -412,7 +415,7 @@
                                             FontSize="15"
                                             HorizontalOptions="EndAndExpand"
                                             Style="{StaticResource lblMedium}"
-                                            TextColor="{StaticResource Green}" />
+                                            TextColor="{StaticResource appColor1}" />
                                     </StackLayout>
 
                                     <BoxView Style="{StaticResource boxHorizontal}" />
@@ -435,7 +438,7 @@
                                 <Frame
                                     Grid.Row="1"
                                     Padding="15,10"
-                                    BackgroundColor="{StaticResource LightGray}"
+                                    BackgroundColor="{StaticResource appColor8}"
                                     Style="{StaticResource frmBlank}">
                                     <Label
                                         x:Name="lblBillingAddress"
@@ -462,7 +465,7 @@
                                 <Frame
                                     Grid.Row="1"
                                     Padding="15,10"
-                                    BackgroundColor="{StaticResource LightGray}"
+                                    BackgroundColor="{StaticResource appColor8}"
                                     Style="{StaticResource frmBlank}">
                                     <Label
                                         x:Name="lblShippingAddress"
@@ -511,14 +514,15 @@
                                         Grid.Row="0"
                                         Margin="0"
                                         Padding="0"
-                                        BackgroundColor="{StaticResource LightGray}"
+                                        BackgroundColor="{StaticResource appColor8}"
                                         BorderColor="Transparent"
                                         CornerRadius="0"
                                         HasShadow="False"
-                                        HeightRequest="50">
+                                        VerticalOptions="StartAndExpand">
 
-                                        <StackLayout Margin="20,10" Orientation="Horizontal">
+                                        <Grid Margin="20,10" ColumnDefinitions="*,Auto,Auto">
                                             <Label
+                                                Grid.Column="0"
                                                 Margin="0"
                                                 FontSize="15"
                                                 HorizontalOptions="StartAndExpand"
@@ -528,14 +532,15 @@
 
                                             <Frame
                                                 x:Name="FrmSortBy"
-                                                Grid.Column="0"
+                                                Grid.Column="1"
                                                 Margin="0"
                                                 Padding="0"
-                                                BackgroundColor="{StaticResource White}"
+                                                BackgroundColor="{StaticResource appColor6}"
                                                 CornerRadius="5"
                                                 HasShadow="False"
                                                 HorizontalOptions="EndAndExpand"
-                                                IsClippedToBounds="True">
+                                                IsClippedToBounds="True"
+                                                VerticalOptions="CenterAndExpand">
                                                 <Grid
                                                     Margin="5"
                                                     ColumnDefinitions="Auto,*"
@@ -558,12 +563,47 @@
                                                     <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmSortBy_Tapped" />
                                                 </Frame.GestureRecognizers>
                                             </Frame>
-                                        </StackLayout>
+
+                                            <Frame
+                                                x:Name="FrmFilterBy"
+                                                Grid.Column="2"
+                                                Margin="0"
+                                                Padding="0"
+                                                BackgroundColor="{StaticResource appColor6}"
+                                                CornerRadius="5"
+                                                HasShadow="False"
+                                                HorizontalOptions="EndAndExpand"
+                                                IsClippedToBounds="True"
+                                                VerticalOptions="CenterAndExpand">
+                                                <Grid
+                                                    Margin="5"
+                                                    ColumnDefinitions="Auto,*"
+                                                    ColumnSpacing="2">
+                                                    <Image
+                                                        Grid.Column="0"
+                                                        Source="iconFilter.png"
+                                                        Style="{StaticResource imgSorting}" />
+
+                                                    <Label
+                                                        x:Name="lblFilterBy"
+                                                        Grid.Column="1"
+                                                        Margin="0,3,0,0"
+                                                        FontSize="12"
+                                                        HorizontalOptions="CenterAndExpand"
+                                                        Style="{StaticResource lblLight}"
+                                                        Text="Filter by" />
+                                                </Grid>
+                                                <Frame.GestureRecognizers>
+                                                    <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="FrmFilter_Tapped" />
+                                                </Frame.GestureRecognizers>
+                                            </Frame>
+                                        </Grid>
                                     </Frame>
 
                                     <ListView
                                         x:Name="lstQoutes"
-                                        Grid.Row="1" ItemTapped="lstQoutes_ItemTapped"
+                                        Grid.Row="1"
+                                        ItemTapped="lstQoutes_ItemTapped"
                                         Style="{StaticResource lstPrimary}">
                                         <ListView.ItemTemplate>
                                             <DataTemplate>
@@ -642,7 +682,7 @@
                                 <Frame
                                     Grid.Row="0"
                                     Padding="0"
-                                    BackgroundColor="{StaticResource LightGray}"
+                                    BackgroundColor="{StaticResource appColor8}"
                                     CornerRadius="5"
                                     HasShadow="False"
                                     HeightRequest="50">

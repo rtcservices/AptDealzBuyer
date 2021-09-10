@@ -39,8 +39,8 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 mRequirements.Clear();
                 GetActiveRequirements(filterBy, title, isAssending);
 
-                MessagingCenter.Unsubscribe<string>(this, "NotificationCount");
-                MessagingCenter.Subscribe<string>(this, "NotificationCount", (count) =>
+                MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount);
+                MessagingCenter.Subscribe<string>(this, Constraints.Str_NotificationCount, (count) =>
                 {
                     if (!Common.EmptyFiels(Common.NotificationCount))
                     {
@@ -191,12 +191,12 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         private void ImgBack_Tapped(object sender, EventArgs e)
         {
             Common.BindAnimation(imageButton: ImgBack);
-            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_Home));
         }
 
         private void BtnLogo_Clicked(object sender, EventArgs e)
         {
-            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_Home));
         }
         #endregion
 
@@ -205,14 +205,14 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         {
             try
             {
-                if (ImgSort.Source.ToString().Replace("File: ", "") == Constraints.Sort_ASC)
+                if (ImgSort.Source.ToString().Replace("File: ", "") == Constraints.Img_SortASC)
                 {
-                    ImgSort.Source = Constraints.Sort_DSC;
+                    ImgSort.Source = Constraints.Img_SortDSC;
                     isAssending = false;
                 }
                 else
                 {
-                    ImgSort.Source = Constraints.Sort_ASC;
+                    ImgSort.Source = Constraints.Img_SortASC;
                     isAssending = true;
                 }
 
@@ -234,7 +234,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 try
                 {
                     Tab.IsEnabled = false;
-                    var sortby = new FilterPopup(filterBy, "Active");
+                    var sortby = new FilterPopup(filterBy, Constraints.Str_Active);
                     sortby.isRefresh += async (s1, e1) =>
                     {
                         string result = s1.ToString();
@@ -308,17 +308,17 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 }
 
                 var mRequirement = imgExp.BindingContext as Requirement;
-                if (mRequirement != null && mRequirement.ArrowImage == Constraints.Arrow_Right)
+                if (mRequirement != null && mRequirement.ArrowImage == Constraints.Img_ArrowRight)
                 {
-                    mRequirement.ArrowImage = Constraints.Arrow_Down;
-                    mRequirement.GridBg = (Color)App.Current.Resources["LightGray"];
+                    mRequirement.ArrowImage = Constraints.Img_ArrowDown;
+                    mRequirement.GridBg = (Color)App.Current.Resources["appColor8"];
                     mRequirement.MoreDetail = true;
                     mRequirement.HideDetail = false;
                     mRequirement.NameFont = 15;
                 }
                 else
                 {
-                    mRequirement.ArrowImage = Constraints.Arrow_Right;
+                    mRequirement.ArrowImage = Constraints.Img_ArrowRight;
                     mRequirement.GridBg = Color.Transparent;
                     mRequirement.MoreDetail = false;
                     mRequirement.HideDetail = true;

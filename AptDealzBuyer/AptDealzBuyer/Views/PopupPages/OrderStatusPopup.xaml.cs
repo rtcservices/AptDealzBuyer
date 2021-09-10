@@ -62,47 +62,47 @@ namespace AptDealzBuyer.Views.PopupPages
                     if (viewSource == (int)OrderStatus.All)
                     {
                         ClearSource();
-                        imgFirstType.Source = Constraints.Radio_Selected;
+                        imgFirstType.Source = Constraints.Img_RadioSelected;
                     }
                     else if (viewSource == (int)OrderStatus.Accepted)
                     {
                         ClearSource();
-                        imgSecondType.Source = Constraints.Radio_Selected;
+                        imgSecondType.Source = Constraints.Img_RadioSelected;
                     }
                     else if (viewSource == (int)OrderStatus.Pending)
                     {
                         ClearSource();
-                        imgThirdType.Source = Constraints.Radio_Selected;
+                        imgThirdType.Source = Constraints.Img_RadioSelected;
                     }
                     else if (viewSource == (int)OrderStatus.ReadyForPickup)
                     {
                         ClearSource();
-                        imgFourType.Source = Constraints.Radio_Selected;
+                        imgFourType.Source = Constraints.Img_RadioSelected;
                     }
                     else if (viewSource == (int)OrderStatus.Shipped)
                     {
                         ClearSource();
-                        imgFiveType.Source = Constraints.Radio_Selected;
+                        imgFiveType.Source = Constraints.Img_RadioSelected;
                     }
                     else if (viewSource == (int)OrderStatus.Delivered)
                     {
                         ClearSource();
-                        imgSixType.Source = Constraints.Radio_Selected;
+                        imgSixType.Source = Constraints.Img_RadioSelected;
                     }
                     else if (viewSource == (int)OrderStatus.Completed)
                     {
                         ClearSource();
-                        imgSevenType.Source = Constraints.Radio_Selected;
+                        imgSevenType.Source = Constraints.Img_RadioSelected;
                     }
                     else if (viewSource == (int)OrderStatus.CancelledFromBuyer)
                     {
                         ClearSource();
-                        imgEightType.Source = Constraints.Radio_Selected;
+                        imgEightType.Source = Constraints.Img_RadioSelected;
                     }
                     else
                     {
                         ClearSource();
-                        imgFirstType.Source = Constraints.Radio_Selected;
+                        imgFirstType.Source = Constraints.Img_RadioSelected;
                     }
                 }
             }
@@ -114,14 +114,14 @@ namespace AptDealzBuyer.Views.PopupPages
 
         private void ClearSource()
         {
-            imgFirstType.Source = Constraints.Redio_UnSelected;
-            imgSecondType.Source = Constraints.Redio_UnSelected;
-            imgThirdType.Source = Constraints.Redio_UnSelected;
-            imgFourType.Source = Constraints.Redio_UnSelected;
-            imgFiveType.Source = Constraints.Redio_UnSelected;
-            imgSixType.Source = Constraints.Redio_UnSelected;
-            imgSevenType.Source = Constraints.Redio_UnSelected;
-            imgEightType.Source = Constraints.Redio_UnSelected;
+            imgFirstType.Source = Constraints.Img_RedioUnSelected;
+            imgSecondType.Source = Constraints.Img_RedioUnSelected;
+            imgThirdType.Source = Constraints.Img_RedioUnSelected;
+            imgFourType.Source = Constraints.Img_RedioUnSelected;
+            imgFiveType.Source = Constraints.Img_RedioUnSelected;
+            imgSixType.Source = Constraints.Img_RedioUnSelected;
+            imgSevenType.Source = Constraints.Img_RedioUnSelected;
+            imgEightType.Source = Constraints.Img_RedioUnSelected;
         }
         #endregion
 

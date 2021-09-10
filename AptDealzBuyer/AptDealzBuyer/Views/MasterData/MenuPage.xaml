@@ -13,7 +13,7 @@
                 x:Name="lblLogout"
                 HorizontalOptions="StartAndExpand"
                 Text="Logout"
-                TextColor="{StaticResource Green}"
+                TextColor="{StaticResource appColor1}"
                 VerticalOptions="CenterAndExpand" />
             <StackLayout.GestureRecognizers>
                 <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="Logout_Tapped" />

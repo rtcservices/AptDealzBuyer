@@ -5,7 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:iOS="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
     iOS:Page.UseSafeArea="True"
-    BackgroundColor="{StaticResource White}"
+    BackgroundColor="{StaticResource appColor6}"
     NavigationPage.HasNavigationBar="False">
 
     <ContentPage.Content>
@@ -106,7 +106,7 @@
                                             HorizontalOptions="StartAndExpand"
                                             Orientation="Horizontal">
                                             <BoxView
-                                                BackgroundColor="{StaticResource Green}"
+                                                BackgroundColor="{StaticResource appColor1}"
                                                 HorizontalOptions="EndAndExpand"
                                                 VerticalOptions="FillAndExpand"
                                                 WidthRequest="2" />

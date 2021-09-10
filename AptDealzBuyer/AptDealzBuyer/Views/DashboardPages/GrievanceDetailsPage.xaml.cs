@@ -15,7 +15,7 @@ namespace AptDealzBuyer.Views.DashboardPages
     {
         #region [ Objects ]
         private Grievance mGrievance;
-        private string GrievanceId;
+        private string GrievanceId = string.Empty;
         #endregion
 
         #region [ Constructor ]
@@ -25,9 +25,9 @@ namespace AptDealzBuyer.Views.DashboardPages
             {
                 InitializeComponent();
                 this.GrievanceId = GrievanceId;
-
-                MessagingCenter.Unsubscribe<string>(this, "NotificationCount");
-                MessagingCenter.Subscribe<string>(this, "NotificationCount", (count) =>
+                txtMessage.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
+                MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount);
+                MessagingCenter.Subscribe<string>(this, Constraints.Str_NotificationCount, (count) =>
                 {
                     if (!Common.EmptyFiels(Common.NotificationCount))
                     {
@@ -76,8 +76,8 @@ namespace AptDealzBuyer.Views.DashboardPages
                 {
                     lblGrievanceId.Text = mGrievance.GrievanceNo;
                     lblOrderId.Text = mGrievance.OrderNo;
-                    lblOrderDate.Text = mGrievance.OrderDate.ToString("dd/MM/yyyy");
-                    lblGrievanceDate.Text = mGrievance.Created.ToString("dd/MM/yyyy");
+                    lblOrderDate.Text = mGrievance.OrderDate.ToString(Constraints.Str_DateFormate);
+                    lblGrievanceDate.Text = mGrievance.Created.ToString(Constraints.Str_DateFormate);
                     lblSellerName.Text = mGrievance.SellerName;
                     lblGrievanceType.Text = mGrievance.GrievanceTypeDescr.ToCamelCase();
                     lblStatus.Text = mGrievance.StatusDescr.ToCamelCase();
@@ -137,7 +137,7 @@ namespace AptDealzBuyer.Views.DashboardPages
                 }
                 else
                 {
-                    BoxMessage.BackgroundColor = (Color)App.Current.Resources["LightRed"];
+                    BoxMessage.BackgroundColor = (Color)App.Current.Resources["appColor3"];
                     Common.DisplayErrorMessage(Constraints.Required_Response);
                 }
             }
@@ -239,7 +239,7 @@ namespace AptDealzBuyer.Views.DashboardPages
 
         private void BtnLogo_Clicked(object sender, EventArgs e)
         {
-            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_Home));
         }
 
         private async void RefreshView_Refreshing(object sender, EventArgs e)
@@ -249,11 +249,11 @@ namespace AptDealzBuyer.Views.DashboardPages
             rfView.IsRefreshing = false;
         }
 
-        private void txtMessage_Unfocused(object sender, FocusEventArgs e)
+        private void TxtMessage_Unfocused(object sender, FocusEventArgs e)
         {
             if (!Common.EmptyFiels(txtMessage.Text))
             {
-                BoxMessage.BackgroundColor = (Color)App.Current.Resources["LightGray"];
+                BoxMessage.BackgroundColor = (Color)App.Current.Resources["appColor8"];
             }
         }
 

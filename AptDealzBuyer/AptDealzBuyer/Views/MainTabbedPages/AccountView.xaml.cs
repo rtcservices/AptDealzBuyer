@@ -41,9 +41,11 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         #region [ Objects ]          
         private ProfileAPI profileAPI;
         private BuyerDetails mBuyerDetail;
+
         private string relativePath;
         bool isFirstLoad = true;
         private bool isUpdatPhoto = false;
+        private bool isUpdateProfile = false;
         #endregion
 
         #region [ Constructor ]
@@ -56,8 +58,8 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 BtnUpdate.IsEnabled = false;
                 BindProperties();
 
-                MessagingCenter.Unsubscribe<string>(this, "NotificationCount");
-                MessagingCenter.Subscribe<string>(this, "NotificationCount", (count) =>
+                MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount);
+                MessagingCenter.Subscribe<string>(this, Constraints.Str_NotificationCount, (count) =>
                 {
                     if (!Common.EmptyFiels(Common.NotificationCount))
                     {
@@ -87,12 +89,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 if (Common.mCountries == null || Common.mCountries.Count == 0)
                     await GetCountries();
 
-                await Task.Run(() =>
-                {
-                    UserDialogs.Instance.ShowLoading(Constraints.Loading);
-                });
                 await GetProfile();
-                UserDialogs.Instance.HideLoading();
             }
             catch (Exception ex)
             {
@@ -117,24 +114,9 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         {
             try
             {
-                if (Common.mBuyerDetail == null || Common.EmptyFiels(Common.mBuyerDetail.BuyerId))
+                if (Common.mBuyerDetail == null || Common.EmptyFiels(Common.mBuyerDetail.UserId) || isUpdateProfile)
                 {
-                    var mResponse = await profileAPI.GetMyProfileData();
-                    if (mResponse != null && mResponse.Succeeded)
-                    {
-                        var jObject = (Newtonsoft.Json.Linq.JObject)mResponse.Data;
-                        if (jObject != null)
-                        {
-                            mBuyerDetail = jObject.ToObject<Model.Request.BuyerDetails>();
-                        }
-                    }
-                    else
-                    {
-                        if (mResponse != null)
-                            Common.DisplayErrorMessage(mResponse.Message);
-                        else
-                            Common.DisplayErrorMessage(Constraints.Something_Wrong);
-                    }
+                    mBuyerDetail = await DependencyService.Get<IProfileRepository>().GetMyProfileData();
                 }
                 else
                 {
@@ -166,7 +148,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 }
                 else
                 {
-                    imgUser.Source = "iconUserAccount.png";
+                    imgUser.Source = Constraints.Img_UserAccount;
                 }
                 if (!Common.EmptyFiels(mBuyerDetails.Building))
                 {
@@ -322,21 +304,19 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         {
             try
             {
-                Common.DisplayErrorMessage(Constraints.Required_All);
-
                 if (Common.EmptyFiels(txtFullName.Text))
                 {
-                    BoxFullName.BackgroundColor = (Color)App.Current.Resources["LightRed"];
+                    BoxFullName.BackgroundColor = (Color)App.Current.Resources["appColor3"];
                 }
 
                 if (Common.EmptyFiels(txtPhoneNumber.Text))
                 {
-                    BoxPhoneNumber.BackgroundColor = (Color)App.Current.Resources["LightRed"];
+                    BoxPhoneNumber.BackgroundColor = (Color)App.Current.Resources["appColor3"];
                 }
 
                 if (Common.EmptyFiels(pkNationality.Text))
                 {
-                    BoxNationality.BackgroundColor = (Color)App.Current.Resources["LightRed"];
+                    BoxNationality.BackgroundColor = (Color)App.Current.Resources["appColor3"];
                 }
             }
             catch (Exception ex)
@@ -398,6 +378,9 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                     var mResponse = await profileAPI.SaveProfile(mBuyerDetails);
                     if (mResponse != null && mResponse.Succeeded)
                     {
+                        isUpdateProfile = true;
+                        await GetProfile();
+
                         var updateId = mResponse.Data;
                         if (updateId != null)
                         {
@@ -476,12 +459,12 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 {
                     if (entry.ClassId == "FullName")
                     {
-                        BoxFullName.BackgroundColor = (Color)App.Current.Resources["LightGray"];
+                        BoxFullName.BackgroundColor = (Color)App.Current.Resources["appColor8"];
                     }
 
                     else if (entry.ClassId == "PhoneNumber")
                     {
-                        BoxPhoneNumber.BackgroundColor = (Color)App.Current.Resources["LightGray"];
+                        BoxPhoneNumber.BackgroundColor = (Color)App.Current.Resources["appColor8"];
                     }
                 }
 
@@ -489,7 +472,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 {
                     if (autoSuggestBox.ClassId == "Nationality")
                     {
-                        BoxNationality.BackgroundColor = (Color)App.Current.Resources["LightGray"];
+                        BoxNationality.BackgroundColor = (Color)App.Current.Resources["appColor8"];
                     }
                 }
 
@@ -512,16 +495,16 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                     isValid = await DependencyService.Get<IProfileRepository>().ValidPincode(txtPinCode.Text);
                     if (isValid)
                     {
-                        BoxPincode.BackgroundColor = (Color)App.Current.Resources["LightGray"];
+                        BoxPincode.BackgroundColor = (Color)App.Current.Resources["appColor8"];
                     }
                     else
                     {
-                        BoxPincode.BackgroundColor = (Color)App.Current.Resources["LightRed"];
+                        BoxPincode.BackgroundColor = (Color)App.Current.Resources["appColor3"];
                     }
                 }
                 else
                 {
-                    BoxPincode.BackgroundColor = (Color)App.Current.Resources["LightGray"];
+                    BoxPincode.BackgroundColor = (Color)App.Current.Resources["appColor8"];
                     isValid = true;
                 }
                 HasUpdateProfileDetail();
@@ -571,7 +554,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         private void ImgBack_Tapped(object sender, EventArgs e)
         {
             Common.BindAnimation(imageButton: ImgBack);
-            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_Home));
         }
 
         private async void BtnUpdate_Clicked(object sender, EventArgs e)
@@ -742,7 +725,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
 
         private void BtnLogo_Clicked(object sender, EventArgs e)
         {
-            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_Home));
         }
 
         private void RefreshView_Refreshing(object sender, EventArgs e)

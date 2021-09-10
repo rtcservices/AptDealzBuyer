@@ -33,10 +33,11 @@ namespace AptDealzBuyer.Views.Orders
                 mComplaintTypeList = new List<string>();
                 documentList = new List<string>();
 
+                CapitalizeWord();
                 BindComplaintType();
                 GetOrderDetails();
 
-                MessagingCenter.Unsubscribe<string>(this, "NotificationCount"); MessagingCenter.Subscribe<string>(this, "NotificationCount", (count) =>
+                MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount); MessagingCenter.Subscribe<string>(this, Constraints.Str_NotificationCount, (count) =>
                 {
                     if (!Common.EmptyFiels(Common.NotificationCount))
                     {
@@ -58,6 +59,11 @@ namespace AptDealzBuyer.Views.Orders
         #endregion
 
         #region [ Methods ]
+        private void CapitalizeWord()
+        {
+            txtDescription.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
+            txtSolution.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
+        }
         public void Dispose()
         {
             GC.Collect();
@@ -144,7 +150,7 @@ namespace AptDealzBuyer.Views.Orders
                 }
                 else
                 {
-                    FrmType.BorderColor = (Color)App.Current.Resources["LightRed"];
+                    FrmType.BorderColor = (Color)App.Current.Resources["appColor3"];
                     ErrorMessage = Constraints.Required_ComplainType;
                     return null;
                 }
@@ -187,7 +193,7 @@ namespace AptDealzBuyer.Views.Orders
                     if (mResponse != null && mResponse.Succeeded)
                     {
                         Common.DisplaySuccessMessage(mResponse.Message);
-                        await Navigation.PushAsync(new DashboardPages.GrievancesPage());
+                        Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_Home));
                     }
                     else
                     {
@@ -313,7 +319,7 @@ namespace AptDealzBuyer.Views.Orders
 
         private void BtnLogo_Clicked(object sender, EventArgs e)
         {
-            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_Home));
         }
 
         private void Picker_Unfocused(object sender, FocusEventArgs e)
@@ -323,7 +329,7 @@ namespace AptDealzBuyer.Views.Orders
                 var picker = (Picker)sender;
                 if (picker.SelectedIndex != -1)
                 {
-                    FrmType.BorderColor = (Color)App.Current.Resources["LightGray"];
+                    FrmType.BorderColor = (Color)App.Current.Resources["appColor8"];
                 }
             }
             catch (Exception ex)

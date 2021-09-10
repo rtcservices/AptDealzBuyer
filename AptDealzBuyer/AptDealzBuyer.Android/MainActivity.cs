@@ -64,20 +64,21 @@ namespace AptDealzBuyer.Droid
 
             LoadApplication(new App());
 
-            MessagingCenter.Subscribe<RazorPayload>(this, "PayNow", (payload) =>
-            {
-                isReveal = false;
-                string username = "rzp_test_PUJtE9p3XLuGe8";
-                string password = "42HIrjeUTXOHNC84Ldl3aDzL";
-                PayViaRazor(payload, username, password);
-            });
+            MessagingCenter.Subscribe<RazorPayload>(this, Constraints.RP_PayNow, (payload) =>
+             {
+                 isReveal = false;
+                 string username = Constraints.RP_UserName;
+                 string password = Constraints.RP_Password;
 
-            MessagingCenter.Subscribe<RazorPayload>(this, "RevealPayNow", (payload) =>
+                 PayViaRazor(payload, username, password);
+             });
+
+            MessagingCenter.Subscribe<RazorPayload>(this, Constraints.RP_RevealPayNow, (payload) =>
             {
                 isReveal = true;
 
-                string username = "rzp_test_PUJtE9p3XLuGe8";
-                string password = "42HIrjeUTXOHNC84Ldl3aDzL";
+                string username = Constraints.RP_UserName;
+                string password = Constraints.RP_Password;
                 PayViaRazor(payload, username, password);
             });
         }
@@ -109,19 +110,19 @@ namespace AptDealzBuyer.Droid
             //CreateNotificationFromIntent(intent);
         }
 
-        void CreateNotificationFromIntent(Intent intent)
-        {
-            if (intent?.Extras != null)
-            {
-                var isEnable = Preferences.Get(AppKeys.Notification, true);
-                if (isEnable)
-                {
-                    string title = intent.Extras.GetString(NotificationHelper.TitleKey);
-                    string message = intent.Extras.GetString(NotificationHelper.MessageKey);
-                    DependencyService.Get<INotificationHelper>().ReceiveNotification(title, message);
-                }
-            }
-        }
+        //void CreateNotificationFromIntent(Intent intent)
+        //{
+        //    if (intent?.Extras != null)
+        //    {
+        //        var isEnable = Preferences.Get(AppKeys.Notification, true);
+        //        if (isEnable)
+        //        {
+        //            string title = intent.Extras.GetString(NotificationHelper.TitleKey);
+        //            string message = intent.Extras.GetString(NotificationHelper.MessageKey);
+        //            DependencyService.Get<INotificationHelper>().ReceiveNotification(title, message);
+        //        }
+        //    }
+        //}
         #endregion
 
         #region [ RazorPay ]
@@ -136,9 +137,9 @@ namespace AptDealzBuyer.Droid
             };
 
             if (isReveal)
-                MessagingCenter.Send<RazorResponse>(mRazorResponse, "PaidRevealResponse");
+                MessagingCenter.Send<RazorResponse>(mRazorResponse, Constraints.RP_PaidRevealResponse);
             else
-                MessagingCenter.Send<RazorResponse>(mRazorResponse, "PaidResponse");
+                MessagingCenter.Send<RazorResponse>(mRazorResponse, Constraints.RP_PaidResponse);
         }
 
         public void OnPaymentSuccess(string p0, PaymentData p1)
@@ -152,9 +153,9 @@ namespace AptDealzBuyer.Droid
             };
 
             if (isReveal)
-                MessagingCenter.Send<RazorResponse>(mRazorResponse, "PaidRevealResponse");
+                MessagingCenter.Send<RazorResponse>(mRazorResponse, Constraints.RP_PaidRevealResponse);
             else
-                MessagingCenter.Send<RazorResponse>(mRazorResponse, "PaidResponse");
+                MessagingCenter.Send<RazorResponse>(mRazorResponse, Constraints.RP_PaidResponse);
         }
 
         public async void PayViaRazor(RazorPayload payload, string username, string password)
@@ -195,7 +196,7 @@ namespace AptDealzBuyer.Droid
             }
             catch (Exception ex)
             {
-
+                Toast.MakeText(this, "Exception-Payment: " + ex.Message, ToastLength.Short).Show();
             }
         }
 
@@ -222,9 +223,9 @@ namespace AptDealzBuyer.Droid
 
                 checkout.Open(this, options);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                // Log.e(TAG, "Error in starting Razorpay Checkout", e);
+                Toast.MakeText(this, "Exception-CheckoutRazorPay: " + ex.Message, ToastLength.Short).Show();
             }
         }
         #endregion
@@ -260,7 +261,7 @@ namespace AptDealzBuyer.Droid
         public void GetPermission()
         {
             //var name = Android.OS.Build.VERSION.SdkInt;     //Android Version Name like Kitkate etc... 
-            string version = Android.OS.Build.VERSION.Release;    //Android Version No like 4.4.4 etc... 
+            //string version = Android.OS.Build.VERSION.Release;    //Android Version No like 4.4.4 etc... 
 
             if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.Lollipop)
             {

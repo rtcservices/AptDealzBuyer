@@ -424,7 +424,7 @@ namespace AptDealzBuyer.Views.Login
             if (!Common.EmptyFiels(TxtOtpSix.Text))
             {
                 TxtOtpSix.Unfocus();
-                BtnSubmit.BackgroundColor = (Color)App.Current.Resources["Green"];
+                BtnSubmit.BackgroundColor = (Color)App.Current.Resources["appColor1"];
             }
             else
                 TxtOtpFive.Focus();

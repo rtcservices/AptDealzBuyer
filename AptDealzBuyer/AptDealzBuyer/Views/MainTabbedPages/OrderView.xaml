@@ -6,7 +6,7 @@
     xmlns:ext="clr-namespace:AptDealzBuyer.Extention"
     xmlns:iOS="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
     iOS:Page.UseSafeArea="True"
-    BackgroundColor="{StaticResource White}"
+    BackgroundColor="{StaticResource appColor6}"
     NavigationPage.HasNavigationBar="False">
     <ContentView.Content>
         <Grid RowSpacing="0">
@@ -230,8 +230,9 @@
                 <ListView
                     x:Name="lstOrders"
                     Grid.Row="2"
-                    IsPullToRefreshEnabled="True" ItemTapped="lstOrders_ItemTapped"
+                    IsPullToRefreshEnabled="True"
                     ItemAppearing="lstOrders_ItemAppearing"
+                    ItemTapped="lstOrders_ItemTapped"
                     Refreshing="lstOrders_Refreshing"
                     Style="{StaticResource lstPrimary}">
                     <ListView.ItemTemplate>
@@ -265,7 +266,7 @@
                                                 HorizontalOptions="EndAndExpand"
                                                 Style="{StaticResource lblMedium}"
                                                 Text="{Binding PaidAmount, StringFormat='Rs {0}'}"
-                                                TextColor="{StaticResource Green}" />
+                                                TextColor="{StaticResource appColor1}" />
 
                                         </StackLayout>
 

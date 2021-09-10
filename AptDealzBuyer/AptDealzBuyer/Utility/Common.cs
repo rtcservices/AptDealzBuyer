@@ -34,7 +34,7 @@ namespace AptDealzBuyer.Utility
             {
                 Position = ToastPosition.Top,
                 BackgroundColor = (Color)App.Current.Resources["ErrorBackground"],
-                MessageTextColor = (Color)App.Current.Resources["White"],
+                MessageTextColor = (Color)App.Current.Resources["appColor6"],
                 Duration = new TimeSpan(0, 0, 5),
             });
         }
@@ -45,7 +45,7 @@ namespace AptDealzBuyer.Utility
             {
                 Position = ToastPosition.Top,
                 BackgroundColor = (Color)App.Current.Resources["SuccessBackground"],
-                MessageTextColor = (Color)App.Current.Resources["White"],
+                MessageTextColor = (Color)App.Current.Resources["appColor6"],
                 Duration = new TimeSpan(0, 0, 5)
             });
         }
@@ -56,7 +56,7 @@ namespace AptDealzBuyer.Utility
             {
                 Position = ToastPosition.Top,
                 BackgroundColor = (Color)App.Current.Resources["WarningBackground"],
-                MessageTextColor = (Color)App.Current.Resources["White"],
+                MessageTextColor = (Color)App.Current.Resources["appColor6"],
                 Duration = new TimeSpan(0, 0, 5),
             });
         }

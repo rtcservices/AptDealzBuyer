@@ -36,8 +36,8 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 pageNo = 1;
                 GetShippedOrders(title, filterBy, isAssending);
 
-                MessagingCenter.Unsubscribe<string>(this, "NotificationCount");
-                MessagingCenter.Subscribe<string>(this, "NotificationCount", (count) =>
+                MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount);
+                MessagingCenter.Subscribe<string>(this, Constraints.Str_NotificationCount, (count) =>
                 {
                     if (!Common.EmptyFiels(Common.NotificationCount))
                     {
@@ -142,31 +142,31 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 {
                     foreach (var selectedImage in mOrders)
                     {
-                        if (selectedImage.ArrowImage == Constraints.Arrow_Right)
+                        if (selectedImage.ArrowImage == Constraints.Img_ArrowRight)
                         {
-                            selectedImage.ArrowImage = Constraints.Arrow_Right;
+                            selectedImage.ArrowImage = Constraints.Img_ArrowRight;
                             selectedImage.GridBg = Color.Transparent;
                             selectedImage.MoreDetail = false;
                             selectedImage.OldDetail = true;
                         }
                         else
                         {
-                            selectedImage.ArrowImage = Constraints.Arrow_Down;
-                            selectedImage.GridBg = (Color)App.Current.Resources["LightGray"];
+                            selectedImage.ArrowImage = Constraints.Img_ArrowDown;
+                            selectedImage.GridBg = (Color)App.Current.Resources["appColor8"];
                             selectedImage.MoreDetail = true;
                             selectedImage.OldDetail = false;
                         }
                     }
-                    if (response.ArrowImage == Constraints.Arrow_Right)
+                    if (response.ArrowImage == Constraints.Img_ArrowRight)
                     {
-                        response.ArrowImage = Constraints.Arrow_Down;
-                        response.GridBg = (Color)App.Current.Resources["LightGray"];
+                        response.ArrowImage = Constraints.Img_ArrowDown;
+                        response.GridBg = (Color)App.Current.Resources["appColor8"];
                         response.MoreDetail = true;
                         response.OldDetail = false;
                     }
                     else
                     {
-                        response.ArrowImage = Constraints.Arrow_Right;
+                        response.ArrowImage = Constraints.Img_ArrowRight;
                         response.GridBg = Color.Transparent;
                         response.MoreDetail = false;
                         response.OldDetail = true;
@@ -216,13 +216,13 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         private void ImgBack_Tapped(object sender, EventArgs e)
         {
             Common.BindAnimation(imageButton: ImgBack);
-            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_Home));
 
         }
 
         private void BtnLogo_Clicked(object sender, EventArgs e)
         {
-            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_Home));
         }
         #endregion
 
@@ -231,14 +231,14 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         {
             try
             {
-                if (ImgSort.Source.ToString().Replace("File: ", "") == Constraints.Sort_ASC)
+                if (ImgSort.Source.ToString().Replace("File: ", "") == Constraints.Img_SortASC)
                 {
-                    ImgSort.Source = Constraints.Sort_DSC;
+                    ImgSort.Source = Constraints.Img_SortDSC;
                     isAssending = false;
                 }
                 else
                 {
-                    ImgSort.Source = Constraints.Sort_ASC;
+                    ImgSort.Source = Constraints.Img_SortASC;
                     isAssending = true;
                 }
 
@@ -260,7 +260,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 try
                 {
                     Tab.IsEnabled = false;
-                    var sortby = new FilterPopup(filterBy, "Order");
+                    var sortby = new FilterPopup(filterBy, Constraints.Str_Order);
                     sortby.isRefresh += (s1, e1) =>
                     {
                         string result = s1.ToString();

@@ -19,7 +19,7 @@ namespace AptDealzBuyer.Views.OtherPages
         {
             InitializeComponent();
 
-            MessagingCenter.Unsubscribe<string>(this, "NotificationCount"); MessagingCenter.Subscribe<string>(this, "NotificationCount", (count) =>
+            MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount); MessagingCenter.Subscribe<string>(this, Constraints.Str_NotificationCount, (count) =>
             {
                 if (!Common.EmptyFiels(Common.NotificationCount))
                 {
@@ -138,8 +138,8 @@ namespace AptDealzBuyer.Views.OtherPages
 
         private void BtnLogo_Clicked(object sender, EventArgs e)
         {
-            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_Home));
         }
-    } 
+    }
     #endregion
 }

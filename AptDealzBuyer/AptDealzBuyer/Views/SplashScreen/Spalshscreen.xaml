@@ -10,7 +10,7 @@
         <Grid
             Margin="0"
             Padding="0"
-            BackgroundColor="{StaticResource White}"
+            BackgroundColor="{StaticResource appColor6}"
             HorizontalOptions="FillAndExpand"
             VerticalOptions="FillAndExpand">
 

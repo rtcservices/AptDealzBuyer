@@ -6,7 +6,7 @@
     xmlns:ext="clr-namespace:AptDealzBuyer.Extention"
     xmlns:iOS="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
     iOS:Page.UseSafeArea="True"
-    BackgroundColor="{StaticResource White}"
+    BackgroundColor="{StaticResource appColor6}"
     NavigationPage.HasNavigationBar="False">
     <ContentPage.Content>
         <Grid RowSpacing="0">
@@ -57,6 +57,7 @@
                                 <Label Style="{StaticResource lblPrimary13}" Text="Email / Phone Number" />
                                 <ext:ExtEntry
                                     x:Name="txtUserAuth"
+                                    Keyboard="Text"
                                     Style="{StaticResource entrGray}"
                                     Unfocused="txtUserAuth_Unfocused" />
                                 <BoxView x:Name="BoxUserAuth" Style="{StaticResource boxHorizontal}" />
@@ -90,7 +91,7 @@
                                 HorizontalOptions="StartAndExpand"
                                 Style="{StaticResource lblMedium}"
                                 Text="Sign Up"
-                                TextColor="{StaticResource Green}" />
+                                TextColor="{StaticResource appColor1}" />
                             <StackLayout.GestureRecognizers>
                                 <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="StkSignup_Tapped" />
                             </StackLayout.GestureRecognizers>

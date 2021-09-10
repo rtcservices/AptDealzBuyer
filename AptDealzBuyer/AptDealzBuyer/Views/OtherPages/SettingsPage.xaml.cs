@@ -13,7 +13,7 @@ namespace AptDealzBuyer.Views.OtherPages
         {
             InitializeComponent();
 
-            MessagingCenter.Unsubscribe<string>(this, "NotificationCount"); MessagingCenter.Subscribe<string>(this, "NotificationCount", (count) =>
+            MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount); MessagingCenter.Subscribe<string>(this, Constraints.Str_NotificationCount, (count) =>
             {
                 if (!Common.EmptyFiels(Common.NotificationCount))
                 {
@@ -97,13 +97,13 @@ namespace AptDealzBuyer.Views.OtherPages
         {
             try
             {
-                if (imgSwitch.Source.ToString().Replace("File: ", "") == Constraints.Switch_Off)
+                if (imgSwitch.Source.ToString().Replace("File: ", "") == Constraints.Img_SwitchOff)
                 {
-                    imgSwitch.Source = Constraints.Switch_On;
+                    imgSwitch.Source = Constraints.Img_SwitchOn;
                 }
                 else
                 {
-                    imgSwitch.Source = Constraints.Switch_Off;
+                    imgSwitch.Source = Constraints.Img_SwitchOff;
                 }
             }
             catch (Exception ex)
@@ -114,7 +114,7 @@ namespace AptDealzBuyer.Views.OtherPages
 
         private void BtnLogo_Clicked(object sender, EventArgs e)
         {
-            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_Home));
         }
         #endregion
     }

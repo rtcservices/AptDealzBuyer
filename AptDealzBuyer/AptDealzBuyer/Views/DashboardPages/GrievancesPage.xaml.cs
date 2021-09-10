@@ -36,8 +36,8 @@ namespace AptDealzBuyer.Views.DashboardPages
                 pageNo = 1;
                 GetGrievance(statusBy, title, filterBy, isAssending);
 
-                MessagingCenter.Unsubscribe<string>(this, "NotificationCount");
-                MessagingCenter.Subscribe<string>(this, "NotificationCount", (count) =>
+                MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount);
+                MessagingCenter.Subscribe<string>(this, Constraints.Str_NotificationCount, (count) =>
                 {
                     if (!Common.EmptyFiels(Common.NotificationCount))
                     {
@@ -179,7 +179,7 @@ namespace AptDealzBuyer.Views.DashboardPages
 
         private void BtnLogo_Clicked(object sender, EventArgs e)
         {
-            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_Home));
         }
         #endregion
 
@@ -188,14 +188,14 @@ namespace AptDealzBuyer.Views.DashboardPages
         {
             try
             {
-                if (ImgSort.Source.ToString().Replace("File: ", "") == Constraints.Sort_ASC)
+                if (ImgSort.Source.ToString().Replace("File: ", "") == Constraints.Img_SortASC)
                 {
-                    ImgSort.Source = Constraints.Sort_DSC;
+                    ImgSort.Source = Constraints.Img_SortDSC;
                     isAssending = false;
                 }
                 else
                 {
-                    ImgSort.Source = Constraints.Sort_ASC;
+                    ImgSort.Source = Constraints.Img_SortASC;
                     isAssending = true;
                 }
 
@@ -251,7 +251,7 @@ namespace AptDealzBuyer.Views.DashboardPages
                 try
                 {
                     Tab.IsEnabled = false;
-                    var sortby = new FilterPopup(filterBy, "Grievances");
+                    var sortby = new FilterPopup(filterBy, Constraints.Str_Grievances);
                     sortby.isRefresh += (s1, e1) =>
                     {
                         string result = s1.ToString();
@@ -315,7 +315,7 @@ namespace AptDealzBuyer.Views.DashboardPages
                 try
                 {
                     Tab.IsEnabled = false;
-                    await Navigation.PushAsync(new MainTabbedPages.MainTabbedPage("RaiseGrievances", isNavigate: true));
+                    await Navigation.PushAsync(new MainTabbedPages.MainTabbedPage(Constraints.Str_RaiseGrievances, isNavigate: true));
                 }
                 catch (Exception ex)
                 {

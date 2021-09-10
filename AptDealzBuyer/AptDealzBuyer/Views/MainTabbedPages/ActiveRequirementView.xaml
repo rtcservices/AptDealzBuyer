@@ -5,7 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:converter="clr-namespace:AptDealzBuyer.Converter"
     xmlns:ext="clr-namespace:AptDealzBuyer.Extention"
-    BackgroundColor="{StaticResource White}"
+    BackgroundColor="{StaticResource appColor6}"
     NavigationPage.HasNavigationBar="False">
     <ContentView.Content>
         <Grid RowSpacing="0">
@@ -247,7 +247,7 @@
                                                             HorizontalOptions="EndAndExpand"
                                                             Style="{StaticResource lblMedium}"
                                                             Text="{Binding TotalPriceEstimation, StringFormat='RS {0:}'}"
-                                                            TextColor="{StaticResource Green}" />
+                                                            TextColor="{StaticResource appColor1}" />
                                                     </StackLayout>
 
                                                     <Label
@@ -351,7 +351,7 @@
                                                 Grid.Row="2"
                                                 Margin="0"
                                                 Padding="0"
-                                                BorderColor="{StaticResource Green}"
+                                                BorderColor="{StaticResource appColor1}"
                                                 CornerRadius="20"
                                                 HasShadow="False"
                                                 HeightRequest="40"

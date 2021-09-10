@@ -19,7 +19,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             InitializeComponent();
             BindMenus();
 
-            MessagingCenter.Unsubscribe<string>(this, "NotificationCount"); MessagingCenter.Subscribe<string>(this, "NotificationCount", (count) =>
+            MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount); MessagingCenter.Subscribe<string>(this, Constraints.Str_NotificationCount, (count) =>
             {
                 if (!Common.EmptyFiels(Common.NotificationCount))
                 {
@@ -43,19 +43,19 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 List<HomeMenu> HomeMenus;
                 HomeMenus = new List<HomeMenu>()
                 {
-                    new HomeMenu{ MenuId=1, MenuImage="imgActiveRequirements.png", UiName="Active\nRequirements", MenuName="ActiveRequirements"},
-                    new HomeMenu{ MenuId=2, MenuImage="imgPostRequirements.png", UiName="Post New\nRequirement", MenuName="PostNewRequirements"},
-                    new HomeMenu { MenuId = 3, MenuImage = "imgPreviousRequirements.png", UiName = "Previous\nRequirements", MenuName = "PreviousRequirements" },
-                    new HomeMenu { MenuId = 4, MenuImage = "imgOrderHistory.png", UiName = "Order\nHistory", MenuName = "Order" },
-                    new HomeMenu { MenuId = 5, MenuImage = "imgShippingDetails.png", UiName = "Shipping\nDetails", MenuName = "ShippingDetails" },
-                    new HomeMenu { MenuId = 6, MenuImage = "imgNotifications.png", UiName = "Notifications", MenuName = "Notifications" },
-                    new HomeMenu { MenuId = 7, MenuImage = "imgProfile.png", UiName = "Profile", MenuName = "Profile" },
-                    new HomeMenu { MenuId = 8, MenuImage = "imgGrievances.png", UiName = "Grievances", MenuName = "Grievances" },
-                    new HomeMenu { MenuId = 9, MenuImage = "imgContactSupport.png", UiName = "Contact\nSupport", MenuName = "ContactSupport" },
-                    new HomeMenu { MenuId = 10, MenuImage = "imgAboutAptDealz.png", UiName = "About\nAptDealz", MenuName = "AboutAptDealz" },
-                    new HomeMenu { MenuId = 11, MenuImage = "iconTandP.png", UiName = "Terms & Policies", MenuName = "TermsPolicies" },
-                    new HomeMenu { MenuId = 12, MenuImage = "imgFAQHelp.png", UiName = "FAQ & Help", MenuName = "FAQHelp" },
-                    new HomeMenu { MenuId = 13, MenuImage = "imgWeSupport.png", UiName = "We Support", MenuName = "WeSupport" },
+                    new HomeMenu { MenuId = 1,  MenuImage = Constraints.Img_ActiveRequirements,   UiName="Active\nRequirements",          MenuName = Constraints.Str_Requirements         },
+                    new HomeMenu { MenuId = 2,  MenuImage = Constraints.Img_PostRequirements,     UiName="Post New\nRequirement",         MenuName = Constraints.Str_PostNewRequirements  },
+                    new HomeMenu { MenuId = 3,  MenuImage = Constraints.Img_PreviousRequirements, UiName = "Previous\nRequirements",      MenuName = Constraints.Str_PreviousRequirements },
+                    new HomeMenu { MenuId = 4,  MenuImage = Constraints.Img_OrderHistory,         UiName = "Order\nHistory",              MenuName = Constraints.Str_Order                },
+                    new HomeMenu { MenuId = 5,  MenuImage = Constraints.Img_ShippingDetails,      UiName = "Shipping\nDetails",           MenuName = Constraints.Str_ShippingDetails      },
+                    new HomeMenu { MenuId = 6,  MenuImage = Constraints.Img_Notifications,        UiName = Constraints.Str_Notifications, MenuName = Constraints.Str_Notifications        },
+                    new HomeMenu { MenuId = 7,  MenuImage = Constraints.Img_Profile,              UiName = Constraints.Str_Profile,       MenuName = Constraints.Str_Profile              },
+                    new HomeMenu { MenuId = 8,  MenuImage = Constraints.Img_Grievances,           UiName = Constraints.Str_Grievances,    MenuName = Constraints.Str_Grievances           },
+                    new HomeMenu { MenuId = 9,  MenuImage = Constraints.Img_ContactSupport,       UiName = "Contact\nSupport",            MenuName = Constraints.Str_ContactSupport       },
+                    new HomeMenu { MenuId = 10, MenuImage = Constraints.Img_AboutAptDealz,        UiName = "About\nAptDealz",             MenuName = Constraints.Str_AboutAptDealz        },
+                    new HomeMenu { MenuId = 11, MenuImage = Constraints.Img_TermsAndPolicies,     UiName = "Terms & Policies",            MenuName = Constraints.Str_TermsPolicies        },
+                    new HomeMenu { MenuId = 12, MenuImage = Constraints.Img_FAQHelp,              UiName = "FAQ & Help",                  MenuName = Constraints.Str_FAQHelp              },
+                    new HomeMenu { MenuId = 13, MenuImage = Constraints.Img_WeSupport,            UiName = "We Support",                  MenuName = Constraints.Str_WeSupport            },
                 };
 
                 flvMenus.FlowItemsSource = HomeMenus.ToList();
@@ -111,23 +111,23 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                     Tab.IsEnabled = false;
                     var menuName = Tab.BindingContext as HomeMenu;
 
-                    if (menuName != null && menuName.MenuName == "PostNewRequirements")
+                    if (menuName != null && menuName.MenuName == Constraints.Str_PostNewRequirements)
                     {
                         await Navigation.PushAsync(new DashboardPages.PostNewRequiremntPage());
                     }
-                    else if (menuName != null && menuName.MenuName == "Notifications")
+                    else if (menuName != null && menuName.MenuName == Constraints.Str_Notifications)
                     {
                         await Navigation.PushAsync(new DashboardPages.NotificationPage());
                     }
-                    else if (menuName != null && menuName.MenuName == "ContactSupport")
+                    else if (menuName != null && menuName.MenuName == Constraints.Str_ContactSupport)
                     {
                         await Navigation.PushAsync(new OtherPages.ContactSupportPage());
                     }
-                    else if (menuName != null && menuName.MenuName == "Grievances")
+                    else if (menuName != null && menuName.MenuName == Constraints.Str_Grievances)
                     {
                         await Navigation.PushAsync(new DashboardPages.GrievancesPage());
                     }
-                    else if (menuName != null && menuName.MenuName == "WeSupport")
+                    else if (menuName != null && menuName.MenuName == Constraints.Str_WeSupport)
                     {
                         await Navigation.PushAsync(new OtherPages.WeSupportPage());
                     }
@@ -145,11 +145,6 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                     Tab.IsEnabled = true;
                 }
             }
-        }
-
-        private void BtnLogo_Clicked(object sender, EventArgs e)
-        {
-            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
         }
         #endregion
     }

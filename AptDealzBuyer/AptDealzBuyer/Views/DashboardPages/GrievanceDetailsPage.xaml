@@ -9,7 +9,7 @@
     xmlns:iOS="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
     xmlns:pan="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
     iOS:Page.UseSafeArea="True"
-    BackgroundColor="{StaticResource White}"
+    BackgroundColor="{StaticResource appColor6}"
     NavigationPage.HasNavigationBar="False">
     <ContentPage.Content>
 
@@ -43,7 +43,7 @@
                     Grid.Column="1"
                     Clicked="BtnLogo_Clicked"
                     Style="{StaticResource imgLogo}" />
-                <!--  FontFamily="Poppins-Medium"  -->
+
                 <Grid
                     Grid.Column="2"
                     Margin="0,0,10,0"
@@ -278,7 +278,7 @@
                                             x:Name="lblAttachDocument"
                                             Style="{StaticResource lblLight}"
                                             Text="No Docs found"
-                                            TextColor="{StaticResource DarkGray}" />
+                                            TextColor="{StaticResource appColor9}" />
 
                                         <!--  List Of Documents  -->
                                         <CollectionView x:Name="lstDocument" BackgroundColor="Transparent">
@@ -313,7 +313,10 @@
                                     Grid.Row="0"
                                     Padding="10"
                                     Style="{StaticResource frmBlank}">
-                                    <Label x:Name="lblDescription" Style="{StaticResource lblLight}" />
+                                    <Label
+                                        x:Name="lblDescription"
+                                        HorizontalOptions="StartAndExpand"
+                                        Style="{StaticResource lblLight}" />
                                 </Frame>
 
                                 <!--  List of Response  -->
@@ -328,7 +331,7 @@
                                                 <pan:PancakeView
                                                     Margin="{Binding IsUser, Converter={converter:BooleanToMessageMargin}}"
                                                     Padding="10"
-                                                    BackgroundColor="{StaticResource LightGray}"
+                                                    BackgroundColor="{StaticResource appColor8}"
                                                     CornerRadius="{Binding IsUser, Converter={converter:BooleanToPancakeRadius}}"
                                                     HorizontalOptions="{Binding IsUser, Converter={converter:BooleanToMessagePosition}}"
                                                     IsClippedToBounds="True"
@@ -386,7 +389,7 @@
                                                                     HorizontalOptions="EndAndExpand"
                                                                     Style="{StaticResource lblSemiBold}"
                                                                     Text="{Binding CreatedDate, StringFormat='{0:hh:mm tt}'}"
-                                                                    TextColor="{StaticResource DarkGray}"
+                                                                    TextColor="{StaticResource appColor9}"
                                                                     VerticalOptions="EndAndExpand" />
                                                             </StackLayout>
                                                         </Grid>
@@ -439,14 +442,15 @@
                                     VerticalOptions="EndAndExpand">
                                     <StackLayout HorizontalOptions="StartAndExpand" Orientation="Horizontal">
                                         <Label Style="{StaticResource lblPrimary13}" Text="Enter your message" />
-                                        <Label Text="*" TextColor="{StaticResource Red}" />
+                                        <Label Text="*" TextColor="{StaticResource appColor2}" />
                                     </StackLayout>
                                     <Editor
                                         x:Name="txtMessage"
                                         Margin="10,0"
                                         AutoSize="TextChanges"
+                                        Keyboard="Text"
                                         Style="{StaticResource edPrimary}"
-                                        Unfocused="txtMessage_Unfocused" />
+                                        Unfocused="TxtMessage_Unfocused" />
                                     <BoxView x:Name="BoxMessage" Style="{StaticResource boxHorizontal}" />
                                 </StackLayout>
 

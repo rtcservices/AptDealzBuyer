@@ -35,7 +35,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 pageNo = 1;
                 GetPreviousRequirements(filterBy, title, isAscending);
 
-                MessagingCenter.Unsubscribe<string>(this, "NotificationCount"); MessagingCenter.Subscribe<string>(this, "NotificationCount", (count) =>
+                MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount); MessagingCenter.Subscribe<string>(this, Constraints.Str_NotificationCount, (count) =>
                 {
                     if (!Common.EmptyFiels(Common.NotificationCount))
                     {
@@ -127,7 +127,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         }
         #endregion
 
-        #region Events      
+        #region [ Events ]       
         private void ImgMenu_Tapped(object sender, EventArgs e)
         {
             Common.BindAnimation(image: ImgMenu);
@@ -163,7 +163,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         private void ImgBack_Tapped(object sender, EventArgs e)
         {
             Common.BindAnimation(imageButton: ImgBack);
-            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_Home));
 
         }
 
@@ -171,14 +171,14 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         {
             try
             {
-                if (ImgSort.Source.ToString().Replace("File: ", "") == Constraints.Sort_ASC)
+                if (ImgSort.Source.ToString().Replace("File: ", "") == Constraints.Img_SortASC)
                 {
-                    ImgSort.Source = Constraints.Sort_DSC;
+                    ImgSort.Source = Constraints.Img_SortDSC;
                     isAscending = false;
                 }
                 else
                 {
-                    ImgSort.Source = Constraints.Sort_ASC;
+                    ImgSort.Source = Constraints.Img_SortASC;
                     isAscending = true;
                 }
 
@@ -203,15 +203,15 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                     viewCell.ForceUpdateSize();
                 }
                 var mRequirement = imgExp.BindingContext as Requirement;
-                if (mRequirement != null && mRequirement.ArrowImage == Constraints.Arrow_Right)
+                if (mRequirement != null && mRequirement.ArrowImage == Constraints.Img_ArrowRight)
                 {
-                    mRequirement.ArrowImage = Constraints.Arrow_Down;
-                    mRequirement.GridBg = (Color)App.Current.Resources["LightGray"];
+                    mRequirement.ArrowImage = Constraints.Img_ArrowDown;
+                    mRequirement.GridBg = (Color)App.Current.Resources["appColor8"];
                     mRequirement.MoreDetail = true;
                 }
                 else
                 {
-                    mRequirement.ArrowImage = Constraints.Arrow_Right;
+                    mRequirement.ArrowImage = Constraints.Img_ArrowRight;
                     mRequirement.GridBg = Color.Transparent;
                     mRequirement.MoreDetail = false;
                 }
@@ -339,7 +339,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 try
                 {
                     Tab.IsEnabled = false;
-                    var sortby = new FilterPopup(filterBy, "Active");
+                    var sortby = new FilterPopup(filterBy, Constraints.Str_Active);
                     sortby.isRefresh += (s1, e1) =>
                     {
                         string result = s1.ToString();
@@ -374,13 +374,13 @@ namespace AptDealzBuyer.Views.MainTabbedPages
 
         private void BtnLogo_Clicked(object sender, EventArgs e)
         {
-            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_Home));
         }
-        #endregion
 
         private void lstRequirements_ItemTapped(object sender, ItemTappedEventArgs e)
         {
             lstRequirements.SelectedItem = null;
         }
+        #endregion
     }
 }

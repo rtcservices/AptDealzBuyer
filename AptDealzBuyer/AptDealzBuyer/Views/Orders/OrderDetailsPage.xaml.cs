@@ -32,7 +32,7 @@ namespace AptDealzBuyer.Views.Orders
                 rateAndReviewAPI = new RateAndReviewAPI();
                 OrderId = orderId;
 
-                MessagingCenter.Unsubscribe<string>(this, "NotificationCount"); MessagingCenter.Subscribe<string>(this, "NotificationCount", (count) =>
+                MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount); MessagingCenter.Subscribe<string>(this, Constraints.Str_NotificationCount, (count) =>
                 {
                     if (!Common.EmptyFiels(Common.NotificationCount))
                     {
@@ -81,9 +81,9 @@ namespace AptDealzBuyer.Views.Orders
                 {
                     #region [ Details ]
                     if (mOrder.PickupProductDirectly)
-                        lblPinCodeTitle.Text = "Product Pickup PIN Code";
+                        lblPinCodeTitle.Text = Constraints.Str_ProductPickupPINCode;
                     else
-                        lblPinCodeTitle.Text = "Shipping PIN Code";
+                        lblPinCodeTitle.Text = Constraints.Str_ShippingPINCode;
 
                     if (mOrder.SellerContact != null)
                     {
@@ -377,7 +377,7 @@ namespace AptDealzBuyer.Views.Orders
 
         private void BtnLogo_Clicked(object sender, EventArgs e)
         {
-            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_Home));
         }
 
         private async void RefreshView_Refreshing(object sender, EventArgs e)

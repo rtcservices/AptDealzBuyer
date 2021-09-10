@@ -6,7 +6,7 @@
     xmlns:ffImage="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
     xmlns:iOS="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
     iOS:Page.UseSafeArea="True"
-    BackgroundColor="{StaticResource White}"
+    BackgroundColor="{StaticResource appColor6}"
     NavigationPage.HasNavigationBar="False">
     <ContentPage.Content>
 
@@ -137,7 +137,7 @@
                                         HorizontalTextAlignment="Center"
                                         Style="{StaticResource lblLight}"
                                         Text="{Binding Description}"
-                                        TextColor="{StaticResource DarkGray}"
+                                        TextColor="{StaticResource appColor9}"
                                         VerticalOptions="StartAndExpand" />
                                 </Grid>
                             </DataTemplate>
@@ -148,10 +148,10 @@
                         x:Name="Indicators"
                         Margin="0,250,0,0"
                         HeightRequest="30"
-                        IndicatorColor="{StaticResource DarkGray}"
+                        IndicatorColor="{StaticResource appColor9}"
                         IndicatorSize="15"
                         Position="{Binding Source={x:Reference cvWelcome}, Path=Position}"
-                        SelectedIndicatorColor="{StaticResource Green}"
+                        SelectedIndicatorColor="{StaticResource appColor1}"
                         VerticalOptions="StartAndExpand"
                         WidthRequest="30" />
                 </Grid>

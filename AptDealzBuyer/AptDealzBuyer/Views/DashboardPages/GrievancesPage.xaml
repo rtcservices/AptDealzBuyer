@@ -6,7 +6,7 @@
     xmlns:ext="clr-namespace:AptDealzBuyer.Extention"
     xmlns:iOS="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
     iOS:Page.UseSafeArea="True"
-    BackgroundColor="{StaticResource White}"
+    BackgroundColor="{StaticResource appColor6}"
     NavigationPage.HasNavigationBar="False">
     <ContentPage.Content>
         <Grid RowSpacing="0">
@@ -309,7 +309,7 @@
                                                 LineBreakMode="WordWrap"
                                                 Style="{StaticResource lblMedium}"
                                                 Text="{Binding StatusDescr}"
-                                                TextColor="{StaticResource Green}" />
+                                                TextColor="{StaticResource appColor1}" />
                                         </Frame>
 
                                     </Grid>

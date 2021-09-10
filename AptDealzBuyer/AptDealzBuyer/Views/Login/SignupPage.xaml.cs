@@ -46,9 +46,9 @@ namespace AptDealzBuyer.Views.Login
             base.OnAppearing();
 
             if (isChecked)
-                imgCheck.Source = Constraints.CheckBox_Checked;
+                imgCheck.Source = Constraints.Img_CheckBoxChecked;
             else
-                imgCheck.Source = Constraints.CheckBox_UnChecked;
+                imgCheck.Source = Constraints.Img_CheckBoxUnChecked;
         }
 
         private bool Validations()
@@ -102,20 +102,19 @@ namespace AptDealzBuyer.Views.Login
         {
             try
             {
-                Common.DisplayErrorMessage(Constraints.Required_All);
                 if (Common.EmptyFiels(txtFullName.Text))
                 {
-                    BoxFullName.BackgroundColor = (Color)App.Current.Resources["LightRed"];
+                    BoxFullName.BackgroundColor = (Color)App.Current.Resources["appColor3"];
                 }
 
                 if (Common.EmptyFiels(txtEmailAddress.Text))
                 {
-                    BoxEmailAddress.BackgroundColor = (Color)App.Current.Resources["LightRed"];
+                    BoxEmailAddress.BackgroundColor = (Color)App.Current.Resources["appColor3"];
                 }
 
                 if (Common.EmptyFiels(txtPhoneNumber.Text))
                 {
-                    BoxPhoneNumber.BackgroundColor = (Color)App.Current.Resources["LightRed"];
+                    BoxPhoneNumber.BackgroundColor = (Color)App.Current.Resources["appColor3"];
                 }
             }
             catch (Exception ex)
@@ -289,7 +288,7 @@ namespace AptDealzBuyer.Views.Login
         }
         #endregion
 
-        #region Events
+        #region [ Events ]
         private async void ImgBack_Tapped(object sender, EventArgs e)
         {
             Common.BindAnimation(image: ImgBack);
@@ -321,15 +320,15 @@ namespace AptDealzBuyer.Views.Login
         {
             try
             {
-                if (imgCheck.Source.ToString().Replace("File: ", "") == Constraints.CheckBox_Checked)
+                if (imgCheck.Source.ToString().Replace("File: ", "") == Constraints.Img_CheckBoxChecked)
                 {
                     isChecked = false;
-                    imgCheck.Source = Constraints.CheckBox_UnChecked;
+                    imgCheck.Source = Constraints.Img_CheckBoxUnChecked;
                 }
                 else
                 {
                     isChecked = true;
-                    imgCheck.Source = Constraints.CheckBox_Checked;
+                    imgCheck.Source = Constraints.Img_CheckBoxChecked;
                 }
             }
             catch (Exception ex)
@@ -369,15 +368,15 @@ namespace AptDealzBuyer.Views.Login
                 {
                     if (entry.ClassId == "FullName")
                     {
-                        BoxFullName.BackgroundColor = (Color)App.Current.Resources["LightGray"];
+                        BoxFullName.BackgroundColor = (Color)App.Current.Resources["appColor8"];
                     }
                     else if (entry.ClassId == "Email")
                     {
-                        BoxEmailAddress.BackgroundColor = (Color)App.Current.Resources["LightGray"];
+                        BoxEmailAddress.BackgroundColor = (Color)App.Current.Resources["appColor8"];
                     }
                     else if (entry.ClassId == "PhoneNumber")
                     {
-                        BoxPhoneNumber.BackgroundColor = (Color)App.Current.Resources["LightGray"];
+                        BoxPhoneNumber.BackgroundColor = (Color)App.Current.Resources["appColor8"];
                     }
                 }
             }

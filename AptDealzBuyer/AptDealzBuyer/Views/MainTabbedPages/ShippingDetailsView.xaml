@@ -6,7 +6,7 @@
     xmlns:ext="clr-namespace:AptDealzBuyer.Extention"
     xmlns:iOS="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
     iOS:Page.UseSafeArea="True"
-    BackgroundColor="{StaticResource White}"
+    BackgroundColor="{StaticResource appColor6}"
     NavigationPage.HasNavigationBar="False">
     <ContentView.Content>
         <Grid>
@@ -252,7 +252,7 @@
                                                 Grid.Row="0"
                                                 Grid.Column="1"
                                                 Padding="10,0"
-                                                BorderColor="{StaticResource DarkGray}"
+                                                BorderColor="{StaticResource appColor9}"
                                                 BorderWidth="1"
                                                 Clicked="BtnTrack_Clicked"
                                                 FontSize="15"
@@ -286,7 +286,7 @@
                                                 Grid.Row="2"
                                                 Grid.Column="0"
                                                 Padding="10,0"
-                                                BorderColor="{StaticResource DarkGray}"
+                                                BorderColor="{StaticResource appColor9}"
                                                 BorderWidth="1"
                                                 Clicked="BtnTrack_Clicked"
                                                 FontSize="15"
@@ -305,7 +305,7 @@
                                                 IsVisible="{Binding MoreDetail, Mode=TwoWay}"
                                                 Style="{StaticResource lblMedium}"
                                                 Text="{Binding PaidAmount, StringFormat='Rs {0:}'}"
-                                                TextColor="{StaticResource Green}" />
+                                                TextColor="{StaticResource appColor1}" />
                                         </Grid>
 
                                         <!--  ArrowImage  -->

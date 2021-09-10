@@ -81,7 +81,7 @@ namespace AptDealzBuyer.Services
                     Settings.RefreshToken = string.Empty;
                     Settings.UserId = string.Empty;
                     Settings.LoginTrackingKey = string.Empty;
-                    MessagingCenter.Unsubscribe<string>(this, "NotificationCount");
+                    MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount);
                     App.stoppableTimer.Stop();
                     //Settings.fcm_token = string.Empty; don't empty this token
                     App.Current.MainPage = new NavigationPage(new LoginPage());

@@ -6,9 +6,12 @@ using AptDealzBuyer.Model.Reponse;
 using AptDealzBuyer.Model.Request;
 using AptDealzBuyer.Repository;
 using AptDealzBuyer.Utility;
+using AptDealzBuyer.Views.OtherPages;
 using Newtonsoft.Json.Linq;
 using Rg.Plugins.Popup.Services;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -38,7 +41,7 @@ namespace AptDealzBuyer.Views.DashboardPages
                 QuoteId = quoteId;
                 mQuote = new Quote();
 
-                MessagingCenter.Unsubscribe<string>(this, "NotificationCount"); MessagingCenter.Subscribe<string>(this, "NotificationCount", (count) =>
+                MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount); MessagingCenter.Subscribe<string>(this, Constraints.Str_NotificationCount, (count) =>
                 {
                     if (!Common.EmptyFiels(Common.NotificationCount))
                     {
@@ -85,8 +88,6 @@ namespace AptDealzBuyer.Views.DashboardPages
                 mQuote = await DependencyService.Get<IQuoteRepository>().GetQuoteById(QuoteId);
                 if (mQuote != null)
                 {
-                    await GetRequirementsDetails();
-
                     lblRequirementId.Text = mQuote.RequirementNo;
                     lblQuoteRefNo.Text = mQuote.QuoteNo;
                     lblBuyerId.Text = mQuote.BuyerId;
@@ -128,11 +129,16 @@ namespace AptDealzBuyer.Views.DashboardPages
                     if (mQuote.IsSellerContactRevealed)
                     {
                         if (mQuote.SellerContact != null)
+                        {
                             BtnRevealContact.Text = mQuote.SellerContact.PhoneNumber;
+                            lblSellerContact.Text = mQuote.SellerContact.PhoneNumber;
+                        }
+
                     }
                     else
                     {
-                        BtnRevealContact.Text = "Reveal Contact";
+                        BtnRevealContact.Text = Constraints.Str_RevealContact;
+                        lblSellerContact.Text = Constraints.Str_NotRevealContact;
                     }
 
                     if (mQuote.Days.Contains("Expired"))
@@ -145,8 +151,7 @@ namespace AptDealzBuyer.Views.DashboardPages
                         lblDate.Text = mQuote.ValidityDate.Date.ToString("dd/MM/yyyy");
                     }
 
-                    //if (mQuote.Status == "Accepted")
-                    if (mQuote.Status == "Accepted" || mQuote.Days.Contains("Expired"))
+                    if (mQuote.Status == QuoteStatus.Accepted.ToString() || mQuote.Days.Contains("Expired"))
                     {
                         BtnAcceptQuote.IsEnabled = false;
                     }
@@ -154,6 +159,8 @@ namespace AptDealzBuyer.Views.DashboardPages
                     {
                         BtnAcceptQuote.IsEnabled = true;
                     }
+
+                    await GetRequirementsDetails();
                 }
             }
             catch (Exception ex)
@@ -171,11 +178,24 @@ namespace AptDealzBuyer.Views.DashboardPages
                 {
                     if (mRequirement.PickupProductDirectly)
                     {
-                        lblShippingPinCode.Text = "Product Pickup PIN Code";
+                        lblShippingPinCode.Text = Constraints.Str_ProductPickupPINCode;
                     }
                     else
                     {
-                        lblShippingPinCode.Text = "Shipping PIN Code";
+                        lblShippingPinCode.Text = Constraints.Str_ShippingPINCode;
+                    }
+
+                    if (mRequirement.Status != RequirementStatus.Active.ToString())
+                    {
+                        BtnAcceptQuote.IsVisible = false;
+                        BtnRevealContact.IsVisible = false;
+                        lblSellerContact.IsVisible = true;
+                    }
+                    else
+                    {
+                        BtnAcceptQuote.IsVisible = true;
+                        BtnRevealContact.IsVisible = true;
+                        lblSellerContact.IsVisible = false;
                     }
                 }
 
@@ -190,6 +210,80 @@ namespace AptDealzBuyer.Views.DashboardPages
             }
         }
 
+        private async Task QuotePayment(bool isRevealContact)
+        {
+            try
+            {
+                string message = string.Empty;
+                if (isRevealContact)
+                {
+                    long revealRs = (long)App.Current.Resources["RevealContact"];
+                    message = "You need to pay Rs " + revealRs + " to reveal the Seller contact information. Do you wish to continue making payment?";
+                }
+                else
+                {
+                    message = "Make a payment of Rs " + mQuote.TotalQuoteAmount + " to Accept Quote";
+                }
+                var contactPopup = new PopupPages.PaymentPopup(message);
+                contactPopup.isRefresh += async (s1, e1) =>
+                {
+                    bool isPay = (bool)s1;
+                    if (isPay)
+                    {
+                        if (isRevealContact)
+                        {
+                            await RevealSellerContact();
+                        }
+                        else
+                        {
+                            //Accept Quote
+                            PaidQuote();
+                        }
+                    }
+                };
+                await PopupNavigation.Instance.PushAsync(contactPopup);
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("QuoteDetailsPage/QuotePayment: " + ex.Message);
+            }
+        }
+
+        #region [ AcceptQuote ]
+        /// <summary>
+        ///  [ Create Order | Payment Process | Update Order Payment Status | Accept Quote ]
+        /// </summary>
+        private async void PaidQuote()
+        {
+            try
+            {
+                var mOrder = await CreateOrder();
+                if (mOrder != null && mOrder.IsSuccess)
+                {
+                    OpenRazorPayQuote(mOrder);
+                }
+                else
+                {
+                    if (mOrder.OrderErrorMessage.Contains("duplicate"))
+                    {
+                        OpenRazorPayQuote(mOrder);
+                    }
+                    else
+                    {
+                        Common.DisplayErrorMessage(mOrder.OrderErrorMessage);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("QuoteDetailsPage/PaidQuote: " + ex.Message);
+            }
+        }
+
+
+        /// <summary>
+        /// [ Step 1 - CreateOrder ]
+        /// </summary>
         private async Task<Order> CreateOrder()
         {
             Order mOrder = new Order();
@@ -232,92 +326,6 @@ namespace AptDealzBuyer.Views.DashboardPages
             return mOrder;
         }
 
-        /// <summary>
-        ///  [ Create Order | Payment Process | Update Order Payment Status | Accept Quote ]
-        /// </summary>
-        private async void PaidQuote()
-        {
-            try
-            {
-                var mOrder = await CreateOrder();
-                if (mOrder != null && mOrder.IsSuccess)
-                {
-                    if (DeviceInfo.Platform == DevicePlatform.Android)
-                    {
-                        OpenRazorPayQuote(mOrder);
-                    }
-                    else
-                    {
-                        await AcceptQuote(mOrder.OrderSuccessMessage);
-                        OnAppearing();
-                    }
-                }
-                else
-                {
-                    if (mOrder.OrderErrorMessage.Contains("duplicate"))
-                    {
-                        OpenRazorPayQuote(mOrder);
-                    }
-                    else
-                    {
-                        Common.DisplayErrorMessage(mOrder.OrderErrorMessage);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Common.DisplayErrorMessage("QuoteDetailsPage/PaidQuote: " + ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// [ Step 1 - CreateOrder ]
-        /// </summary>
-        private async Task QuotePayment(bool isRevealContact)
-        {
-            try
-            {
-                string message = string.Empty;
-                if (isRevealContact)
-                {
-                    long revealRs = (long)App.Current.Resources["RevealContact"];
-                    message = "You need to pay Rs " + revealRs + " to reveal the Seller contact information. Do you wish to continue making payment?";
-                }
-                else
-                {
-                    message = "Make a payment of Rs " + mQuote.TotalQuoteAmount + " to Accept Quote";
-                }
-                var contactPopup = new PopupPages.PaymentPopup(message);
-                contactPopup.isRefresh += (s1, e1) =>
-               {
-                   bool isPay = (bool)s1;
-                   if (isPay)
-                   {
-                       if (DeviceInfo.Platform == DevicePlatform.Android)
-                       {
-                           if (isRevealContact)
-                           {
-                               RevealSellerContact();
-                           }
-                           else
-                           {
-                               PaidQuote();
-                           }
-                       }
-                       else
-                       {
-                           //PaidQuote(false);
-                       }
-                   }
-               };
-                await PopupNavigation.Instance.PushAsync(contactPopup);
-            }
-            catch (Exception ex)
-            {
-                Common.DisplayErrorMessage("QuoteDetailsPage/QuotePayment: " + ex.Message);
-            }
-        }
-
         public async Task OrderPayment(RazorResponse mRazorResponse)
         {
             try
@@ -355,7 +363,7 @@ namespace AptDealzBuyer.Views.DashboardPages
         /// [ Step 2 - Payment Process with orderId ]
         /// </summary>
         /// <param name="mOrder"></param>
-        private void OpenRazorPayQuote(Order mOrder)
+        private async void OpenRazorPayQuote(Order mOrder)
         {
             try
             {
@@ -367,35 +375,63 @@ namespace AptDealzBuyer.Views.DashboardPages
                 payload.email = Common.mBuyerDetail.Email;
                 payload.contact = Common.mBuyerDetail.PhoneNumber;
 
-                MessagingCenter.Send<RazorPayload>(payload, "PayNow");
-
-                MessagingCenter.Subscribe<RazorResponse>(this, "PaidResponse", async (razorResponse) =>
+                if (DeviceInfo.Platform == DevicePlatform.Android)
                 {
-                    // Update Payment status
-                    razorResponse.OrderNo = mOrder.OrderId;
-                    await OrderPayment(razorResponse);
-
-                    if (razorResponse != null && razorResponse.isPaid)
+                    MessagingCenter.Send<RazorPayload>(payload, Constraints.RP_PayNow);
+                    MessagingCenter.Subscribe<RazorResponse>(this, Constraints.RP_PaidResponse, async (razorResponse) =>
                     {
-                        await AcceptQuote(mOrder.OrderSuccessMessage);
-                        OnAppearing();
-                    }
-                    else
+                        // Make Order
+                        MakeOrder(razorResponse, mOrder);
+                        MessagingCenter.Unsubscribe<RazorResponse>(this, Constraints.RP_PaidResponse);
+                    });
+                }
+                else
+                {
+                    RequestPayLoad mPayLoad = new RequestPayLoad()
                     {
-                        string message = "Payment failed ";
-
-                        if (Common.EmptyFiels(razorResponse.OrderId))
-                            message += "OrderId: " + razorResponse.OrderId + " ";
-
-                        if (Common.EmptyFiels(razorResponse.PaymentId))
-                            message += "PaymentId: " + razorResponse.PaymentId + " ";
-
-                        var contactPopup = new PopupPages.SuccessPopup(message, false);
-                        await PopupNavigation.Instance.PushAsync(contactPopup);
+                        amount = payload.amount,
+                        currency = payload.currency,
+                        accept_partial = false,
+                        description = mOrder.Title,
+                        customer = new Customer()
+                        {
+                            contact = Common.mBuyerDetail.PhoneNumber,
+                            email = Common.mBuyerDetail.Email,
+                            name = Common.mBuyerDetail.FullName
+                        },
+                        callback_method = "get",
+                        callback_url = "https://purple-field-04c774300.azurestaticapps.net/login",
+                    };
+                    RazorPayUtility razorPayUtility = new RazorPayUtility();
+                    var urls = await razorPayUtility.PayViaRazor(payload, mPayLoad, Constraints.RP_UserName, Constraints.RP_Password);
+                    if (urls != null && urls.Count > 0)
+                    {
+                        var url = urls.FirstOrDefault();
+                        var orderId = urls.LastOrDefault();
+                        var checkoutPage = new CheckOutPage(url);
+                        checkoutPage.PaidEvent += (s1, e1) =>
+                        {
+                            MessagingCenter.Unsubscribe<RazorResponse>(this, Constraints.RP_PaidRevealResponse);
+                            MessagingCenter.Unsubscribe<RazorResponse>(this, Constraints.RP_PaidResponse);
+                            RazorResponse razorResponse = new RazorResponse();
+                            var keyValuePairs = (Dictionary<string, string>)s1;
+                            if (keyValuePairs != null)
+                            {
+                                razorResponse.isPaid = true;
+                                razorResponse.PaymentId = keyValuePairs.Where(x => x.Key == "razorpay_payment_id").FirstOrDefault().Value;
+                                razorResponse.OrderId = keyValuePairs.Where(x => x.Key == "razorpay_payment_link_reference_id").FirstOrDefault().Value;
+                                razorResponse.Signature = keyValuePairs.Where(x => x.Key == "razorpay_signature").FirstOrDefault().Value;
+                            }
+                            else
+                            {
+                                razorResponse.isPaid = false;
+                                razorResponse.OrderId = orderId;
+                            }
+                            MakeOrder(razorResponse, mOrder);
+                        };
+                        await Navigation.PushAsync(checkoutPage);
                     }
-
-                    MessagingCenter.Unsubscribe<RazorResponse>(this, "PaidResponse");
-                });
+                }
             }
             catch (Exception ex)
             {
@@ -404,6 +440,38 @@ namespace AptDealzBuyer.Views.DashboardPages
             finally
             {
                 UserDialogs.Instance.HideLoading();
+            }
+        }
+
+        private async void MakeOrder(RazorResponse razorResponse, Order mOrder)
+        {
+            try
+            {
+                razorResponse.OrderNo = mOrder.OrderId;
+                await OrderPayment(razorResponse);
+
+                if (razorResponse != null && razorResponse.isPaid)
+                {
+                    await AcceptQuote(mOrder.OrderSuccessMessage);
+                    OnAppearing();
+                }
+                else
+                {
+                    string message = "Payment failed ";
+
+                    if (Common.EmptyFiels(razorResponse.OrderId))
+                        message += "OrderId: " + razorResponse.OrderId + " ";
+
+                    if (Common.EmptyFiels(razorResponse.PaymentId))
+                        message += "PaymentId: " + razorResponse.PaymentId + " ";
+
+                    var contactPopup = new PopupPages.SuccessPopup(message, false);
+                    await PopupNavigation.Instance.PushAsync(contactPopup);
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("QuoteDetailsPage/MakeOrder: " + ex.Message);
             }
         }
 
@@ -441,78 +509,107 @@ namespace AptDealzBuyer.Views.DashboardPages
                 UserDialogs.Instance.HideLoading();
             }
         }
+        #endregion
 
-        private void RevealSellerContact()
+        private async Task RevealSellerContact()
         {
             try
             {
-                long amount = (long)App.Current.Resources["RevealContact"];
                 RazorPayload payload = new RazorPayload();
+                long amount = (long)App.Current.Resources["RevealContact"];
                 payload.amount = amount * 100;
                 payload.currency = (string)App.Current.Resources["Currency"];
                 payload.receipt = QuoteId; // quoteid
                 payload.email = Common.mBuyerDetail.Email;
                 payload.contact = Common.mBuyerDetail.PhoneNumber;
-                MessagingCenter.Send<RazorPayload>(payload, "RevealPayNow");
-                MessagingCenter.Subscribe<RazorResponse>(this, "PaidRevealResponse", async (razorResponse) =>
+
+                if (DeviceInfo.Platform == DevicePlatform.Android)
                 {
-                    if (razorResponse != null && !razorResponse.isPaid)
-                    {
-                        string message = "Payment failed ";
+                    MessagingCenter.Send<RazorPayload>(payload, Constraints.RP_RevealPayNow);
+                    MessagingCenter.Subscribe<RazorResponse>(this, Constraints.RP_PaidRevealResponse, async (razorResponse) =>
+                     {
+                         if (razorResponse != null && !razorResponse.isPaid)
+                         {
+                             string message = "Payment failed ";
 
-                        if (!Common.EmptyFiels(razorResponse.OrderId))
-                            message += "OrderId: " + razorResponse.OrderId + " ";
+                             if (!Common.EmptyFiels(razorResponse.OrderId))
+                                 message += "OrderId: " + razorResponse.OrderId + " ";
 
-                        if (!Common.EmptyFiels(razorResponse.PaymentId))
-                            message += "PaymentId: " + razorResponse.PaymentId + " ";
+                             if (!Common.EmptyFiels(razorResponse.PaymentId))
+                                 message += "PaymentId: " + razorResponse.PaymentId + " ";
 
-                        if (message != null)
-                            Common.DisplayErrorMessage(message);
-                    }
+                             if (message != null)
+                                 Common.DisplayErrorMessage(message);
+                         }
 
-                    RevealSellerContact mRevealSellerContact = new RevealSellerContact();
-                    mRevealSellerContact.QuoteId = QuoteId;
-                    mRevealSellerContact.PaymentStatus = razorResponse.isPaid ? (int)RevealContactStatus.Success : (int)RevealContactStatus.Failure;
-                    mRevealSellerContact.RazorPayOrderId = razorResponse.OrderId;
-                    mRevealSellerContact.RazorPayPaymentId = razorResponse.PaymentId;
+                         RevealSellerContact mRevealSellerContact = new RevealSellerContact();
+                         mRevealSellerContact.QuoteId = QuoteId;
+                         mRevealSellerContact.PaymentStatus = razorResponse.isPaid ? (int)RevealContactStatus.Success : (int)RevealContactStatus.Failure;
+                         mRevealSellerContact.RazorPayOrderId = razorResponse.OrderId;
+                         mRevealSellerContact.RazorPayPaymentId = razorResponse.PaymentId;
 
-                    BtnRevealContact.Text = await DependencyService.Get<IQuoteRepository>().RevealContact(mRevealSellerContact);
+                         BtnRevealContact.Text = await DependencyService.Get<IQuoteRepository>().RevealContact(mRevealSellerContact);
 
-                    MessagingCenter.Unsubscribe<RazorResponse>(this, "PaidRevealResponse");
-                });
-
-            }
-            catch (Exception ex)
-            {
-                Common.DisplayErrorMessage("QuoteDetailsPage/OpenPaymentPopup: " + ex.Message);
-            }
-            finally
-            {
-                UserDialogs.Instance.HideLoading();
-            }
-        }
-
-        private async void RejectQuote()
-        {
-            try
-            {
-                UserDialogs.Instance.ShowLoading(Constraints.Loading);
-                var mResponse = await quoteAPI.RejectQuote(QuoteId);
-                if (mResponse != null && mResponse.Succeeded)
-                {
-                    Common.DisplaySuccessMessage(mResponse.Message);
+                         MessagingCenter.Unsubscribe<RazorResponse>(this, Constraints.RP_PaidRevealResponse);
+                     });
                 }
                 else
                 {
-                    if (mResponse != null)
-                        Common.DisplayErrorMessage(mResponse.Message);
-                    else
-                        Common.DisplayErrorMessage(Constraints.Something_Wrong);
+                    RequestPayLoad mPayLoad = new RequestPayLoad()
+                    {
+                        amount = payload.amount,
+                        currency = payload.currency,
+                        accept_partial = false,
+                        description = Constraints.Str_RevealContact,
+                        customer = new Customer()
+                        {
+                            contact = Common.mBuyerDetail.PhoneNumber,
+                            email = Common.mBuyerDetail.Email,
+                            name = Common.mBuyerDetail.FullName
+                        },
+                        callback_method = "get",
+                        callback_url = "https://purple-field-04c774300.azurestaticapps.net/login",
+                    };
+                    RazorPayUtility razorPayUtility = new RazorPayUtility();
+                    var urls = await razorPayUtility.PayViaRazor(payload, mPayLoad, Constraints.RP_UserName, Constraints.RP_Password);
+                    if (urls != null && urls.Count > 0)
+                    {
+                        var url = urls.FirstOrDefault();
+                        var orderId = urls.LastOrDefault();
+                        var checkoutPage = new CheckOutPage(url);
+                        checkoutPage.PaidEvent += async (s1, e1) =>
+                        {
+                            MessagingCenter.Unsubscribe<RazorResponse>(this, Constraints.RP_PaidRevealResponse);
+                            MessagingCenter.Unsubscribe<RazorResponse>(this, Constraints.RP_PaidResponse);
+                            RazorResponse razorResponse = new RazorResponse();
+                            var keyValuePairs = (Dictionary<string, string>)s1;
+                            if (keyValuePairs != null)
+                            {
+                                razorResponse.isPaid = true;
+                                razorResponse.PaymentId = keyValuePairs.Where(x => x.Key == "razorpay_payment_id").FirstOrDefault().Value;
+                                razorResponse.OrderId = keyValuePairs.Where(x => x.Key == "razorpay_payment_link_reference_id").FirstOrDefault().Value;
+                                razorResponse.Signature = keyValuePairs.Where(x => x.Key == "razorpay_signature").FirstOrDefault().Value;
+                            }
+                            else
+                            {
+                                razorResponse.isPaid = false;
+                                razorResponse.OrderId = orderId;
+                            }
+                            RevealSellerContact mRevealSellerContact = new RevealSellerContact();
+                            mRevealSellerContact.QuoteId = QuoteId;
+                            mRevealSellerContact.PaymentStatus = razorResponse.isPaid ? (int)RevealContactStatus.Success : (int)RevealContactStatus.Failure;
+                            mRevealSellerContact.RazorPayOrderId = razorResponse.OrderId;
+                            mRevealSellerContact.RazorPayPaymentId = razorResponse.PaymentId;
+                            BtnRevealContact.Text = await DependencyService.Get<IQuoteRepository>().RevealContact(mRevealSellerContact);
+                        };
+                        await Navigation.PushAsync(checkoutPage);
+                    }
                 }
+
             }
             catch (Exception ex)
             {
-                Common.DisplayErrorMessage("QuoteDetailsPage/RejectQuote: " + ex.Message);
+                Common.DisplayErrorMessage("QuoteDetailsPage/RevealSellerContact: " + ex.Message);
             }
             finally
             {
@@ -569,7 +666,7 @@ namespace AptDealzBuyer.Views.DashboardPages
                 {
                     Tab.IsEnabled = false;
                     Common.BindAnimation(button: BtnRevealContact);
-                    if (BtnRevealContact.Text == "Reveal Contact")
+                    if (BtnRevealContact.Text == Constraints.Str_RevealContact)
                     {
                         await QuotePayment(true);
                     }
@@ -636,7 +733,7 @@ namespace AptDealzBuyer.Views.DashboardPages
 
         private void BtnLogo_Clicked(object sender, EventArgs e)
         {
-            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_Home));
         }
 
         private async void RefreshView_Refreshing(object sender, EventArgs e)
@@ -687,13 +784,6 @@ namespace AptDealzBuyer.Views.DashboardPages
                 Common.DisplayErrorMessage("QuoteDetailsPage/CopyString_Tapped: " + ex.Message);
             }
         }
-
-        //private async void BtnRejectQuote_Clicked(object sender, EventArgs e)
-        //{
-        //    Common.BindAnimation(button: BtnRejectQuote);
-        //    RejectQuote();
-        //    await Navigation.PopAsync();
-        //}
         #endregion
     }
 }

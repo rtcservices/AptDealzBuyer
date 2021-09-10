@@ -4,7 +4,7 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:ext="clr-namespace:AptDealzBuyer.Extention"
-    BackgroundColor="{StaticResource White}"
+    BackgroundColor="{StaticResource appColor6}"
     NavigationPage.HasNavigationBar="False">
     <ContentView.Content>
 
@@ -99,9 +99,9 @@
                 <ListView
                     x:Name="lstFaq"
                     Grid.Row="1"
-                    Style="{StaticResource lstPrimary}" ItemTapped="lstFaq_ItemTapped"
-                    VerticalOptions="StartAndExpand"
-                    >
+                    ItemTapped="lstFaq_ItemTapped"
+                    Style="{StaticResource lstPrimary}"
+                    VerticalOptions="StartAndExpand">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
@@ -130,7 +130,7 @@
                                                 HorizontalOptions="StartAndExpand"
                                                 Style="{StaticResource lblMedium}"
                                                 Text="{Binding FaqTitle}"
-                                                TextColor="{StaticResource Green}" />
+                                                TextColor="{StaticResource appColor1}" />
 
                                             <Image
                                                 Grid.Column="1"
@@ -165,7 +165,7 @@
 
                                     <BoxView
                                         Grid.Row="1"
-                                        BackgroundColor="{StaticResource LightGray}"
+                                        BackgroundColor="{StaticResource appColor8}"
                                         HeightRequest="1"
                                         HorizontalOptions="FillAndExpand"
                                         VerticalOptions="EndAndExpand" />

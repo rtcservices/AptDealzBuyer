@@ -5,7 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:iOS="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
     iOS:Page.UseSafeArea="True"
-    BackgroundColor="{StaticResource White}"
+    BackgroundColor="{StaticResource appColor6}"
     NavigationPage.HasNavigationBar="False">
     <ContentPage.Content>
 
@@ -15,6 +15,7 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
+            <!--  Header  -->
             <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="80" />
@@ -80,6 +81,7 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
+                <!--  Back Arrow  -->
                 <Grid
                     Grid.Row="0"
                     Margin="5,5,5,0"
@@ -135,7 +137,7 @@
                                             FontSize="15"
                                             HorizontalOptions="EndAndExpand"
                                             Style="{StaticResource lblMedium}"
-                                            TextColor="{StaticResource Green}" />
+                                            TextColor="{StaticResource appColor1}" />
                                     </StackLayout>
 
                                     <BoxView Style="{StaticResource boxHorizontal}" />
@@ -159,7 +161,7 @@
                                             FontSize="15"
                                             HorizontalOptions="EndAndExpand"
                                             Style="{StaticResource lblMedium}"
-                                            TextColor="{StaticResource Green}" />
+                                            TextColor="{StaticResource appColor1}" />
                                     </StackLayout>
 
                                     <BoxView Style="{StaticResource boxHorizontal}" />
@@ -367,7 +369,7 @@
                                         <Label
                                             HorizontalOptions="StartAndExpand"
                                             Style="{StaticResource lblLight}"
-                                            Text="Country of origin" />
+                                            Text="Country of Origin" />
                                         <Label
                                             x:Name="lblCountryOrigin"
                                             FontSize="15"
@@ -411,7 +413,7 @@
                                 Margin="20,20,20,0"
                                 Padding="15"
                                 Style="{StaticResource frmBlank}">
-                                <Grid RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="10">
+                                <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="10">
 
                                     <Grid
                                         Grid.Row="0"
@@ -457,29 +459,38 @@
                                             Text="" />
                                     </Grid>
 
-                                    <Grid
-                                        Grid.Row="2"
-                                        ColumnDefinitions="*,*"
-                                        HorizontalOptions="FillAndExpand"
-                                        VerticalOptions="CenterAndExpand">
-                                        <Label
-                                            Grid.Column="0"
-                                            FontSize="15"
-                                            HorizontalOptions="StartAndExpand"
-                                            LineBreakMode="WordWrap"
-                                            Style="{StaticResource lblMedium}"
-                                            Text="Contact Seller" />
-                                        <Button
-                                            x:Name="BtnRevealContact"
-                                            Grid.Column="1"
-                                            Clicked="BtnRevealContact_Clicked"
-                                            FontSize="15"
-                                            HeightRequest="40"
-                                            Style="{StaticResource btnBorder}"
-                                            Text="Reveal Contact" />
-                                    </Grid>
 
-                                    <Grid Grid.Row="3" VerticalOptions="CenterAndExpand">
+                                    <StackLayout Grid.Row="2" Spacing="10">
+                                        <Grid
+                                            ColumnDefinitions="*,*"
+                                            HorizontalOptions="FillAndExpand"
+                                            VerticalOptions="CenterAndExpand">
+                                            <Label
+                                                Grid.Column="0"
+                                                FontSize="15"
+                                                HorizontalOptions="StartAndExpand"
+                                                LineBreakMode="WordWrap"
+                                                Style="{StaticResource lblMedium}"
+                                                Text="Contact Seller" />
+                                            <Label
+                                                x:Name="lblSellerContact"
+                                                Grid.Column="1"
+                                                FontSize="15"
+                                                HorizontalOptions="StartAndExpand"
+                                                IsVisible="false"
+                                                LineBreakMode="WordWrap"
+                                                Style="{StaticResource lblMedium}"
+                                                TextColor="{StaticResource appColor1}" />
+                                            <Button
+                                                x:Name="BtnRevealContact"
+                                                Grid.Column="1"
+                                                Clicked="BtnRevealContact_Clicked"
+                                                FontSize="15"
+                                                HeightRequest="40"
+                                                Style="{StaticResource btnBorder}"
+                                                Text="Reveal Contact" />
+                                        </Grid>
+
                                         <Button
                                             x:Name="BtnAcceptQuote"
                                             Clicked="BtnAcceptQuote_Clicked"
@@ -487,17 +498,7 @@
                                             HeightRequest="40"
                                             Style="{StaticResource btnBorder}"
                                             Text="Accept Quote" />
-
-                                        <!--<Button ColumnDefinitions="*,*"
-                                        ColumnSpacing="25"
-                                        x:Name="BtnRejectQuote"
-                                        Grid.Column="1"
-                                        Clicked="BtnRejectQuote_Clicked"
-                                        FontSize="15"
-                                        HeightRequest="40"
-                                        Style="{StaticResource btnBorder}"
-                                        Text="Reject Quote" />-->
-                                    </Grid>
+                                    </StackLayout>
                                 </Grid>
                             </Frame>
 

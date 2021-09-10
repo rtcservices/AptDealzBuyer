@@ -141,11 +141,11 @@ namespace AptDealzBuyer.Utility
         {
             if (fileUploadCategory == 0)
             {
-                ImageConvertion.NullImagePath = "iconUserAccount.png";
+                ImageConvertion.NullImagePath = Constraints.Img_UserAccount;
             }
             else
             {
-                ImageConvertion.NullImagePath = "imgUploadImage.png";
+                ImageConvertion.NullImagePath = Constraints.Img_UploadImage;
             }
         }
 

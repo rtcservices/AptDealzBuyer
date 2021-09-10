@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using AptDealzBuyer.Utility;
+using Newtonsoft.Json;
 using System.IO;
 
 namespace AptDealzBuyer.Model.Reponse
@@ -24,13 +25,13 @@ namespace AptDealzBuyer.Model.Reponse
                     string extension = Path.GetExtension(FileUri).ToLower();
 
                     if (extension == ".mp3" || extension == ".wma" || extension == ".acc")
-                        extensionDoc = "iconMusic.png";
+                        extensionDoc = Constraints.Img_Music;
                     else if (extension == ".jpg" || extension == ".jpeg" || extension == ".png")
                         extensionDoc = baseURL + RelativePath;
                     else if (extension == ".mp4" || extension == ".mov" || extension == ".wmv" || extension == ".qt" || extension == ".gif")
-                        extensionDoc = "iconVideo.png";
+                        extensionDoc = Constraints.Img_Video;
                     else
-                        extensionDoc = "iconFiles2.png";
+                        extensionDoc = Constraints.Img_File;
                 }
                 return extensionDoc;
             }

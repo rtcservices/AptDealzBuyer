@@ -17,7 +17,7 @@ namespace AptDealzBuyer.Services
 
         public async Task<string> RevealContact(RevealSellerContact mRevealSellerContact)
         {
-            string PhoneNumber = "Reveal Contact";
+            string PhoneNumber = Constraints.Str_RevealContact;
             try
             {
                 UserDialogs.Instance.ShowLoading(Constraints.Loading);

@@ -26,8 +26,9 @@ namespace AptDealzBuyer.Views.OtherPages
             InitializeComponent();
             supportChatAPI = new SupportChatAPI();
             mMessageList = new List<ChatSupport>();
+            txtMessage.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
 
-            MessagingCenter.Unsubscribe<string>(this, "NotificationCount"); MessagingCenter.Subscribe<string>(this, "NotificationCount", (count) =>
+            MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount); MessagingCenter.Subscribe<string>(this, Constraints.Str_NotificationCount, (count) =>
             {
                 if (!Common.EmptyFiels(Common.NotificationCount))
                 {
@@ -62,27 +63,12 @@ namespace AptDealzBuyer.Views.OtherPages
             GetMessages();
         }
 
-        private async Task GetMessages(bool isGetChatList = true)
+        private async Task GetMessages()
         {
             try
             {
                 UserDialogs.Instance.ShowLoading(Constraints.Loading);
-                var mResponse = new Response();
-                if (isGetChatList)
-                {
-                    mResponse = await supportChatAPI.GetAllMyChat();
-                }
-                else
-                {
-                    if (!Common.EmptyFiels(txtMessage.Text))
-                    {
-                        mResponse = await supportChatAPI.SendChatSupportMessage(txtMessage.Text);
-                    }
-                    else
-                    {
-                        return;
-                    }
-                }
+                var mResponse = await supportChatAPI.GetAllMyChat();
 
                 if (mResponse != null && mResponse.Succeeded)
                 {
@@ -105,11 +91,11 @@ namespace AptDealzBuyer.Views.OtherPages
                                 {
                                     if (message.IsMessageFromSupportTeam)
                                     {
-                                        message.ChatMessageFromUserProfileImage = "imgContact.jpg";
+                                        message.ChatMessageFromUserProfileImage = Constraints.Img_Contact;
                                     }
                                     else
                                     {
-                                        message.ChatMessageFromUserProfileImage = "iconUserAccount.png";
+                                        message.ChatMessageFromUserProfileImage = Constraints.Img_UserAccount;
                                     }
                                 }
                             }
@@ -144,9 +130,38 @@ namespace AptDealzBuyer.Views.OtherPages
             }
 
         }
+
+        private async Task SentMessage()
+        {
+            try
+            {
+                if (!Common.EmptyFiels(txtMessage.Text))
+                {
+                    var mResponse = await supportChatAPI.SendChatSupportMessage(txtMessage.Text);
+                    if (mResponse != null && mResponse.Succeeded)
+                    {
+                        txtMessage.Text = string.Empty;
+                        await GetMessages();
+                    }
+                    else
+                    {
+                        lstChar.IsVisible = false;
+                        lblNoRecord.IsVisible = true;
+                        if (mResponse != null && !Common.EmptyFiels(mResponse.Message))
+                            lblNoRecord.Text = mResponse.Message;
+                        else
+                            lblNoRecord.Text = Constraints.Something_Wrong;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("ContactSupportPage/SentMessage: " + ex.Message);
+            }
+        }
         #endregion
 
-        #region events
+        #region [ Events ]
         private void ImgMenu_Tapped(object sender, EventArgs e)
         {
             Common.BindAnimation(image: ImgMenu);
@@ -188,7 +203,7 @@ namespace AptDealzBuyer.Views.OtherPages
 
         private void BtnLogo_Clicked(object sender, EventArgs e)
         {
-            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_Home));
         }
 
         private async void BtnSend_Clicked(object sender, EventArgs e)
@@ -200,7 +215,7 @@ namespace AptDealzBuyer.Views.OtherPages
                 {
                     Tab.IsEnabled = false;
                     Common.BindAnimation(imageButton: BtnSend);
-                    await GetMessages(false);
+                    await SentMessage();
                 }
                 catch (Exception ex)
                 {

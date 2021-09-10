@@ -22,11 +22,13 @@ namespace AptDealzBuyer.Views.PopupPages
                 lblMessage.Text = ReqMessage;
                 if (!isSuccess)
                 {
-                    ImgReaction.Source = "iconSad.png";
+                    lblSuccess.Text = "Fail";
+                    ImgReaction.Source = Constraints.Img_Sad;
                 }
                 else
                 {
-                    ImgReaction.Source = "iconSmile.png";
+                    lblSuccess.Text = "Success";
+                    ImgReaction.Source = Constraints.Img_Smile;
                 }
             }
             catch (Exception ex)
