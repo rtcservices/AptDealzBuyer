@@ -20,22 +20,10 @@
 
             <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="80" />
+                    <ColumnDefinition Width="120" />
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="80" />
+                    <ColumnDefinition Width="120" />
                 </Grid.ColumnDefinitions>
-                <Image
-                    x:Name="ImgMenu"
-                    Grid.Column="0"
-                    Margin="20,0,0,0"
-                    HeightRequest="30"
-                    HorizontalOptions="StartAndExpand"
-                    Source="IconMenu.png"
-                    VerticalOptions="CenterAndExpand">
-                    <Image.GestureRecognizers>
-                        <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgMenu_Tapped" />
-                    </Image.GestureRecognizers>
-                </Image>
 
                 <ImageButton
                     x:Name="BtnLogo"
@@ -46,7 +34,7 @@
                 <Grid
                     Grid.Column="2"
                     Margin="0,0,10,0"
-                    ColumnDefinitions="*,*"
+                    ColumnDefinitions="*,*,*"
                     HorizontalOptions="EndAndExpand">
                     <Grid>
                         <Image Source="iconNotification.png" Style="{StaticResource imgNotification}" />
@@ -73,6 +61,21 @@
                             <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgQuestion_Tapped" />
                         </Image.GestureRecognizers>
                     </Image>
+
+                    <Image
+                        x:Name="ImgMenu"
+                        Grid.Column="2"
+                        Margin="0,0,0,0"
+                        HeightRequest="30"
+                        HorizontalOptions="CenterAndExpand"
+                        Source="iconGear.png"
+                        VerticalOptions="CenterAndExpand"
+                        WidthRequest="30">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgMenu_Tapped" />
+                        </Image.GestureRecognizers>
+                    </Image>
+
                 </Grid>
                 <BoxView Grid.ColumnSpan="3" Style="{StaticResource boxHorizontal}" />
             </Grid>
@@ -107,82 +110,84 @@
                     Refreshing="RefreshView_Refreshing">
                     <ScrollView Style="{StaticResource scrPrimary}">
                         <Grid RowDefinitions="Auto,*,Auto" RowSpacing="0">
-                            <Frame
+                            <!--<Frame
                                 Grid.Row="0"
                                 Margin="20,10"
-                                Style="{StaticResource frmBlank}">
+                                Style="{StaticResource frmBlank}">-->
+                            <Grid
+                                Grid.Row="0"
+                                Margin="20,0"
+                                Padding="0,10"
+                                RowDefinitions="Auto,Auto,Auto"
+                                RowSpacing="10">
+
                                 <Grid
-                                    Padding="10"
-                                    RowDefinitions="Auto,Auto,Auto"
-                                    RowSpacing="10">
-
-                                    <Grid
-                                        Grid.Row="0"
-                                        ColumnDefinitions="*,*"
-                                        HorizontalOptions="FillAndExpand"
-                                        VerticalOptions="CenterAndExpand">
-                                        <Label
-                                            Grid.Column="0"
-                                            FontSize="15"
-                                            HorizontalOptions="StartAndExpand"
-                                            LineBreakMode="WordWrap"
-                                            Style="{StaticResource lblMedium}"
-                                            Text="Requirement ID" />
-                                        <Label
-                                            x:Name="lblRequirementId"
-                                            Grid.Column="1"
-                                            FontSize="15"
-                                            HorizontalOptions="StartAndExpand"
-                                            LineBreakMode="WordWrap"
-                                            Style="{StaticResource lblMedium}"
-                                            TextColor="{StaticResource appColor1}" />
-                                    </Grid>
-
-                                    <Grid
-                                        Grid.Row="1"
-                                        ColumnDefinitions="*,*"
-                                        HorizontalOptions="FillAndExpand"
-                                        VerticalOptions="CenterAndExpand">
-                                        <Label
-                                            Grid.Column="0"
-                                            FontSize="15"
-                                            HorizontalOptions="StartAndExpand"
-                                            LineBreakMode="WordWrap"
-                                            Style="{StaticResource lblMedium}"
-                                            Text="Quote Reference No" />
-                                        <Label
-                                            x:Name="lblQuoteNo"
-                                            Grid.Column="1"
-                                            FontSize="15"
-                                            HorizontalOptions="StartAndExpand"
-                                            LineBreakMode="WordWrap"
-                                            Style="{StaticResource lblMedium}"
-                                            TextColor="{StaticResource appColor1}" />
-                                    </Grid>
-
-                                    <Grid
-                                        Grid.Row="2"
-                                        ColumnDefinitions="*,*"
-                                        HorizontalOptions="FillAndExpand"
-                                        VerticalOptions="CenterAndExpand">
-                                        <Label
-                                            Grid.Column="0"
-                                            FontSize="15"
-                                            HorizontalOptions="StartAndExpand"
-                                            LineBreakMode="WordWrap"
-                                            Style="{StaticResource lblMedium}"
-                                            Text="Invoice Number" />
-                                        <Label
-                                            x:Name="lblInvoiceNo"
-                                            Grid.Column="1"
-                                            FontSize="15"
-                                            HorizontalOptions="StartAndExpand"
-                                            LineBreakMode="WordWrap"
-                                            Style="{StaticResource lblMedium}"
-                                            TextColor="{StaticResource appColor1}" />
-                                    </Grid>
+                                    Grid.Row="0"
+                                    ColumnDefinitions="Auto,*"
+                                    HorizontalOptions="FillAndExpand"
+                                    VerticalOptions="CenterAndExpand">
+                                    <Label
+                                        Grid.Column="0"
+                                        FontSize="{StaticResource Font15}"
+                                        HorizontalOptions="StartAndExpand"
+                                        LineBreakMode="WordWrap"
+                                        Style="{StaticResource lblMedium}"
+                                        Text="Requirement ID" />
+                                    <Label
+                                        x:Name="lblRequirementId"
+                                        Grid.Column="1"
+                                        FontSize="{StaticResource Font14}"
+                                        HorizontalOptions="EndAndExpand"
+                                        LineBreakMode="WordWrap"
+                                        Style="{StaticResource lblMedium}"
+                                        TextColor="{StaticResource appColor1}" />
                                 </Grid>
-                            </Frame>
+
+                                <Grid
+                                    Grid.Row="1"
+                                    ColumnDefinitions="Auto,*"
+                                    HorizontalOptions="FillAndExpand"
+                                    VerticalOptions="CenterAndExpand">
+                                    <Label
+                                        Grid.Column="0"
+                                        FontSize="{StaticResource Font15}"
+                                        HorizontalOptions="StartAndExpand"
+                                        LineBreakMode="WordWrap"
+                                        Style="{StaticResource lblMedium}"
+                                        Text="Quote Reference No" />
+                                    <Label
+                                        x:Name="lblQuoteNo"
+                                        Grid.Column="1"
+                                        FontSize="{StaticResource Font14}"
+                                        HorizontalOptions="EndAndExpand"
+                                        LineBreakMode="WordWrap"
+                                        Style="{StaticResource lblMedium}"
+                                        TextColor="{StaticResource appColor1}" />
+                                </Grid>
+
+                                <Grid
+                                    Grid.Row="2"
+                                    ColumnDefinitions="Auto,*"
+                                    HorizontalOptions="FillAndExpand"
+                                    VerticalOptions="CenterAndExpand">
+                                    <Label
+                                        Grid.Column="0"
+                                        FontSize="{StaticResource Font15}"
+                                        HorizontalOptions="StartAndExpand"
+                                        LineBreakMode="WordWrap"
+                                        Style="{StaticResource lblMedium}"
+                                        Text="Invoice Number" />
+                                    <Label
+                                        x:Name="lblInvoiceNo"
+                                        Grid.Column="1"
+                                        FontSize="{StaticResource Font14}"
+                                        HorizontalOptions="EndAndExpand"
+                                        LineBreakMode="WordWrap"
+                                        Style="{StaticResource lblMedium}"
+                                        TextColor="{StaticResource appColor1}" />
+                                </Grid>
+                            </Grid>
+                            <!--</Frame>-->
 
                             <Grid Grid.Row="1" RowSpacing="10">
                                 <Grid.RowDefinitions>
@@ -211,7 +216,7 @@
 
                                         <Label
                                             x:Name="lblSellerName"
-                                            FontSize="15"
+                                            FontSize="{StaticResource Font15}"
                                             HorizontalOptions="EndAndExpand"
                                             Style="{StaticResource lblMedium}"
                                             Text="Seller Name"
@@ -234,7 +239,7 @@
                                             Text="Shipping PIN Code" />
                                         <Label
                                             x:Name="lblShippingPINCode"
-                                            FontSize="15"
+                                            FontSize="{StaticResource Font15}"
                                             HorizontalOptions="EndAndExpand"
                                             Style="{StaticResource lblMedium}" />
                                     </StackLayout>
@@ -256,7 +261,7 @@
 
                                         <Label
                                             x:Name="lblQuantity"
-                                            FontSize="15"
+                                            FontSize="{StaticResource Font15}"
                                             HorizontalOptions="EndAndExpand"
                                             Style="{StaticResource lblMedium}" />
 
@@ -279,7 +284,7 @@
 
                                         <Label
                                             x:Name="lblUnitPrice"
-                                            FontSize="15"
+                                            FontSize="{StaticResource Font15}"
                                             HorizontalOptions="EndAndExpand"
                                             Style="{StaticResource lblMedium}" />
 
@@ -301,7 +306,7 @@
 
                                         <Label
                                             x:Name="lblNetAmount"
-                                            FontSize="15"
+                                            FontSize="{StaticResource Font15}"
                                             HorizontalOptions="EndAndExpand"
                                             Style="{StaticResource lblMedium}" />
 
@@ -323,7 +328,7 @@
 
                                         <Label
                                             x:Name="lblHandlingCharges"
-                                            FontSize="15"
+                                            FontSize="{StaticResource Font15}"
                                             HorizontalOptions="EndAndExpand"
                                             Style="{StaticResource lblMedium}" />
 
@@ -345,7 +350,7 @@
 
                                         <Label
                                             x:Name="lblShippingCharges"
-                                            FontSize="15"
+                                            FontSize="{StaticResource Font15}"
                                             HorizontalOptions="EndAndExpand"
                                             Style="{StaticResource lblMedium}" />
 
@@ -367,7 +372,7 @@
 
                                         <Label
                                             x:Name="lblInsuranceCharges"
-                                            FontSize="15"
+                                            FontSize="{StaticResource Font15}"
                                             HorizontalOptions="EndAndExpand"
                                             Style="{StaticResource lblMedium}" />
 
@@ -384,7 +389,7 @@
                                         Orientation="Horizontal">
 
                                         <Label
-                                            FontSize="15"
+                                            FontSize="{StaticResource Font15}"
                                             HorizontalOptions="StartAndExpand"
                                             Style="{StaticResource lblMedium}"
                                             Text="Total Amount"
@@ -392,7 +397,7 @@
 
                                         <Label
                                             x:Name="lblTotalAmount"
-                                            FontSize="15"
+                                            FontSize="{StaticResource Font15}"
                                             HorizontalOptions="EndAndExpand"
                                             Style="{StaticResource lblMedium}"
                                             Text="Rs 3500"
@@ -406,7 +411,7 @@
                                         Orientation="Horizontal">
 
                                         <Label
-                                            FontSize="15"
+                                            FontSize="{StaticResource Font15}"
                                             HorizontalOptions="StartAndExpand"
                                             Style="{StaticResource lblMedium}"
                                             Text="Order Status"
@@ -414,7 +419,7 @@
 
                                         <Label
                                             x:Name="lblOrderStatus"
-                                            FontSize="15"
+                                            FontSize="{StaticResource Font15}"
                                             HorizontalOptions="EndAndExpand"
                                             Style="{StaticResource lblMedium}"
                                             Text="Shipped"
@@ -445,10 +450,10 @@
                                     Style="{StaticResource lblSemiBold}"
                                     Text="Details" />
 
-                                <Grid Grid.Row="1" ColumnDefinitions="*,*">
+                                <Grid Grid.Row="1" RowDefinitions="Auto,Auto">
 
                                     <Label
-                                        Grid.Column="0"
+                                        Grid.Row="0"
                                         HorizontalOptions="StartAndExpand"
                                         LineBreakMode="WordWrap"
                                         Style="{StaticResource lblLight}"
@@ -456,7 +461,7 @@
 
                                     <Frame
                                         x:Name="FrmType"
-                                        Grid.Column="1"
+                                        Grid.Row="1"
                                         HeightRequest="45"
                                         Style="{StaticResource frmGrayBorder}">
                                         <Grid
@@ -510,7 +515,7 @@
 
                                         <Label
                                             Grid.Column="1"
-                                            FontSize="15"
+                                            FontSize="{StaticResource Font15}"
                                             HorizontalOptions="CenterAndExpand"
                                             Style="{StaticResource lblLight}"
                                             Text="Upload Photo/Video" />
@@ -552,7 +557,7 @@
                                         Style="{StaticResource edPrimary}" />
                                 </Frame>
 
-                                <Grid Grid.Row="4" ColumnDefinitions="*,*">
+                                <Grid Grid.Row="4" RowDefinitions="Auto,Auto">
 
                                     <Label
                                         Grid.Column="0"
@@ -562,14 +567,22 @@
                                         Text="Preferred Solution" />
 
                                     <Frame
-                                        Grid.Column="1"
+                                        Grid.Row="1"
+                                        Margin="0"
+                                        Padding="0"
                                         BackgroundColor="Transparent"
                                         BorderColor="{StaticResource appColor8}"
-                                        Style="{StaticResource frmEntryGray}">
-                                        <ext:ExtEntry
+                                        CornerRadius="5"
+                                        HasShadow="False"
+                                        MinimumHeightRequest="100">
+
+                                        <Editor
                                             x:Name="txtSolution"
-                                            Keyboard="Text"
-                                            Style="{StaticResource entrGray}" />
+                                            Margin="10"
+                                            AutoSize="TextChanges"
+                                            HorizontalOptions="FillAndExpand"
+                                            Style="{StaticResource edPrimary}"
+                                            VerticalOptions="FillAndExpand" />
                                     </Frame>
 
                                 </Grid>

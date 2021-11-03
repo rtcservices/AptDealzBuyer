@@ -11,13 +11,13 @@ namespace AptDealzBuyer.Model.Reponse
         public string Street { get; set; }
 
         [JsonProperty("state")]
-        public object State { get; set; }
+        public string State { get; set; }
 
         [JsonProperty("city")]
         public string City { get; set; }
 
         [JsonProperty("pinCode")]
-        public object PinCode { get; set; }
+        public string PinCode { get; set; }
 
         [JsonProperty("landmark")]
         public string Landmark { get; set; }

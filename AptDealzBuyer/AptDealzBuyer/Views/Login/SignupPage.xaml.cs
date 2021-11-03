@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -24,7 +25,9 @@ namespace AptDealzBuyer.Views.Login
         public SignupPage()
         {
             InitializeComponent();
-            txtFullName.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
+
+            if (DeviceInfo.Platform == DevicePlatform.Android)
+                txtFullName.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
         }
         #endregion
 

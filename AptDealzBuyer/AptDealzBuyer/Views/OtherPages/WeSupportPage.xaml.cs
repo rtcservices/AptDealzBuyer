@@ -127,7 +127,7 @@ namespace AptDealzBuyer.Views.OtherPages
 
         private void ImgQuestion_Tapped(object sender, EventArgs e)
         {
-
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_FAQHelp));
         }
 
         private async void ImgBack_Tapped(object sender, EventArgs e)

@@ -5,42 +5,105 @@ using AptDealzBuyer.Utility;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 namespace AptDealzBuyer.Views.OtherPages
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class ContactSupportPage : ContentPage
+    public partial class ContactSupportPage : ContentPage, INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
         #region [ Objects ]
         SupportChatAPI supportChatAPI;
-        private List<ChatSupport> mMessageList;
+        private string tempCount;
+
+        private List<ChatSupport> _mMessageList;
+        public List<ChatSupport> mMessageList
+        {
+            get { return _mMessageList; }
+            set
+            {
+                _mMessageList = value;
+                OnPropertyChanged("mMessageList");
+            }
+        }
         #endregion
 
         #region [ Constructor ]
         public ContactSupportPage()
         {
-            InitializeComponent();
-            supportChatAPI = new SupportChatAPI();
-            mMessageList = new List<ChatSupport>();
-            txtMessage.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
-
-            MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount); MessagingCenter.Subscribe<string>(this, Constraints.Str_NotificationCount, (count) =>
+            try
             {
-                if (!Common.EmptyFiels(Common.NotificationCount))
+                InitializeComponent();
+                supportChatAPI = new SupportChatAPI();
+                mMessageList = new List<ChatSupport>();
+
+                Binding binding = new Binding("mMessageList", mode: BindingMode.TwoWay, source: this);
+                lstChar.SetBinding(ListView.ItemsSourceProperty, binding);
+
+                if (DeviceInfo.Platform == DevicePlatform.Android)
+                    txtMessage.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
+
+                MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount);
+                MessagingCenter.Subscribe<string>(this, Constraints.Str_NotificationCount, (count) =>
                 {
-                    lblNotificationCount.Text = count;
-                    frmNotification.IsVisible = true;
-                }
-                else
-                {
-                    frmNotification.IsVisible = false;
-                    lblNotificationCount.Text = string.Empty;
-                }
-            });
+                    if (!Common.EmptyFiels(Common.NotificationCount))
+                    {
+                        lblNotificationCount.Text = count;
+                        frmNotification.IsVisible = true;
+
+                        tempCount = Common.NotificationCount;
+                    }
+                    else
+                    {
+                        frmNotification.IsVisible = false;
+                        lblNotificationCount.Text = string.Empty;
+                    }
+                });
+
+                Common.TempNotificationCount = tempCount;
+
+                var backgroundWorker = new BackgroundWorker();
+                backgroundWorker.DoWork += async delegate
+                 {
+                     await GetMessages();
+
+                     if (App.chatStoppableTimer != null)
+                     {
+                         App.chatStoppableTimer.Stop();
+                         App.chatStoppableTimer = null;
+                     }
+
+                     if (App.chatStoppableTimer == null)
+                     {
+                         App.chatStoppableTimer = new StoppableTimer(TimeSpan.FromSeconds(1), async () =>
+                         {
+                             if (Common.PreviousNotificationCount != Common.NotificationCount)
+                             {
+                                 Common.PreviousNotificationCount = Common.NotificationCount;
+                                 await GetMessages();
+                             }
+                         });
+                     }
+                     App.chatStoppableTimer.Start();
+                 };
+                backgroundWorker.RunWorkerAsync();
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("ContactSupportPage/Constructor: " + ex.Message);
+            }
         }
         #endregion
 
@@ -55,27 +118,33 @@ namespace AptDealzBuyer.Views.OtherPages
         {
             base.OnDisappearing();
             Dispose();
+
+            if (App.chatStoppableTimer != null)
+            {
+                App.chatStoppableTimer.Stop();
+                App.chatStoppableTimer = null;
+            }
         }
 
-        protected override void OnAppearing()
+        protected async override void OnAppearing()
         {
             base.OnAppearing();
-            GetMessages();
+            UserDialogs.Instance.ShowLoading(Constraints.Loading);
+            await GetMessages();
+            UserDialogs.Instance.HideLoading();
         }
 
         private async Task GetMessages()
         {
             try
             {
-                UserDialogs.Instance.ShowLoading(Constraints.Loading);
                 var mResponse = await supportChatAPI.GetAllMyChat();
-
                 if (mResponse != null && mResponse.Succeeded)
                 {
                     JArray result = (JArray)mResponse.Data;
                     if (result != null)
                     {
-                        txtMessage.Text = string.Empty;
+                        //txtMessage.Text = string.Empty;
                         mMessageList = result.ToObject<List<ChatSupport>>();
                         if (mMessageList != null && mMessageList.Count > 0)
                         {
@@ -101,7 +170,11 @@ namespace AptDealzBuyer.Views.OtherPages
                             }
                             lstChar.IsVisible = true;
                             lblNoRecord.IsVisible = false;
-                            lstChar.ItemsSource = mMessageList.ToList();
+                            //lstChar.ItemsSource = mMessageList.ToList();
+
+                            var mMessage = mMessageList.LastOrDefault();
+                            if (mMessage != null)
+                                lstChar.ScrollTo(mMessage, ScrollToPosition.End, false);
                         }
                         else
                         {
@@ -124,11 +197,6 @@ namespace AptDealzBuyer.Views.OtherPages
             {
                 Common.DisplayErrorMessage("ContactSupportPage/GetMessages: " + ex.Message);
             }
-            finally
-            {
-                UserDialogs.Instance.HideLoading();
-            }
-
         }
 
         private async Task SentMessage()
@@ -192,7 +260,7 @@ namespace AptDealzBuyer.Views.OtherPages
 
         private void ImgQuestion_Tapped(object sender, EventArgs e)
         {
-
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_FAQHelp));
         }
 
         private async void ImgBack_Tapped(object sender, EventArgs e)

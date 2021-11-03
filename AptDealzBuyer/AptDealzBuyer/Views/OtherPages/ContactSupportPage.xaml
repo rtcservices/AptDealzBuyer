@@ -19,22 +19,10 @@
 
             <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="80" />
+                    <ColumnDefinition Width="120" />
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="80" />
+                    <ColumnDefinition Width="120" />
                 </Grid.ColumnDefinitions>
-                <Image
-                    x:Name="ImgMenu"
-                    Grid.Column="0"
-                    Margin="20,0,0,0"
-                    HeightRequest="30"
-                    HorizontalOptions="StartAndExpand"
-                    Source="IconMenu.png"
-                    VerticalOptions="CenterAndExpand">
-                    <Image.GestureRecognizers>
-                        <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgMenu_Tapped" />
-                    </Image.GestureRecognizers>
-                </Image>
 
                 <ImageButton
                     x:Name="BtnLogo"
@@ -45,7 +33,7 @@
                 <Grid
                     Grid.Column="2"
                     Margin="0,0,10,0"
-                    ColumnDefinitions="*,*"
+                    ColumnDefinitions="*,*,*"
                     HorizontalOptions="EndAndExpand">
                     <Grid>
                         <Image Source="iconNotification.png" Style="{StaticResource imgNotification}" />
@@ -72,6 +60,21 @@
                             <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgQuestion_Tapped" />
                         </Image.GestureRecognizers>
                     </Image>
+
+                    <Image
+                        x:Name="ImgMenu"
+                        Grid.Column="2"
+                        Margin="0,0,0,0"
+                        HeightRequest="30"
+                        HorizontalOptions="CenterAndExpand"
+                        Source="iconGear.png"
+                        VerticalOptions="CenterAndExpand"
+                        WidthRequest="30">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgMenu_Tapped" />
+                        </Image.GestureRecognizers>
+                    </Image>
+
                 </Grid>
                 <BoxView Grid.ColumnSpan="3" Style="{StaticResource boxHorizontal}" />
             </Grid>
@@ -98,7 +101,10 @@
                         Text="Contact Support" />
                 </Grid>
 
-                <ext:ExtKeyboard Grid.Row="1" RowSpacing="0">
+                <ext:ExtKeyboard
+                    x:Name="GrdMain"
+                    Grid.Row="1"
+                    RowSpacing="0">
                     <ext:ExtKeyboard.RowDefinitions>
                         <RowDefinition Height="*" />
                         <RowDefinition Height="Auto" />
@@ -108,6 +114,7 @@
                         x:Name="lstChar"
                         Grid.Row="0"
                         Margin="20,0"
+                        IsPullToRefreshEnabled="True"
                         ItemTapped="lstChar_ItemTapped"
                         Refreshing="lstChar_Refreshing"
                         Style="{StaticResource lstPrimary}">
@@ -132,7 +139,7 @@
                                                 HeightRequest="50"
                                                 HorizontalOptions="EndAndExpand"
                                                 IsVisible="{Binding IsContact}"
-                                                Source="{Binding ChatMessageFromUserProfileImage}"
+                                                Source="{Binding ChatMessageFromUserProfileImage, Mode=OneTime}"
                                                 VerticalOptions="StartAndExpand"
                                                 WidthRequest="50">
                                                 <Image.Clip>
@@ -175,7 +182,7 @@
                                                         FontSize="9"
                                                         HorizontalOptions="EndAndExpand"
                                                         Style="{StaticResource lblSemiBold}"
-                                                        Text="{Binding CreatedDate, StringFormat='{0:hh:mm tt}'}"
+                                                        Text="{Binding CreatedDateStr}"
                                                         TextColor="{StaticResource appColor9}"
                                                         VerticalOptions="EndAndExpand" />
                                                 </StackLayout>
@@ -208,7 +215,7 @@
                     <Label
                         x:Name="lblNoRecord"
                         Grid.Row="0"
-                        FontSize="15"
+                        FontSize="{StaticResource Font15}"
                         HorizontalOptions="CenterAndExpand"
                         IsVisible="false"
                         Style="{StaticResource lblMedium}"
@@ -239,7 +246,7 @@
                                                         iOS=0}"
                                     AutoSize="TextChanges"
                                     Keyboard="Text"
-                                    Placeholder="Enter Your message "
+                                    Placeholder="Enter your message "
                                     Style="{StaticResource edPrimary}" />
                             </Frame>
                             <ImageButton

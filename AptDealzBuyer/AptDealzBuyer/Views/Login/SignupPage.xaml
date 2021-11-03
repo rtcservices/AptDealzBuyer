@@ -157,13 +157,13 @@
                             VerticalOptions="EndAndExpand">
 
                             <Label
-                                FontSize="15"
+                                FontSize="{StaticResource Font15}"
                                 HorizontalOptions="EndAndExpand"
                                 Style="{StaticResource lblMedium}"
                                 Text="Already have an account ?" />
 
                             <Label
-                                FontSize="15"
+                                FontSize="{StaticResource Font15}"
                                 HorizontalOptions="StartAndExpand"
                                 Style="{StaticResource lblMedium}"
                                 Text="Login"

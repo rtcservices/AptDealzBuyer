@@ -3,10 +3,15 @@ using AptDealzBuyer.API;
 using AptDealzBuyer.Model.Request;
 using AptDealzBuyer.Repository;
 using AptDealzBuyer.Utility;
+using Plugin.Media;
+using Plugin.Media.Abstractions;
+using Plugin.Permissions;
+using Plugin.Permissions.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -61,8 +66,11 @@ namespace AptDealzBuyer.Views.Orders
         #region [ Methods ]
         private void CapitalizeWord()
         {
-            txtDescription.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
-            txtSolution.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
+            if (DeviceInfo.Platform == DevicePlatform.Android)
+            {
+                txtDescription.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
+                txtSolution.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
+            }
         }
         public void Dispose()
         {
@@ -80,10 +88,14 @@ namespace AptDealzBuyer.Views.Orders
         {
             try
             {
-                mComplaintTypeList.Add(GrievancesType.OrderRelated.ToString().ToCamelCase());
-                mComplaintTypeList.Add(GrievancesType.DelayedDelivery.ToString().ToCamelCase());
-                mComplaintTypeList.Add(GrievancesType.PaymentRelated.ToString().ToCamelCase());
-                pkType.ItemsSource = mComplaintTypeList.ToList();
+                mComplaintTypeList.Add(GrievancesType.Order_Related.ToString().Replace("_", " ").ToCamelCase());
+                mComplaintTypeList.Add(GrievancesType.Delayed_Delivery.ToString().Replace("_", " ").ToCamelCase());
+                mComplaintTypeList.Add(GrievancesType.Payment_Related.ToString().Replace("_", " ").ToCamelCase());
+                mComplaintTypeList.Add(GrievancesType.Manufacture_Defect.ToString().Replace("_", " ").ToCamelCase());
+                mComplaintTypeList.Add(GrievancesType.Incomplete_Product_Delivery.ToString().Replace("_", " ").ToCamelCase());
+                mComplaintTypeList.Add(GrievancesType.Wrong_Order.ToString().Replace("_", " ").ToCamelCase());
+
+                pkType.ItemsSource = mComplaintTypeList.OrderBy(x => x).ToList();
             }
             catch (Exception ex)
             {
@@ -124,15 +136,21 @@ namespace AptDealzBuyer.Views.Orders
 
         private int GetGrievanceType(string grievanceType)
         {
-            grievanceType = grievanceType.Replace(" ", "");
+            grievanceType = grievanceType.Replace(" ", "_");
             switch (grievanceType)
             {
-                case "DelayedDelivery":
-                    return (int)GrievancesType.DelayedDelivery;
-                case "OrderRelated":
-                    return (int)GrievancesType.OrderRelated;
-                case "PaymentRelated":
-                    return (int)GrievancesType.PaymentRelated;
+                case "Delayed_Delivery":
+                    return (int)GrievancesType.Delayed_Delivery;
+                case "Order_Related":
+                    return (int)GrievancesType.Order_Related;
+                case "Payment_Related":
+                    return (int)GrievancesType.Payment_Related;
+                case "Manufacture_Defect":
+                    return (int)GrievancesType.Manufacture_Defect;
+                case "Incomplete_Product_Delivery":
+                    return (int)GrievancesType.Incomplete_Product_Delivery;
+                case "Wrong_Order":
+                    return (int)GrievancesType.Wrong_Order;
                 default:
                     return 0;
             }
@@ -183,33 +201,44 @@ namespace AptDealzBuyer.Views.Orders
         {
             try
             {
-                GrievanceAPI grievanceAPI = new GrievanceAPI();
-                UserDialogs.Instance.ShowLoading(Constraints.Loading);
-
-                var mRaiseGrievance = FillGrievance();
-                if (mRaiseGrievance != null)
+                if (Common.EmptyFiels(txtDescription.Text))
                 {
-                    var mResponse = await grievanceAPI.CreateGrievanceFromBuyer(mRaiseGrievance);
-                    if (mResponse != null && mResponse.Succeeded)
-                    {
-                        Common.DisplaySuccessMessage(mResponse.Message);
-                        Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_Home));
-                    }
-                    else
-                    {
-                        if (mResponse != null && !Common.EmptyFiels(mResponse.Message))
-                            Common.DisplayErrorMessage(mResponse.Message);
-                        else
-                            Common.DisplayErrorMessage(Constraints.Something_Wrong);
-                    }
+                    Common.DisplayErrorMessage(Constraints.Required_Description);
+                }
+                else if (documentList == null || (documentList != null && documentList.Count == 0))
+                {
+                    Common.DisplayErrorMessage(Constraints.Required_Documents);
                 }
                 else
                 {
-                    if (ErrorMessage == null)
+                    GrievanceAPI grievanceAPI = new GrievanceAPI();
+                    UserDialogs.Instance.ShowLoading(Constraints.Loading);
+
+                    var mRaiseGrievance = FillGrievance();
+                    if (mRaiseGrievance != null)
                     {
-                        ErrorMessage = Constraints.Something_Wrong;
+                        var mResponse = await grievanceAPI.CreateGrievanceFromBuyer(mRaiseGrievance);
+                        if (mResponse != null && mResponse.Succeeded)
+                        {
+                            Common.DisplaySuccessMessage(mResponse.Message);
+                            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_Home));
+                        }
+                        else
+                        {
+                            if (mResponse != null && !Common.EmptyFiels(mResponse.Message))
+                                Common.DisplayErrorMessage(mResponse.Message);
+                            else
+                                Common.DisplayErrorMessage(Constraints.Something_Wrong);
+                        }
                     }
-                    Common.DisplayErrorMessage(ErrorMessage);
+                    else
+                    {
+                        if (ErrorMessage == null)
+                        {
+                            ErrorMessage = Constraints.Something_Wrong;
+                        }
+                        Common.DisplayErrorMessage(ErrorMessage);
+                    }
                 }
             }
             catch (Exception ex)
@@ -253,7 +282,7 @@ namespace AptDealzBuyer.Views.Orders
 
         private void ImgQuestion_Tapped(object sender, EventArgs e)
         {
-
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_FAQHelp));
         }
 
         private async void ImgBack_Tapped(object sender, EventArgs e)
@@ -295,12 +324,83 @@ namespace AptDealzBuyer.Views.Orders
             {
                 Common.BindAnimation(imageButton: ImgUplode);
                 UserDialogs.Instance.ShowLoading(Constraints.Loading);
-                await FileSelection.FilePickup();
+
+                var result = await App.Current.MainPage.DisplayActionSheet(Constraints.UploadPicture, Constraints.Cancel, "", new string[] { Constraints.TakePhoto, Constraints.ChooseFromLibrary });
+
+                MediaFile file = null;
+                if (result == Constraints.Cancel)
+                    return;
+                if (result == Constraints.TakePhoto)
+                {
+                    try
+                    {
+                        if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
+                        {
+                            await App.Current.MainPage.DisplayAlert(Constraints.NoCamera, ":( " + Constraints.NoCameraAwailable, Constraints.Ok);
+                            return;
+                        }
+
+                        var cameraStatus = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Camera);
+                        var storageStatus = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Storage);
+
+                        if (cameraStatus != Plugin.Permissions.Abstractions.PermissionStatus.Granted || storageStatus != Plugin.Permissions.Abstractions.PermissionStatus.Granted)
+                        {
+                            var results = await CrossPermissions.Current.RequestPermissionsAsync(new[] { Permission.Camera, Permission.Storage });
+                            cameraStatus = results[Permission.Camera];
+                            storageStatus = results[Permission.Storage];
+                        }
+
+                        if (cameraStatus == Plugin.Permissions.Abstractions.PermissionStatus.Granted && storageStatus == Plugin.Permissions.Abstractions.PermissionStatus.Granted)
+                        {
+                            file = await CrossMedia.Current.TakePhotoAsync(new Plugin.Media.Abstractions.StoreCameraMediaOptions
+                            {
+                                SaveToAlbum = true,
+                                CompressionQuality = 50,
+                                DefaultCamera = CameraDevice.Rear,
+                                AllowCropping = true,
+                                PhotoSize = Plugin.Media.Abstractions.PhotoSize.Custom,
+                                //CustomPhotoSize = 50,
+                                CustomPhotoSize = 20
+                            });
+
+                            if (file == null)
+                            {
+                                return;
+                            }
+
+                            if (file != null)
+                            {
+                                ImageConvertion.SelectedImageByte = ImageConvertion.TakeCameraAsync(file);
+                            }
+                        }
+                        else
+                        {
+                            await App.Current.MainPage.DisplayAlert(Constraints.PermissionDenied, Constraints.UnableTakePhoto, Constraints.Ok);
+                            //On iOS you may want to send your user to the settings screen.
+                            //CrossPermissions.Current.OpenAppSettings();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Common.DisplayErrorMessage("ImageConvertion/SelectImage/TakePhoto: " + ex.Message);
+                    }
+                    finally
+                    {
+                        UserDialogs.Instance.HideLoading();
+                    }
+                }
+                else
+                {
+                    ImageConvertion.SelectedImageByte = null;
+                    await FileSelection.FilePickup();
+                }
                 relativePath = await DependencyService.Get<IFileUploadRepository>().UploadFile((int)FileUploadCategory.ProfileDocuments);
 
                 if (!Common.EmptyFiels(relativePath))
                 {
-                    ImgProductImage.Source = relativePath;
+                    var SourcePath = FileSelection.DisplayImage(relativePath);
+                    ImgProductImage.Source = SourcePath;
+
                     if (documentList == null)
                         documentList = new List<string>();
 

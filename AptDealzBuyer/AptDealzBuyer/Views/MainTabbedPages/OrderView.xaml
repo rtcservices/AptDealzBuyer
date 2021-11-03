@@ -17,22 +17,10 @@
 
             <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="80" />
+                    <ColumnDefinition Width="120" />
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="80" />
+                    <ColumnDefinition Width="120" />
                 </Grid.ColumnDefinitions>
-                <Image
-                    x:Name="ImgMenu"
-                    Grid.Column="0"
-                    Margin="20,0,0,0"
-                    HeightRequest="30"
-                    HorizontalOptions="StartAndExpand"
-                    Source="IconMenu.png"
-                    VerticalOptions="CenterAndExpand">
-                    <Image.GestureRecognizers>
-                        <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgMenu_Tapped" />
-                    </Image.GestureRecognizers>
-                </Image>
 
                 <ImageButton
                     x:Name="BtnLogo"
@@ -43,7 +31,7 @@
                 <Grid
                     Grid.Column="2"
                     Margin="0,0,10,0"
-                    ColumnDefinitions="*,*"
+                    ColumnDefinitions="*,*,*"
                     HorizontalOptions="EndAndExpand">
                     <Grid>
                         <Image Source="iconNotification.png" Style="{StaticResource imgNotification}" />
@@ -70,6 +58,21 @@
                             <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgQuestion_Tapped" />
                         </Image.GestureRecognizers>
                     </Image>
+
+                    <Image
+                        x:Name="ImgMenu"
+                        Grid.Column="2"
+                        Margin="0,0,0,0"
+                        HeightRequest="30"
+                        HorizontalOptions="CenterAndExpand"
+                        Source="iconGear.png"
+                        VerticalOptions="CenterAndExpand"
+                        WidthRequest="30">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgMenu_Tapped" />
+                        </Image.GestureRecognizers>
+                    </Image>
+
                 </Grid>
                 <BoxView Grid.ColumnSpan="3" Style="{StaticResource boxHorizontal}" />
             </Grid>
@@ -248,7 +251,7 @@
                                         </Grid.RowDefinitions>
                                         <Label
                                             Grid.Row="0"
-                                            FontSize="15"
+                                            FontSize="{StaticResource Font15}"
                                             HorizontalOptions="StartAndExpand"
                                             Style="{StaticResource lblMedium}"
                                             Text="{Binding Title}" />
@@ -256,13 +259,13 @@
                                         <StackLayout Grid.Row="1" Orientation="Horizontal">
 
                                             <Label
-                                                FontSize="15"
+                                                FontSize="{StaticResource Font15}"
                                                 HorizontalOptions="StartAndExpand"
                                                 Style="{StaticResource lblMedium}"
                                                 Text="{Binding OrderNo}" />
 
                                             <Label
-                                                FontSize="15"
+                                                FontSize="{StaticResource Font15}"
                                                 HorizontalOptions="EndAndExpand"
                                                 Style="{StaticResource lblMedium}"
                                                 Text="{Binding PaidAmount, StringFormat='Rs {0}'}"
@@ -332,7 +335,7 @@
                 <Label
                     x:Name="lblNoRecord"
                     Grid.Row="2"
-                    FontSize="15"
+                    FontSize="{StaticResource Font15}"
                     HorizontalOptions="CenterAndExpand"
                     IsVisible="false"
                     Style="{StaticResource lblMedium}"

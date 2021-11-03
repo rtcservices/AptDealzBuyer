@@ -76,6 +76,9 @@ namespace AptDealzBuyer.Model.Request
         [JsonProperty("billingAddressCity")]
         public string BillingAddressCity { get; set; }
 
+        [JsonProperty("billingAddressState")]
+        public string BillingAddressState { get; set; }
+
         [JsonProperty("billingAddressPinCode")]
         public string BillingAddressPinCode { get; set; }
 
@@ -90,6 +93,9 @@ namespace AptDealzBuyer.Model.Request
 
         [JsonProperty("shippingAddressCity")]
         public string ShippingAddressCity { get; set; }
+
+        [JsonProperty("shippingAddressState")]
+        public string ShippingAddressState { get; set; }
 
         [JsonProperty("shippingAddressPinCode")]
         public string ShippingAddressPinCode { get; set; }
@@ -147,6 +153,7 @@ namespace AptDealzBuyer.Model.Request
 
         [JsonProperty("quotes")]
         public int Quotes { get; set; }
+
 
         #region [ Extra Properties ]
         [JsonIgnore]

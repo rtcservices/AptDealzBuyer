@@ -200,22 +200,34 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                     {
                         if (grid.ClassId == Constraints.Str_Home)
                         {
-                            BindViews(Constraints.Str_Home);
+                            if (selectedView != Constraints.Str_Home)
+                            {
+                                BindViews(Constraints.Str_Home);
+                            }
                         }
                         else if (grid.ClassId == Constraints.Str_Requirements)
                         {
-                            this.isNavigate = true;
-                            BindViews(Constraints.Str_Requirements);
+                            if (selectedView != Constraints.Str_Requirements)
+                            {
+                                this.isNavigate = true;
+                                BindViews(Constraints.Str_Requirements);
+                            }
                         }
                         else if (grid.ClassId == Constraints.Str_Order)
                         {
-                            this.isNavigate = true;
-                            BindViews(Constraints.Str_Order);
+                            if (selectedView != Constraints.Str_Order)
+                            {
+                                this.isNavigate = true;
+                                BindViews(Constraints.Str_Order);
+                            }
                         }
                         else if (grid.ClassId == Constraints.Str_Profile)
                         {
-                            this.isNavigate = true;
-                            BindViews(Constraints.Str_Profile);
+                            if (selectedView != Constraints.Str_Profile)
+                            {
+                                this.isNavigate = true;
+                                BindViews(Constraints.Str_Profile);
+                            }
                         }
                     }
                 }

@@ -7,7 +7,6 @@ using Android.OS;
 using Android.Runtime;
 using Android.Widget;
 using AndroidX.AppCompat.App;
-using AptDealzBuyer.Constants;
 using AptDealzBuyer.Droid.DependencService;
 using AptDealzBuyer.Interfaces;
 using AptDealzBuyer.Model;
@@ -25,12 +24,11 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace AptDealzBuyer.Droid
 {
-    [Activity(Label = "AptDealzBuyer", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = true,
+    [Activity(Label = "Aptdealz", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = true,
         ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity, IPaymentResultWithDataListener
     {
@@ -60,7 +58,7 @@ namespace AptDealzBuyer.Droid
             Rg.Plugins.Popup.Popup.Init(this);
 
             CameraPermission();
-            GetPermission();
+           // GetPermission();
 
             LoadApplication(new App());
 
@@ -107,22 +105,7 @@ namespace AptDealzBuyer.Droid
         protected override void OnNewIntent(Intent intent)
         {
             FirebasePushNotificationManager.ProcessIntent(this, intent);
-            //CreateNotificationFromIntent(intent);
         }
-
-        //void CreateNotificationFromIntent(Intent intent)
-        //{
-        //    if (intent?.Extras != null)
-        //    {
-        //        var isEnable = Preferences.Get(AppKeys.Notification, true);
-        //        if (isEnable)
-        //        {
-        //            string title = intent.Extras.GetString(NotificationHelper.TitleKey);
-        //            string message = intent.Extras.GetString(NotificationHelper.MessageKey);
-        //            DependencyService.Get<INotificationHelper>().ReceiveNotification(title, message);
-        //        }
-        //    }
-        //}
         #endregion
 
         #region [ RazorPay ]
@@ -225,7 +208,7 @@ namespace AptDealzBuyer.Droid
             }
             catch (Exception ex)
             {
-                Toast.MakeText(this, "Exception-CheckoutRazorPay: " + ex.Message, ToastLength.Short).Show();
+                //Toast.MakeText(this, "Exception-CheckoutRazorPay: " + ex.Message, ToastLength.Short).Show();
             }
         }
         #endregion

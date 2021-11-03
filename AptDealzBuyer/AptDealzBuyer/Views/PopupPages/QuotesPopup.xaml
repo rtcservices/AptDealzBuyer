@@ -34,7 +34,7 @@
                 Orientation="Horizontal"
                 VerticalOptions="CenterAndExpand">
                 <Label
-                    FontSize="15"
+                    FontSize="{StaticResource Font15}"
                     Style="{StaticResource lblLight}"
                     Text="Received Quote" />
                 <Image
@@ -58,7 +58,7 @@
                 Orientation="Horizontal"
                 VerticalOptions="CenterAndExpand">
                 <Label
-                    FontSize="15"
+                    FontSize="{StaticResource Font15}"
                     Style="{StaticResource lblLight}"
                     Text="Amount" />
                 <Image

@@ -24,44 +24,7 @@ namespace AptDealzBuyer.API
                     {
                         string url = string.Format(EndPointURL.GetAllNotificationsForUser, (int)App.Current.Resources["Version"]);
                         var response = await hcf.GetAsync(url);
-                        var responseJson = await response.Content.ReadAsStringAsync();
-                        if (response.IsSuccessStatusCode)
-                        {
-                            mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
-                        {
-                            var errorString = JsonConvert.DeserializeObject<string>(responseJson);
-                            if (errorString == Constraints.Session_Expired)
-                            {
-                                Common.DisplayErrorMessage(Constraints.Session_Expired);
-                                App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                            }
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
-                        {
-                            Common.DisplayErrorMessage(Constraints.ServiceUnavailable);
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
-                        {
-                            Common.DisplayErrorMessage(Constraints.Something_Wrong_Server);
-                        }
-                        else
-                        {
-                            if (responseJson.Contains(Constraints.Str_TokenExpired) || response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                            {
-                                var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
-                                if (!isRefresh)
-                                {
-                                    Common.DisplayErrorMessage(Constraints.Session_Expired);
-                                    App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                                }
-                            }
-                            else
-                            {
-                                mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
-                            }
-                        }
+                        mResponse = await DependencyService.Get<IAuthenticationRepository>().APIResponse(response);
                     }
                 }
                 else
@@ -74,6 +37,8 @@ namespace AptDealzBuyer.API
             }
             catch (Exception ex)
             {
+                mResponse.Succeeded = false;
+                mResponse.Message = ex.Message;
                 Common.DisplayErrorMessage("NotificationAPI/GetAllNotificationsForUser: " + ex.Message);
             }
             return mResponse;
@@ -89,38 +54,61 @@ namespace AptDealzBuyer.API
                     using (var hcf = new HttpClientFactory(token: Common.Token))
                     {
                         string url = string.Format(EndPointURL.GetNotificationsCountForUser, (int)App.Current.Resources["Version"]);
-                        var response = await hcf.GetAsync(url);
-                        var responseJson = await response.Content.ReadAsStringAsync();
-                        if (response.IsSuccessStatusCode)
+                        var respons = await hcf.GetAsync(url);
+                        var responseJson = await respons.Content.ReadAsStringAsync();
+                        if (respons.IsSuccessStatusCode)
                         {
                             mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
                         }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                        else if (respons.StatusCode == System.Net.HttpStatusCode.Forbidden)
                         {
                             var errorString = JsonConvert.DeserializeObject<string>(responseJson);
                             if (errorString == Constraints.Session_Expired)
                             {
-                                Common.DisplayErrorMessage(Constraints.Session_Expired);
-                                App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
+                                mResponse.Message = Constraints.Session_Expired;
+                                MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount);
+                                Common.ClearAllData();
                             }
                         }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
+                        else if (respons.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
                         {
-                            Common.DisplayErrorMessage(Constraints.ServiceUnavailable);
+                            mResponse.Message = Constraints.ServiceUnavailable;
+                            MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount);
+                            Common.ClearAllData();
                         }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
+                        else if (respons.StatusCode == System.Net.HttpStatusCode.InternalServerError)
                         {
-                            Common.DisplayErrorMessage(Constraints.Something_Wrong_Server);
+                            if (responseJson.Contains(Constraints.Str_Duplicate))
+                            {
+                                mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
+                            }
+                            else
+                            {
+                                mResponse.Message = Constraints.Something_Wrong_Server;
+                                MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount);
+                                Common.ClearAllData();
+                            }
+                        }
+                        else if (responseJson.Contains(Constraints.Str_AccountDeactivated) && respons.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                        {
+                            if (Common.mBuyerDetail != null && !Common.EmptyFiels(Common.mBuyerDetail.FullName))
+                                mResponse.Message = "Hey " + Common.mBuyerDetail.FullName + ", your account is deactivated.Please contact customer support.";
+                            else
+                                mResponse.Message = "Hey, your account is deactivated.Please contact customer support.";
+
+                            MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount);
+                            Common.ClearAllData();
                         }
                         else
                         {
-                            if (responseJson.Contains(Constraints.Str_TokenExpired) || response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                            if (responseJson.Contains(Constraints.Str_TokenExpired) || respons.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                             {
                                 var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
                                 if (!isRefresh)
                                 {
-                                    Common.DisplayErrorMessage(Constraints.Session_Expired);
-                                    App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
+                                    mResponse.Message = Constraints.Session_Expired;
+                                    MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount);
+                                    Common.ClearAllData();
                                 }
                             }
                             else
@@ -128,6 +116,7 @@ namespace AptDealzBuyer.API
                                 mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
                             }
                         }
+
                     }
                 }
                 else
@@ -140,6 +129,8 @@ namespace AptDealzBuyer.API
             }
             catch (Exception ex)
             {
+                mResponse.Succeeded = false;
+                mResponse.Message = ex.Message;
                 Common.DisplayErrorMessage("NotificationAPI/GetNotificationsCountForUser: " + ex.Message);
             }
             return mResponse;
@@ -159,43 +150,7 @@ namespace AptDealzBuyer.API
                     {
                         string url = string.Format(EndPointURL.SetUserNoficiationAsRead, (int)App.Current.Resources["Version"], NotificationId);
                         var responseHttp = await hcf.PostAsync(url, requestJson);
-                        var responseJson = await responseHttp.Content.ReadAsStringAsync();
-                        if (responseHttp.IsSuccessStatusCode)
-                        {
-                            mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
-                        }
-                        else if (responseHttp.StatusCode == System.Net.HttpStatusCode.Forbidden)
-                        {
-                            var errorString = JsonConvert.DeserializeObject<string>(responseJson);
-                            if (errorString == Constraints.Session_Expired)
-                            {
-                                App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                            }
-                        }
-                        else if (responseHttp.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
-                        {
-                            Common.DisplayErrorMessage(Constraints.ServiceUnavailable);
-                        }
-                        else if (responseHttp.StatusCode == System.Net.HttpStatusCode.InternalServerError)
-                        {
-                            Common.DisplayErrorMessage(Constraints.Something_Wrong_Server);
-                        }
-                        else
-                        {
-                            if (responseJson.Contains(Constraints.Str_TokenExpired) || responseHttp.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                            {
-                                var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
-                                if (!isRefresh)
-                                {
-                                    Common.DisplayErrorMessage(Constraints.Session_Expired);
-                                    App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                                }
-                            }
-                            else
-                            {
-                                mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
-                            }
-                        }
+                        mResponse = await DependencyService.Get<IAuthenticationRepository>().APIResponse(responseHttp);
                     }
                 }
                 else
@@ -209,8 +164,40 @@ namespace AptDealzBuyer.API
             catch (Exception ex)
             {
                 mResponse.Succeeded = false;
-                mResponse.Errors = ex.Message;
+                mResponse.Message = ex.Message;
                 Common.DisplayErrorMessage("NotificationAPI/SetUserNoficiationAsRead: " + ex.Message);
+            }
+            return mResponse;
+        }
+
+        public async Task<Response> SetUserNoficiationAsReadAndDelete(string NotificationId)
+        {
+            Response mResponse = new Response();
+            try
+            {
+                if (CrossConnectivity.Current.IsConnected)
+                {
+                    string requestJson = "";
+                    using (var hcf = new HttpClientFactory(token: Common.Token))
+                    {
+                        string url = string.Format(EndPointURL.SetUserNoficiationAsReadAndDelete, (int)App.Current.Resources["Version"], NotificationId);
+                        var response = await hcf.PostAsync(url, requestJson);
+                        mResponse = await DependencyService.Get<IAuthenticationRepository>().APIResponse(response);
+                    }
+                }
+                else
+                {
+                    if (await Common.InternetConnection())
+                    {
+                        await SetUserNoficiationAsReadAndDelete(NotificationId);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                mResponse.Succeeded = false;
+                mResponse.Message = ex.Message;
+                Common.DisplayErrorMessage("NotificationAPI/SetUserNoficiationAsReadAndDelete: " + ex.Message);
             }
             return mResponse;
         }

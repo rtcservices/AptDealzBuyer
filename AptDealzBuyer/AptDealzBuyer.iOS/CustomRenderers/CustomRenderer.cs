@@ -16,7 +16,7 @@ using Xamarin.Forms.Platform.iOS;
 [assembly: ExportRenderer(typeof(Picker), typeof(CustomPickerRenderer))]
 [assembly: ExportRenderer(typeof(Editor), typeof(CustomEditorRenderer))]
 [assembly: ExportRenderer(typeof(ExtDatePicker), typeof(CustomeDatePickerRenderer))]
-[assembly: ExportRenderer(typeof(ExtAutoSuggestBox), typeof(ExtAutoSuggestBoxRenderer))]
+[assembly: ExportRenderer(typeof(ExtAutoSuggestBox), typeof(CustomSuggestBoxRenderer))]
 [assembly: ExportRenderer(typeof(ExtKeyboard), typeof(KeyboardViewRenderer))]
 
 namespace AptDealzBuyer.iOS.CustomRenderers
@@ -30,7 +30,7 @@ namespace AptDealzBuyer.iOS.CustomRenderers
                 base.OnElementChanged(e);
                 if (Control != null)
                 {
-                    if (e.NewElement != null && e.NewElement.Text !=null)
+                    if (e.NewElement != null && e.NewElement.Text != null)
                     {
                         if (!string.IsNullOrEmpty(Element.FontFamily))
                             Control.Font = UIFont.FromName(this.Element.FontFamily, (nfloat)e.NewElement.FontSize);
@@ -62,6 +62,13 @@ namespace AptDealzBuyer.iOS.CustomRenderers
                     Control.LeftViewMode = UITextFieldViewMode.Always;
                     Control.RightView = new UIView(new CGRect(0, 0, 0, 0));
                     Control.RightViewMode = UITextFieldViewMode.Always;
+
+                    var keyboard = e.NewElement?.Keyboard;
+                    if (keyboard != Keyboard.Numeric)
+                    {
+                        Control.AutocapitalizationType = UITextAutocapitalizationType.Sentences;
+                        Control.KeyboardType = UIKeyboardType.ASCIICapable;
+                    }
                 }
             }
             catch (Exception ex)
@@ -107,6 +114,8 @@ namespace AptDealzBuyer.iOS.CustomRenderers
                 {
                     Control.Layer.BorderColor = Color.Transparent.ToCGColor();
                     Control.Layer.BorderWidth = 0;
+                    Control.AutocapitalizationType = UITextAutocapitalizationType.Sentences;
+                    Control.KeyboardType = UIKeyboardType.ASCIICapable;
                 }
             }
             catch (Exception ex)
@@ -144,7 +153,7 @@ namespace AptDealzBuyer.iOS.CustomRenderers
         }
     }
 
-    public class ExtAutoSuggestBoxRenderer : AutoSuggestBoxRenderer
+    public class CustomSuggestBoxRenderer : AutoSuggestBoxRenderer
     {
         protected override void OnElementChanged(ElementChangedEventArgs<AutoSuggestBox> e)
         {

@@ -1,10 +1,14 @@
 ﻿using Acr.UserDialogs;
+using AptDealzBuyer.Interfaces;
 using AptDealzBuyer.Model.Request;
 using AptDealzBuyer.Repository;
 using AptDealzBuyer.Utility;
+using Rg.Plugins.Popup.Services;
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -25,7 +29,10 @@ namespace AptDealzBuyer.Views.DashboardPages
             {
                 InitializeComponent();
                 this.GrievanceId = GrievanceId;
-                txtMessage.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
+
+                if (DeviceInfo.Platform == DevicePlatform.Android)
+                    txtMessage.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
+
                 MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount);
                 MessagingCenter.Subscribe<string>(this, Constraints.Str_NotificationCount, (count) =>
                 {
@@ -79,8 +86,40 @@ namespace AptDealzBuyer.Views.DashboardPages
                     lblOrderDate.Text = mGrievance.OrderDate.ToString(Constraints.Str_DateFormate);
                     lblGrievanceDate.Text = mGrievance.Created.ToString(Constraints.Str_DateFormate);
                     lblSellerName.Text = mGrievance.SellerName;
-                    lblGrievanceType.Text = mGrievance.GrievanceTypeDescr.ToCamelCase();
+
+                    string GrievanceTypeDescr = "";
+                    if (mGrievance.GrievanceType > -1)
+                    {
+                        switch (mGrievance.GrievanceType)
+                        {
+                            case (int)GrievancesType.Order_Related:
+                                GrievanceTypeDescr = GrievancesType.Order_Related.ToString().Replace("_", " ");
+                                break;
+                            case (int)GrievancesType.Delayed_Delivery:
+                                GrievanceTypeDescr = GrievancesType.Delayed_Delivery.ToString().Replace("_", " ");
+                                break;
+                            case (int)GrievancesType.Payment_Related:
+                                GrievanceTypeDescr = GrievancesType.Payment_Related.ToString().Replace("_", " ");
+                                break;
+                            case (int)GrievancesType.Manufacture_Defect:
+                                GrievanceTypeDescr = GrievancesType.Manufacture_Defect.ToString().Replace("_", " ");
+                                break;
+                            case (int)GrievancesType.Incomplete_Product_Delivery:
+                                GrievanceTypeDescr = GrievancesType.Incomplete_Product_Delivery.ToString().Replace("_", " ");
+                                break;
+                            case (int)GrievancesType.Wrong_Order:
+                                GrievanceTypeDescr = GrievancesType.Wrong_Order.ToString().Replace("_", " ");
+                                break;
+                            default:
+                                GrievanceTypeDescr = GrievancesType.Order_Related.ToString().Replace("_", " ");
+                                break;
+                        }
+                    }
+
+                    lblGrievanceType.Text = GrievanceTypeDescr.ToCamelCase();
                     lblStatus.Text = mGrievance.StatusDescr.ToCamelCase();
+                    lblSolution.Text = mGrievance.PreferredSolution;
+
                     if (Common.EmptyFiels(mGrievance.IssueDescription))
                     {
                         lblDescription.Text = "No description found";
@@ -117,6 +156,18 @@ namespace AptDealzBuyer.Views.DashboardPages
                     }
 
                     AttachDocumentList();
+                    GrdMessage.IsVisible = mGrievance.EnableResponseFromUser;
+                    if (mGrievance.EnableResponseFromUser)
+                    {
+                        if (mGrievance.Status == (int)GrievancesStatus.Closed)
+                        {
+                            GrdMessage.IsVisible = false;
+                        }
+                        else
+                        {
+                            GrdMessage.IsVisible = true;
+                        }
+                    }
                 }
             }
             catch (Exception ex)
@@ -206,7 +257,7 @@ namespace AptDealzBuyer.Views.DashboardPages
 
         private void ImgQuestion_Tapped(object sender, EventArgs e)
         {
-
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_FAQHelp));
         }
 
         private async void ImgBack_Tapped(object sender, EventArgs e)
@@ -285,6 +336,28 @@ namespace AptDealzBuyer.Views.DashboardPages
         private void lstResponse_ItemTapped(object sender, ItemTappedEventArgs e)
         {
             lstResponse.SelectedItem = null;
+        }
+
+        private async void ImgDocument_Clicked(object sender, EventArgs e)
+        {
+            var imgButton = (ImageButton)sender;
+            if (imgButton.IsEnabled)
+            {
+                try
+                {
+                    imgButton.IsEnabled = false;
+                    var url = imgButton.BindingContext as string;
+                    await GenerateWebView.GenerateView(url);
+                }
+                catch (Exception ex)
+                {
+                    Common.DisplayErrorMessage("GrievancesPage/ImgDocument_Clicked: " + ex.Message);
+                }
+                finally
+                {
+                    imgButton.IsEnabled = true;
+                }
+            }
         }
         #endregion
     }

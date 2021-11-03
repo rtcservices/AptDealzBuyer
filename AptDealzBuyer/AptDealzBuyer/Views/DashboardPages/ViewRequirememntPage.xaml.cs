@@ -8,6 +8,7 @@ using AptDealzBuyer.Views.PopupPages;
 using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -150,7 +151,7 @@ namespace AptDealzBuyer.Views.DashboardPages
                     }
                     if (mRequirement.ExpectedDeliveryDate != null && mRequirement.ExpectedDeliveryDate != DateTime.MinValue)
                     {
-                        lblDeliveryDateValue.Text = mRequirement.ExpectedDeliveryDate.ToString("dd/MM/yyyy");
+                        lblDeliveryDateValue.Text = mRequirement.ExpectedDeliveryDate.ToString(Constraints.Str_DateFormate);
                     }
                     if (!Common.EmptyFiels(mRequirement.DeliveryLocationPinCode))
                     {
@@ -186,7 +187,7 @@ namespace AptDealzBuyer.Views.DashboardPages
                     }
                     else
                     {
-                        lblDeliveryDate.Text = Constraints.Str_ReceivedDate;
+                        lblDeliveryDate.Text = Constraints.Str_ExpectedDeliveryDate;
                         lblPreferSeller.Text = Constraints.Str_Wrong;
                     }
 
@@ -198,8 +199,8 @@ namespace AptDealzBuyer.Views.DashboardPages
                     lblBillingAddress.Text = mRequirement.BillingAddressName + "\n"
                                + mRequirement.BillingAddressBuilding + "\n"
                                + mRequirement.BillingAddressStreet + "\n"
-                               + mRequirement.BillingAddressCity + "-"
-                               + mRequirement.BillingAddressPinCode;
+                               + mRequirement.BillingAddressCity + "\n"
+                               + mRequirement.BillingAddressState + "-" + mRequirement.BillingAddressPinCode;
 
                     if (!Common.EmptyFiels(mRequirement.ShippingAddressName) || !Common.EmptyFiels(mRequirement.ShippingAddressBuilding)
                       || !Common.EmptyFiels(mRequirement.ShippingAddressStreet) || !Common.EmptyFiels(mRequirement.ShippingAddressCity)
@@ -209,8 +210,8 @@ namespace AptDealzBuyer.Views.DashboardPages
                         lblShippingAddress.Text = mRequirement.ShippingAddressName + "\n"
                             + mRequirement.ShippingAddressBuilding + "\n"
                             + mRequirement.ShippingAddressStreet + "\n"
-                            + mRequirement.ShippingAddressCity + "-"
-                            + mRequirement.ShippingAddressPinCode + "\n"
+                            + mRequirement.ShippingAddressCity + "\n"
+                            + mRequirement.ShippingAddressState + "-" + mRequirement.ShippingAddressPinCode + "\n"
                             + mRequirement.ShippingAddressLandmark;
                         GrdShippingAddress.IsVisible = true;
                     }
@@ -282,6 +283,7 @@ namespace AptDealzBuyer.Views.DashboardPages
                     {
                         lblNoRecord.IsVisible = true;
                         FrmSortBy.IsVisible = false;
+                        FrmFilterBy.IsVisible = false;
                         lstQoutes.IsVisible = false;
                         lstQoutes.ItemsSource = null;
                         lstQoutes.HeightRequest = 50;
@@ -352,7 +354,7 @@ namespace AptDealzBuyer.Views.DashboardPages
 
         private void ImgQuestion_Tapped(object sender, EventArgs e)
         {
-
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_FAQHelp));
         }
 
         private async void ImgBack_Tapped(object sender, EventArgs e)
@@ -409,6 +411,39 @@ namespace AptDealzBuyer.Views.DashboardPages
                 isAssending = true;
             }
             GetListOfQuotes(filterBy, isAssending);
+        }
+
+        private async void FrmFilter_Tapped(object sender, EventArgs e)
+        {
+            var Tab = (Frame)sender;
+            if (Tab.IsEnabled)
+            {
+                try
+                {
+                    Tab.IsEnabled = false;
+                    var sortby = new QuotesPopup(filterBy);
+                    sortby.isRefresh += (s1, e1) =>
+                    {
+                        string result = s1.ToString();
+                        if (!Common.EmptyFiels(result))
+                        {
+                            filterBy = result;
+                            lblFilterBy.Text = filterBy;
+
+                            GetListOfQuotes(filterBy, isAssending);
+                        }
+                    };
+                    await PopupNavigation.Instance.PushAsync(sortby);
+                }
+                catch (Exception ex)
+                {
+                    Common.DisplayErrorMessage("ViewRequirememntPage/FrmFilter_Tapped: " + ex.Message);
+                }
+                finally
+                {
+                    Tab.IsEnabled = true;
+                }
+            }
         }
 
         private void CopyString_Tapped(object sender, EventArgs e)
@@ -473,25 +508,7 @@ namespace AptDealzBuyer.Views.DashboardPages
         }
         #endregion
 
-        #endregion
-
         private async void FrmProductImage_Tapped(object sender, EventArgs e)
-        {
-            try
-            {
-                if (!Common.EmptyFiels(ProductImageUrl))
-                {
-                    var successPopup = new PopupPages.ShowImagePopup(ProductImageUrl);
-                    await PopupNavigation.Instance.PushAsync(successPopup);
-                }
-            }
-            catch (Exception ex)
-            {
-                Common.DisplayErrorMessage("ViewRequirememntPage/FrmProductImage_Tapped: " + ex.Message);
-            }
-        }
-
-        private async void FrmFilter_Tapped(object sender, EventArgs e)
         {
             var Tab = (Frame)sender;
             if (Tab.IsEnabled)
@@ -499,23 +516,18 @@ namespace AptDealzBuyer.Views.DashboardPages
                 try
                 {
                     Tab.IsEnabled = false;
-                    var sortby = new QuotesPopup(filterBy);
-                    sortby.isRefresh += (s1, e1) =>
+                    if (!Common.EmptyFiels(ProductImageUrl))
                     {
-                        string result = s1.ToString();
-                        if (!Common.EmptyFiels(result))
-                        {
-                            filterBy = result;
-                            lblFilterBy.Text = filterBy;
+                        var base64File = ImageConvertion.ConvertImageURLToBase64(ProductImageUrl);
+                        string extension = Path.GetExtension(ProductImageUrl).ToLower();
 
-                            GetListOfQuotes(filterBy, isAssending);
-                        }
-                    };
-                    await PopupNavigation.Instance.PushAsync(sortby);
+                        var successPopup = new DisplayDocumentPopup(base64File, extension);
+                        await PopupNavigation.Instance.PushAsync(successPopup);
+                    }
                 }
                 catch (Exception ex)
                 {
-                    Common.DisplayErrorMessage("ActiveRequirementView/CustomEntry_Unfocused: " + ex.Message);
+                    Common.DisplayErrorMessage("ViewRequirememntPage/FrmProductImage_Tapped: " + ex.Message);
                 }
                 finally
                 {
@@ -523,5 +535,6 @@ namespace AptDealzBuyer.Views.DashboardPages
                 }
             }
         }
+        #endregion
     }
 }

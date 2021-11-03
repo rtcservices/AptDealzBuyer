@@ -64,5 +64,23 @@ namespace AptDealzBuyer.Services
             }
             return hasReaded;
         }
+
+        public async Task<bool> SetUserNoficiationAsReadAndDelete(string NotificationId)
+        {
+            bool hasReaded = false;
+            try
+            {
+                var mResponse = await notificationAPI.SetUserNoficiationAsReadAndDelete(NotificationId);
+                if (mResponse != null && mResponse.Succeeded)
+                {
+                    hasReaded = (bool)mResponse.Data;
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("NavigationRepository/SetUserNoficiationAsReadAndDelete: " + ex.Message);
+            }
+            return hasReaded;
+        }
     }
 }

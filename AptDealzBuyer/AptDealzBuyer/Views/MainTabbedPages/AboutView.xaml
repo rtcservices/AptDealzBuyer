@@ -15,22 +15,10 @@
 
             <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="80" />
+                    <ColumnDefinition Width="120" />
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="80" />
+                    <ColumnDefinition Width="120" />
                 </Grid.ColumnDefinitions>
-                <Image
-                    x:Name="ImgMenu"
-                    Grid.Column="0"
-                    Margin="20,0,0,0"
-                    HeightRequest="30"
-                    HorizontalOptions="StartAndExpand"
-                    Source="IconMenu.png"
-                    VerticalOptions="CenterAndExpand">
-                    <Image.GestureRecognizers>
-                        <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgMenu_Tapped" />
-                    </Image.GestureRecognizers>
-                </Image>
 
                 <ImageButton
                     x:Name="BtnLogo"
@@ -41,7 +29,7 @@
                 <Grid
                     Grid.Column="2"
                     Margin="0,0,10,0"
-                    ColumnDefinitions="*,*"
+                    ColumnDefinitions="*,*,*"
                     HorizontalOptions="EndAndExpand">
                     <Grid>
                         <Image Source="iconNotification.png" Style="{StaticResource imgNotification}" />
@@ -68,6 +56,21 @@
                             <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgQuestion_Tapped" />
                         </Image.GestureRecognizers>
                     </Image>
+
+                    <Image
+                        x:Name="ImgMenu"
+                        Grid.Column="2"
+                        Margin="0,0,0,0"
+                        HeightRequest="30"
+                        HorizontalOptions="CenterAndExpand"
+                        Source="iconGear.png"
+                        VerticalOptions="CenterAndExpand"
+                        WidthRequest="30">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgMenu_Tapped" />
+                        </Image.GestureRecognizers>
+                    </Image>
+
                 </Grid>
                 <BoxView Grid.ColumnSpan="3" Style="{StaticResource boxHorizontal}" />
             </Grid>
@@ -103,11 +106,12 @@
                             RowDefinitions="Auto,Auto"
                             RowSpacing="20">
                             <Label
+                                x:Name="lblAbout"
                                 Grid.Row="0"
                                 HorizontalOptions="FillAndExpand"
                                 LineBreakMode="WordWrap"
                                 Style="{StaticResource lblLight}"
-                                Text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+                                TextType="Html"
                                 VerticalOptions="StartAndExpand" />
 
                             <Frame
@@ -120,7 +124,7 @@
                                 HasShadow="False"
                                 HorizontalOptions="FillAndExpand"
                                 VerticalOptions="StartAndExpand">
-                                <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="10">
+                                <Grid RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="10">
 
                                     <Label
                                         Grid.Row="0"
@@ -129,17 +133,36 @@
                                         Style="{StaticResource lblMedium}"
                                         Text="Contact Info" />
 
-                                    <Label
-                                        Grid.Row="1"
-                                        HorizontalOptions="StartAndExpand"
-                                        Style="{StaticResource lblLight}"
-                                        Text="30, ABC, XYZ Road &#x0a;Kochi, Kerala, &#x0a;PIN - 682024" />
+                                    <StackLayout Grid.Row="1" Spacing="0">
+                                        <Label
+                                            x:Name="lblAddress1"
+                                            HorizontalOptions="StartAndExpand"
+                                            Style="{StaticResource lblLight}" />
+
+                                        <Label
+                                            x:Name="lblAddress2"
+                                            Grid.Row="1"
+                                            HorizontalOptions="StartAndExpand"
+                                            Style="{StaticResource lblLight}" />
+
+                                        <Label
+                                            x:Name="lblPincode"
+                                            Grid.Row="1"
+                                            HorizontalOptions="StartAndExpand"
+                                            Style="{StaticResource lblLight}" />
+                                    </StackLayout>
 
                                     <Label
+                                        x:Name="lblEmail"
                                         Grid.Row="2"
                                         HorizontalOptions="StartAndExpand"
-                                        Style="{StaticResource lblLight}"
-                                        Text="Phone: +91 012345678" />
+                                        Style="{StaticResource lblLight}" />
+
+                                    <Label
+                                        x:Name="lblPhoneNo"
+                                        Grid.Row="3"
+                                        HorizontalOptions="StartAndExpand"
+                                        Style="{StaticResource lblLight}" />
 
                                 </Grid>
                             </Frame>

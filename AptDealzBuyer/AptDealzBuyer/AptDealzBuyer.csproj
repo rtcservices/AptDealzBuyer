@@ -17,6 +17,7 @@
     <PackageReference Include="dotMorten.Xamarin.Forms.AutoSuggestBox" Version="1.1.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Plugin.FirebasePushNotification" Version="3.3.10" />
+    <PackageReference Include="Plugin.LocalNotification" Version="5.0.6" />
     <PackageReference Include="Plugin.Permissions" Version="6.0.1" />
     <PackageReference Include="Polly" Version="7.2.1" />
     <PackageReference Include="Rg.Plugins.Popup" Version="2.0.0.11" />
@@ -47,6 +48,9 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\DashboardPages\PostNewRequiremntPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\DashboardPages\QRCodePage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\DashboardPages\QuoteDetailsPage.xaml">
@@ -133,7 +137,7 @@
     <EmbeddedResource Update="Views\PopupPages\QuotesPopup.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\PopupPages\ShowImagePopup.xaml">
+    <EmbeddedResource Update="Views\PopupPages\DisplayDocumentPopup.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\PopupPages\StatusPopup.xaml">
@@ -181,6 +185,9 @@
   <ItemGroup>
     <Compile Update="Views\PopupPages\PaymentPopup.xaml.cs">
       <DependentUpon>PaymentPopup.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\PopupPages\DisplayDocumentPopup.xaml.cs">
+      <DependentUpon>DisplayDocumentPopup.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

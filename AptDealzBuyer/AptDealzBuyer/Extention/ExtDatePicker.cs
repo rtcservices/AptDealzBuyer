@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AptDealzBuyer.Utility;
+using System;
 using Xamarin.Forms;
 
 namespace AptDealzBuyer.Extention
@@ -68,7 +69,7 @@ namespace AptDealzBuyer.Extention
         {
             this.DateSelected += CustomDatePicker_DateSelected;
             // this.Date = DateTime.Now.Date;
-            this.Format = "dd/MM/yyyy";
+            this.Format = Constraints.Str_DateFormate;
         }
 
         // Wird gefeuert wenn ein neues Datum selektiert wurde

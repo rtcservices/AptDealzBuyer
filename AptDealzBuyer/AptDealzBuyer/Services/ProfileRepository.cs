@@ -150,16 +150,9 @@ namespace AptDealzBuyer.Services
                     var mResponse = await profileAPI.DeactiviateUser(Settings.UserId);
                     if (mResponse != null && mResponse.Succeeded)
                     {
-                        Settings.EmailAddress = string.Empty;
-                        Settings.UserToken = string.Empty;
-                        Settings.RefreshToken = string.Empty;
-                        Settings.UserId = string.Empty;
-                        Settings.LoginTrackingKey = string.Empty;
-                        Settings.fcm_token = string.Empty;
                         MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount);
-                        App.stoppableTimer.Stop();
-
-                        App.Current.MainPage = new NavigationPage(new LoginPage());
+                        Settings.fcm_token = string.Empty;
+                        Common.ClearAllData();
                     }
                     else
                     {

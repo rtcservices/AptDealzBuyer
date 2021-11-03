@@ -59,6 +59,22 @@ namespace AptDealzBuyer.Utility
             return Convert.ToString(_sb);
         }
 
+        //public static String ConvertURLToBase64(String url)
+        //{
+        //    try
+        //    {
+        //        using (HttpClientFactory hcf = new HttpClientFactory(sessionId: Common.SessionId, sessionTimeout: Common.SessionTimeOut))
+        //        {
+        //            return await hcf.GetBase64(url);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _ = ex.Message;
+        //        return null;
+        //    }
+        //}
+
         private static byte[] GetImage(string url)
         {
             Stream stream = null;
@@ -82,10 +98,10 @@ namespace AptDealzBuyer.Utility
                 stream.Close();
                 response.Close();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 buf = null;
-                //DisplayErrorMessage("ImageConvertion/GetImage : " + ex.Message);
+                Common.DisplayErrorMessage("ImageConvertion/GetImage : " + ex.Message);
             }
 
             return (buf);
@@ -117,11 +133,14 @@ namespace AptDealzBuyer.Utility
                     }
                     else
                     {
-                        SelectedXFImagePath.Source = ImageSource.FromStream(() =>
+                        if (SelectedXFImagePath != null)
                         {
-                            var stream = file.GetStream();
-                            return stream;
-                        });
+                            SelectedXFImagePath.Source = ImageSource.FromStream(() =>
+                            {
+                                var stream = file.GetStream();
+                                return stream;
+                            });
+                        }
                     }
                 });
 
@@ -280,21 +299,6 @@ namespace AptDealzBuyer.Utility
             }
             finally { UserDialogs.Instance.HideLoading(); }
 #pragma warning restore CS0618 // Type or member is obsolete
-        }
-
-        public static ImageSource LoadBase64(string base64)
-        {
-            byte[] bytes = Convert.FromBase64String(base64);
-            ImageSource image;
-            using (MemoryStream ms = new MemoryStream(bytes))
-            {
-                image = ImageSource.FromStream(() =>
-                {
-                    return ms;
-                });
-            }
-
-            return image;
         }
         #endregion
     }

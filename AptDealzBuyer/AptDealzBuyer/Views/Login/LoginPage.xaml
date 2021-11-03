@@ -81,13 +81,13 @@
                             Orientation="Horizontal">
 
                             <Label
-                                FontSize="15"
+                                FontSize="{StaticResource Font15}"
                                 HorizontalOptions="EndAndExpand"
                                 Style="{StaticResource lblMedium}"
                                 Text="Don't have an Account ?" />
 
                             <Label
-                                FontSize="15"
+                                FontSize="{StaticResource Font15}"
                                 HorizontalOptions="StartAndExpand"
                                 Style="{StaticResource lblMedium}"
                                 Text="Sign Up"

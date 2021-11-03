@@ -18,22 +18,11 @@
             <!--  Header  -->
             <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="80" />
+                    <ColumnDefinition Width="120" />
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="80" />
+                    <ColumnDefinition Width="120" />
                 </Grid.ColumnDefinitions>
-                <Image
-                    x:Name="ImgMenu"
-                    Grid.Column="0"
-                    Margin="20,0,0,0"
-                    HeightRequest="30"
-                    HorizontalOptions="StartAndExpand"
-                    Source="IconMenu.png"
-                    VerticalOptions="CenterAndExpand">
-                    <Image.GestureRecognizers>
-                        <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgMenu_Tapped" />
-                    </Image.GestureRecognizers>
-                </Image>
+
 
                 <ImageButton
                     x:Name="BtnLogo"
@@ -44,7 +33,7 @@
                 <Grid
                     Grid.Column="2"
                     Margin="0,0,10,0"
-                    ColumnDefinitions="*,*"
+                    ColumnDefinitions="*,*,*"
                     HorizontalOptions="EndAndExpand">
                     <Grid>
                         <Image Source="iconNotification.png" Style="{StaticResource imgNotification}" />
@@ -69,6 +58,20 @@
                         WidthRequest="30">
                         <Image.GestureRecognizers>
                             <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgQuestion_Tapped" />
+                        </Image.GestureRecognizers>
+                    </Image>
+
+                    <Image
+                        x:Name="ImgMenu"
+                        Grid.Column="2"
+                        Margin="0,0,0,0"
+                        HeightRequest="30"
+                        HorizontalOptions="CenterAndExpand"
+                        Source="iconGear.png"
+                        VerticalOptions="CenterAndExpand"
+                        WidthRequest="30">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgMenu_Tapped" />
                         </Image.GestureRecognizers>
                     </Image>
                 </Grid>
@@ -134,7 +137,7 @@
                                             Text="Requirement ID" />
                                         <Label
                                             x:Name="lblRequirementId"
-                                            FontSize="15"
+                                            FontSize="{StaticResource Font15}"
                                             HorizontalOptions="EndAndExpand"
                                             Style="{StaticResource lblMedium}"
                                             TextColor="{StaticResource appColor1}" />
@@ -158,7 +161,7 @@
 
                                         <Label
                                             x:Name="lblQuoteRefNo"
-                                            FontSize="15"
+                                            FontSize="{StaticResource Font15}"
                                             HorizontalOptions="EndAndExpand"
                                             Style="{StaticResource lblMedium}"
                                             TextColor="{StaticResource appColor1}" />
@@ -183,7 +186,7 @@
 
                                         <Label
                                             x:Name="lblBuyerId"
-                                            FontSize="15"
+                                            FontSize="{StaticResource Font15}"
                                             HorizontalOptions="EndAndExpand"
                                             Style="{StaticResource lblMedium}" />
                                     </StackLayout>
@@ -206,7 +209,7 @@
 
                                         <Label
                                             x:Name="lblSellerId"
-                                            FontSize="15"
+                                            FontSize="{StaticResource Font15}"
                                             HorizontalOptions="EndAndExpand"
                                             Style="{StaticResource lblMedium}" />
                                     </StackLayout>
@@ -230,7 +233,7 @@
 
                                         <Label
                                             x:Name="lblShippingPINCode"
-                                            FontSize="15"
+                                            FontSize="{StaticResource Font15}"
                                             HorizontalOptions="EndAndExpand"
                                             Style="{StaticResource lblMedium}" />
                                     </StackLayout>
@@ -250,7 +253,7 @@
 
                                         <Label
                                             x:Name="lblRequestedQuantity"
-                                            FontSize="15"
+                                            FontSize="{StaticResource Font15}"
                                             HorizontalOptions="EndAndExpand"
                                             Style="{StaticResource lblMedium}" />
                                     </StackLayout>
@@ -270,7 +273,7 @@
                                             Text="Unit Price" />
                                         <Label
                                             x:Name="lblUnitPrice"
-                                            FontSize="15"
+                                            FontSize="{StaticResource Font15}"
                                             HorizontalOptions="EndAndExpand"
                                             Style="{StaticResource lblMedium}" />
 
@@ -290,7 +293,7 @@
                                             Text="Net Amount" />
                                         <Label
                                             x:Name="lblNetAmount"
-                                            FontSize="15"
+                                            FontSize="{StaticResource Font15}"
                                             HorizontalOptions="EndAndExpand"
                                             Style="{StaticResource lblMedium}" />
                                     </StackLayout>
@@ -311,7 +314,7 @@
 
                                         <Label
                                             x:Name="lblHandlingCharges"
-                                            FontSize="15"
+                                            FontSize="{StaticResource Font15}"
                                             HorizontalOptions="EndAndExpand"
                                             Style="{StaticResource lblMedium}" />
                                     </StackLayout>
@@ -332,7 +335,7 @@
 
                                         <Label
                                             x:Name="lblShippingCharges"
-                                            FontSize="15"
+                                            FontSize="{StaticResource Font15}"
                                             HorizontalOptions="EndAndExpand"
                                             Style="{StaticResource lblMedium}" />
                                     </StackLayout>
@@ -352,7 +355,7 @@
 
                                         <Label
                                             x:Name="lblInsuranceCharges"
-                                            FontSize="15"
+                                            FontSize="{StaticResource Font15}"
                                             HorizontalOptions="EndAndExpand"
                                             Style="{StaticResource lblMedium}" />
                                     </StackLayout>
@@ -372,7 +375,7 @@
                                             Text="Country of Origin" />
                                         <Label
                                             x:Name="lblCountryOrigin"
-                                            FontSize="15"
+                                            FontSize="{StaticResource Font15}"
                                             HorizontalOptions="EndAndExpand"
                                             Style="{StaticResource lblMedium}" />
                                     </StackLayout>
@@ -396,7 +399,7 @@
                                         <Label
                                             x:Name="lblComments"
                                             Grid.Column="1"
-                                            FontSize="15"
+                                            FontSize="{StaticResource Font15}"
                                             HorizontalTextAlignment="Start"
                                             LineBreakMode="WordWrap"
                                             Style="{StaticResource lblMedium}" />
@@ -422,7 +425,7 @@
                                         VerticalOptions="CenterAndExpand">
                                         <Label
                                             Grid.Column="0"
-                                            FontSize="15"
+                                            FontSize="{StaticResource Font15}"
                                             HorizontalOptions="StartAndExpand"
                                             LineBreakMode="WordWrap"
                                             Style="{StaticResource lblMedium}"
@@ -430,7 +433,7 @@
                                         <Label
                                             x:Name="lblTotalAmount"
                                             Grid.Column="1"
-                                            FontSize="15"
+                                            FontSize="{StaticResource Font15}"
                                             HorizontalOptions="StartAndExpand"
                                             LineBreakMode="WordWrap"
                                             Style="{StaticResource lblMedium}"
@@ -444,7 +447,7 @@
                                         VerticalOptions="CenterAndExpand">
                                         <Label
                                             Grid.Column="0"
-                                            FontSize="15"
+                                            FontSize="{StaticResource Font15}"
                                             HorizontalOptions="StartAndExpand"
                                             LineBreakMode="WordWrap"
                                             Style="{StaticResource lblMedium}"
@@ -452,7 +455,7 @@
                                         <Label
                                             x:Name="lblDate"
                                             Grid.Column="1"
-                                            FontSize="15"
+                                            FontSize="{StaticResource Font15}"
                                             HorizontalOptions="StartAndExpand"
                                             LineBreakMode="WordWrap"
                                             Style="{StaticResource lblMedium}"
@@ -467,7 +470,7 @@
                                             VerticalOptions="CenterAndExpand">
                                             <Label
                                                 Grid.Column="0"
-                                                FontSize="15"
+                                                FontSize="{StaticResource Font15}"
                                                 HorizontalOptions="StartAndExpand"
                                                 LineBreakMode="WordWrap"
                                                 Style="{StaticResource lblMedium}"
@@ -475,7 +478,7 @@
                                             <Label
                                                 x:Name="lblSellerContact"
                                                 Grid.Column="1"
-                                                FontSize="15"
+                                                FontSize="{StaticResource Font15}"
                                                 HorizontalOptions="StartAndExpand"
                                                 IsVisible="false"
                                                 LineBreakMode="WordWrap"
@@ -485,7 +488,7 @@
                                                 x:Name="BtnRevealContact"
                                                 Grid.Column="1"
                                                 Clicked="BtnRevealContact_Clicked"
-                                                FontSize="15"
+                                                FontSize="{StaticResource Font15}"
                                                 HeightRequest="40"
                                                 Style="{StaticResource btnBorder}"
                                                 Text="Reveal Contact" />
@@ -494,7 +497,7 @@
                                         <Button
                                             x:Name="BtnAcceptQuote"
                                             Clicked="BtnAcceptQuote_Clicked"
-                                            FontSize="15"
+                                            FontSize="{StaticResource Font15}"
                                             HeightRequest="40"
                                             Style="{StaticResource btnBorder}"
                                             Text="Accept Quote" />

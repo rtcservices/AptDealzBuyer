@@ -1,4 +1,7 @@
-﻿using AptDealzBuyer.Utility;
+﻿using Acr.UserDialogs;
+using AptDealzBuyer.API;
+using AptDealzBuyer.Model.Reponse;
+using AptDealzBuyer.Utility;
 using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -14,7 +17,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             try
             {
                 InitializeComponent();
-
+                BindAboutApzdealz();
                 MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount);
                 MessagingCenter.Subscribe<string>(this, Constraints.Str_NotificationCount, (count) =>
                 {
@@ -36,6 +39,39 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             }
         }
         #endregion
+
+        async void BindAboutApzdealz()
+        {
+            try
+            {
+                UserDialogs.Instance.ShowLoading("Loading...");
+                AppSettingsAPI appSettingsAPI = new AppSettingsAPI();
+                var mResponse = await appSettingsAPI.AboutAptdealzBuyerApp();
+                UserDialogs.Instance.HideLoading();
+
+                if (mResponse != null && mResponse.Succeeded)
+                {
+                    var jObject = (Newtonsoft.Json.Linq.JObject)mResponse.Data;
+                    if (jObject != null)
+                    {
+                        var mAboutAptDealz = jObject.ToObject<AboutAptDealz>();
+                        if (mAboutAptDealz != null)
+                        {
+                            lblAbout.Text = mAboutAptDealz.About;
+                            lblAddress1.Text = mAboutAptDealz.ContactAddressLine1;
+                            lblAddress2.Text = mAboutAptDealz.ContactAddressLine2;
+                            lblPincode.Text = "PIN - " + mAboutAptDealz.ContactAddressPincode;
+                            lblEmail.Text = "Email : " + mAboutAptDealz.ContactAddressEmail;
+                            lblPhoneNo.Text = "Phone : " + mAboutAptDealz.ContactAddressPhone;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
 
         #region [ Events ]
         private void ImgMenu_Tapped(object sender, EventArgs e)
@@ -67,7 +103,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
 
         private void ImgQuestion_Tapped(object sender, EventArgs e)
         {
-
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_FAQHelp));
         }
 
         private void ImgBack_Tapped(object sender, EventArgs e)

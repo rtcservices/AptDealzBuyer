@@ -185,7 +185,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
 
         private void ImgQuestion_Tapped(object sender, EventArgs e)
         {
-
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_FAQHelp));
         }
 
         private void ImgBack_Tapped(object sender, EventArgs e)
@@ -258,7 +258,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 }
                 catch (Exception ex)
                 {
-                    Common.DisplayErrorMessage("ActiveRequirementView/CustomEntry_Unfocused: " + ex.Message);
+                    Common.DisplayErrorMessage("ActiveRequirementView/FrmFilter_Tapped: " + ex.Message);
                 }
                 finally
                 {
@@ -285,7 +285,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             }
             catch (Exception ex)
             {
-                Common.DisplayErrorMessage("ActiveRequirementView/CustomEntry_Unfocused: " + ex.Message);
+                Common.DisplayErrorMessage("ActiveRequirementView/entrSearch_TextChanged: " + ex.Message);
             }
         }
 

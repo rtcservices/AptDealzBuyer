@@ -19,7 +19,10 @@
         <x:Int64 x:Key="RevealContact">1</x:Int64>
         <!--#endregion-->
 
-        <!--#region [ Color ]-->
+        <x:Double x:Key="Font15">15</x:Double>
+        <x:Double x:Key="Font14">14</x:Double>
+
+        <!--#region [ Colors ]-->
         <Color x:Key="ErrorBackground">#ff4d4f</Color>
         <Color x:Key="SuccessBackground">#52c41a</Color>
         <Color x:Key="WarningBackground">#1890ff</Color>
@@ -33,9 +36,10 @@
         <Color x:Key="appColor7">#bbbbbb</Color>
         <Color x:Key="appColor8">#F0F0F0</Color>
         <Color x:Key="appColor9">#8C8B8B</Color>
+        <Color x:Key="appColor10">#60006027</Color>
         <!--#endregion-->
 
-        <!--#region [ Frame ]-->
+        <!--#region [ Frames ]-->
         <Style x:Key="frmEntry" TargetType="Frame">
             <Setter Property="Padding" Value="15,0" />
             <Setter Property="Margin" Value="0" />
@@ -228,7 +232,7 @@
         </Style>
         <!--#endregion-->
 
-        <!--#region [ Button ]-->
+        <!--#region [ Buttons ]-->
         <Style x:Key="btnPrimary" TargetType="Button">
             <Setter Property="HeightRequest" Value="50" />
             <Setter Property="CornerRadius" Value="5" />
@@ -269,7 +273,7 @@
         </Style>
         <!--#endregion-->
 
-        <!--#region [ ImageButton ]-->
+        <!--#region [ ImageButtons ]-->
         <Style x:Key="ImgBtnPrimary" TargetType="ImageButton">
             <Setter Property="HeightRequest" Value="45" />
             <Setter Property="WidthRequest" Value="45" />

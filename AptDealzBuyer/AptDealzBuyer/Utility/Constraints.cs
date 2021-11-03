@@ -2,15 +2,14 @@
 {
     public static class Constraints
     {
-
-        public const int LargeBufferSize = 4096;
-
         #region [ String ]
         public const string Str_DateFormate = "dd/MM/yyyy";
-        public const string Str_TokenExpired = "TokenExpired3";
+        public const string Str_TokenExpired = "TokenExpired";
+        public const string Str_AccountDeactivated = "account is deactivated";
+        public const string Str_NotificationCount = "NotificationCount";
+        public const string Str_Duplicate = "duplicate";
         public const string Str_Active = "Active";
         public const string Str_Amount = "Amount";
-        public const string Str_NotificationCount = "NotificationCount";
         public const string Str_ReceivedDate = "Received Date";
 
         public const string Str_Home = "Home";
@@ -135,6 +134,8 @@
         public const string Loading = "Loading...";
         public const string Logout = "Logout";
         #endregion
+     
+        public const string Required_Documents = "Please upload documents!";
 
         #region [ Alert Message ]
         public const string CouldNotSentOTP = "Could not send Verification Code to the given number!";
@@ -178,6 +179,7 @@
         public const string Required_BuildingNumber = "Please enter building number!";
         public const string Required_Street = "Please enter street!";
         public const string Required_City = "Please enter city!";
+        public const string Required_State = "Please enter state!";
         public const string Required_Nationality = "Please enter nationality!";
         public const string Required_PinCode = "Please enter pincode!";
         public const string Required_Landmark = "Please enter landmark!";
@@ -196,12 +198,14 @@
         public const string Required_Billing_Building = "Please enter billing address building!";
         public const string Required_Billing_Street = "Please enter billing address street!";
         public const string Required_Billing_City = "Please enter billing address city!";
+        public const string Required_Billing_State = "Please enter billing address state!";
         public const string Required_Billing_PinCode = "Please enter billing address pin code!";
 
         public const string Required_Shipping_Name = "Please enter shipping address name!";
         public const string Required_Shipping_Building = "Please enter shipping address building!";
         public const string Required_Shipping_Street = "Please enter shipping address street!";
         public const string Required_Shipping_City = "Please enter shipping address city!";
+        public const string Required_Shipping_State = "Please enter shipping address state!";
         public const string Required_Shipping_PinCode = "Please enter shipping address pin code!";
         public const string Required_Shipping_Landmark = "Please enter shipping address landmark!";
 
@@ -209,6 +213,7 @@
         public const string Required_Response = "Please enter your message!";
         #endregion
 
+        public const string Required_Reason = "Please enter the reason for rejection!";
         #region [ Success ]
         public const string OTPSent = "OTP Verification Code Sent Successfully";
         public const string InstantVerification = "you don't get any code, it is instant verification. Please try to login with email address";

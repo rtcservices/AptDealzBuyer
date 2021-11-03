@@ -19,7 +19,7 @@ using Xamarin.Forms.Platform.Android;
 [assembly: ExportRenderer(typeof(Editor), typeof(CustomEditorRenderer))]
 [assembly: ExportRenderer(typeof(ExtDatePicker), typeof(CustomDatePickerRender))]
 [assembly: ExportRenderer(typeof(Xamarin.Forms.Button), typeof(CustomButtonRender))]
-[assembly: ExportRenderer(typeof(ExtAutoSuggestBox), typeof(CustomeAutoSuggestBoxRenderer))]
+[assembly: ExportRenderer(typeof(ExtAutoSuggestBox), typeof(CustomSuggestBoxRenderer))]
 
 namespace AptDealzBuyer.Droid.CustomRenderers
 {
@@ -68,14 +68,34 @@ namespace AptDealzBuyer.Droid.CustomRenderers
                 gd.SetColor(Android.Graphics.Color.Transparent);
                 editText.Background = gd;
 
-                var maxLenght = e.NewElement?.MaxLength;
-                if (maxLenght == 1)
+                if (Control != null)
                 {
-                    Control.Gravity = Android.Views.GravityFlags.Center;
-                }
-                else
-                {
-                    Control.Gravity = Android.Views.GravityFlags.CenterVertical;
+                    //for Otp screen
+                    var maxLenght = e.NewElement?.MaxLength;
+                    if (maxLenght == 1)
+                    {
+                        Control.Gravity = Android.Views.GravityFlags.Center;
+                    }
+                    else
+                    {
+                        Control.Gravity = Android.Views.GravityFlags.CenterVertical;
+                    }
+
+                    //Desable emoji
+                    var keyboard = e.NewElement?.Keyboard;
+                    if (keyboard != Keyboard.Numeric)
+                    {
+                        Control.ImeOptions = Android.Views.InputMethods.ImeAction.Done;
+                        Control.InputType = Android.Text.InputTypes.ClassText | Android.Text.InputTypes.TextVariationVisiblePassword | Android.Text.InputTypes.TextFlagMultiLine;
+                        Control.SetTypeface(Typeface.Default, TypefaceStyle.Normal);
+                    }
+
+                    var password = e.NewElement?.IsPassword;
+                    if (password != null && password == true)
+                    {
+                        Control.InputType = Android.Text.InputTypes.TextVariationPassword | Android.Text.InputTypes.ClassText;
+                        editText.InputType = Android.Text.InputTypes.TextVariationPassword | Android.Text.InputTypes.ClassText;
+                    }
                 }
             }
             catch (Exception ex)
@@ -108,6 +128,8 @@ namespace AptDealzBuyer.Droid.CustomRenderers
 
                 Control.SetPadding(0, 0, 0, 0);
                 Control.Gravity = Android.Views.GravityFlags.CenterVertical;
+
+
             }
             catch (Exception ex)
             {
@@ -124,7 +146,7 @@ namespace AptDealzBuyer.Droid.CustomRenderers
             {
                 base.OnElementChanged(e);
                 string fontFamily = e.NewElement?.FontFamily;
-                if (!string.IsNullOrEmpty(fontFamily))
+                if (!Common.EmptyFiels(fontFamily))
                 {
                     var label = (TextView)Control; // for example
                     Typeface font = Typeface.CreateFromAsset(Forms.Context.Assets, fontFamily + ".otf");
@@ -137,8 +159,15 @@ namespace AptDealzBuyer.Droid.CustomRenderers
                 gd.SetColor(Android.Graphics.Color.Transparent);
                 nativeedittextfield.Background = gd;
 
-                Control.SetPadding(0, 0, 0, 0);
-                Control.Gravity = Android.Views.GravityFlags.Start;
+                if (Control != null)
+                {
+                    Control.SetPadding(0, 0, 0, 0);
+                    Control.Gravity = Android.Views.GravityFlags.Start;
+
+                    Control.ImeOptions = Android.Views.InputMethods.ImeAction.Done;
+                    Control.InputType = Android.Text.InputTypes.ClassText | Android.Text.InputTypes.TextVariationVisiblePassword | Android.Text.InputTypes.TextFlagMultiLine;
+                    Control.SetTypeface(Typeface.Default, TypefaceStyle.Normal);
+                }
             }
             catch (Exception ex)
             {
@@ -219,9 +248,9 @@ namespace AptDealzBuyer.Droid.CustomRenderers
         }
     }
 
-    public class CustomeAutoSuggestBoxRenderer : AutoSuggestBoxRenderer
+    public class CustomSuggestBoxRenderer : AutoSuggestBoxRenderer
     {
-        public CustomeAutoSuggestBoxRenderer(Context context) : base(context)
+        public CustomSuggestBoxRenderer(Context context) : base(context)
         {
 
         }

@@ -3,6 +3,7 @@ using AptDealzBuyer.API;
 using AptDealzBuyer.Model.Reponse;
 using AptDealzBuyer.Repository;
 using AptDealzBuyer.Utility;
+using AptDealzBuyer.Views.OtherPages;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -27,6 +28,7 @@ namespace AptDealzBuyer.Views.DashboardPages
             try
             {
                 InitializeComponent();
+                mNotificationsList = new List<NotificationData>();
             }
             catch (Exception ex)
             {
@@ -104,6 +106,7 @@ namespace AptDealzBuyer.Views.DashboardPages
                         }
                         else
                         {
+                            lstNotification.ItemsSource = null;
                             lstNotification.IsVisible = false;
                             lblNoRecord.IsVisible = true;
                         }
@@ -111,6 +114,8 @@ namespace AptDealzBuyer.Views.DashboardPages
                 }
                 else
                 {
+                    lstNotification.ItemsSource = null;
+                    lstNotification.IsVisible = false;
                     lblNoRecord.IsVisible = true;
                     if (mResponse != null && !Common.EmptyFiels(mResponse.Message))
                         lblNoRecord.Text = mResponse.Message;
@@ -144,6 +149,23 @@ namespace AptDealzBuyer.Views.DashboardPages
                 Common.DisplayErrorMessage("NotificationPage/GetNotification: " + ex.Message);
             }
         }
+
+        private async Task SetUserNoficiationAsReadAndDelete(string NotificationId)
+        {
+            try
+            {
+                var isReded = await DependencyService.Get<INotificationRepository>().SetUserNoficiationAsReadAndDelete(NotificationId);
+                if (isReded)
+                {
+                    mNotificationsList.Clear();
+                    await GetNotification();
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("NotificationPage/SetUserNoficiationAsReadAndDelete: " + ex.Message);
+            }
+        }
         #endregion
 
         #region Events      
@@ -155,7 +177,7 @@ namespace AptDealzBuyer.Views.DashboardPages
 
         private void ImgQuestion_Tapped(object sender, EventArgs e)
         {
-
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_FAQHelp));
         }
 
         private void ImgBack_Tapped(object sender, EventArgs e)
@@ -174,8 +196,14 @@ namespace AptDealzBuyer.Views.DashboardPages
             try
             {
                 var ImageButtonExp = (ImageButton)sender;
-                var notificationData = ImageButtonExp.BindingContext as NotificationData;
-                await SetNoficiationAsRead(notificationData.NotificationId);
+                if (ImageButtonExp != null)
+                {
+                    var notificationData = ImageButtonExp.BindingContext as NotificationData;
+                    if (notificationData != null && !Common.EmptyFiels(notificationData.NotificationId))
+                    {
+                        await SetUserNoficiationAsReadAndDelete(notificationData.NotificationId);
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -208,21 +236,30 @@ namespace AptDealzBuyer.Views.DashboardPages
                 {
                     Tab.IsEnabled = false;
                     var mNotification = Tab.BindingContext as NotificationData;
-                    if (mNotification.NavigationScreen == (int)NavigationScreen.RequirementDetails)
+                    if (mNotification != null && !Common.EmptyFiels(mNotification.NotificationId))
                     {
-                        await Navigation.PushAsync(new DashboardPages.ViewRequirememntPage(mNotification.ParentKeyId));
-                    }
-                    else if (mNotification.NavigationScreen == (int)NavigationScreen.QuoteDetails)
-                    {
-                        await Navigation.PushAsync(new QuoteDetailsPage(mNotification.ParentKeyId));
-                    }
-                    else if (mNotification.NavigationScreen == (int)NavigationScreen.OrderDetails)
-                    {
-                        await Navigation.PushAsync(new Orders.OrderDetailsPage(mNotification.ParentKeyId));
-                    }
-                    else if (mNotification.NavigationScreen == (int)NavigationScreen.GrievanceDetails)
-                    {
-                        await Navigation.PushAsync(new GrievanceDetailsPage(mNotification.ParentKeyId));
+                        await SetNoficiationAsRead(mNotification.NotificationId);
+
+                        if (mNotification.NavigationScreen == (int)NavigationScreen.RequirementDetails)
+                        {
+                            await Navigation.PushAsync(new DashboardPages.ViewRequirememntPage(mNotification.ParentKeyId));
+                        }
+                        else if (mNotification.NavigationScreen == (int)NavigationScreen.QuoteDetails)
+                        {
+                            await Navigation.PushAsync(new QuoteDetailsPage(mNotification.ParentKeyId));
+                        }
+                        else if (mNotification.NavigationScreen == (int)NavigationScreen.OrderDetails)
+                        {
+                            await Navigation.PushAsync(new Orders.OrderDetailsPage(mNotification.ParentKeyId));
+                        }
+                        else if (mNotification.NavigationScreen == (int)NavigationScreen.GrievanceDetails)
+                        {
+                            await Navigation.PushAsync(new GrievanceDetailsPage(mNotification.ParentKeyId));
+                        }
+                        else if (mNotification.NavigationScreen == (int)NavigationScreen.SupportChatDetails)
+                        {
+                            await Navigation.PushAsync(new ContactSupportPage());
+                        }
                     }
                 }
                 catch (Exception ex)

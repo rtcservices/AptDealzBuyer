@@ -19,6 +19,10 @@ namespace AptDealzBuyer.Utility
         public static List<Country> mCountries { get; set; }
         public static string Token { get; set; }
         public static string NotificationCount { get; set; }
+        public static string PreviousNotificationCount { get; set; }
+        public static string TempNotificationCount { get; set; }
+        public static string SessionId { get; set; } = string.Empty;
+        public static int SessionTimeOut { get; set; } = 15;
         #endregion
 
         #region [ Regex Properties ]
@@ -247,6 +251,20 @@ namespace AptDealzBuyer.Utility
                 Common.DisplayErrorMessage("Common/CopyText: " + ex.Message);
             }
         }
+
+        public static void ClearAllData()
+        {
+            Settings.EmailAddress = string.Empty;
+            Settings.UserToken = string.Empty;
+            Settings.RefreshToken = string.Empty;
+            Settings.UserId = string.Empty;
+            Settings.LoginTrackingKey = string.Empty;
+            //Settings.fcm_token = string.Empty; don't empty this token
+
+            App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
+            if (App.stoppableTimer != null)
+                App.stoppableTimer.Stop();
+        }
         #endregion
     }
 
@@ -321,9 +339,12 @@ namespace AptDealzBuyer.Utility
 
     public enum GrievancesType
     {
-        OrderRelated,
-        DelayedDelivery,
-        PaymentRelated
+        Order_Related,
+        Delayed_Delivery,
+        Payment_Related,
+        Manufacture_Defect,
+        Incomplete_Product_Delivery,
+        Wrong_Order
     }
 
     public enum GrievancesFrom
@@ -340,6 +361,7 @@ namespace AptDealzBuyer.Utility
         QuoteDetails,
         OrderDetails,
         GrievanceDetails,
+        SupportChatDetails
     }
 
     #endregion

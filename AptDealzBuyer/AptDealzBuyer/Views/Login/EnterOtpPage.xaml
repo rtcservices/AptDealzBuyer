@@ -80,7 +80,7 @@
                         <ext:ExtEntry
                             x:Name="TxtOtpOne"
                             FontFamily="Poppins"
-                            FontSize="15"
+                            FontSize="{StaticResource Font15}"
                             HorizontalOptions="FillAndExpand"
                             HorizontalTextAlignment="Center"
                             Keyboard="Numeric"
@@ -104,7 +104,7 @@
                         <ext:ExtEntry
                             x:Name="TxtOtpTwo"
                             FontFamily="Poppins"
-                            FontSize="15"
+                            FontSize="{StaticResource Font15}"
                             HorizontalOptions="FillAndExpand"
                             HorizontalTextAlignment="Center"
                             Keyboard="Numeric"
@@ -128,7 +128,7 @@
                         <ext:ExtEntry
                             x:Name="TxtOtpThree"
                             FontFamily="Poppins"
-                            FontSize="15"
+                            FontSize="{StaticResource Font15}"
                             HorizontalOptions="FillAndExpand"
                             HorizontalTextAlignment="Center"
                             Keyboard="Numeric"
@@ -152,7 +152,7 @@
                         <ext:ExtEntry
                             x:Name="TxtOtpFour"
                             FontFamily="Poppins"
-                            FontSize="15"
+                            FontSize="{StaticResource Font15}"
                             HorizontalOptions="FillAndExpand"
                             HorizontalTextAlignment="Center"
                             Keyboard="Numeric"
@@ -176,7 +176,7 @@
                         <ext:ExtEntry
                             x:Name="TxtOtpFive"
                             FontFamily="Poppins"
-                            FontSize="15"
+                            FontSize="{StaticResource Font15}"
                             HorizontalOptions="FillAndExpand"
                             HorizontalTextAlignment="Center"
                             Keyboard="Numeric"
@@ -202,7 +202,7 @@
                         <ext:ExtEntry
                             x:Name="TxtOtpSix"
                             FontFamily="Poppins"
-                            FontSize="15"
+                            FontSize="{StaticResource Font15}"
                             HorizontalOptions="FillAndExpand"
                             HorizontalTextAlignment="Center"
                             Keyboard="Numeric"

@@ -34,44 +34,7 @@ namespace AptDealzBuyer.API
                             url += "&IsAscending=" + IsAscending.Value;
 
                         var response = await hcf.GetAsync(url);
-                        var responseJson = await response.Content.ReadAsStringAsync();
-                        if (response.IsSuccessStatusCode)
-                        {
-                            mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
-                        {
-                            var errorString = JsonConvert.DeserializeObject<string>(responseJson);
-                            if (errorString == Constraints.Session_Expired)
-                            {
-                                Common.DisplayErrorMessage(Constraints.Session_Expired);
-                                App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                            }
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
-                        {
-                            Common.DisplayErrorMessage(Constraints.ServiceUnavailable);
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
-                        {
-                            Common.DisplayErrorMessage(Constraints.Something_Wrong_Server);
-                        }
-                        else
-                        {
-                            if (responseJson.Contains(Constraints.Str_TokenExpired) || response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                            {
-                                var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
-                                if (!isRefresh)
-                                {
-                                    Common.DisplayErrorMessage(Constraints.Session_Expired);
-                                    App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                                }
-                            }
-                            else
-                            {
-                                mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
-                            }
-                        }
+                        mResponse = await DependencyService.Get<IAuthenticationRepository>().APIResponse(response);
                     }
                 }
                 else
@@ -84,6 +47,8 @@ namespace AptDealzBuyer.API
             }
             catch (Exception ex)
             {
+                mResponse.Succeeded = false;
+                mResponse.Message = ex.Message;
                 Common.DisplayErrorMessage("OrderAPI/GetOrdersForBuyer: " + ex.Message);
             }
             return mResponse;
@@ -100,44 +65,7 @@ namespace AptDealzBuyer.API
                     {
                         string url = string.Format(EndPointURL.GetOrderDetailsForBuyer, (int)App.Current.Resources["Version"], orderId);
                         var response = await hcf.GetAsync(url);
-                        var responseJson = await response.Content.ReadAsStringAsync();
-                        if (response.IsSuccessStatusCode)
-                        {
-                            mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
-                        {
-                            var errorString = JsonConvert.DeserializeObject<string>(responseJson);
-                            if (errorString == Constraints.Session_Expired)
-                            {
-                                Common.DisplayErrorMessage(Constraints.Session_Expired);
-                                App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                            }
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
-                        {
-                            Common.DisplayErrorMessage(Constraints.ServiceUnavailable);
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
-                        {
-                            Common.DisplayErrorMessage(Constraints.Something_Wrong_Server);
-                        }
-                        else
-                        {
-                            if (responseJson.Contains(Constraints.Str_TokenExpired) || response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                            {
-                                var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
-                                if (!isRefresh)
-                                {
-                                    Common.DisplayErrorMessage(Constraints.Session_Expired);
-                                    App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                                }
-                            }
-                            else
-                            {
-                                mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
-                            }
-                        }
+                        mResponse = await DependencyService.Get<IAuthenticationRepository>().APIResponse(response);
                     }
                 }
                 else
@@ -150,6 +78,8 @@ namespace AptDealzBuyer.API
             }
             catch (Exception ex)
             {
+                mResponse.Succeeded = false;
+                mResponse.Message = ex.Message;
                 Common.DisplayErrorMessage("OrderAPI/GetOrderDetailsForBuyer: " + ex.Message);
             }
             return mResponse;
@@ -174,44 +104,7 @@ namespace AptDealzBuyer.API
                             url += "&IsAscending=" + IsAscending.Value;
 
                         var response = await hcf.GetAsync(url);
-                        var responseJson = await response.Content.ReadAsStringAsync();
-                        if (response.IsSuccessStatusCode)
-                        {
-                            mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
-                        {
-                            var errorString = JsonConvert.DeserializeObject<string>(responseJson);
-                            if (errorString == Constraints.Session_Expired)
-                            {
-                                Common.DisplayErrorMessage(Constraints.Session_Expired);
-                                App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                            }
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
-                        {
-                            Common.DisplayErrorMessage(Constraints.ServiceUnavailable);
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
-                        {
-                            Common.DisplayErrorMessage(Constraints.Something_Wrong_Server);
-                        }
-                        else
-                        {
-                            if (responseJson.Contains(Constraints.Str_TokenExpired) || response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                            {
-                                var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
-                                if (!isRefresh)
-                                {
-                                    Common.DisplayErrorMessage(Constraints.Session_Expired);
-                                    App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                                }
-                            }
-                            else
-                            {
-                                mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
-                            }
-                        }
+                        mResponse = await DependencyService.Get<IAuthenticationRepository>().APIResponse(response);
                     }
                 }
                 else
@@ -224,6 +117,8 @@ namespace AptDealzBuyer.API
             }
             catch (Exception ex)
             {
+                mResponse.Succeeded = false;
+                mResponse.Message = ex.Message;
                 Common.DisplayErrorMessage("OrderAPI/GetShippedOrdersForBuyer: " + ex.Message);
             }
             return mResponse;
@@ -239,35 +134,19 @@ namespace AptDealzBuyer.API
                     using (var hcf = new HttpClientFactory(token: Common.Token))
                     {
                         string url = "https://aptdealzapidev.azurewebsites.net/api/v1/Order/GenerateQRCodeImageForBuyerApp/" + orderId;
+                        //string url = string.Format(EndPointURL.GenerateQRCodeImageForBuyerApp, (int)App.Current.Resources["Version"], orderId);
                         var response = await hcf.client.GetAsync(url);
-                        var contentStream = await response.Content.ReadAsStreamAsync();
+                        mResponse = await DependencyService.Get<IAuthenticationRepository>().APIResponse(response);
                         if (response.IsSuccessStatusCode)
                         {
-                            mResponse.Succeeded = true;
-                            byte[] buffer = ImageConvertion.streamToByteArray(contentStream);
-                            contentStream.Read(buffer, 0, (int)contentStream.Length);
-                            mResponse.Data = Convert.ToBase64String(buffer);
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
-                        {
-                            var errorString = JsonConvert.DeserializeObject<string>("");
-                            if (errorString == Constraints.Session_Expired)
+                            if (mResponse != null && mResponse.Succeeded)
                             {
-                                Common.DisplayErrorMessage(Constraints.Session_Expired);
-                                App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
+                                var contentStream = await response.Content.ReadAsStreamAsync();
+                                mResponse.Succeeded = true;
+                                byte[] buffer = ImageConvertion.streamToByteArray(contentStream);
+                                contentStream.Read(buffer, 0, (int)contentStream.Length);
+                                mResponse.Data = Convert.ToBase64String(buffer);
                             }
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
-                        {
-                            Common.DisplayErrorMessage(Constraints.ServiceUnavailable);
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
-                        {
-                            Common.DisplayErrorMessage(Constraints.Something_Wrong_Server);
-                        }
-                        else
-                        {
-                            mResponse = null;
                         }
                     }
                 }
@@ -281,6 +160,8 @@ namespace AptDealzBuyer.API
             }
             catch (Exception ex)
             {
+                mResponse.Succeeded = false;
+                mResponse.Message = ex.Message;
                 Common.DisplayErrorMessage("OrderAPI/GenerateQRCodeImageForBuyerApp: " + ex.Message);
             }
             return mResponse;
@@ -300,50 +181,7 @@ namespace AptDealzBuyer.API
                     {
                         string url = string.Format(EndPointURL.CreateOrder, (int)App.Current.Resources["Version"]);
                         var response = await hcf.PostAsync(url, requestJson);
-                        var responseJson = await response.Content.ReadAsStringAsync();
-                        if (response.IsSuccessStatusCode)
-                        {
-                            mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
-                        {
-                            var errorString = JsonConvert.DeserializeObject<string>(responseJson);
-                            if (errorString == Constraints.Session_Expired)
-                            {
-                                App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                            }
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
-                        {
-                            Common.DisplayErrorMessage(Constraints.ServiceUnavailable);
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
-                        {
-                            if (responseJson.Contains("duplicate"))
-                            {
-                                mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
-                            }
-                            else
-                            {
-                                Common.DisplayErrorMessage(Constraints.Something_Wrong_Server);
-                            }
-                        }
-                        else
-                        {
-                            if (responseJson.Contains(Constraints.Str_TokenExpired) || response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                            {
-                                var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
-                                if (!isRefresh)
-                                {
-                                    Common.DisplayErrorMessage(Constraints.Session_Expired);
-                                    App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                                }
-                            }
-                            else
-                            {
-                                mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
-                            }
-                        }
+                        mResponse = await DependencyService.Get<IAuthenticationRepository>().APIResponse(response);
                     }
                 }
                 else
@@ -357,7 +195,7 @@ namespace AptDealzBuyer.API
             catch (Exception ex)
             {
                 mResponse.Succeeded = false;
-                mResponse.Errors = ex.Message;
+                mResponse.Message = ex.Message;
                 Common.DisplayErrorMessage("OrderAPI/CreateOrder: " + ex.Message);
             }
             return mResponse;
@@ -375,43 +213,7 @@ namespace AptDealzBuyer.API
                     {
                         string url = string.Format(EndPointURL.OrderPayment, (int)App.Current.Resources["Version"]);
                         var response = await hcf.PostAsync(url, requestJson);
-                        var responseJson = await response.Content.ReadAsStringAsync();
-                        if (response.IsSuccessStatusCode)
-                        {
-                            mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
-                        {
-                            var errorString = JsonConvert.DeserializeObject<string>(responseJson);
-                            if (errorString == Constraints.Session_Expired)
-                            {
-                                App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                            }
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
-                        {
-                            Common.DisplayErrorMessage(Constraints.ServiceUnavailable);
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
-                        {
-                            Common.DisplayErrorMessage(Constraints.Something_Wrong_Server);
-                        }
-                        else
-                        {
-                            if (responseJson.Contains(Constraints.Str_TokenExpired) || response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                            {
-                                var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
-                                if (!isRefresh)
-                                {
-                                    Common.DisplayErrorMessage(Constraints.Session_Expired);
-                                    App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                                }
-                            }
-                            else
-                            {
-                                mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
-                            }
-                        }
+                        mResponse = await DependencyService.Get<IAuthenticationRepository>().APIResponse(response);
                     }
                 }
                 else
@@ -425,11 +227,13 @@ namespace AptDealzBuyer.API
             catch (Exception ex)
             {
                 mResponse.Succeeded = false;
-                mResponse.Errors = ex.Message;
+                mResponse.Message = ex.Message;
                 Common.DisplayErrorMessage("OrderAPI/CreateOrderPayment: " + ex.Message);
             }
             return mResponse;
         }
+
+
         #endregion
 
         #region [ PUT ]
@@ -445,43 +249,7 @@ namespace AptDealzBuyer.API
                     {
                         string url = string.Format(EndPointURL.CancelOrder, (int)App.Current.Resources["Version"], orderId);
                         var response = await hcf.PutAsync(url, requestJson);
-                        var responseJson = await response.Content.ReadAsStringAsync();
-                        if (response.IsSuccessStatusCode)
-                        {
-                            mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
-                        {
-                            var errorString = JsonConvert.DeserializeObject<string>(responseJson);
-                            if (errorString == Constraints.Session_Expired)
-                            {
-                                App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                            }
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
-                        {
-                            Common.DisplayErrorMessage(Constraints.ServiceUnavailable);
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
-                        {
-                            Common.DisplayErrorMessage(Constraints.Something_Wrong_Server);
-                        }
-                        else
-                        {
-                            if (responseJson.Contains(Constraints.Str_TokenExpired) || response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                            {
-                                var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
-                                if (!isRefresh)
-                                {
-                                    Common.DisplayErrorMessage(Constraints.Session_Expired);
-                                    App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                                }
-                            }
-                            else
-                            {
-                                mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
-                            }
-                        }
+                        mResponse = await DependencyService.Get<IAuthenticationRepository>().APIResponse(response);
                     }
                 }
                 else
@@ -495,7 +263,7 @@ namespace AptDealzBuyer.API
             catch (Exception ex)
             {
                 mResponse.Succeeded = false;
-                mResponse.Errors = ex.Message;
+                mResponse.Message = ex.Message;
                 Common.DisplayErrorMessage("OrderAPI/CancelOrder: " + ex.Message);
             }
             return mResponse;
@@ -513,43 +281,7 @@ namespace AptDealzBuyer.API
                     {
                         string url = string.Format(EndPointURL.ConfirmDeliveryFromBuyer, (int)App.Current.Resources["Version"], orderId);
                         var response = await hcf.PutAsync(url, requestJson);
-                        var responseJson = await response.Content.ReadAsStringAsync();
-                        if (response.IsSuccessStatusCode)
-                        {
-                            mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
-                        {
-                            var errorString = JsonConvert.DeserializeObject<string>(responseJson);
-                            if (errorString == Constraints.Session_Expired)
-                            {
-                                App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                            }
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
-                        {
-                            Common.DisplayErrorMessage(Constraints.ServiceUnavailable);
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
-                        {
-                            Common.DisplayErrorMessage(Constraints.Something_Wrong_Server);
-                        }
-                        else
-                        {
-                            if (responseJson.Contains(Constraints.Str_TokenExpired) || response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                            {
-                                var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
-                                if (!isRefresh)
-                                {
-                                    Common.DisplayErrorMessage(Constraints.Session_Expired);
-                                    App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                                }
-                            }
-                            else
-                            {
-                                mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
-                            }
-                        }
+                        mResponse = await DependencyService.Get<IAuthenticationRepository>().APIResponse(response);
                     }
                 }
                 else
@@ -563,7 +295,7 @@ namespace AptDealzBuyer.API
             catch (Exception ex)
             {
                 mResponse.Succeeded = false;
-                mResponse.Errors = ex.Message;
+                mResponse.Message = ex.Message;
                 Common.DisplayErrorMessage("OrderAPI/ConfirmDeliveryFromBuyer: " + ex.Message);
             }
             return mResponse;

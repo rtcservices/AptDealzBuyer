@@ -35,7 +35,7 @@
                 VerticalOptions="CenterAndExpand">
                 <Label
                     x:Name="lblFirstType"
-                    FontSize="15"
+                    FontSize="{StaticResource Font15}"
                     Style="{StaticResource lblLight}" />
                 <Image
                     x:Name="imgFirstType"
@@ -60,7 +60,7 @@
                 VerticalOptions="CenterAndExpand">
                 <Label
                     x:Name="lblSecondType"
-                    FontSize="15"
+                    FontSize="{StaticResource Font15}"
                     Style="{StaticResource lblLight}" />
                 <Image
                     x:Name="imgSecondType"
@@ -84,7 +84,7 @@
                 VerticalOptions="CenterAndExpand">
                 <Label
                     x:Name="lblThirdType"
-                    FontSize="15"
+                    FontSize="{StaticResource Font15}"
                     Style="{StaticResource lblLight}" />
                 <Image
                     x:Name="imgThirdType"
@@ -109,7 +109,7 @@
                 VerticalOptions="CenterAndExpand">
                 <Label
                     x:Name="lblFourType"
-                    FontSize="15"
+                    FontSize="{StaticResource Font15}"
                     Style="{StaticResource lblLight}" />
                 <Image
                     x:Name="imgFourType"

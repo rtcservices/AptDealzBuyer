@@ -3,6 +3,8 @@
     x:Class="AptDealzBuyer.Views.SplashScreen.WelcomePage"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:ffImage="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+    xmlns:ffTransformer="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
     xmlns:iOS="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
     Title="Onboarding"
     Padding="{OnPlatform Android=0,
@@ -11,6 +13,8 @@
     iOS:Page.UseSafeArea="False"
     BackgroundColor="{StaticResource appColor6}"
     NavigationPage.HasNavigationBar="False">
+
+
     <ContentPage.Content>
 
         <Grid RowSpacing="20">
@@ -23,7 +27,6 @@
             <Grid Grid.Row="0" RowSpacing="20">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
-                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
@@ -40,39 +43,32 @@
                                               iOS=420}">
                     <CarouselView.ItemTemplate>
                         <DataTemplate>
-                            <StackLayout Margin="0" Padding="0">
-                                <Image
+                            <Grid
+                                Margin="0"
+                                Padding="0"
+                                RowDefinitions="*, Auto">
+
+                                <ffImage:CachedImage
+                                    Margin="0"
                                     Aspect="AspectFit"
-                                    HorizontalOptions="FillAndExpand"
-                                    Source="{Binding ImageName}"
+                                    ErrorPlaceholder="imgUploadImage.png"
+                                    LoadingPlaceholder="imgUploadImage.png"
+                                    Source="{Binding ImageUrl}"
                                     VerticalOptions="FillAndExpand" />
-                            </StackLayout>
+
+                                <Label
+                                    Grid.Row="1"
+                                    HorizontalTextAlignment="Center"
+                                    Style="{StaticResource lblLight}"
+                                    Text="{Binding Text}" />
+                            </Grid>
                         </DataTemplate>
                     </CarouselView.ItemTemplate>
                 </CarouselView>
 
-                <StackLayout
-                    Grid.Row="1"
-                    Margin="20,0"
-                    HorizontalOptions="CenterAndExpand"
-                    Spacing="10"
-                    VerticalOptions="CenterAndExpand">
-                    <Label
-                        FontSize="21"
-                        HorizontalTextAlignment="Center"
-                        Style="{StaticResource lblBoldHeader}"
-                        Text="What is Lorem Ipsum" />
-
-                    <Label
-                        FontSize="15"
-                        HorizontalTextAlignment="Center"
-                        Style="{StaticResource lblLight}"
-                        Text="Lorem Ipsum is simply dummy text of the printing and typesetting industry." />
-                </StackLayout>
-
                 <IndicatorView
                     x:Name="Indicators"
-                    Grid.Row="2"
+                    Grid.Row="1"
                     Margin="{OnPlatform Android='0',
                                         iOS='20'}"
                     HeightRequest="30"
@@ -83,6 +79,15 @@
                     VerticalOptions="CenterAndExpand"
                     WidthRequest="30" />
             </Grid>
+
+            <Label
+                x:Name="lblNoRecord"
+                Grid.Row="0"
+                FontSize="{StaticResource Font15}"
+                HorizontalOptions="CenterAndExpand"
+                IsVisible="false"
+                Style="{StaticResource lblMedium}"
+                Text="No App Promo found" />
 
             <Button
                 x:Name="BtnLogin"

@@ -33,16 +33,18 @@ namespace AptDealzBuyer.API
                             var errorString = JsonConvert.DeserializeObject<string>(responseJson);
                             if (errorString == Constraints.Session_Expired)
                             {
-                                App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
+                                mCategory = null;
+                                MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount);
+                                Common.ClearAllData();
                             }
                         }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
+                        else if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable
+                                || response.StatusCode == System.Net.HttpStatusCode.InternalServerError
+                                || responseJson.Contains(Constraints.Str_AccountDeactivated) && response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                         {
-                            Common.DisplayErrorMessage(Constraints.ServiceUnavailable);
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
-                        {
-                            Common.DisplayErrorMessage(Constraints.Something_Wrong_Server);
+                            mCategory = null;
+                            MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount);
+                            Common.ClearAllData();
                         }
                         else
                         {
@@ -60,6 +62,7 @@ namespace AptDealzBuyer.API
             }
             catch (Exception ex)
             {
+                mCategory = null;
                 Common.DisplayErrorMessage("CategoryAPI/GetCategory: " + ex.Message);
             }
             return mCategory;
@@ -86,16 +89,18 @@ namespace AptDealzBuyer.API
                             var errorString = JsonConvert.DeserializeObject<string>(responseJson);
                             if (errorString == Constraints.Session_Expired)
                             {
-                                App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
+                                mSubCategory = null;
+                                MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount);
+                                Common.ClearAllData();
                             }
                         }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
+                        else if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable
+                                || response.StatusCode == System.Net.HttpStatusCode.InternalServerError
+                                || responseJson.Contains(Constraints.Str_AccountDeactivated) && response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                         {
-                            Common.DisplayErrorMessage(Constraints.ServiceUnavailable);
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
-                        {
-                            Common.DisplayErrorMessage(Constraints.Something_Wrong_Server);
+                            mSubCategory = null;
+                            MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount);
+                            Common.ClearAllData();
                         }
                         else
                         {
@@ -113,6 +118,7 @@ namespace AptDealzBuyer.API
             }
             catch (Exception ex)
             {
+                mSubCategory = null;
                 Common.DisplayErrorMessage("CategoryAPI/GetSubCategory: " + ex.Message);
             }
             return mSubCategory;

@@ -168,7 +168,7 @@ namespace AptDealzBuyer.Views.DashboardPages
 
         private void ImgQuestion_Tapped(object sender, EventArgs e)
         {
-
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_FAQHelp));
         }
 
         private async void ImgBack_Tapped(object sender, EventArgs e)
@@ -295,7 +295,7 @@ namespace AptDealzBuyer.Views.DashboardPages
             }
             catch (Exception ex)
             {
-                Common.DisplayErrorMessage("GrievancesPage/CustomEntry_Unfocused: " + ex.Message);
+                Common.DisplayErrorMessage("GrievancesPage/entrSearch_TextChanged: " + ex.Message);
             }
 
         }

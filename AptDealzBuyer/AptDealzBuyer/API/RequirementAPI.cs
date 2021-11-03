@@ -23,44 +23,7 @@ namespace AptDealzBuyer.API
                     {
                         string url = string.Format(EndPointURL.GetRequirementById, (int)App.Current.Resources["Version"], RequirmentId);
                         var response = await hcf.GetAsync(url);
-                        var responseJson = await response.Content.ReadAsStringAsync();
-                        if (response.IsSuccessStatusCode)
-                        {
-                            mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
-                        {
-                            var errorString = JsonConvert.DeserializeObject<string>(responseJson);
-                            if (errorString == Constraints.Session_Expired)
-                            {
-                                Common.DisplayErrorMessage(Constraints.Session_Expired);
-                                App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                            }
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
-                        {
-                            Common.DisplayErrorMessage(Constraints.ServiceUnavailable);
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
-                        {
-                            Common.DisplayErrorMessage(Constraints.Something_Wrong_Server);
-                        }
-                        else
-                        {
-                            if (responseJson.Contains(Constraints.Str_TokenExpired) || response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                            {
-                                var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
-                                if (!isRefresh)
-                                {
-                                    Common.DisplayErrorMessage(Constraints.Session_Expired);
-                                    App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                                }
-                            }
-                            else
-                            {
-                                mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
-                            }
-                        }
+                        mResponse = await DependencyService.Get<IAuthenticationRepository>().APIResponse(response);
                     }
                 }
                 else
@@ -73,6 +36,8 @@ namespace AptDealzBuyer.API
             }
             catch (Exception ex)
             {
+                mResponse.Succeeded = false;
+                mResponse.Message = ex.Message;
                 Common.DisplayErrorMessage("RequirementAPI/GetRequirementById: " + ex.Message);
             }
             return mResponse;
@@ -97,44 +62,7 @@ namespace AptDealzBuyer.API
                             url += "&IsAscending=" + IsAscending.Value;
 
                         var response = await hcf.GetAsync(url);
-                        var responseJson = await response.Content.ReadAsStringAsync();
-                        if (response.IsSuccessStatusCode)
-                        {
-                            mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
-                        {
-                            var errorString = JsonConvert.DeserializeObject<string>(responseJson);
-                            if (errorString == Constraints.Session_Expired)
-                            {
-                                Common.DisplayErrorMessage(Constraints.Session_Expired);
-                                App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                            }
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
-                        {
-                            Common.DisplayErrorMessage(Constraints.ServiceUnavailable);
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
-                        {
-                            Common.DisplayErrorMessage(Constraints.Something_Wrong_Server);
-                        }
-                        else
-                        {
-                            if (responseJson.Contains(Constraints.Str_TokenExpired) || response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                            {
-                                var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
-                                if (!isRefresh)
-                                {
-                                    Common.DisplayErrorMessage(Constraints.Session_Expired);
-                                    App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                                }
-                            }
-                            else
-                            {
-                                mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
-                            }
-                        }
+                        mResponse = await DependencyService.Get<IAuthenticationRepository>().APIResponse(response);
                     }
                 }
                 else
@@ -147,6 +75,8 @@ namespace AptDealzBuyer.API
             }
             catch (Exception ex)
             {
+                mResponse.Succeeded = false;
+                mResponse.Message = ex.Message;
                 Common.DisplayErrorMessage("RequirementAPI/GetActiveRequirements: " + ex.Message);
             }
             return mResponse;
@@ -171,44 +101,7 @@ namespace AptDealzBuyer.API
                             url += "&IsAscending=" + IsAscending.Value;
 
                         var response = await hcf.GetAsync(url);
-                        var responseJson = await response.Content.ReadAsStringAsync();
-                        if (response.IsSuccessStatusCode)
-                        {
-                            mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
-                        {
-                            var errorString = JsonConvert.DeserializeObject<string>(responseJson);
-                            if (errorString == Constraints.Session_Expired)
-                            {
-                                Common.DisplayErrorMessage(Constraints.Session_Expired);
-                                App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                            }
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
-                        {
-                            Common.DisplayErrorMessage(Constraints.ServiceUnavailable);
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
-                        {
-                            Common.DisplayErrorMessage(Constraints.Something_Wrong_Server);
-                        }
-                        else
-                        {
-                            if (responseJson.Contains(Constraints.Str_TokenExpired) || response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                            {
-                                var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
-                                if (!isRefresh)
-                                {
-                                    Common.DisplayErrorMessage(Constraints.Session_Expired);
-                                    App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                                }
-                            }
-                            else
-                            {
-                                mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
-                            }
-                        }
+                        mResponse = await DependencyService.Get<IAuthenticationRepository>().APIResponse(response);
                     }
                 }
                 else
@@ -221,6 +114,8 @@ namespace AptDealzBuyer.API
             }
             catch (Exception ex)
             {
+                mResponse.Succeeded = false;
+                mResponse.Message = ex.Message;
                 Common.DisplayErrorMessage("RequirementAPI/GetPreviousRequirements: " + ex.Message);
             }
             return mResponse;
@@ -240,43 +135,7 @@ namespace AptDealzBuyer.API
                     {
                         string url = string.Format(EndPointURL.CreateRequirement, (int)App.Current.Resources["Version"]);
                         var response = await hcf.PostAsync(url, requestJson);
-                        var responseJson = await response.Content.ReadAsStringAsync();
-                        if (response.IsSuccessStatusCode)
-                        {
-                            mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
-                        {
-                            var errorString = JsonConvert.DeserializeObject<string>(responseJson);
-                            if (errorString == Constraints.Session_Expired)
-                            {
-                                App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                            }
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
-                        {
-                            Common.DisplayErrorMessage(Constraints.ServiceUnavailable);
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
-                        {
-                            Common.DisplayErrorMessage(Constraints.Something_Wrong_Server);
-                        }
-                        else
-                        {
-                            if (responseJson.Contains(Constraints.Str_TokenExpired) || response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                            {
-                                var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
-                                if (!isRefresh)
-                                {
-                                    Common.DisplayErrorMessage(Constraints.Session_Expired);
-                                    App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                                }
-                            }
-                            else
-                            {
-                                mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
-                            }
-                        }
+                        mResponse = await DependencyService.Get<IAuthenticationRepository>().APIResponse(response);
                     }
                 }
                 else
@@ -290,7 +149,7 @@ namespace AptDealzBuyer.API
             catch (Exception ex)
             {
                 mResponse.Succeeded = false;
-                mResponse.Errors = ex.Message;
+                mResponse.Message = ex.Message;
                 Common.DisplayErrorMessage("RequirementAPI/CreateRequirement: " + ex.Message);
             }
             return mResponse;
@@ -308,43 +167,7 @@ namespace AptDealzBuyer.API
                     {
                         string url = string.Format(EndPointURL.CancelRequirement, (int)App.Current.Resources["Version"], requirementId);
                         var response = await hcf.PostAsync(url, requestJson);
-                        var responseJson = await response.Content.ReadAsStringAsync();
-                        if (response.IsSuccessStatusCode)
-                        {
-                            mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
-                        {
-                            var errorString = JsonConvert.DeserializeObject<string>(responseJson);
-                            if (errorString == Constraints.Session_Expired)
-                            {
-                                App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                            }
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
-                        {
-                            Common.DisplayErrorMessage(Constraints.ServiceUnavailable);
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
-                        {
-                            Common.DisplayErrorMessage(Constraints.Something_Wrong_Server);
-                        }
-                        else
-                        {
-                            if (responseJson.Contains(Constraints.Str_TokenExpired) || response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                            {
-                                var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
-                                if (!isRefresh)
-                                {
-                                    Common.DisplayErrorMessage(Constraints.Session_Expired);
-                                    App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                                }
-                            }
-                            else
-                            {
-                                mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
-                            }
-                        }
+                        mResponse = await DependencyService.Get<IAuthenticationRepository>().APIResponse(response);
                     }
                 }
                 else
@@ -358,11 +181,47 @@ namespace AptDealzBuyer.API
             catch (Exception ex)
             {
                 mResponse.Succeeded = false;
-                mResponse.Errors = ex.Message;
+                mResponse.Message = ex.Message;
                 Common.DisplayErrorMessage("RequirementAPI/CancelRequirement: " + ex.Message);
             }
             return mResponse;
         }
+
+        public async Task<Response> GetAmountToBePaidToRevealBuyerContact(string requirementId)
+        {
+            Response mResponse = new Response();
+            try
+            {
+                if (CrossConnectivity.Current.IsConnected)
+                {
+                    string requestJson = "{\"requirementId\":\"" + requirementId + "\"}";
+                    using (var hcf = new HttpClientFactory(token: Common.Token))
+                    {
+                        //string url = string.Format(EndPointURL.GetAmountToBePaidToRevealBuyerContact, (int)App.Current.Resources["Version"]);
+
+                        string url = "https://aptdealzapidev.azurewebsites.net/api/v1/Requirement/GetAmountToBePaidToRevealBuyerContact";
+                        var response = await hcf.PostAsync(url, requestJson);
+                        mResponse = await DependencyService.Get<IAuthenticationRepository>().APIResponse(response);
+                    }
+                }
+                else
+                {
+                    if (await Common.InternetConnection())
+                    {
+                        await GetAmountToBePaidToRevealBuyerContact(requirementId);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                mResponse.Succeeded = false;
+                mResponse.Message = ex.Message;
+                Common.DisplayErrorMessage("RequirementAPI/CancelRequirement: " + ex.Message);
+            }
+            return mResponse;
+        }
+
+
         #endregion
 
         #region [ DELETE ]
@@ -378,43 +237,7 @@ namespace AptDealzBuyer.API
                     {
                         string url = string.Format(EndPointURL.DeleteRequirement, (int)App.Current.Resources["Version"], id);
                         var response = await hcf.DeleteAsync(url);
-                        var responseJson = await response.Content.ReadAsStringAsync();
-                        if (response.IsSuccessStatusCode)
-                        {
-                            mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
-                        {
-                            var errorString = JsonConvert.DeserializeObject<string>(responseJson);
-                            if (errorString == Constraints.Session_Expired)
-                            {
-                                App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                            }
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
-                        {
-                            Common.DisplayErrorMessage(Constraints.ServiceUnavailable);
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
-                        {
-                            Common.DisplayErrorMessage(Constraints.Something_Wrong_Server);
-                        }
-                        else
-                        {
-                            if (responseJson.Contains(Constraints.Str_TokenExpired) || response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                            {
-                                var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
-                                if (!isRefresh)
-                                {
-                                    Common.DisplayErrorMessage(Constraints.Session_Expired);
-                                    App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                                }
-                            }
-                            else
-                            {
-                                mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
-                            }
-                        }
+                        mResponse = await DependencyService.Get<IAuthenticationRepository>().APIResponse(response);
                     }
                 }
                 else
@@ -428,7 +251,7 @@ namespace AptDealzBuyer.API
             catch (Exception ex)
             {
                 mResponse.Succeeded = false;
-                mResponse.Errors = ex.Message;
+                mResponse.Message = ex.Message;
                 Common.DisplayErrorMessage("RequirementAPI/DeleteRequirement: " + ex.Message);
             }
             return mResponse;
@@ -448,43 +271,7 @@ namespace AptDealzBuyer.API
                     {
                         string url = string.Format(EndPointURL.UpdateStatusRequirement, (int)App.Current.Resources["Version"]);
                         var response = await hcf.PutAsync(url, requestJson);
-                        var responseJson = await response.Content.ReadAsStringAsync();
-                        if (response.IsSuccessStatusCode)
-                        {
-                            mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
-                        {
-                            var errorString = JsonConvert.DeserializeObject<string>(responseJson);
-                            if (errorString == Constraints.Session_Expired)
-                            {
-                                App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                            }
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
-                        {
-                            Common.DisplayErrorMessage(Constraints.ServiceUnavailable);
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
-                        {
-                            Common.DisplayErrorMessage(Constraints.Something_Wrong_Server);
-                        }
-                        else
-                        {
-                            if (responseJson.Contains(Constraints.Str_TokenExpired) || response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                            {
-                                var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
-                                if (!isRefresh)
-                                {
-                                    Common.DisplayErrorMessage(Constraints.Session_Expired);
-                                    App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                                }
-                            }
-                            else
-                            {
-                                mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
-                            }
-                        }
+                        mResponse = await DependencyService.Get<IAuthenticationRepository>().APIResponse(response);
                     }
                 }
                 else
@@ -498,7 +285,7 @@ namespace AptDealzBuyer.API
             catch (Exception ex)
             {
                 mResponse.Succeeded = false;
-                mResponse.Errors = ex.Message;
+                mResponse.Message = ex.Message;
                 Common.DisplayErrorMessage("RequirementAPI/UpdateStatusRequirement: " + ex.Message);
             }
             return mResponse;

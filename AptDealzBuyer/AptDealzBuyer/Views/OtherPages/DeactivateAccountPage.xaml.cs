@@ -1,6 +1,7 @@
 ﻿using AptDealzBuyer.Repository;
 using AptDealzBuyer.Utility;
 using System;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -13,7 +14,9 @@ namespace AptDealzBuyer.Views.OtherPages
         public DeactivateAccountPage()
         {
             InitializeComponent();
-            txtReason.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
+
+            if (DeviceInfo.Platform == DevicePlatform.Android)
+                txtReason.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
 
             MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount); MessagingCenter.Subscribe<string>(this, Constraints.Str_NotificationCount, (count) =>
             {
@@ -75,7 +78,7 @@ namespace AptDealzBuyer.Views.OtherPages
 
         private void ImgQuestion_Tapped(object sender, EventArgs e)
         {
-
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_FAQHelp));
         }
 
         private async void ImgBack_Tapped(object sender, EventArgs e)
@@ -93,7 +96,16 @@ namespace AptDealzBuyer.Views.OtherPages
                 {
                     Tab.IsEnabled = false;
                     Common.BindAnimation(button: BtnDeactivation);
-                    await DependencyService.Get<IProfileRepository>().DeactivateAccount();
+                    if (!Common.EmptyFiels(txtReason.Text))
+                    {
+                        BoxReason.BackgroundColor = (Color)App.Current.Resources["appColor8"];
+                        await DependencyService.Get<IProfileRepository>().DeactivateAccount();
+                    }
+                    else
+                    {
+                        BoxReason.BackgroundColor = (Color)App.Current.Resources["appColor3"];
+                        Common.DisplayErrorMessage(Constraints.Required_Reason);
+                    }
                 }
                 catch (Exception ex)
                 {

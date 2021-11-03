@@ -1,5 +1,9 @@
-﻿using AptDealzBuyer.Model;
+﻿using Acr.UserDialogs;
+using AptDealzBuyer.API;
+using AptDealzBuyer.Model.Reponse;
 using AptDealzBuyer.Utility;
+using AptDealzBuyer.Views.DashboardPages;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +17,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
     public partial class FaqHelpView : ContentView
     {
         #region [ Objects ]       
-        public List<FaqM> FaqMs = new List<FaqM>();
+        List<FAQResponse> mFAQResponses = new List<FAQResponse>();
         #endregion
 
         #region [ Constructor ]
@@ -22,7 +26,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             try
             {
                 InitializeComponent();
-                BindFaq();
+                BindFAQ();
 
                 MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount); MessagingCenter.Subscribe<string>(this, Constraints.Str_NotificationCount, (count) =>
                 {
@@ -46,19 +50,42 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         #endregion
 
         #region [ Methods ]
-        private void BindFaq()
+        private async void BindFAQ()
         {
             try
             {
                 lstFaq.ItemsSource = null;
-                FaqMs = new List<FaqM>()
-            {
-                new FaqM{ FaqTitle="How do I post requirement?", FaqDesc="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text."},
-                new FaqM{ FaqTitle="How do I view the quotes receive", FaqDesc="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text."},
-                new FaqM{ FaqTitle="Do I have to pay to submit requirement", FaqDesc="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text."},
-                new FaqM{ FaqTitle="How long will my requirement be", FaqDesc="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text."}
-            };
-                lstFaq.ItemsSource = FaqMs.ToList();
+                AppSettingsAPI appSettingsAPI = new AppSettingsAPI();
+                UserDialogs.Instance.ShowLoading("Loading...");
+                var mResponse = await appSettingsAPI.GetFAQ();
+                UserDialogs.Instance.HideLoading();
+
+                if (mResponse != null && mResponse.Succeeded)
+                {
+                    JArray result = (JArray)mResponse.Data;
+                    if (result != null)
+                    {
+                        //txtMessage.Text = string.Empty;
+                        mFAQResponses = result.ToObject<List<FAQResponse>>();
+                    }
+                }
+
+                if (mFAQResponses != null && mFAQResponses.Count > 0)
+                {
+                    lstFaq.ItemsSource = mFAQResponses.ToList();
+                }
+                else
+                {
+                }
+
+
+                //    FaqMs = new List<FaqM>()
+                //{
+                //    new FaqM{ FaqTitle="How do I post requirement?", FaqDesc="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text."},
+                //    new FaqM{ FaqTitle="How do I view the quotes receive", FaqDesc="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text."},
+                //    new FaqM{ FaqTitle="Do I have to pay to submit requirement", FaqDesc="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text."},
+                //    new FaqM{ FaqTitle="How long will my requirement be", FaqDesc="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text."}
+                //};
             }
             catch (Exception ex)
             {
@@ -82,7 +109,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 try
                 {
                     Tab.IsEnabled = false;
-                    await Navigation.PushAsync(new DashboardPages.NotificationPage());
+                    await Navigation.PushAsync(new NotificationPage());
                 }
                 catch (Exception ex)
                 {
@@ -93,12 +120,11 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                     Tab.IsEnabled = true;
                 }
             }
-
         }
 
         private void ImgQuestion_Tapped(object sender, EventArgs e)
         {
-
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_FAQHelp));
         }
 
         private void ImgBack_Tapped(object sender, EventArgs e)
@@ -117,7 +143,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 {
                     viewCell.ForceUpdateSize();
                 }
-                var faqModel = imgExp.BindingContext as FaqM;
+                var faqModel = imgExp.BindingContext as FAQResponse;
                 if (faqModel != null && faqModel.ArrowImage == Constraints.Img_GreenArrowDown)
                 {
                     faqModel.ArrowImage = Constraints.Img_GreenArrowUp;

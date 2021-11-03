@@ -1,4 +1,5 @@
 ﻿using AptDealzBuyer.Utility;
+using AptDealzBuyer.Views.DashboardPages;
 using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -8,7 +9,7 @@ namespace AptDealzBuyer.Views.OtherPages
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class SettingsPage : ContentPage
     {
-        #region Ctor
+        #region [ Ctor ]
         public SettingsPage()
         {
             InitializeComponent();
@@ -29,6 +30,7 @@ namespace AptDealzBuyer.Views.OtherPages
         }
         #endregion
 
+        #region [ Methods ]
         public void Dispose()
         {
             GC.Collect();
@@ -40,12 +42,12 @@ namespace AptDealzBuyer.Views.OtherPages
             base.OnDisappearing();
             Dispose();
         }
+        #endregion
 
-        #region Events
-        private void ImgMenu_Tapped(object sender, EventArgs e)
+        #region [ Events ]
+        private void BtnLogo_Clicked(object sender, EventArgs e)
         {
-            Common.BindAnimation(image: ImgMenu);
-            //Common.OpenMenu();
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
         }
 
         private async void ImgNotification_Tapped(object sender, EventArgs e)
@@ -56,7 +58,7 @@ namespace AptDealzBuyer.Views.OtherPages
                 try
                 {
                     Tab.IsEnabled = false;
-                    await Navigation.PushAsync(new DashboardPages.NotificationPage());
+                    await Navigation.PushAsync(new NotificationPage());
                 }
                 catch (Exception ex)
                 {
@@ -67,12 +69,14 @@ namespace AptDealzBuyer.Views.OtherPages
                     Tab.IsEnabled = true;
                 }
             }
-
-
-
         }
 
         private void ImgQuestion_Tapped(object sender, EventArgs e)
+        {
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("FAQHelp"));
+        }
+
+        private void ImgMenu_Tapped(object sender, EventArgs e)
         {
 
         }
@@ -83,38 +87,48 @@ namespace AptDealzBuyer.Views.OtherPages
             await Navigation.PopAsync();
         }
 
-        private void ImgLanguage_Tapped(object sender, EventArgs e)
+        private void BtnLight_Clicked(object sender, EventArgs e)
         {
-            pkLanguage.Focus();
+
         }
 
-        private void ImgAlertTone_Tapped(object sender, EventArgs e)
+        private void BtnDark_Clicked(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pkAlertTone_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void BtnAlertTone_Clicked(object sender, EventArgs e)
         {
             pkAlertTone.Focus();
         }
 
-        private void ImgSwitch_Tapped(object sender, EventArgs e)
+        private void BtnMuteNotifications_Clicked(object sender, EventArgs e)
         {
             try
             {
-                if (imgSwitch.Source.ToString().Replace("File: ", "") == Constraints.Img_SwitchOff)
+                if (BtnMuteNotifications.Source.ToString().Replace("File: ", "") == Constraints.Img_SwitchOff)
                 {
-                    imgSwitch.Source = Constraints.Img_SwitchOn;
+                    BtnMuteNotifications.Source = Constraints.Img_SwitchOn;
                 }
                 else
                 {
-                    imgSwitch.Source = Constraints.Img_SwitchOff;
+                    BtnMuteNotifications.Source = Constraints.Img_SwitchOff;
                 }
             }
             catch (Exception ex)
             {
-                Common.DisplayErrorMessage("SettingsPage/ImgSwitch_Tapped: " + ex.Message);
+                Common.DisplayErrorMessage("SettingsPage/BtnMuteNotifications_Clicked: " + ex.Message);
             }
         }
 
-        private void BtnLogo_Clicked(object sender, EventArgs e)
+        private void Picker_Unfocused(object sender, FocusEventArgs e)
         {
-            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_Home));
+
         }
         #endregion
     }

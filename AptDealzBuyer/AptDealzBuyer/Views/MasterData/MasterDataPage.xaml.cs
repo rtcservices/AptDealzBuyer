@@ -10,24 +10,32 @@ namespace AptDealzBuyer.Views.MasterData
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class MasterDataPage : MasterDetailPage
     {
+
         public MasterDataPage(bool isNotification = false)
         {
             InitializeComponent();
-            BindNavigation(isNotification);
-
-            BackgroundWorker backgroundWorker = new BackgroundWorker();
-            backgroundWorker.DoWork += delegate
+            try
             {
-                if (App.stoppableTimer == null)
+                BindNavigation(isNotification);
+
+                var backgroundWorker = new BackgroundWorker();
+                backgroundWorker.DoWork += delegate
                 {
-                    App.stoppableTimer = new StoppableTimer(TimeSpan.FromSeconds(10), () =>
+                    if (App.stoppableTimer == null)
                     {
-                        GetNotificationCount();
-                    });
-                }
-                App.stoppableTimer.Start();
-            };
-            backgroundWorker.RunWorkerAsync();
+                        App.stoppableTimer = new StoppableTimer(TimeSpan.FromSeconds(3), () =>
+                        {
+                            GetNotificationCount();
+                        });
+                    }
+                    App.stoppableTimer.Start();
+                };
+                backgroundWorker.RunWorkerAsync();
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("MasterDataPage/Constructor: " + ex.Message);
+            }
         }
 
         void BindNavigation(bool isNotification = false)
@@ -67,6 +75,5 @@ namespace AptDealzBuyer.Views.MasterData
                 Common.DisplayErrorMessage("MasterDataPage/GetNotificationCount: " + ex.Message);
             }
         }
-
     }
 }

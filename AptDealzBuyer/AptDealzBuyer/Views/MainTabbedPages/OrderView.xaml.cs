@@ -1,13 +1,16 @@
 ﻿using Acr.UserDialogs;
 using AptDealzBuyer.API;
 using AptDealzBuyer.Model.Reponse;
+using AptDealzBuyer.Repository;
 using AptDealzBuyer.Utility;
 using AptDealzBuyer.Views.PopupPages;
 using Newtonsoft.Json.Linq;
 using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -145,6 +148,22 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 Common.DisplayErrorMessage("OrderView/BindList: " + ex.Message);
             }
         }
+
+        private async Task ShowQRCodeImage(string OrderId)
+        {
+            try
+            {
+                string imageBase64 = await DependencyService.Get<IOrderRepository>().GenerateQRCodeImage(OrderId);
+                if (!Common.EmptyFiels(imageBase64))
+                {
+                    //ImgQRCode.Source = Xamarin.Forms.ImageSource.FromStream(() => new MemoryStream(Convert.FromBase64String(imageBase64)));
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("OrderDetailsPage/ShowQRCodeImage: " + ex.Message);
+            }
+        }
         #endregion
 
         #region [ Events ]
@@ -180,7 +199,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
 
         private void ImgQuestion_Tapped(object sender, EventArgs e)
         {
-
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_FAQHelp));
         }
 
         private async void ImgBack_Tapped(object sender, EventArgs e)
@@ -290,7 +309,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 }
                 catch (Exception ex)
                 {
-                    Common.DisplayErrorMessage("OrderView/CustomEntry_Unfocused: " + ex.Message);
+                    Common.DisplayErrorMessage("OrderView/FrmFilter_Tapped: " + ex.Message);
                 }
                 finally
                 {
@@ -317,7 +336,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             }
             catch (Exception ex)
             {
-                Common.DisplayErrorMessage("OrderView/CustomEntry_Unfocused: " + ex.Message);
+                Common.DisplayErrorMessage("OrderView/entrSearch_TextChanged: " + ex.Message);
             }
 
         }
@@ -354,22 +373,28 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             }
         }
 
-        private void BtnOrderAction_Tapped(object sender, EventArgs e)
+        private async void BtnOrderAction_Tapped(object sender, EventArgs e)
         {
             var ButtonExp = (Button)sender;
+            var order = ButtonExp.BindingContext as Order;
+
             if (ButtonExp.IsEnabled)
             {
                 try
                 {
                     ButtonExp.IsEnabled = false;
                     var mOrder = ButtonExp.BindingContext as Order;
-                    if (mOrder.OrderAction == "Reorder")
+                    if (mOrder.OrderAction == "Repost")
                     {
-                        //perform Action
+                        await Navigation.PushAsync(new DashboardPages.PostNewRequiremntPage(mOrder.RequirementId));
                     }
                     else if (mOrder.OrderAction == "Show QR Code")
                     {
-                        //perform Action
+                        if (order != null && !Common.EmptyFiels(order.OrderId))
+                        {
+                            //await ShowQRCodeImage(order.OrderId);
+                            await Navigation.PushAsync(new DashboardPages.QRCodePage(mOrder.OrderId));
+                        }
                     }
                     else
                     {

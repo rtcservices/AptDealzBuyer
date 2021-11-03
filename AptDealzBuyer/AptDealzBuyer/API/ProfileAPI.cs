@@ -25,44 +25,7 @@ namespace AptDealzBuyer.API
                     {
                         string url = string.Format(EndPointURL.GetMyProfileData, (int)App.Current.Resources["Version"]);
                         var response = await hcf.GetAsync(url);
-                        var responseJson = await response.Content.ReadAsStringAsync();
-                        if (response.IsSuccessStatusCode)
-                        {
-                            mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
-                        {
-                            var errorString = JsonConvert.DeserializeObject<string>(responseJson);
-                            if (errorString == Constraints.Session_Expired)
-                            {
-                                Common.DisplayErrorMessage(Constraints.Session_Expired);
-                                App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                            }
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
-                        {
-                            Common.DisplayErrorMessage(Constraints.ServiceUnavailable);
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
-                        {
-                            Common.DisplayErrorMessage(Constraints.Something_Wrong_Server);
-                        }
-                        else
-                        {
-                            if (responseJson.Contains(Constraints.Str_TokenExpired) || response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                            {
-                                var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
-                                if (!isRefresh)
-                                {
-                                    Common.DisplayErrorMessage(Constraints.Session_Expired);
-                                    App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                                }
-                            }
-                            else
-                            {
-                                mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
-                            }
-                        }
+                        mResponse = await DependencyService.Get<IAuthenticationRepository>().APIResponse(response);
                     }
                 }
                 else
@@ -75,6 +38,8 @@ namespace AptDealzBuyer.API
             }
             catch (Exception ex)
             {
+                mResponse.Succeeded = false;
+                mResponse.Message = ex.Message;
                 Common.DisplayErrorMessage("ProfileAPI/GetMyProfileData: " + ex.Message);
             }
             return mResponse;
@@ -101,16 +66,18 @@ namespace AptDealzBuyer.API
                             var errorString = JsonConvert.DeserializeObject<string>(responseJson);
                             if (errorString == Constraints.Session_Expired)
                             {
-                                App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
+                                mCountries = null;
+                                MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount);
+                                Common.ClearAllData();
                             }
                         }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
+                        else if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable
+                                || response.StatusCode == System.Net.HttpStatusCode.InternalServerError
+                                || responseJson.Contains(Constraints.Str_AccountDeactivated) && response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                         {
-                            Common.DisplayErrorMessage(Constraints.ServiceUnavailable);
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
-                        {
-                            Common.DisplayErrorMessage(Constraints.Something_Wrong_Server);
+                            mCountries = null;
+                            MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount);
+                            Common.ClearAllData();
                         }
                         else
                         {
@@ -128,6 +95,7 @@ namespace AptDealzBuyer.API
             }
             catch (Exception ex)
             {
+                mCountries = null;
                 Common.DisplayErrorMessage("ProfileAPI/GetCountry: " + ex.Message);
             }
             return mCountries;
@@ -144,31 +112,7 @@ namespace AptDealzBuyer.API
                     {
                         string url = string.Format(EndPointURL.GetPincodeInfo, PinCode);
                         var response = await hcf.GetAsync(url);
-                        var responseJson = await response.Content.ReadAsStringAsync();
-                        if (response.IsSuccessStatusCode)
-                        {
-                            mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
-                        {
-                            var errorString = JsonConvert.DeserializeObject<string>(responseJson);
-                            if (errorString == Constraints.Session_Expired)
-                            {
-                                App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                            }
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
-                        {
-                            Common.DisplayErrorMessage(Constraints.ServiceUnavailable);
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
-                        {
-                            Common.DisplayErrorMessage(Constraints.Something_Wrong_Server);
-                        }
-                        else
-                        {
-                            mResponse = null;
-                        }
+                        mResponse = await DependencyService.Get<IAuthenticationRepository>().APIResponse(response);
                     }
                 }
                 else
@@ -181,6 +125,8 @@ namespace AptDealzBuyer.API
             }
             catch (Exception ex)
             {
+                mResponse.Succeeded = false;
+                mResponse.Message = ex.Message;
                 Common.DisplayErrorMessage("ProfileAPI/GetPincodeInfo: " + ex.Message);
             }
             return mResponse;
@@ -200,43 +146,7 @@ namespace AptDealzBuyer.API
                     {
                         string url = EndPointURL.DeactivateUser; //sent UserId
                         var response = await hcf.PostAsync(url, requestJson);
-                        var responseJson = await response.Content.ReadAsStringAsync();
-                        if (response.IsSuccessStatusCode)
-                        {
-                            mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
-                        {
-                            var errorString = JsonConvert.DeserializeObject<string>(responseJson);
-                            if (errorString == Constraints.Session_Expired)
-                            {
-                                App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                            }
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
-                        {
-                            Common.DisplayErrorMessage(Constraints.ServiceUnavailable);
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
-                        {
-                            Common.DisplayErrorMessage(Constraints.Something_Wrong_Server);
-                        }
-                        else
-                        {
-                            if (responseJson.Contains(Constraints.Str_TokenExpired) || response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                            {
-                                var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
-                                if (!isRefresh)
-                                {
-                                    Common.DisplayErrorMessage(Constraints.Session_Expired);
-                                    App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                                }
-                            }
-                            else
-                            {
-                                mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
-                            }
-                        }
+                        mResponse = await DependencyService.Get<IAuthenticationRepository>().APIResponse(response);
                     }
                 }
                 else
@@ -250,7 +160,7 @@ namespace AptDealzBuyer.API
             catch (Exception ex)
             {
                 mResponse.Succeeded = false;
-                mResponse.Errors = ex.Message;
+                mResponse.Message = ex.Message;
                 Common.DisplayErrorMessage("ProfileAPI/DeactiviateUser: " + ex.Message);
             }
             return mResponse;
@@ -268,43 +178,7 @@ namespace AptDealzBuyer.API
                     {
                         string url = EndPointURL.FileUpload;
                         var response = await hcf.PostAsync(url, requestJson);
-                        var responseJson = await response.Content.ReadAsStringAsync();
-                        if (response.IsSuccessStatusCode)
-                        {
-                            mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
-                        {
-                            var errorString = JsonConvert.DeserializeObject<string>(responseJson);
-                            if (errorString == Constraints.Session_Expired)
-                            {
-                                App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                            }
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
-                        {
-                            Common.DisplayErrorMessage(Constraints.ServiceUnavailable);
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
-                        {
-                            Common.DisplayErrorMessage(Constraints.Something_Wrong_Server);
-                        }
-                        else
-                        {
-                            if (responseJson.Contains(Constraints.Str_TokenExpired) || response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                            {
-                                var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
-                                if (!isRefresh)
-                                {
-                                    Common.DisplayErrorMessage(Constraints.Session_Expired);
-                                    App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                                }
-                            }
-                            else
-                            {
-                                mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
-                            }
-                        }
+                        mResponse = await DependencyService.Get<IAuthenticationRepository>().APIResponse(response);
                     }
                 }
                 else
@@ -318,7 +192,7 @@ namespace AptDealzBuyer.API
             catch (Exception ex)
             {
                 mResponse.Succeeded = false;
-                mResponse.Errors = ex.Message;
+                mResponse.Message = ex.Message;
                 Common.DisplayErrorMessage("ProfileAPI/FileUpload: " + ex.Message);
             }
             return mResponse;
@@ -338,43 +212,7 @@ namespace AptDealzBuyer.API
                     {
                         string url = string.Format(EndPointURL.SaveProfile, (int)App.Current.Resources["Version"]);
                         var response = await hcf.PutAsync(url, requestJson);
-                        var responseJson = await response.Content.ReadAsStringAsync();
-                        if (response.IsSuccessStatusCode)
-                        {
-                            mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
-                        {
-                            var errorString = JsonConvert.DeserializeObject<string>(responseJson);
-                            if (errorString == Constraints.Session_Expired)
-                            {
-                                App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                            }
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
-                        {
-                            Common.DisplayErrorMessage(Constraints.ServiceUnavailable);
-                        }
-                        else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
-                        {
-                            Common.DisplayErrorMessage(Constraints.Something_Wrong_Server);
-                        }
-                        else
-                        {
-                            if (responseJson.Contains(Constraints.Str_TokenExpired) || response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                            {
-                                var isRefresh = await DependencyService.Get<IAuthenticationRepository>().RefreshToken();
-                                if (!isRefresh)
-                                {
-                                    Common.DisplayErrorMessage(Constraints.Session_Expired);
-                                    App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                                }
-                            }
-                            else
-                            {
-                                mResponse = JsonConvert.DeserializeObject<Response>(responseJson);
-                            }
-                        }
+                        mResponse = await DependencyService.Get<IAuthenticationRepository>().APIResponse(response);
                     }
                 }
                 else
@@ -388,7 +226,7 @@ namespace AptDealzBuyer.API
             catch (Exception ex)
             {
                 mResponse.Succeeded = false;
-                mResponse.Errors = ex.Message;
+                mResponse.Message = ex.Message;
                 Common.DisplayErrorMessage("ProfileAPI/SaveProfile: " + ex.Message);
             }
             return mResponse;

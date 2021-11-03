@@ -1,6 +1,10 @@
-﻿using AptDealzBuyer.Interfaces;
+﻿using Acr.UserDialogs;
+using AptDealzBuyer.API;
+using AptDealzBuyer.Interfaces;
 using AptDealzBuyer.Model;
+using AptDealzBuyer.Model.Reponse;
 using AptDealzBuyer.Utility;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,10 +18,6 @@ namespace AptDealzBuyer.Views.SplashScreen
 
     public partial class WelcomePage : ContentPage
     {
-        #region [ Objecst ]      
-        public List<CarousellImage> mCarousellImages = new List<CarousellImage>();
-        #endregion
-
         #region [ Constructor ]
         public WelcomePage()
         {
@@ -42,7 +42,50 @@ namespace AptDealzBuyer.Views.SplashScreen
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            BindCarousallData();
+            GetAppPromoBar();
+        }
+
+        private async void GetAppPromoBar()
+        {
+            try
+            {
+                Indicators.ItemsSource = null;
+
+                List<AppPromo> mAppPromos = new List<AppPromo>();
+                AppSettingsAPI appSettingsAPI = new AppSettingsAPI();
+                UserDialogs.Instance.ShowLoading("Loading...");
+                var mResponse = await appSettingsAPI.GetAppPromoBar();
+                UserDialogs.Instance.HideLoading();
+                if (mResponse != null && mResponse.Succeeded)
+                {
+                    JArray result = (JArray)mResponse.Data;
+                    if (result != null)
+                    {
+                        mAppPromos = result.ToObject<List<AppPromo>>();
+                        if (mAppPromos != null && mAppPromos.Count > 0)
+                        {
+                            Indicators.ItemsSource = cvWelcome.ItemsSource = mAppPromos.ToList();
+                            lblNoRecord.IsVisible = false;
+                        }
+                        else
+                        {
+                            lblNoRecord.IsVisible = true;
+                        }
+                    }
+                }
+                else
+                {
+                    if (mResponse != null && !Common.EmptyFiels(mResponse.Message))
+                        lblNoRecord.Text = mResponse.Message;
+                    else
+                        lblNoRecord.Text = Constraints.Something_Wrong;
+                }
+            }
+            catch (Exception ex)
+            {
+                UserDialogs.Instance.HideLoading();
+                Common.DisplayErrorMessage("WelcomePage/GetAppPromoBar: " + ex.Message);
+            }
         }
 
         protected override bool OnBackButtonPressed()
@@ -69,23 +112,6 @@ namespace AptDealzBuyer.Views.SplashScreen
             return true;
         }
 
-        private void BindCarousallData()
-        {
-            try
-            {
-                mCarousellImages = new List<CarousellImage>()
-            {
-                new CarousellImage{ImageName=Constraints.Img_WelcomeOne},
-                new CarousellImage{ImageName=Constraints.Img_WelcomeTwo},
-                new CarousellImage{ImageName=Constraints.Img_WelcomeThree},
-            };
-                Indicators.ItemsSource = cvWelcome.ItemsSource = mCarousellImages.ToList();
-            }
-            catch (Exception ex)
-            {
-                Common.DisplayErrorMessage("WelcomePage/BindCarousallData: " + ex.Message);
-            }
-        }
         #endregion
 
         #region [ Events ]  

@@ -19,7 +19,8 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             InitializeComponent();
             BindMenus();
 
-            MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount); MessagingCenter.Subscribe<string>(this, Constraints.Str_NotificationCount, (count) =>
+            MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount);
+            MessagingCenter.Subscribe<string>(this, Constraints.Str_NotificationCount, (count) =>
             {
                 if (!Common.EmptyFiels(Common.NotificationCount))
                 {
@@ -68,10 +69,26 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         #endregion
 
         #region [ Events ]
-        private void ImgMenu_Tapped(object sender, EventArgs e)
+        private async void ImgMenu_Tapped(object sender, EventArgs e)
         {
-            Common.BindAnimation(image: ImgMenu);
-            //Common.OpenMenu();
+            var Tab = (Image)sender;
+            if (Tab.IsEnabled)
+            {
+                try
+                {
+                    Common.BindAnimation(image: ImgMenu);
+                    Tab.IsEnabled = false;
+                    await Navigation.PushAsync(new OtherPages.SettingsPage());
+                }
+                catch (Exception ex)
+                {
+                    Common.DisplayErrorMessage("HomeView/ImgNotification_Tapped: " + ex.Message);
+                }
+                finally
+                {
+                    Tab.IsEnabled = true;
+                }
+            }
         }
 
         private async void ImgNotification_Tapped(object sender, EventArgs e)
@@ -93,12 +110,11 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                     Tab.IsEnabled = true;
                 }
             }
-
         }
 
         private void ImgQuestion_Tapped(object sender, EventArgs e)
         {
-
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_FAQHelp));
         }
 
         private async void BtnMenu_Tapped(object sender, EventArgs e)

@@ -20,22 +20,10 @@
             <!--  Header  -->
             <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="80" />
+                    <ColumnDefinition Width="120" />
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="80" />
+                    <ColumnDefinition Width="120" />
                 </Grid.ColumnDefinitions>
-                <Image
-                    x:Name="ImgMenu"
-                    Grid.Column="0"
-                    Margin="20,0,0,0"
-                    HeightRequest="30"
-                    HorizontalOptions="StartAndExpand"
-                    Source="IconMenu.png"
-                    VerticalOptions="CenterAndExpand">
-                    <Image.GestureRecognizers>
-                        <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgMenu_Tapped" />
-                    </Image.GestureRecognizers>
-                </Image>
 
                 <ImageButton
                     x:Name="BtnLogo"
@@ -46,7 +34,7 @@
                 <Grid
                     Grid.Column="2"
                     Margin="0,0,10,0"
-                    ColumnDefinitions="*,*"
+                    ColumnDefinitions="*,*,*"
                     HorizontalOptions="EndAndExpand">
                     <Grid>
                         <Image Source="iconNotification.png" Style="{StaticResource imgNotification}" />
@@ -71,6 +59,20 @@
                         WidthRequest="30">
                         <Image.GestureRecognizers>
                             <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgQuestion_Tapped" />
+                        </Image.GestureRecognizers>
+                    </Image>
+
+                    <Image
+                        x:Name="ImgMenu"
+                        Grid.Column="2"
+                        Margin="0,0,0,0"
+                        HeightRequest="30"
+                        HorizontalOptions="CenterAndExpand"
+                        Source="iconGear.png"
+                        VerticalOptions="CenterAndExpand"
+                        WidthRequest="30">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgMenu_Tapped" />
                         </Image.GestureRecognizers>
                     </Image>
                 </Grid>
@@ -134,7 +136,8 @@
 
                                     <ext:ExtEntry
                                         x:Name="txtTitle"
-                                        ClassId="Title"  Keyboard="Text"
+                                        ClassId="Title"
+                                        Keyboard="Text"
                                         Style="{StaticResource entrPrimary}"
                                         Unfocused="Entry_Unfocused" />
                                     <BoxView x:Name="BoxTitle" Style="{StaticResource boxHorizontal}" />
@@ -276,7 +279,8 @@
                                         <Editor
                                             x:Name="txtDescription"
                                             AutoSize="TextChanges"
-                                            ClassId="Description"  Keyboard="Text"
+                                            ClassId="Description"
+                                            Keyboard="Text"
                                             Style="{StaticResource edPrimary}"
                                             Unfocused="Editor_Unfocused" />
                                     </Frame>
@@ -491,7 +495,10 @@
 
                                 <StackLayout Grid.Row="1" Spacing="{OnPlatform Android=0, iOS=7}">
                                     <Label Style="{StaticResource lblPrimary13}" Text="Preferred Source of Supply (Region)" />
-                                    <ext:ExtEntry x:Name="txtSourceSupply"  Keyboard="Text" Style="{StaticResource entrPrimary}" />
+                                    <ext:ExtEntry
+                                        x:Name="txtSourceSupply"
+                                        Keyboard="Text"
+                                        Style="{StaticResource entrPrimary}" />
                                     <BoxView x:Name="BoxSourceSupply" Style="{StaticResource boxHorizontal}" />
                                 </StackLayout>
 
@@ -505,7 +512,7 @@
                                         Margin="0"
                                         BackgroundColor="Transparent"
                                         FontFamily="Poppins"
-                                        FontSize="15"
+                                        FontSize="{StaticResource Font15}"
                                         Format="dd/MM/yyyy"
                                         HorizontalOptions="FillAndExpand"
                                         TextColor="{StaticResource appColor4}" />
@@ -519,7 +526,7 @@
                             <!--  Billing Address  -->
                             <Grid
                                 Grid.Row="5"
-                                RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
+                                RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto"
                                 RowSpacing="20">
 
                                 <Label
@@ -537,7 +544,8 @@
 
                                     <ext:ExtEntry
                                         x:Name="txtName"
-                                        ClassId="Name"  Keyboard="Text"
+                                        ClassId="Name"
+                                        Keyboard="Text"
                                         Style="{StaticResource entrPrimary}"
                                         Unfocused="Entry_Unfocused" />
                                     <BoxView x:Name="BoxName" Style="{StaticResource boxHorizontal}" />
@@ -549,8 +557,9 @@
                                         <Label Text="*" TextColor="{StaticResource appColor2}" />
                                     </StackLayout>
                                     <ext:ExtEntry
-                                        x:Name="txtBuilding"  Keyboard="Text"
+                                        x:Name="txtBuilding"
                                         ClassId="Building"
+                                        Keyboard="Text"
                                         Style="{StaticResource entrPrimary}"
                                         Unfocused="Entry_Unfocused" />
                                     <BoxView x:Name="BoxBuilding" Style="{StaticResource boxHorizontal}" />
@@ -562,8 +571,9 @@
                                         <Label Text="*" TextColor="{StaticResource appColor2}" />
                                     </StackLayout>
                                     <ext:ExtEntry
-                                        x:Name="txtStreet"  Keyboard="Text"
+                                        x:Name="txtStreet"
                                         ClassId="Street"
+                                        Keyboard="Text"
                                         Style="{StaticResource entrPrimary}"
                                         Unfocused="Entry_Unfocused" />
                                     <BoxView x:Name="BoxStreet" Style="{StaticResource boxHorizontal}" />
@@ -575,14 +585,29 @@
                                         <Label Text="*" TextColor="{StaticResource appColor2}" />
                                     </StackLayout>
                                     <ext:ExtEntry
-                                        x:Name="txtCity"  Keyboard="Text"
+                                        x:Name="txtCity"
                                         ClassId="City"
+                                        Keyboard="Text"
                                         Style="{StaticResource entrPrimary}"
                                         Unfocused="Entry_Unfocused" />
                                     <BoxView x:Name="BoxCity" Style="{StaticResource boxHorizontal}" />
                                 </StackLayout>
 
                                 <StackLayout Grid.Row="5" Spacing="{OnPlatform Android=0, iOS=7}">
+                                    <StackLayout HorizontalOptions="StartAndExpand" Orientation="Horizontal">
+                                        <Label Style="{StaticResource lblPrimary13}" Text="State" />
+                                        <Label Text="*" TextColor="{StaticResource appColor2}" />
+                                    </StackLayout>
+                                    <ext:ExtEntry
+                                        x:Name="txtState"
+                                        ClassId="State"
+                                        Keyboard="Text"
+                                        Style="{StaticResource entrPrimary}"
+                                        Unfocused="Entry_Unfocused" />
+                                    <BoxView x:Name="BoxState" Style="{StaticResource boxHorizontal}" />
+                                </StackLayout>
+
+                                <StackLayout Grid.Row="6" Spacing="{OnPlatform Android=0, iOS=7}">
                                     <StackLayout HorizontalOptions="StartAndExpand" Orientation="Horizontal">
                                         <Label Style="{StaticResource lblPrimary13}" Text="PIN Code" />
                                         <Label Text="*" TextColor="{StaticResource appColor2}" />
@@ -647,6 +672,7 @@
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
 
                                     <StackLayout
@@ -682,7 +708,8 @@
                                         </StackLayout>
                                         <ext:ExtEntry
                                             x:Name="txtSAName"
-                                            ClassId="SAName"  Keyboard="Text"
+                                            ClassId="SAName"
+                                            Keyboard="Text"
                                             Style="{StaticResource entrPrimary}"
                                             Unfocused="Entry_Unfocused" />
                                         <BoxView x:Name="BoxSAName" Style="{StaticResource boxHorizontal}" />
@@ -698,7 +725,8 @@
                                         </StackLayout>
                                         <ext:ExtEntry
                                             x:Name="txtSABuilding"
-                                            ClassId="SABuilding"  Keyboard="Text"
+                                            ClassId="SABuilding"
+                                            Keyboard="Text"
                                             Style="{StaticResource entrPrimary}"
                                             Unfocused="Entry_Unfocused" />
                                         <BoxView x:Name="BoxSABuilding" Style="{StaticResource boxHorizontal}" />
@@ -713,8 +741,9 @@
                                                 TextColor="{StaticResource appColor2}" />
                                         </StackLayout>
                                         <ext:ExtEntry
-                                            x:Name="txtSAStreet"  Keyboard="Text"
+                                            x:Name="txtSAStreet"
                                             ClassId="SAStreet"
+                                            Keyboard="Text"
                                             Style="{StaticResource entrPrimary}"
                                             Unfocused="Entry_Unfocused" />
                                         <BoxView x:Name="BoxSAStreet" Style="{StaticResource boxHorizontal}" />
@@ -729,14 +758,32 @@
                                                 TextColor="{StaticResource appColor2}" />
                                         </StackLayout>
                                         <ext:ExtEntry
-                                            x:Name="txtSACity"  Keyboard="Text"
+                                            x:Name="txtSACity"
                                             ClassId="SACity"
+                                            Keyboard="Text"
                                             Style="{StaticResource entrPrimary}"
                                             Unfocused="Entry_Unfocused" />
                                         <BoxView x:Name="BoxSACity" Style="{StaticResource boxHorizontal}" />
                                     </StackLayout>
 
                                     <StackLayout Grid.Row="5" Spacing="{OnPlatform Android=0, iOS=7}">
+                                        <StackLayout HorizontalOptions="StartAndExpand" Orientation="Horizontal">
+                                            <Label Style="{StaticResource lblPrimary13}" Text="State" />
+                                            <Label
+                                                x:Name="lblSAState"
+                                                Text="*"
+                                                TextColor="{StaticResource appColor2}" />
+                                        </StackLayout>
+                                        <ext:ExtEntry
+                                            x:Name="txtSAState"
+                                            ClassId="SAState"
+                                            Keyboard="Text"
+                                            Style="{StaticResource entrPrimary}"
+                                            Unfocused="Entry_Unfocused" />
+                                        <BoxView x:Name="BoxSAState" Style="{StaticResource boxHorizontal}" />
+                                    </StackLayout>
+
+                                    <StackLayout Grid.Row="6" Spacing="{OnPlatform Android=0, iOS=7}">
                                         <StackLayout HorizontalOptions="StartAndExpand" Orientation="Horizontal">
                                             <Label Style="{StaticResource lblPrimary13}" Text="PIN Code" />
                                             <Label
@@ -753,7 +800,7 @@
                                         <BoxView x:Name="BoxSAPinCode" Style="{StaticResource boxHorizontal}" />
                                     </StackLayout>
 
-                                    <StackLayout Grid.Row="6" Spacing="{OnPlatform Android=0, iOS=7}">
+                                    <StackLayout Grid.Row="7" Spacing="{OnPlatform Android=0, iOS=7}">
                                         <StackLayout HorizontalOptions="StartAndExpand" Orientation="Horizontal">
                                             <Label Style="{StaticResource lblPrimary13}" Text="Landmark" />
                                             <!--<Label
@@ -761,7 +808,10 @@
                                             Text="*"  ClassId="SALandmark"
                                             TextColor="{StaticResource appColor2}" />-->
                                         </StackLayout>
-                                        <ext:ExtEntry x:Name="txtSALandmark"    Keyboard="Text"   Style="{StaticResource entrPrimary}" />
+                                        <ext:ExtEntry
+                                            x:Name="txtSALandmark"
+                                            Keyboard="Text"
+                                            Style="{StaticResource entrPrimary}" />
                                         <BoxView Style="{StaticResource boxHorizontal}" />
                                     </StackLayout>
                                 </Grid>

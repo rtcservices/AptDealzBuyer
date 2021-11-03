@@ -22,4 +22,10 @@ namespace AptDealzBuyer.Model.Reponse
         [JsonProperty("data")]
         public object Data { get; set; }
     }
+
+    public class Data
+    {
+        public int amount { get; set; }
+    }
+
 }

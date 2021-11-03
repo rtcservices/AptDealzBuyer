@@ -45,6 +45,7 @@
     <AndroidSigningKeyPass>test123</AndroidSigningKeyPass>
     <AndroidSigningKeyAlias>AptDealzBuyer</AndroidSigningKeyAlias>
     <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
+    <AndroidUseSharedRuntime>true</AndroidUseSharedRuntime>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -64,6 +65,7 @@
     <AndroidSigningKeyAlias>AptDealzBuyer</AndroidSigningKeyAlias>
     <AndroidSigningStorePass>test123</AndroidSigningStorePass>
     <AndroidSigningKeyPass>test123</AndroidSigningKeyPass>
+    <AndroidSupportedAbis />
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Android" />
@@ -163,6 +165,7 @@
     <Compile Include="CustomRenderers\CustomRenderer.cs" />
     <Compile Include="DependencService\CloseAppOnBackButton.cs" />
     <Compile Include="DependencService\FirebaseAuthenticator.cs" />
+    <Compile Include="DependencService\HtmlToPDFService.cs" />
     <Compile Include="DependencService\NotificationHelper.cs" />
     <Compile Include="DependencService\PhoneDialer.cs" />
     <Compile Include="MainActivity.cs" />
@@ -410,6 +413,7 @@
     <AndroidResource Include="Resources\drawable\iconVideo.png" />
     <AndroidResource Include="Resources\drawable\iconMusic.png" />
     <AndroidResource Include="Resources\drawable\iconFiles2.png" />
+    <AndroidResource Include="Resources\drawable\iconGear.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <ProjectExtensions>

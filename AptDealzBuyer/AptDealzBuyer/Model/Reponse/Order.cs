@@ -142,6 +142,12 @@ namespace AptDealzBuyer.Model.Reponse
         public bool IsSelectGrievance { get; set; } = false;
 
         [JsonIgnore]
+        public bool IsShowRais { get; set; } = false;
+
+        [JsonIgnore]
+        public DateTime CreatedCompletedOrder { get; set; }
+
+        [JsonIgnore]
         public string OrderSuccessMessage { get; set; }
         [JsonIgnore]
         public string OrderErrorMessage { get; set; }
@@ -155,7 +161,7 @@ namespace AptDealzBuyer.Model.Reponse
             {
                 if (OrderStatus == (int)Utility.OrderStatus.Completed || OrderStatus == (int)Utility.OrderStatus.CancelledFromBuyer)
                 {
-                    return "Reorder";
+                    return "Repost";
                 }
                 else if (OrderStatus == (int)Utility.OrderStatus.Shipped && PickupProductDirectly)
                 {

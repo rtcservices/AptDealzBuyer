@@ -54,7 +54,15 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             try
             {
                 InitializeComponent();
-                txtFullName.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
+
+                if (DeviceInfo.Platform == DevicePlatform.Android)
+                {
+                    txtFullName.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
+                    txtState.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
+                    txtCity.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
+                    txtLandmark.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
+                }
+
                 BtnUpdate.IsEnabled = false;
                 BindProperties();
 
@@ -114,16 +122,20 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         {
             try
             {
-                if (Common.mBuyerDetail == null || Common.EmptyFiels(Common.mBuyerDetail.UserId) || isUpdateProfile)
+                if (Common.mBuyerDetail == null || Common.EmptyFiels(Common.mBuyerDetail.BuyerId) || isUpdateProfile)
                 {
                     mBuyerDetail = await DependencyService.Get<IProfileRepository>().GetMyProfileData();
+                    Common.mBuyerDetail = mBuyerDetail;
                 }
                 else
                 {
                     mBuyerDetail = Common.mBuyerDetail;
                 }
 
-                GetProfileDetails(mBuyerDetail);
+                if (Common.mBuyerDetail != null && !Common.EmptyFiels(Common.mBuyerDetail.BuyerId))
+                {
+                    GetProfileDetails(Common.mBuyerDetail);
+                }
             }
             catch (Exception ex)
             {
@@ -135,53 +147,56 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         {
             try
             {
-                lblBuyerId.Text = mBuyerDetails.BuyerNo;
-                txtFullName.Text = mBuyerDetails.FullName;
-                txtEmailAddress.Text = mBuyerDetails.Email;
-                txtPhoneNumber.Text = mBuyerDetails.PhoneNumber;
+                if (mBuyerDetails != null)
+                {
+                    lblBuyerId.Text = mBuyerDetails.BuyerNo;
+                    txtFullName.Text = mBuyerDetails.FullName;
+                    txtEmailAddress.Text = mBuyerDetails.Email;
+                    txtPhoneNumber.Text = mBuyerDetails.PhoneNumber;
 
-                if (!Common.EmptyFiels(mBuyerDetails.ProfilePhoto))
-                {
-                    string baseURL = (string)App.Current.Resources["BaseURL"];
-                    mBuyerDetails.ProfilePhoto = baseURL + mBuyerDetails.ProfilePhoto.Replace(baseURL, "");
-                    imgUser.Source = mBuyerDetails.ProfilePhoto;
-                }
-                else
-                {
-                    imgUser.Source = Constraints.Img_UserAccount;
-                }
-                if (!Common.EmptyFiels(mBuyerDetails.Building))
-                {
-                    txtBuildingNumber.Text = mBuyerDetails.Building;
-                }
-                if (!Common.EmptyFiels(mBuyerDetails.Street))
-                {
-                    txtStreet.Text = mBuyerDetails.Street;
-                }
-                if (!Common.EmptyFiels(mBuyerDetails.City))
-                {
-                    txtCity.Text = mBuyerDetails.City;
-                }
-                if (!Common.EmptyFiels(mBuyerDetails.Landmark))
-                {
-                    txtLandmark.Text = mBuyerDetails.Landmark;
-                }
-                if (!Common.EmptyFiels(mBuyerDetails.State))
-                {
-                    txtState.Text = mBuyerDetails.State;
-                }
-                if (!Common.EmptyFiels(mBuyerDetails.PinCode))
-                {
-                    txtPinCode.Text = mBuyerDetails.PinCode;
-                }
-                if (mBuyerDetails.CountryId > 0 && Common.mCountries != null && Common.mCountries.Count() > 0)
-                {
-                    pkNationality.Text = Common.mCountries.Where(x => x.CountryId == mBuyerDetails.CountryId).FirstOrDefault().Name;
+                    if (!Common.EmptyFiels(mBuyerDetails.ProfilePhoto))
+                    {
+                        string baseURL = (string)App.Current.Resources["BaseURL"];
+                        mBuyerDetails.ProfilePhoto = baseURL + mBuyerDetails.ProfilePhoto.Replace(baseURL, "");
+                        imgUser.Source = mBuyerDetails.ProfilePhoto;
+                    }
+                    else
+                    {
+                        imgUser.Source = Constraints.Img_UserAccount;
+                    }
+                    if (!Common.EmptyFiels(mBuyerDetails.Building))
+                    {
+                        txtBuildingNumber.Text = mBuyerDetails.Building;
+                    }
+                    if (!Common.EmptyFiels(mBuyerDetails.Street))
+                    {
+                        txtStreet.Text = mBuyerDetails.Street;
+                    }
+                    if (!Common.EmptyFiels(mBuyerDetails.City))
+                    {
+                        txtCity.Text = mBuyerDetails.City;
+                    }
+                    if (!Common.EmptyFiels(mBuyerDetails.Landmark))
+                    {
+                        txtLandmark.Text = mBuyerDetails.Landmark;
+                    }
+                    if (!Common.EmptyFiels(mBuyerDetails.State))
+                    {
+                        txtState.Text = mBuyerDetails.State;
+                    }
+                    if (!Common.EmptyFiels(mBuyerDetails.PinCode))
+                    {
+                        txtPinCode.Text = mBuyerDetails.PinCode;
+                    }
+                    if (mBuyerDetails.CountryId > 0 && Common.mCountries != null && Common.mCountries.Count() > 0)
+                    {
+                        pkNationality.Text = Common.mCountries.Where(x => x.CountryId == mBuyerDetails.CountryId).FirstOrDefault().Name;
+                    }
                 }
             }
             catch (Exception ex)
             {
-                Common.DisplayErrorMessage("AccountView/BindProfileDetails: " + ex.Message);
+                Common.DisplayErrorMessage("AccountView/GetProfileDetails: " + ex.Message);
             }
         }
 
@@ -262,7 +277,8 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             bool isValid = false;
             try
             {
-                if (Common.EmptyFiels(txtFullName.Text) || Common.EmptyFiels(txtPhoneNumber.Text) || Common.EmptyFiels(pkNationality.Text))
+                if (Common.EmptyFiels(txtFullName.Text) || Common.EmptyFiels(txtPhoneNumber.Text) ||
+                    Common.EmptyFiels(txtState.Text) || Common.EmptyFiels(pkNationality.Text))
                 {
                     RequiredFields();
                     isValid = false;
@@ -280,9 +296,21 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 {
                     Common.DisplayErrorMessage(Constraints.InValid_PhoneNumber);
                 }
+                else if (Common.EmptyFiels(txtCity.Text))
+                {
+                    Common.DisplayErrorMessage(Constraints.Required_City);
+                }
                 else if (Common.EmptyFiels(pkNationality.Text))
                 {
                     Common.DisplayErrorMessage(Constraints.Required_Nationality);
+                }
+                else if (Common.EmptyFiels(txtState.Text))
+                {
+                    Common.DisplayErrorMessage(Constraints.Required_State);
+                }
+                else if (Common.EmptyFiels(txtPinCode.Text))
+                {
+                    Common.DisplayErrorMessage(Constraints.Required_PinCode);
                 }
                 else if (Common.mCountries.Where(x => x.Name.ToLower() == pkNationality.Text.ToLower()).Count() == 0)
                 {
@@ -314,6 +342,11 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                     BoxPhoneNumber.BackgroundColor = (Color)App.Current.Resources["appColor3"];
                 }
 
+                if (Common.EmptyFiels(txtState.Text))
+                {
+                    BoxState.BackgroundColor = (Color)App.Current.Resources["appColor3"];
+                }
+
                 if (Common.EmptyFiels(pkNationality.Text))
                 {
                     BoxNationality.BackgroundColor = (Color)App.Current.Resources["appColor3"];
@@ -331,6 +364,8 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             {
                 txtFullName.Text = txtFullName.Text.Trim();
                 txtPhoneNumber.Text = txtPhoneNumber.Text.Trim();
+                txtState.Text = txtState.Text.Trim();
+
                 if (!Common.EmptyFiels(txtBuildingNumber.Text))
                 {
                     txtBuildingNumber.Text = txtBuildingNumber.Text.Trim();
@@ -346,10 +381,6 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 if (!Common.EmptyFiels(txtLandmark.Text))
                 {
                     txtLandmark.Text = txtLandmark.Text.Trim();
-                }
-                if (!Common.EmptyFiels(txtState.Text))
-                {
-                    txtState.Text = txtState.Text.Trim();
                 }
                 if (!Common.EmptyFiels(txtPinCode.Text))
                 {
@@ -410,47 +441,6 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             }
         }
 
-        private async Task DoLogout()
-        {
-            try
-            {
-                var isClose = await App.Current.MainPage.DisplayAlert(Constraints.Logout, Constraints.AreYouSureWantLogout, Constraints.Yes, Constraints.No);
-                if (isClose)
-                {
-                    AuthenticationAPI authenticationAPI = new AuthenticationAPI();
-                    UserDialogs.Instance.ShowLoading(Constraints.Loading);
-                    var mResponse = await authenticationAPI.Logout(Settings.RefreshToken, Settings.LoginTrackingKey);
-                    if (mResponse != null && mResponse.Succeeded)
-                    {
-                        //Common.DisplaySuccessMessage(mResponse.Message);
-                    }
-                    else
-                    {
-                        if (mResponse != null && !mResponse.Message.Contains("TrackingKey"))
-                            Common.DisplayErrorMessage(mResponse.Message);
-                    }
-
-                    Settings.EmailAddress = string.Empty;
-                    Settings.RefreshToken = string.Empty;
-                    Settings.LoginTrackingKey = string.Empty;
-                    Settings.UserToken = string.Empty;
-                    Settings.PhoneAuthToken = string.Empty;
-                    Settings.UserId = string.Empty;
-
-                    //Settings.fcm_token = string.Empty; don't empty this token
-                    App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-                }
-            }
-            catch (Exception ex)
-            {
-                Common.DisplayErrorMessage("AccountView/DoLogout: " + ex.Message);
-            }
-            finally
-            {
-                UserDialogs.Instance.HideLoading();
-            }
-        }
-
         private void UnfocussedFields(Entry entry = null, ExtAutoSuggestBox autoSuggestBox = null)
         {
             try
@@ -461,7 +451,10 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                     {
                         BoxFullName.BackgroundColor = (Color)App.Current.Resources["appColor8"];
                     }
-
+                    else if (entry.ClassId == "State")
+                    {
+                        BoxState.BackgroundColor = (Color)App.Current.Resources["appColor8"];
+                    }
                     else if (entry.ClassId == "PhoneNumber")
                     {
                         BoxPhoneNumber.BackgroundColor = (Color)App.Current.Resources["appColor8"];
@@ -548,7 +541,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
 
         private void ImgQuestion_Tapped(object sender, EventArgs e)
         {
-
+            Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_FAQHelp));
         }
 
         private void ImgBack_Tapped(object sender, EventArgs e)
@@ -642,6 +635,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             }
         }
 
+        #region [ AutoSuggestBox ]
         int i = 0;
         private void AutoSuggestBox_TextChanged(object sender, dotMorten.Xamarin.Forms.AutoSuggestBoxTextChangedEventArgs e)
         {
@@ -703,12 +697,6 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             pkNationality.Text = e.SelectedItem.ToString();
         }
 
-        private void Entry_Unfocused(object sender, FocusEventArgs e)
-        {
-            var entry = (ExtEntry)sender;
-            UnfocussedFields(entry: entry);
-        }
-
         private void AutoSuggestBox_Unfocused(object sender, FocusEventArgs e)
         {
             var autoSuggestBox = (ExtAutoSuggestBox)sender;
@@ -716,6 +704,12 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             {
                 UnfocussedFields(autoSuggestBox: autoSuggestBox);
             }
+        }
+        #endregion
+        private void Entry_Unfocused(object sender, FocusEventArgs e)
+        {
+            var entry = (ExtEntry)sender;
+            UnfocussedFields(entry: entry);
         }
 
         private async void txtPinCode_Unfocused(object sender, FocusEventArgs e)
