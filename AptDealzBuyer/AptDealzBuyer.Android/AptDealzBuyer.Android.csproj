@@ -44,8 +44,9 @@
     <AndroidSigningStorePass>test123</AndroidSigningStorePass>
     <AndroidSigningKeyPass>test123</AndroidSigningKeyPass>
     <AndroidSigningKeyAlias>AptDealzBuyer</AndroidSigningKeyAlias>
-    <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
+    <EmbedAssembliesIntoApk>false</EmbedAssembliesIntoApk>
     <AndroidUseSharedRuntime>true</AndroidUseSharedRuntime>
+    <MandroidI18n />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -80,6 +81,9 @@
     <Reference Include="System.Numerics.Vectors" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Acr.UserDialogs">
+      <Version>7.1.0.514</Version>
+    </PackageReference>
     <PackageReference Include="CarouselView.FormsPlugin">
       <Version>6.0.0</Version>
     </PackageReference>
@@ -100,6 +104,9 @@
     </PackageReference>
     <PackageReference Include="Plugin.Permissions">
       <Version>6.0.1</Version>
+    </PackageReference>
+    <PackageReference Include="Polly">
+      <Version>7.2.2</Version>
     </PackageReference>
     <PackageReference Include="Rg.Plugins.Popup">
       <Version>2.0.0.11</Version>
@@ -414,6 +421,19 @@
     <AndroidResource Include="Resources\drawable\iconMusic.png" />
     <AndroidResource Include="Resources\drawable\iconFiles2.png" />
     <AndroidResource Include="Resources\drawable\iconGear.png" />
+    <AndroidResource Include="Resources\drawable\iconOrdersWhite.png" />
+    <AndroidResource Include="Resources\drawable\iconProductBannerWhite.png" />
+    <AndroidResource Include="Resources\drawable\iconSortASCWhite.png" />
+    <AndroidResource Include="Resources\drawable\iconSortDSCWhite.png" />
+    <AndroidResource Include="Resources\drawable\iconStatusWhite.png" />
+    <AndroidResource Include="Resources\drawable\imgContactWhite.png" />
+    <AndroidResource Include="Resources\drawable\iconAccountWhite.png" />
+    <AndroidResource Include="Resources\drawable\iconAddWhite.png" />
+    <AndroidResource Include="Resources\drawable\iconBackArrowWhite.png" />
+    <AndroidResource Include="Resources\drawable\iconEditBlackWhite.png" />
+    <AndroidResource Include="Resources\drawable\iconFilterWhite.png" />
+    <AndroidResource Include="Resources\drawable\iconHomeWhite.png" />
+    <AndroidResource Include="Resources\drawable\iconManageSellerWhite.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <ProjectExtensions>

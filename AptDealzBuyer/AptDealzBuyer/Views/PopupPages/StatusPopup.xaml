@@ -5,7 +5,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:popup="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup">
     <Grid
-        BackgroundColor="{StaticResource appColor6}"
+        BackgroundColor="{AppThemeBinding Dark={StaticResource appColor4},
+                                          Light={StaticResource appColor6}}"
         HorizontalOptions="FillAndExpand"
         RowDefinitions="Auto,Auto,Auto"
         RowSpacing="0"
@@ -25,7 +26,7 @@
         <Grid
             Grid.Row="2"
             Margin="20"
-            RowDefinitions="Auto,Auto,Auto,Auto"
+            RowDefinitions="Auto,Auto,Auto,Auto,Auto"
             RowSpacing="0">
 
             <StackLayout
@@ -79,7 +80,6 @@
             </StackLayout>
 
             <StackLayout
-                x:Name="StkThirdType"
                 Grid.Row="2"
                 Margin="0,0,0,10"
                 HorizontalOptions="FillAndExpand"
@@ -105,8 +105,8 @@
             </StackLayout>
 
             <StackLayout
-                x:Name="StkFourType"
                 Grid.Row="3"
+                Margin="0,0,0,10"
                 HorizontalOptions="FillAndExpand"
                 Orientation="Horizontal"
                 VerticalOptions="CenterAndExpand">
@@ -126,6 +126,30 @@
                     WidthRequest="20" />
                 <StackLayout.GestureRecognizers>
                     <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="StkFourType_Tapped" />
+                </StackLayout.GestureRecognizers>
+            </StackLayout>
+
+            <StackLayout
+                Grid.Row="4"
+                HorizontalOptions="FillAndExpand"
+                Orientation="Horizontal"
+                VerticalOptions="CenterAndExpand">
+                <Label
+                    x:Name="lblfiveType"
+                    Grid.Row="0"
+                    HorizontalOptions="StartAndExpand"
+                    Style="{StaticResource lblLight}" />
+                <Image
+                    x:Name="imgfiveType"
+                    Margin="0"
+                    Aspect="Fill"
+                    HeightRequest="20"
+                    HorizontalOptions="EndAndExpand"
+                    Source="iconRadioUnselect.png"
+                    VerticalOptions="CenterAndExpand"
+                    WidthRequest="20" />
+                <StackLayout.GestureRecognizers>
+                    <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="StkFiveType_Tapped" />
                 </StackLayout.GestureRecognizers>
             </StackLayout>
         </Grid>

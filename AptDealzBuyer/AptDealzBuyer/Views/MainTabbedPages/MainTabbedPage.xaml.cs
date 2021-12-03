@@ -30,6 +30,11 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         #endregion
 
         #region [ Methods ]
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+        }
+
         public void Dispose()
         {
             GC.Collect();
@@ -101,17 +106,21 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             }
         }
 
+        private Color BindTextColor()
+        {
+            return (Application.Current.UserAppTheme == OSAppTheme.Light) ? (Color)App.Current.Resources["appColor4"] : (Color)App.Current.Resources["appColor6"];
+        }
+
         private void UnselectTab()
         {
             grdMain.Children.Clear();
-            imgHome.Source = Constraints.Img_Home;
-            imgRequirements.Source = Constraints.Img_Requirements;
-            imgOrders.Source = Constraints.Img_Orders;
-            imgAccount.Source = Constraints.Img_Account;
-            lblHome.TextColor = (Color)App.Current.Resources["appColor4"];
-            lblRequirements.TextColor = (Color)App.Current.Resources["appColor4"];
-            lblOrders.TextColor = (Color)App.Current.Resources["appColor4"];
-            lblAccount.TextColor = (Color)App.Current.Resources["appColor4"];
+
+            imgHome.Source = (Application.Current.UserAppTheme == OSAppTheme.Light) ? Constraints.Img_Home : Constraints.Img_HomeDark;
+            imgRequirements.Source = (Application.Current.UserAppTheme == OSAppTheme.Light) ? Constraints.Img_Requirements : Constraints.Img_RequirementsDark;
+            imgOrders.Source = (Application.Current.UserAppTheme == OSAppTheme.Light) ? Constraints.Img_Orders : Constraints.Img_OrdersDark;
+            imgAccount.Source = (Application.Current.UserAppTheme == OSAppTheme.Light) ? Constraints.Img_Account : Constraints.Img_AccountDark;
+
+            lblHome.TextColor = lblRequirements.TextColor = lblOrders.TextColor = lblAccount.TextColor = BindTextColor();
         }
 
         private void BindViews(string view)
@@ -191,54 +200,46 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         private void Tab_Tapped(object sender, EventArgs e)
         {
             var grid = (Grid)sender;
-            if (grid.IsEnabled)
+            try
             {
-                try
+                if (!Common.EmptyFiels(grid.ClassId))
                 {
-                    grid.IsEnabled = false;
-                    if (!Common.EmptyFiels(grid.ClassId))
+                    if (grid.ClassId == Constraints.Str_Home)
                     {
-                        if (grid.ClassId == Constraints.Str_Home)
+                        if (selectedView != Constraints.Str_Home)
                         {
-                            if (selectedView != Constraints.Str_Home)
-                            {
-                                BindViews(Constraints.Str_Home);
-                            }
+                            BindViews(Constraints.Str_Home);
                         }
-                        else if (grid.ClassId == Constraints.Str_Requirements)
+                    }
+                    else if (grid.ClassId == Constraints.Str_Requirements)
+                    {
+                        if (selectedView != Constraints.Str_Requirements)
                         {
-                            if (selectedView != Constraints.Str_Requirements)
-                            {
-                                this.isNavigate = true;
-                                BindViews(Constraints.Str_Requirements);
-                            }
+                            this.isNavigate = true;
+                            BindViews(Constraints.Str_Requirements);
                         }
-                        else if (grid.ClassId == Constraints.Str_Order)
+                    }
+                    else if (grid.ClassId == Constraints.Str_Order)
+                    {
+                        if (selectedView != Constraints.Str_Order)
                         {
-                            if (selectedView != Constraints.Str_Order)
-                            {
-                                this.isNavigate = true;
-                                BindViews(Constraints.Str_Order);
-                            }
+                            this.isNavigate = true;
+                            BindViews(Constraints.Str_Order);
                         }
-                        else if (grid.ClassId == Constraints.Str_Profile)
+                    }
+                    else if (grid.ClassId == Constraints.Str_Profile)
+                    {
+                        if (selectedView != Constraints.Str_Profile)
                         {
-                            if (selectedView != Constraints.Str_Profile)
-                            {
-                                this.isNavigate = true;
-                                BindViews(Constraints.Str_Profile);
-                            }
+                            this.isNavigate = true;
+                            BindViews(Constraints.Str_Profile);
                         }
                     }
                 }
-                catch (Exception ex)
-                {
-                    Common.DisplayErrorMessage("MainTabbedPage/Tab_Tapped: " + ex.Message);
-                }
-                finally
-                {
-                    grid.IsEnabled = true;
-                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("MainTabbedPage/Tab_Tapped: " + ex.Message);
             }
         }
         #endregion

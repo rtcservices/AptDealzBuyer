@@ -5,8 +5,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:iOS="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
     iOS:Page.UseSafeArea="True"
-    BackgroundColor="{StaticResource appColor6}"
+    BackgroundColor="{AppThemeBinding Dark={StaticResource appColor4},
+                                      Light={StaticResource appColor6}}"
     NavigationPage.HasNavigationBar="False">
+
     <ContentPage.Content>
         <Grid RowSpacing="0">
             <Grid.RowDefinitions>
@@ -17,16 +19,12 @@
 
             <Grid x:Name="grdMain" Grid.Row="0" />
 
-            <BoxView
-                Grid.Row="1"
-                BackgroundColor="{StaticResource appColor8}"
-                HeightRequest="1"
-                HorizontalOptions="FillAndExpand"
-                VerticalOptions="EndAndExpand" />
+            <BoxView Grid.Row="1" Style="{StaticResource boxHorizontal}" />
 
             <Grid
                 Grid.Row="2"
-                BackgroundColor="{StaticResource appColor6}"
+                BackgroundColor="{AppThemeBinding Dark={StaticResource appColor4},
+                                                  Light={StaticResource appColor6}}"
                 ColumnSpacing="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -50,7 +48,8 @@
                         Grid.Row="0"
                         HeightRequest="30"
                         HorizontalOptions="CenterAndExpand"
-                        Source="iconHome.png"
+                        Source="{AppThemeBinding Dark=iconHomeWhite.png,
+                                                 Light=iconHome.png}"
                         VerticalOptions="CenterAndExpand"
                         WidthRequest="30" />
                     <Label
@@ -81,7 +80,8 @@
                         Grid.Row="0"
                         HeightRequest="30"
                         HorizontalOptions="CenterAndExpand"
-                        Source="iconRequirements.png"
+                        Source="{AppThemeBinding Dark=iconManageSellerWhite.png,
+                                                 Light=iconRequirements.png}"
                         VerticalOptions="CenterAndExpand"
                         WidthRequest="30" />
                     <Label
@@ -112,7 +112,8 @@
                         Grid.Row="0"
                         HeightRequest="30"
                         HorizontalOptions="CenterAndExpand"
-                        Source="iconOrders.png"
+                        Source="{AppThemeBinding Dark=iconOrdersWhite.png,
+                                                 Light=iconOrders.png}"
                         VerticalOptions="CenterAndExpand"
                         WidthRequest="30" />
                     <Label
@@ -143,7 +144,8 @@
                         Grid.Row="0"
                         HeightRequest="30"
                         HorizontalOptions="CenterAndExpand"
-                        Source="iconAccount.png"
+                        Source="{AppThemeBinding Dark=iconAccountWhite.png,
+                                                 Light=iconAccount.png}"
                         VerticalOptions="CenterAndExpand"
                         WidthRequest="30" />
                     <Label

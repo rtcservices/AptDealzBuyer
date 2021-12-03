@@ -5,7 +5,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:iOS="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
     iOS:Page.UseSafeArea="True"
-    BackgroundColor="{StaticResource appColor6}"
+    BackgroundColor="{AppThemeBinding Dark={StaticResource appColor4},
+                                      Light={StaticResource appColor6}}"
     NavigationPage.HasNavigationBar="False">
     <ContentPage.Content>
         <Grid RowSpacing="0">
@@ -31,7 +32,7 @@
                 <Grid
                     Grid.Column="2"
                     Margin="0,0,10,0"
-                    ColumnDefinitions="*,*,*"
+                    ColumnDefinitions="*,*"
                     HorizontalOptions="EndAndExpand">
                     <Grid>
                         <Image Source="iconNotification.png" Style="{StaticResource imgNotification}" />
@@ -58,20 +59,6 @@
                             <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgQuestion_Tapped" />
                         </Image.GestureRecognizers>
                     </Image>
-
-                    <Image
-                        Grid.Column="2"
-                        Margin="0,0,0,0"
-                        HeightRequest="30"
-                        HorizontalOptions="StartAndExpand"
-                        Source="iconGear.png"
-                        VerticalOptions="CenterAndExpand"
-                        WidthRequest="30">
-                        <Image.GestureRecognizers>
-                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgMenu_Tapped" />
-                        </Image.GestureRecognizers>
-                    </Image>
-
                 </Grid>
                 <BoxView Grid.ColumnSpan="3" Style="{StaticResource boxHorizontal}" />
             </Grid>
@@ -92,7 +79,6 @@
                         x:Name="ImgBack"
                         Grid.Column="0"
                         Clicked="ImgBack_Tapped"
-                        Source="iconBackArrow.png"
                         Style="{StaticResource ImgBtnPrimary}" />
                     <Label
                         Grid.Column="1"
@@ -107,7 +93,7 @@
                         <Grid
                             Grid.Row="0"
                             Padding="20"
-                            ColumnDefinitions="*,*"
+                            ColumnDefinitions="*,Auto"
                             ColumnSpacing="0">
                             <Label
                                 Grid.Column="0"
@@ -128,7 +114,8 @@
                                     HeightRequest="43"
                                     Style="{StaticResource btnPrimary}"
                                     Text="Light"
-                                    TextColor="{StaticResource appColor4}" />
+                                    TextColor="{AppThemeBinding Dark={StaticResource appColor6},
+                                                                Light={StaticResource appColor4}}" />
 
                                 <Button
                                     x:Name="BtnDark"
@@ -142,7 +129,7 @@
                         <BoxView Grid.Row="0" Style="{StaticResource boxHorizontal}" />
 
                         <!--  Alert Tone  -->
-                        <Grid
+                        <!--<Grid
                             Grid.Row="1"
                             Padding="20"
                             ColumnDefinitions="*,*"
@@ -190,7 +177,7 @@
                                 </Grid>
                             </Frame>
                         </Grid>
-                        <BoxView Grid.Row="1" Style="{StaticResource boxHorizontal}" />
+                        <BoxView Grid.Row="1" Style="{StaticResource boxHorizontal}" />-->
 
                         <!--  Notifications  -->
                         <Grid
@@ -204,19 +191,30 @@
                                 HorizontalOptions="StartAndExpand"
                                 Style="{StaticResource lblMedium}"
                                 Text="Mute Notification" />
-                            <ImageButton
-                                x:Name="BtnMuteNotifications"
+                            <StackLayout
                                 Grid.Column="1"
-                                Margin="0"
-                                Padding="10"
-                                Aspect="AspectFit"
-                                BackgroundColor="Transparent"
-                                Clicked="BtnMuteNotifications_Clicked"
-                                HeightRequest="55"
                                 HorizontalOptions="EndAndExpand"
-                                Source="iconSwitchOff.png"
-                                VerticalOptions="CenterAndExpand"
-                                WidthRequest="55" />
+                                Orientation="Horizontal">
+
+                                <Label
+                                    x:Name="lblmute"
+                                    FontSize="15"
+                                    Style="{StaticResource lblMedium}"
+                                    Text="Off"
+                                    VerticalOptions="Center" />
+
+                                <ImageButton
+                                    x:Name="BtnMuteNotifications"
+                                    Margin="0"
+                                    Padding="10"
+                                    Aspect="AspectFit"
+                                    BackgroundColor="Transparent"
+                                    Clicked="BtnMuteNotifications_Clicked"
+                                    HeightRequest="55"
+                                    Source="iconSwitchOff.png"
+                                    VerticalOptions="CenterAndExpand"
+                                    WidthRequest="55" />
+                            </StackLayout>
                         </Grid>
                         <BoxView Grid.Row="2" Style="{StaticResource boxHorizontal}" />
                     </Grid>

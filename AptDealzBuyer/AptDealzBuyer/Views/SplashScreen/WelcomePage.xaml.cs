@@ -1,7 +1,6 @@
 ﻿using Acr.UserDialogs;
 using AptDealzBuyer.API;
 using AptDealzBuyer.Interfaces;
-using AptDealzBuyer.Model;
 using AptDealzBuyer.Model.Reponse;
 using AptDealzBuyer.Utility;
 using Newtonsoft.Json.Linq;
@@ -15,7 +14,6 @@ using Xamarin.Forms.Xaml;
 namespace AptDealzBuyer.Views.SplashScreen
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-
     public partial class WelcomePage : ContentPage
     {
         #region [ Constructor ]
@@ -117,23 +115,14 @@ namespace AptDealzBuyer.Views.SplashScreen
         #region [ Events ]  
         private async void BtnLogin_Clicked(object sender, EventArgs e)
         {
-            var Tab = (Button)sender;
-            if (Tab.IsEnabled)
+            try
             {
-                try
-                {
-                    Tab.IsEnabled = false;
-                    Common.BindAnimation(button: BtnLogin);
-                    await Navigation.PushAsync(new Login.LoginPage());
-                }
-                catch (Exception ex)
-                {
-                    Common.DisplayErrorMessage("WelcomePage/BtnLogin_Clicked: " + ex.Message);
-                }
-                finally
-                {
-                    Tab.IsEnabled = true;
-                }
+                await Common.BindAnimation(button: BtnLogin);
+                await Navigation.PushAsync(new Login.LoginPage());
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("WelcomePage/BtnLogin_Clicked: " + ex.Message);
             }
         }
         #endregion

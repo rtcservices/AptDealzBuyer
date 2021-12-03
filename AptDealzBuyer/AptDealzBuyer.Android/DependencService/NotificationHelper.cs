@@ -9,7 +9,6 @@ using System;
 using AndroidApp = Android.App.Application;
 
 [assembly: Xamarin.Forms.Dependency(typeof(NotificationHelper))]
-
 namespace AptDealzBuyer.Droid.DependencService
 {
     public class NotificationHelper : INotificationHelper
@@ -27,6 +26,7 @@ namespace AptDealzBuyer.Droid.DependencService
         NotificationManager manager;
 
         public event EventHandler NotificationReceived;
+
         //        Android.Net.Uri mute = Android.Net.Uri.Parse(Application.Context.PackageName + "/" + Resource.Raw.s);
         //        Android.Net.Uri unmute = Android.Net.Uri.Parse(Application.Context.PackageName + "/" + Resource.Raw.note);
         /// <summary>
@@ -46,6 +46,11 @@ namespace AptDealzBuyer.Droid.DependencService
         /// <returns></returns>
         public int ScheduleNotification(string title, string message)
         {
+            if (AptDealzBuyer.Utility.Settings.IsMuteMode)
+            {
+                return 0;
+            }
+
             if (!channelInitialized)
             {
                 CreateNotificationChannel();
@@ -104,6 +109,8 @@ namespace AptDealzBuyer.Droid.DependencService
                 {
                     Description = channelDescription,
                 };
+
+                channel.LockscreenVisibility = NotificationVisibility.Public;
                 manager.CreateNotificationChannel(channel);
             }
 

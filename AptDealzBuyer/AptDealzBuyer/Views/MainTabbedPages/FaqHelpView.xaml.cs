@@ -56,7 +56,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             {
                 lstFaq.ItemsSource = null;
                 AppSettingsAPI appSettingsAPI = new AppSettingsAPI();
-                UserDialogs.Instance.ShowLoading("Loading...");
+                UserDialogs.Instance.ShowLoading(Constraints.Loading);
                 var mResponse = await appSettingsAPI.GetFAQ();
                 UserDialogs.Instance.HideLoading();
 
@@ -77,15 +77,6 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 else
                 {
                 }
-
-
-                //    FaqMs = new List<FaqM>()
-                //{
-                //    new FaqM{ FaqTitle="How do I post requirement?", FaqDesc="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text."},
-                //    new FaqM{ FaqTitle="How do I view the quotes receive", FaqDesc="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text."},
-                //    new FaqM{ FaqTitle="Do I have to pay to submit requirement", FaqDesc="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text."},
-                //    new FaqM{ FaqTitle="How long will my requirement be", FaqDesc="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text."}
-                //};
             }
             catch (Exception ex)
             {
@@ -95,30 +86,29 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         #endregion
 
         #region [ Events ]
-        private void ImgMenu_Tapped(object sender, EventArgs e)
+        private async void ImgMenu_Tapped(object sender, EventArgs e)
         {
-            Common.BindAnimation(image: ImgMenu);
-            //Common.OpenMenu();
+            try
+            {
+                await Common.BindAnimation(image: ImgMenu);
+                await Navigation.PushAsync(new OtherPages.SettingsPage());
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("FaqHelpView/ImgMenu_Tapped: " + ex.Message);
+            }
         }
 
         private async void ImgNotification_Tapped(object sender, EventArgs e)
         {
             var Tab = (Grid)sender;
-            if (Tab.IsEnabled)
+            try
             {
-                try
-                {
-                    Tab.IsEnabled = false;
-                    await Navigation.PushAsync(new NotificationPage());
-                }
-                catch (Exception ex)
-                {
-                    Common.DisplayErrorMessage("FaqHelpView/ImgNotification_Tapped: " + ex.Message);
-                }
-                finally
-                {
-                    Tab.IsEnabled = true;
-                }
+                await Navigation.PushAsync(new NotificationPage());
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("FaqHelpView/ImgNotification_Tapped: " + ex.Message);
             }
         }
 
@@ -127,9 +117,9 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_FAQHelp));
         }
 
-        private void ImgBack_Tapped(object sender, EventArgs e)
+        private async void ImgBack_Tapped(object sender, EventArgs e)
         {
-            Common.BindAnimation(imageButton: ImgBack);
+            await Common.BindAnimation(imageButton: ImgBack);
             Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_Home));
         }
 
@@ -165,11 +155,11 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         {
             Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_Home));
         }
-        #endregion
 
         private void lstFaq_ItemTapped(object sender, ItemTappedEventArgs e)
         {
             lstFaq.SelectedItem = null;
         }
+        #endregion
     }
 }

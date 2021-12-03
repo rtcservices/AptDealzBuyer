@@ -7,7 +7,8 @@
     xmlns:iOS="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
     xmlns:skiaRate="clr-namespace:SkiaRate;assembly=SkiaRate.Forms"
     iOS:Page.UseSafeArea="True"
-    BackgroundColor="{StaticResource appColor6}"
+    BackgroundColor="{AppThemeBinding Dark={StaticResource appColor4},
+                                      Light={StaticResource appColor6}}"
     NavigationPage.HasNavigationBar="False">
     <ContentPage.Content>
 
@@ -94,7 +95,6 @@
                         x:Name="ImgBack"
                         Grid.Column="0"
                         Clicked="ImgBack_Tapped"
-                        Source="iconBackArrow.png"
                         Style="{StaticResource ImgBtnPrimary}" />
                     <Label
                         Grid.Column="1"
@@ -163,7 +163,8 @@
                                         </StackLayout>
 
                                         <BoxView
-                                            BackgroundColor="{StaticResource appColor8}"
+                                            BackgroundColor="{AppThemeBinding Dark={StaticResource appColor7},
+                                                                              Light={StaticResource appColor8}}"
                                             HeightRequest="1"
                                             HorizontalOptions="FillAndExpand"
                                             VerticalOptions="EndAndExpand" />
@@ -208,7 +209,7 @@
                                             <Label
                                                 HorizontalOptions="StartAndExpand"
                                                 Style="{StaticResource lblLight}"
-                                                Text="Quote Reference No" />
+                                                Text="Quote Id" />
 
                                             <Label
                                                 x:Name="lblQuoteRefNo"
@@ -340,7 +341,7 @@
                                             <Label
                                                 x:Name="lblPinCodeTitle"
                                                 HorizontalOptions="StartAndExpand"
-                                                Style="{StaticResource lblLight}"
+                                                Style="{StaticResource lblSemiBold}"
                                                 Text="Shipping PIN Code" />
 
                                             <Label
@@ -516,7 +517,7 @@
                                             <Label
                                                 HorizontalOptions="StartAndExpand"
                                                 Style="{StaticResource lblLight}"
-                                                Text="Origin of Products" />
+                                                Text="Product Made In" />
 
                                             <Label
                                                 x:Name="lblOriginProduct"
@@ -548,7 +549,8 @@
                                         Grid.Row="0"
                                         Margin="0,0,0,15"
                                         Padding="15,10"
-                                        BackgroundColor="{StaticResource appColor8}"
+                                        BackgroundColor="{AppThemeBinding Dark={StaticResource appColor7},
+                                                                          Light={StaticResource appColor8}}"
                                         IsVisible="false"
                                         Style="{StaticResource frmBlank}">
                                         <StackLayout Orientation="Vertical">
@@ -572,7 +574,8 @@
                                         Grid.Row="1"
                                         Margin="0"
                                         Padding="15,10"
-                                        BackgroundColor="{StaticResource appColor8}"
+                                        BackgroundColor="{AppThemeBinding Dark={StaticResource appColor7},
+                                                                          Light={StaticResource appColor8}}"
                                         IsVisible="false"
                                         Style="{StaticResource frmBlank}">
                                         <StackLayout Orientation="Vertical">
@@ -596,7 +599,8 @@
                                 <Frame
                                     Grid.Row="1"
                                     Margin="0,20"
-                                    Padding="10,10"
+                                    Padding="7,10"
+                                    BackgroundColor="Transparent"
                                     BorderColor="{StaticResource appColor8}"
                                     CornerRadius="5"
                                     HasShadow="False"
@@ -613,7 +617,7 @@
                                             <Label
                                                 Grid.Row="0"
                                                 Grid.Column="0"
-                                                FontSize="{StaticResource Font15}"
+                                                FontSize="{StaticResource Font12}"
                                                 HorizontalOptions="StartAndExpand"
                                                 LineBreakMode="WordWrap"
                                                 Style="{StaticResource lblMedium}"
@@ -622,7 +626,7 @@
                                                 x:Name="lblInvoiceNo"
                                                 Grid.Row="0"
                                                 Grid.Column="1"
-                                                FontSize="{StaticResource Font14}"
+                                                FontSize="{StaticResource Font12}"
                                                 HorizontalOptions="StartAndExpand"
                                                 LineBreakMode="WordWrap"
                                                 Style="{StaticResource lblMedium}" />
@@ -631,7 +635,7 @@
                                             <Label
                                                 Grid.Row="1"
                                                 Grid.Column="0"
-                                                FontSize="{StaticResource Font15}"
+                                                FontSize="{StaticResource Font12}"
                                                 HorizontalOptions="StartAndExpand"
                                                 LineBreakMode="WordWrap"
                                                 Style="{StaticResource lblMedium}"
@@ -640,16 +644,17 @@
                                                 x:Name="lblTotalAmount"
                                                 Grid.Row="1"
                                                 Grid.Column="1"
-                                                FontSize="{StaticResource Font15}"
+                                                FontSize="{StaticResource Font12}"
                                                 HorizontalOptions="StartAndExpand"
                                                 LineBreakMode="WordWrap"
                                                 Style="{StaticResource lblMedium}" />
 
                                             <!--  Expected Delivery  -->
                                             <Label
+                                                x:Name="lblExpected"
                                                 Grid.Row="2"
                                                 Grid.Column="0"
-                                                FontSize="{StaticResource Font15}"
+                                                FontSize="{StaticResource Font12}"
                                                 HorizontalOptions="StartAndExpand"
                                                 LineBreakMode="WordWrap"
                                                 Style="{StaticResource lblMedium}"
@@ -658,7 +663,7 @@
                                                 x:Name="lblExpectedDate"
                                                 Grid.Row="2"
                                                 Grid.Column="1"
-                                                FontSize="{StaticResource Font15}"
+                                                FontSize="{StaticResource Font12}"
                                                 HorizontalOptions="StartAndExpand"
                                                 LineBreakMode="WordWrap"
                                                 Style="{StaticResource lblMedium}" />
@@ -668,7 +673,7 @@
                                                 x:Name="lblContactSellerLabel"
                                                 Grid.Row="3"
                                                 Grid.Column="0"
-                                                FontSize="{StaticResource Font15}"
+                                                FontSize="{StaticResource Font12}"
                                                 HorizontalOptions="Start"
                                                 LineBreakMode="WordWrap"
                                                 Style="{StaticResource lblMedium}"
@@ -677,7 +682,7 @@
                                                 x:Name="lblSellerContact"
                                                 Grid.Row="3"
                                                 Grid.Column="1"
-                                                FontSize="{StaticResource Font15}"
+                                                FontSize="{StaticResource Font12}"
                                                 HorizontalOptions="StartAndExpand"
                                                 LineBreakMode="WordWrap"
                                                 Style="{StaticResource lblMedium}" />
@@ -701,40 +706,68 @@
                                         </StackLayout>
                                         <!--#endregion-->
 
+
+
+
                                         <!--#region [ Row 2 | Track Order / Raise Grievance Buttons | Shipped ]-->
                                         <Grid
                                             x:Name="GrdTrackOrderAndRaiseGrvInMainGrid"
                                             Grid.Row="2"
-                                            ColumnDefinitions="Auto,Auto"
-                                            ColumnSpacing="10">
+                                            Margin="0,0,0,10"
+                                            HorizontalOptions="CenterAndExpand"
+                                            IsVisible="false"
+                                            RowDefinitions="Auto,Auto"
+                                            RowSpacing="10">
 
                                             <Button
                                                 x:Name="BtnTrackOrder"
-                                                Grid.Column="0"
+                                                Grid.Row="0"
+                                                Margin="0"
+                                                Padding="0"
                                                 BorderWidth="1"
                                                 Clicked="BtnTrackOrder_Tapped"
                                                 FontSize="{StaticResource Font15}"
                                                 HeightRequest="40"
+                                                HorizontalOptions="CenterAndExpand"
                                                 Style="{StaticResource btnBorder}"
-                                                Text="Track Order" />
+                                                Text="Track Order"
+                                                WidthRequest="200" />
 
                                             <Button
-                                                Grid.Column="1"
-                                                Padding="5,0"
+                                                Grid.Row="1"
+                                                Margin="0"
+                                                Padding="0"
                                                 BorderWidth="1"
                                                 Clicked="BtnRaiseGrievance_Tapped"
                                                 FontSize="{StaticResource Font15}"
                                                 HeightRequest="40"
+                                                HorizontalOptions="CenterAndExpand"
                                                 Style="{StaticResource btnBorder}"
-                                                Text="Raise Grievance" />
+                                                Text="Raise Grievance"
+                                                WidthRequest="200" />
                                         </Grid>
+                                        <!--#endregion-->
+
+
+                                        <!--#region [ Cancelled by buyer ]-->
+                                        <Button
+                                            x:Name="BtnRepostReqt1"
+                                            Grid.Row="2"
+                                            Margin="0,5"
+                                            Padding="0"
+                                            Clicked="BtnRepostReqt_Clicked"
+                                            HeightRequest="45"
+                                            HorizontalOptions="CenterAndExpand"
+                                            IsVisible="False"
+                                            Style="{StaticResource btnSmall}"
+                                            Text="Repost"
+                                            WidthRequest="200" />
                                         <!--#endregion-->
 
                                         <!--#region [ Row 3 | Scan QR Code Button/Image | ReadyForPickup ]-->
                                         <Button
                                             x:Name="BtnShowQrCodeInMainGrid"
                                             Grid.Row="3"
-                                            Padding="15,0"
                                             BorderWidth="1"
                                             Clicked="BtnShowQrCode_Clicked"
                                             FontSize="{StaticResource Font15}"
@@ -742,8 +775,8 @@
                                             HorizontalOptions="CenterAndExpand"
                                             IsVisible="false"
                                             Style="{StaticResource btnBorder}"
-                                            Text="Show QR Code" />
-
+                                            Text="Show QR Code"
+                                            WidthRequest="200" />
 
                                         <Grid
                                             x:Name="GrdScanQRCodeImageInMainGrid"
@@ -764,11 +797,7 @@
                                 </Frame>
 
                                 <!--  Warning Msg-Raise Complain / Confirm Deliver / Rating-Report  -->
-                                <Grid
-                                    x:Name="GrdAllSubGrid"
-                                    Grid.Row="2"
-                                    Padding="0,0,0,20"
-                                    IsVisible="false">
+                                <StackLayout Grid.Row="2" Padding="0">
                                     <!--#region [ Warning And Raise Complain | RedyForPickup ]-->
                                     <Grid
                                         x:Name="GrdWarningAndRaiseComplainInSubGrid"
@@ -783,29 +812,38 @@
                                             <Label
                                                 FontSize="13"
                                                 Style="{StaticResource lblMedium}"
-                                                Text="You have to verify the product before&#10;allowing the seller to scan the QR Code." />
+                                                Text="You have to verify the product before allowing the seller to scan the QR Code." />
                                         </StackLayout>
                                         <Button
                                             Grid.Row="1"
                                             Clicked="BtnRaiseGrievance_Tapped"
+                                            HeightRequest="40"
+                                            HorizontalOptions="CenterAndExpand"
+                                            IsVisible="false"
                                             Style="{StaticResource btnPrimary}"
-                                            Text="Raise Complaint" />
+                                            Text="Raise Complaint"
+                                            WidthRequest="200" />
                                     </Grid>
                                     <!--#endregion-->
 
                                     <!--#region [ Confirm Delivery Button | (Shipped/Completed/Deliverd/DeliveryConfirmation == false) ]-->
                                     <Button
                                         x:Name="BtnConfirmDeliveryInSubGrid"
+                                        Margin="0,5,0,10"
                                         Clicked="BtnConfirmDelivery_Clicked"
+                                        HeightRequest="40"
+                                        HorizontalOptions="CenterAndExpand"
                                         IsVisible="false"
                                         Style="{StaticResource btnPrimary}"
-                                        Text="Confirm Delivery" />
+                                        Text="Confirm Delivery"
+                                        WidthRequest="200" />
                                     <!--#endregion-->
+
 
                                     <!--#region [ Rating/Report Req | Completed ]-->
                                     <Grid
                                         x:Name="GrdRateAndReportInSubGrid"
-                                        IsVisible="False"
+                                        IsVisible="false"
                                         RowDefinitions="Auto,Auto"
                                         RowSpacing="15">
 
@@ -829,7 +867,8 @@
                                                 ColorOn="{StaticResource appColor1}"
                                                 Count="5"
                                                 HorizontalOptions="FillAndExpand"
-                                                OutlineOffColor="{StaticResource appColor1}"
+                                                OutlineOffColor="{AppThemeBinding Dark={StaticResource appColor7},
+                                                                                  Light={StaticResource appColor1}}"
                                                 RatingType="Half"
                                                 VerticalOptions="FillAndExpand"
                                                 Value="0" />
@@ -862,7 +901,8 @@
                                                 ColorOn="{StaticResource appColor1}"
                                                 Count="5"
                                                 HorizontalOptions="FillAndExpand"
-                                                OutlineOffColor="{StaticResource appColor1}"
+                                                OutlineOffColor="{AppThemeBinding Dark={StaticResource appColor7},
+                                                                                  Light={StaticResource appColor1}}"
                                                 RatingType="Half"
                                                 VerticalOptions="FillAndExpand"
                                                 Value="0" />
@@ -895,7 +935,8 @@
                                                 ColorOn="{StaticResource appColor1}"
                                                 Count="5"
                                                 HorizontalOptions="FillAndExpand"
-                                                OutlineOffColor="{StaticResource appColor1}"
+                                                OutlineOffColor="{AppThemeBinding Dark={StaticResource appColor7},
+                                                                                  Light={StaticResource appColor1}}"
                                                 RatingType="Half"
                                                 VerticalOptions="FillAndExpand"
                                                 Value="0" />
@@ -914,41 +955,45 @@
                                             <!--#endregion-->
                                         </Grid>
 
-                                        <Grid
-                                            Grid.Row="1"
-                                            ColumnDefinitions="*,*"
-                                            ColumnSpacing="20"
-                                            RowDefinitions="Auto,Auto">
+                                        <Grid Grid.Row="1" RowDefinitions="Auto,Auto,Auto">
                                             <Button
                                                 x:Name="BtnRepostReqt"
                                                 Grid.Row="0"
-                                                Grid.Column="0"
+                                                Margin="0,5"
+                                                Padding="0"
                                                 Clicked="BtnRepostReqt_Clicked"
                                                 HeightRequest="45"
+                                                HorizontalOptions="CenterAndExpand"
                                                 Style="{StaticResource btnSmall}"
-                                                Text="Repost" />
+                                                Text="Repost"
+                                                WidthRequest="200" />
 
                                             <Button
                                                 x:Name="BtnRaiseGrievance"
-                                                Grid.Row="0"
-                                                Grid.Column="1"
+                                                Grid.Row="1"
+                                                Margin="0,5"
+                                                Padding="0"
                                                 Clicked="BtnRaiseGrievance_Tapped"
-                                                HeightRequest="45"
+                                                HeightRequest="40"
+                                                HorizontalOptions="CenterAndExpand"
                                                 Style="{StaticResource btnSmall}"
-                                                Text="Raise Grievance" />
+                                                Text="Raise Grievance"
+                                                WidthRequest="200" />
 
                                             <Label
-                                                Grid.Row="1"
-                                                Grid.Column="1"
-                                                Margin="10,0"
+                                                Grid.Row="2"
+                                                Margin="0,5"
                                                 FontSize="12"
                                                 HorizontalOptions="CenterAndExpand"
+                                                IsVisible="{Binding Source={x:Reference BtnRaiseGrievance}, Path=IsVisible}"
                                                 Style="{StaticResource lblLight}"
-                                                Text="(Visible up to 48 hrs of delivery)" />
+                                                Text="(visible up to 48 hrs of delivery)" />
                                         </Grid>
                                     </Grid>
                                     <!--#endregion-->
-                                </Grid>
+                                </StackLayout>
+
+
 
                                 <!--  Cancel Order | isOrderCancelAllowed = true  -->
                                 <Grid
@@ -961,8 +1006,11 @@
                                         x:Name="BtnCancelOrder"
                                         Grid.Row="0"
                                         Clicked="BtnCancelOrder_Tapped"
+                                        HeightRequest="40"
+                                        HorizontalOptions="CenterAndExpand"
                                         Style="{StaticResource btnPrimary}"
-                                        Text="Cancel Order" />
+                                        Text="Cancel Order"
+                                        WidthRequest="200" />
                                     <Label
                                         Grid.Row="1"
                                         FontSize="12"

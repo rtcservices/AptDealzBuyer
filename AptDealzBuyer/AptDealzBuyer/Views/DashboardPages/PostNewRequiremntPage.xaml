@@ -8,7 +8,8 @@
     xmlns:ffTransformer="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
     xmlns:iOS="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
     iOS:Page.UseSafeArea="True"
-    BackgroundColor="{StaticResource appColor6}"
+    BackgroundColor="{AppThemeBinding Dark={StaticResource appColor4},
+                                      Light={StaticResource appColor6}}"
     NavigationPage.HasNavigationBar="False">
     <ContentPage.Content>
         <Grid RowSpacing="0">
@@ -93,14 +94,14 @@
                 <Grid
                     Grid.Row="0"
                     Margin="5,5,5,0"
-                    BackgroundColor="{StaticResource appColor6}"
+                    BackgroundColor="{AppThemeBinding Dark={StaticResource appColor4},
+                                                      Light={StaticResource appColor6}}"
                     ColumnDefinitions="Auto,*"
                     ColumnSpacing="0">
                     <ImageButton
                         x:Name="ImgBack"
                         Grid.Column="0"
                         Clicked="ImgBack_Tapped"
-                        Source="iconBackArrow.png"
                         Style="{StaticResource ImgBtnPrimary}" />
                     <Label
                         Grid.Column="1"
@@ -211,7 +212,8 @@
                             <!--  Uplode Product Image  -->
                             <Frame
                                 Grid.Row="1"
-                                BackgroundColor="{StaticResource appColor8}"
+                                BackgroundColor="{AppThemeBinding Dark={StaticResource appColor7},
+                                                                  Light={StaticResource appColor8}}"
                                 Style="{StaticResource frmBlank}">
                                 <Grid Margin="7" ColumnDefinitions="Auto,*,Auto,Auto">
 
@@ -241,7 +243,8 @@
 
                                     <BoxView
                                         Grid.Column="2"
-                                        BackgroundColor="{StaticResource appColor6}"
+                                        BackgroundColor="{AppThemeBinding Dark={StaticResource appColor4},
+                                                                          Light={StaticResource appColor6}}"
                                         HorizontalOptions="EndAndExpand"
                                         VerticalOptions="FillAndExpand"
                                         WidthRequest="1" />
@@ -515,7 +518,8 @@
                                         FontSize="{StaticResource Font15}"
                                         Format="dd/MM/yyyy"
                                         HorizontalOptions="FillAndExpand"
-                                        TextColor="{StaticResource appColor4}" />
+                                        TextColor="{AppThemeBinding Dark={StaticResource appColor6},
+                                                                    Light={StaticResource appColor4}}" />
                                     <BoxView x:Name="BoxExpectedDeliveryDate" Style="{StaticResource boxHorizontal}" />
                                     <StackLayout.GestureRecognizers>
                                         <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ExpectedDeliveryDate_Tapped" />
@@ -631,7 +635,8 @@
 
                                 <Frame
                                     Grid.Row="0"
-                                    BackgroundColor="{StaticResource appColor8}"
+                                    BackgroundColor="{AppThemeBinding Dark={StaticResource appColor7},
+                                                                      Light={StaticResource appColor8}}"
                                     Style="{StaticResource frmBlank}">
                                     <StackLayout
                                         x:Name="StkShipping"

@@ -5,7 +5,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:converter="clr-namespace:AptDealzBuyer.Converter"
     xmlns:ext="clr-namespace:AptDealzBuyer.Extention"
-    BackgroundColor="{StaticResource appColor6}"
+    BackgroundColor="{AppThemeBinding Dark={StaticResource appColor4},
+                                      Light={StaticResource appColor6}}"
     NavigationPage.HasNavigationBar="False">
     <ContentView.Content>
         <Grid RowSpacing="0">
@@ -95,7 +96,6 @@
                         x:Name="ImgBack"
                         Grid.Column="0"
                         Clicked="ImgBack_Tapped"
-                        Source="iconBackArrow.png"
                         Style="{StaticResource ImgBtnPrimary}" />
                     <Label
                         Grid.Column="1"
@@ -164,7 +164,8 @@
                                 <Image
                                     x:Name="ImgSort"
                                     Grid.Column="0"
-                                    Source="iconSortDSC.png"
+                                    Source="{AppThemeBinding Dark=iconSortDSCWhite.png,
+                                                             Light=iconSortDSC.png}"
                                     Style="{StaticResource imgSorting}" />
                                 <Label
                                     Grid.Column="1"
@@ -188,7 +189,8 @@
                                 ColumnSpacing="0">
                                 <Image
                                     Grid.Column="0"
-                                    Source="iconFilter.png"
+                                    Source="{AppThemeBinding Dark=iconFilterWhite.png,
+                                                             Light=iconFilter.png}"
                                     Style="{StaticResource imgSorting}" />
 
                                 <Label
@@ -354,6 +356,7 @@
                                                 Grid.Row="2"
                                                 Margin="0"
                                                 Padding="0"
+                                                BackgroundColor="Transparent"
                                                 BorderColor="{StaticResource appColor1}"
                                                 CornerRadius="20"
                                                 HasShadow="False"

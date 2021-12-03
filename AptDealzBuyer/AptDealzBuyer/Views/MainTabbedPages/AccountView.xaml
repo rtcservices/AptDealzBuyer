@@ -8,7 +8,8 @@
     xmlns:ffTransformer="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
     xmlns:panCake="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
     x:Name="page1"
-    BackgroundColor="{StaticResource appColor6}"
+    BackgroundColor="{AppThemeBinding Dark={StaticResource appColor4},
+                                      Light={StaticResource appColor6}}"
     NavigationPage.HasNavigationBar="False">
     <ContentView.Content>
         <Grid RowSpacing="0">
@@ -97,7 +98,6 @@
                         x:Name="ImgBack"
                         Grid.Column="0"
                         Clicked="ImgBack_Tapped"
-                        Source="iconBackArrow.png"
                         Style="{StaticResource ImgBtnPrimary}" />
                     <Label
                         Grid.Column="1"
@@ -234,7 +234,6 @@
 
                                     <ext:ExtEntry
                                         x:Name="txtEmailAddress"
-                                        IsEnabled="False"
                                         IsReadOnly="True"
                                         Style="{StaticResource entrGray}" />
                                     <BoxView Style="{StaticResource boxHorizontal}" />
@@ -314,7 +313,8 @@
                                         TabIndex="6"
                                         Text="{Binding countryText, Source={x:Reference page1}}"
                                         TextChanged="AutoSuggestBox_TextChanged"
-                                        TextColor="{StaticResource appColor4}"
+                                        TextColor="{AppThemeBinding Dark={StaticResource appColor6},
+                                                                    Light={StaticResource appColor4}}"
                                         Unfocused="AutoSuggestBox_Unfocused" />
 
                                     <BoxView x:Name="BoxNationality" Style="{StaticResource boxHorizontal}" />
@@ -396,7 +396,8 @@
                                     HorizontalOptions="CenterAndExpand"
                                     Style="{StaticResource btnSmall}"
                                     Text="Logout"
-                                    TextColor="{StaticResource appColor4}" />
+                                    TextColor="{AppThemeBinding Dark={StaticResource appColor6},
+                                                                Light={StaticResource appColor4}}" />
 
                                 <Button
                                     x:Name="BtnDeactivate"
@@ -408,7 +409,8 @@
                                     HorizontalOptions="CenterAndExpand"
                                     Style="{StaticResource btnSmall}"
                                     Text="Deactivate Account"
-                                    TextColor="{StaticResource appColor4}" />
+                                    TextColor="{AppThemeBinding Dark={StaticResource appColor6},
+                                                                Light={StaticResource appColor4}}" />
                             </Grid>
                         </Grid>
                     </ScrollView>

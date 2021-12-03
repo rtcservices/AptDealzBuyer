@@ -12,7 +12,6 @@ namespace AptDealzBuyer.Droid
         public override void OnTokenRefresh()
         {
             Utility.Settings.fcm_token = FirebaseInstanceId.Instance.Token;
-
         }
 
         void SendRegistrationToServer(string token)

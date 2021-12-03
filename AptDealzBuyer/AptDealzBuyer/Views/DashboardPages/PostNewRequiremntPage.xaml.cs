@@ -9,7 +9,6 @@ using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -121,6 +120,7 @@ namespace AptDealzBuyer.Views.DashboardPages
                     if (!Common.EmptyFiels(mRequirement.ProductImage))
                     {
                         ImgProductImage.Source = mRequirement.ProductImage;
+                        relativePath = mRequirement.ProductImage;
                     }
                     else
                     {
@@ -159,6 +159,13 @@ namespace AptDealzBuyer.Views.DashboardPages
                     {
                         isPickupProductFromSeller = true;
                         imgPickup.Source = Constraints.Img_CheckBoxChecked;
+                        lblDeliveryDate.Text = Constraints.Str_ExpectedPickupDate;
+                        StkDeliveryLocationPINCode.IsVisible = false;
+                    }
+                    else
+                    {
+                        StkDeliveryLocationPINCode.IsVisible = true;
+                        lblDeliveryDate.Text = Constraints.Str_ExpectedDeliveryDate;
                     }
 
                     if (mRequirement.NeedInsuranceCoverage)
@@ -845,64 +852,62 @@ namespace AptDealzBuyer.Views.DashboardPages
         {
             try
             {
-                if (Validations())
+                UserDialogs.Instance.ShowLoading(Constraints.Loading);
+                if (!await PinCodeValidation(txtPinCode.Text, BoxPinCode, "Billing"))
+                    return;
+
+                if (!isPickupProductFromSeller)
                 {
-                    UserDialogs.Instance.ShowLoading(Constraints.Loading);
-                    if (!await PinCodeValidation(txtPinCode.Text, BoxPinCode, "Billing"))
+                    if (!await PinCodeValidation(txtLocationPinCode.Text, BoxLocationPinCode, "Delivery"))
                         return;
-
-                    if (!isPickupProductFromSeller)
+                    else if (!await PinCodeValidation(txtSAPinCode.Text, BoxSAPinCode, "Shipping"))
+                        return;
+                    else if (txtLocationPinCode.Text != txtSAPinCode.Text)
                     {
-                        if (!await PinCodeValidation(txtLocationPinCode.Text, BoxLocationPinCode, "Delivery"))
-                            return;
-                        else if (!await PinCodeValidation(txtSAPinCode.Text, BoxSAPinCode, "Shipping"))
-                            return;
-                        else if (txtLocationPinCode.Text != txtSAPinCode.Text)
-                        {
-                            BoxLocationPinCode.BackgroundColor = (Color)App.Current.Resources["appColor3"];
-                            BoxSAPinCode.BackgroundColor = (Color)App.Current.Resources["appColor3"];
-                            Common.DisplayErrorMessage(Constraints.Same_Delivery_Shipping_PinCode);
-                            return;
-                        }
+                        BoxLocationPinCode.BackgroundColor = (Color)App.Current.Resources["appColor3"];
+                        BoxSAPinCode.BackgroundColor = (Color)App.Current.Resources["appColor3"];
+                        Common.DisplayErrorMessage(Constraints.Same_Delivery_Shipping_PinCode);
+                        return;
                     }
-                    else if (!Common.EmptyFiels(txtSAPinCode.Text))
-                    {
-                        if (!await PinCodeValidation(txtSAPinCode.Text, BoxSAPinCode, "Shipping"))
-                            return;
-                    }
+                }
+                else if (!Common.EmptyFiels(txtSAPinCode.Text))
+                {
+                    if (!await PinCodeValidation(txtSAPinCode.Text, BoxSAPinCode, "Shipping"))
+                        return;
+                }
 
-                    FieldsTrim();
-                    RequirementAPI requirementAPI = new RequirementAPI();
-                    var mRequirement = FillRequirement();
+                FieldsTrim();
+                RequirementAPI requirementAPI = new RequirementAPI();
+                var mRequirement = FillRequirement();
 
-                    if (mRequirement != null)
+                if (mRequirement != null)
+                {
+                    var mResponse = await requirementAPI.CreateRequirement(mRequirement);
+                    if (mResponse != null && mResponse.Succeeded)
                     {
-                        var mResponse = await requirementAPI.CreateRequirement(mRequirement);
-                        if (mResponse != null && mResponse.Succeeded)
-                        {
-                            await SuccessfullRequirementAsync(mResponse.Message);
-                            ClearPropeties();
-                        }
-                        else
-                        {
-                            if (mResponse != null)
-                                Common.DisplayErrorMessage(mResponse.Message);
-                            else
-                                Common.DisplayErrorMessage(Constraints.Something_Wrong);
-                        }
+                        await SuccessfullRequirementAsync(mResponse.Message);
+                        ClearPropeties();
                     }
                     else
                     {
-                        if (!Common.EmptyFiels(ErrorMessage))
-                        {
-                            Common.DisplayErrorMessage(ErrorMessage);
-                        }
+                        if (mResponse != null)
+                            Common.DisplayErrorMessage(mResponse.Message);
                         else
-                        {
                             Common.DisplayErrorMessage(Constraints.Something_Wrong);
-                        }
                     }
                 }
+                else
+                {
+                    if (!Common.EmptyFiels(ErrorMessage))
+                    {
+                        Common.DisplayErrorMessage(ErrorMessage);
+                    }
+                    else
+                    {
+                        Common.DisplayErrorMessage(Constraints.Something_Wrong);
+                    }
+                }
+
             }
             catch (Exception ex)
             {
@@ -1056,31 +1061,29 @@ namespace AptDealzBuyer.Views.DashboardPages
 
         #region [ Events ]   
         #region [ Header Navigation ]
-        private void ImgMenu_Tapped(object sender, EventArgs e)
+        private async void ImgMenu_Tapped(object sender, EventArgs e)
         {
-            Common.BindAnimation(image: ImgMenu);
-            //Common.OpenMenu();
+                try
+                {
+                    await Common.BindAnimation(image: ImgMenu);
+                    await Navigation.PushAsync(new OtherPages.SettingsPage());
+                }
+                catch (Exception ex)
+                {
+                    Common.DisplayErrorMessage("PostNewRequiremntPage/ImgMenu_Tapped: " + ex.Message);
+                }
         }
 
         private async void ImgNotification_Tapped(object sender, EventArgs e)
         {
-            var Tab = (Grid)sender;
-            if (Tab.IsEnabled)
-            {
                 try
                 {
-                    Tab.IsEnabled = false;
                     await Navigation.PushAsync(new NotificationPage());
                 }
                 catch (Exception ex)
                 {
                     Common.DisplayErrorMessage("PostNewRequiremntPage/ImgNotification_Tapped: " + ex.Message);
                 }
-                finally
-                {
-                    Tab.IsEnabled = true;
-                }
-            }
         }
 
         private void ImgQuestion_Tapped(object sender, EventArgs e)
@@ -1090,7 +1093,7 @@ namespace AptDealzBuyer.Views.DashboardPages
 
         private async void ImgBack_Tapped(object sender, EventArgs e)
         {
-            Common.BindAnimation(imageButton: ImgBack);
+            await Common.BindAnimation(imageButton: ImgBack);
             await Navigation.PopAsync();
         }
         #endregion
@@ -1131,7 +1134,7 @@ namespace AptDealzBuyer.Views.DashboardPages
         {
             try
             {
-                if (imgShippingDown.Source.ToString().Replace("File: ", "") == Constraints.Img_ArrowDown)
+                if (imgShippingDown.Source.ToString().Replace("File: ", "") == Constraints.Arrow_Down)
                 {
                     imgShippingDown.Source = Constraints.Img_ArrowUp;
                     grdShippingAddress.IsVisible = true;
@@ -1139,7 +1142,7 @@ namespace AptDealzBuyer.Views.DashboardPages
                 }
                 else
                 {
-                    imgShippingDown.Source = Constraints.Img_ArrowDown;
+                    imgShippingDown.Source = Constraints.Arrow_Down;
                     grdShippingAddress.IsVisible = false;
                 }
             }
@@ -1283,23 +1286,17 @@ namespace AptDealzBuyer.Views.DashboardPages
 
         private async void BtnSubmitRequirement_Clicked(object sender, EventArgs e)
         {
-            var Tab = (Button)sender;
-            if (Tab.IsEnabled)
+            try
             {
-                try
+                await Common.BindAnimation(button: BtnSubmitRequirement);
+                if (Validations())
                 {
-                    Tab.IsEnabled = false;
-                    Common.BindAnimation(button: BtnSubmitRequirement);
                     await SubmitRequirement();
                 }
-                catch (Exception ex)
-                {
-                    Common.DisplayErrorMessage("PostNewRequiremntPage/BtnSubmitRequirement: " + ex.Message);
-                }
-                finally
-                {
-                    Tab.IsEnabled = true;
-                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("PostNewRequiremntPage/BtnSubmitRequirement: " + ex.Message);
             }
         }
 

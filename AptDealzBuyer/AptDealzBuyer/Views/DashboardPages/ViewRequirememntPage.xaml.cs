@@ -1,5 +1,4 @@
 ﻿using Acr.UserDialogs;
-using AptDealzBuyer.API;
 using AptDealzBuyer.Model.Reponse;
 using AptDealzBuyer.Model.Request;
 using AptDealzBuyer.Repository;
@@ -76,13 +75,13 @@ namespace AptDealzBuyer.Views.DashboardPages
             Dispose();
         }
 
-        protected override void OnAppearing()
+        protected async override void OnAppearing()
         {
             try
             {
                 base.OnAppearing();
                 BindGrids();
-                GetRequirementDetails();
+                await GetRequirementDetails();
             }
             catch (Exception ex)
             {
@@ -119,7 +118,7 @@ namespace AptDealzBuyer.Views.DashboardPages
                     }
                     else
                     {
-                        imgProductImage.Source = Constraints.Img_ProductBanner;
+                        imgProductImage.Source = (Application.Current.UserAppTheme == OSAppTheme.Light) ? Constraints.Img_ProductBanner : Constraints.Img_ProductBannerWhite;
                     }
 
                     lblDescription.Text = mRequirement.ProductDescription;
@@ -153,10 +152,12 @@ namespace AptDealzBuyer.Views.DashboardPages
                     {
                         lblDeliveryDateValue.Text = mRequirement.ExpectedDeliveryDate.ToString(Constraints.Str_DateFormate);
                     }
+
                     if (!Common.EmptyFiels(mRequirement.DeliveryLocationPinCode))
                     {
                         lblLocPinCode.Text = mRequirement.DeliveryLocationPinCode;
                     }
+
                     if (!Common.EmptyFiels((string)mRequirement.PreferredSourceOfSupply))
                     {
                         lblPreferredSource.Text = (string)mRequirement.PreferredSourceOfSupply;
@@ -184,9 +185,11 @@ namespace AptDealzBuyer.Views.DashboardPages
                     {
                         lblDeliveryDate.Text = Constraints.Str_ExpectedPickupDate;
                         lblPreferSeller.Text = Constraints.Str_Right;
+                        stkLocPinCode.IsVisible = false;
                     }
                     else
                     {
+                        stkLocPinCode.IsVisible = true;
                         lblDeliveryDate.Text = Constraints.Str_ExpectedDeliveryDate;
                         lblPreferSeller.Text = Constraints.Str_Wrong;
                     }
@@ -333,22 +336,13 @@ namespace AptDealzBuyer.Views.DashboardPages
         #region [ Header Navigation ]
         private async void ImgNotification_Tapped(object sender, EventArgs e)
         {
-            var Tab = (Grid)sender;
-            if (Tab.IsEnabled)
+            try
             {
-                try
-                {
-                    Tab.IsEnabled = false;
-                    await Navigation.PushAsync(new NotificationPage());
-                }
-                catch (Exception ex)
-                {
-                    Common.DisplayErrorMessage("ViewRequirememntPage/ImgNotification_Tapped: " + ex.Message);
-                }
-                finally
-                {
-                    Tab.IsEnabled = true;
-                }
+                await Navigation.PushAsync(new NotificationPage());
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("ViewRequirememntPage/ImgNotification_Tapped: " + ex.Message);
             }
         }
 
@@ -359,14 +353,21 @@ namespace AptDealzBuyer.Views.DashboardPages
 
         private async void ImgBack_Tapped(object sender, EventArgs e)
         {
-            Common.BindAnimation(imageButton: ImgBack);
+            await Common.BindAnimation(imageButton: ImgBack);
             await Navigation.PopAsync();
         }
 
-        private void ImgMenu_Tapped(object sender, EventArgs e)
+        private async void ImgMenu_Tapped(object sender, EventArgs e)
         {
-            Common.BindAnimation(image: ImgMenu);
-            //Common.OpenMenu();
+            try
+            {
+                await Common.BindAnimation(image: ImgMenu);
+                await Navigation.PushAsync(new OtherPages.SettingsPage());
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("ViewRequirememntPage/ImgMenu_Tapped: " + ex.Message);
+            }
         }
 
         private void BtnLogo_Clicked(object sender, EventArgs e)
@@ -377,37 +378,30 @@ namespace AptDealzBuyer.Views.DashboardPages
 
         private async void BtnDeleteRequirement_Tapped(object sender, EventArgs e)
         {
-            var Tab = (Button)sender;
-            if (Tab.IsEnabled)
+            try
             {
-                try
-                {
-                    Tab.IsEnabled = false;
-                    Common.BindAnimation(button: BtnDeleteRequirement);
-                    await DeleteRequirement(RequirementId);
-                }
-                catch (Exception ex)
-                {
-                    Common.DisplayErrorMessage("ViewRequirememntPage/BtnDeleteRequirement: " + ex.Message);
-                }
-                finally
-                {
-                    Tab.IsEnabled = true;
-                }
+                await Common.BindAnimation(button: BtnDeleteRequirement);
+                await DeleteRequirement(RequirementId);
             }
-
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("ViewRequirememntPage/BtnDeleteRequirement: " + ex.Message);
+            }
         }
 
         private void FrmSortBy_Tapped(object sender, EventArgs e)
         {
-            if (ImgSort.Source.ToString().Replace("File: ", "") == Constraints.Img_SortASC)
+            var ImgASC = (Application.Current.UserAppTheme == OSAppTheme.Light) ? Constraints.Sort_ASC : Constraints.Sort_ASC_Dark;
+            var ImgDSC = (Application.Current.UserAppTheme == OSAppTheme.Light) ? Constraints.Sort_DSC : Constraints.Sort_DSC_Dark;
+
+            if (ImgSort.Source.ToString().Replace("File: ", "") == ImgASC)
             {
-                ImgSort.Source = Constraints.Img_SortDSC;
+                ImgSort.Source = ImgDSC;
                 isAssending = false;
             }
             else
             {
-                ImgSort.Source = Constraints.Img_SortASC;
+                ImgSort.Source = ImgASC;
                 isAssending = true;
             }
             GetListOfQuotes(filterBy, isAssending);
@@ -415,34 +409,25 @@ namespace AptDealzBuyer.Views.DashboardPages
 
         private async void FrmFilter_Tapped(object sender, EventArgs e)
         {
-            var Tab = (Frame)sender;
-            if (Tab.IsEnabled)
+            try
             {
-                try
+                var sortby = new QuotesPopup(filterBy);
+                sortby.isRefresh += (s1, e1) =>
                 {
-                    Tab.IsEnabled = false;
-                    var sortby = new QuotesPopup(filterBy);
-                    sortby.isRefresh += (s1, e1) =>
+                    string result = s1.ToString();
+                    if (!Common.EmptyFiels(result))
                     {
-                        string result = s1.ToString();
-                        if (!Common.EmptyFiels(result))
-                        {
-                            filterBy = result;
-                            lblFilterBy.Text = filterBy;
+                        filterBy = result;
+                        lblFilterBy.Text = filterBy;
 
-                            GetListOfQuotes(filterBy, isAssending);
-                        }
-                    };
-                    await PopupNavigation.Instance.PushAsync(sortby);
-                }
-                catch (Exception ex)
-                {
-                    Common.DisplayErrorMessage("ViewRequirememntPage/FrmFilter_Tapped: " + ex.Message);
-                }
-                finally
-                {
-                    Tab.IsEnabled = true;
-                }
+                        GetListOfQuotes(filterBy, isAssending);
+                    }
+                };
+                await PopupNavigation.Instance.PushAsync(sortby);
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("ViewRequirememntPage/FrmFilter_Tapped: " + ex.Message);
             }
         }
 
@@ -463,22 +448,14 @@ namespace AptDealzBuyer.Views.DashboardPages
         private async void GrdViewQuote_Tapped(object sender, EventArgs e)
         {
             var GridTab = (Grid)sender;
-            if (GridTab.IsEnabled)
+            try
             {
-                try
-                {
-                    GridTab.IsEnabled = false;
-                    var mQuote = GridTab.BindingContext as ReceivedQuote;
-                    await Navigation.PushAsync(new QuoteDetailsPage(mQuote.QuoteId));
-                }
-                catch (Exception ex)
-                {
-                    Common.DisplayErrorMessage("ViewRequirememntPage/GrdViewQuote_Tapped: " + ex.Message);
-                }
-                finally
-                {
-                    GridTab.IsEnabled = true;
-                }
+                var mQuote = GridTab.BindingContext as ReceivedQuote;
+                await Navigation.PushAsync(new QuoteDetailsPage(mQuote.QuoteId));
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("ViewRequirememntPage/GrdViewQuote_Tapped: " + ex.Message);
             }
         }
 
@@ -510,29 +487,20 @@ namespace AptDealzBuyer.Views.DashboardPages
 
         private async void FrmProductImage_Tapped(object sender, EventArgs e)
         {
-            var Tab = (Frame)sender;
-            if (Tab.IsEnabled)
+            try
             {
-                try
+                if (!Common.EmptyFiels(ProductImageUrl))
                 {
-                    Tab.IsEnabled = false;
-                    if (!Common.EmptyFiels(ProductImageUrl))
-                    {
-                        var base64File = ImageConvertion.ConvertImageURLToBase64(ProductImageUrl);
-                        string extension = Path.GetExtension(ProductImageUrl).ToLower();
+                    var base64File = ImageConvertion.ConvertImageURLToBase64(ProductImageUrl);
+                    string extension = Path.GetExtension(ProductImageUrl).ToLower();
 
-                        var successPopup = new DisplayDocumentPopup(base64File, extension);
-                        await PopupNavigation.Instance.PushAsync(successPopup);
-                    }
+                    var successPopup = new DisplayDocumentPopup(base64File, extension);
+                    await PopupNavigation.Instance.PushAsync(successPopup);
                 }
-                catch (Exception ex)
-                {
-                    Common.DisplayErrorMessage("ViewRequirememntPage/FrmProductImage_Tapped: " + ex.Message);
-                }
-                finally
-                {
-                    Tab.IsEnabled = true;
-                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("ViewRequirememntPage/FrmProductImage_Tapped: " + ex.Message);
             }
         }
         #endregion

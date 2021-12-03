@@ -26,6 +26,8 @@
         public const string Country = "api/v{0}/Country/Get";
         public const string FileUpload = "api/FileUpload";
         public const string GetPincodeInfo = "api/IndianPincode/GetPincodeInfo/{0}";
+
+        public const string UpdateUserMuteNotification = "api/Account/UpdateUserMuteNotification/{0}";
         #endregion
 
         #region [ Category API ]
@@ -91,7 +93,6 @@
         public const string GetAllAffiliations = "api/v{0}/Affiliations/GetAllAffiliations";
         #endregion
 
-
         #region MyRegion
         public const string GetAmountToBePaidToRevealBuyerContact = "api​/v{0}​/Requirement​/GetAmountToBePaidToRevealBuyerContact";
         public const string GetPrivacyPolicyTermsAndConditions = "api/v{0}/AppSettings/GetPrivacyPolicyTermsAndConditions";
@@ -100,6 +101,7 @@
         public const string AboutAptdealzBuyerApp = "api/v{0}/AppSettings/AboutAptdealzBuyerApp";
         #endregion
 
+       
     }
 }
 

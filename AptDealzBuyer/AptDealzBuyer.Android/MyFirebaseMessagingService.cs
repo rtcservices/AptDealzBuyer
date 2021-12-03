@@ -16,7 +16,10 @@ namespace AptDealzBuyer.Droid
         public override void OnMessageReceived(RemoteMessage message)
         {
             base.OnMessageReceived(message);
-            new NotificationHelper().ScheduleNotification(message.GetNotification().Title, message.GetNotification().Body);
+            if (!AptDealzBuyer.Utility.Settings.IsMuteMode)
+            {
+                new NotificationHelper().ScheduleNotification(message.GetNotification().Title, message.GetNotification().Body);
+            }
         }
     }
 }

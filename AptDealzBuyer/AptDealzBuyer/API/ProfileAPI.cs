@@ -166,6 +166,38 @@ namespace AptDealzBuyer.API
             return mResponse;
         }
 
+        public async Task<Response> UpdateUserMuteNotification(string userId, bool IsNotificationMute)
+        {
+            Response mResponse = new Response();
+            try
+            {
+                if (CrossConnectivity.Current.IsConnected)
+                {
+                    string requestJson = "{\"userId\":\"" + userId + "\"}";
+                    using (var hcf = new HttpClientFactory(token: Common.Token))
+                    {
+                        string url = string.Format(EndPointURL.UpdateUserMuteNotification, IsNotificationMute); //sent UserId
+                        var response = await hcf.PostAsync(url, requestJson);
+                        mResponse = await DependencyService.Get<IAuthenticationRepository>().APIResponse(response);
+                    }
+                }
+                else
+                {
+                    if (await Common.InternetConnection())
+                    {
+                        await UpdateUserMuteNotification(userId, IsNotificationMute);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                mResponse.Succeeded = false;
+                mResponse.Message = ex.Message;
+                Common.DisplayErrorMessage("ProfileAPI/DeactiviateUser: " + ex.Message);
+            }
+            return mResponse;
+        }
+
         public async Task<Response> FileUpload(FileUpload mFileUpload)
         {
             Response mResponse = new Response();

@@ -11,7 +11,8 @@
                          iOS='0,0,0,30'}"
     iOS:Page.PrefersHomeIndicatorAutoHidden="True"
     iOS:Page.UseSafeArea="False"
-    BackgroundColor="{StaticResource appColor6}"
+    BackgroundColor="{AppThemeBinding Dark={StaticResource appColor4},
+                                      Light={StaticResource appColor6}}"
     NavigationPage.HasNavigationBar="False">
 
 

@@ -4,6 +4,8 @@ using AptDealzBuyer.Utility;
 using AptDealzBuyer.Views.MasterData;
 using Plugin.FirebasePushNotification;
 using Plugin.LocalNotification;
+using Plugin.Permissions;
+using Plugin.Permissions.Abstractions;
 using System;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -34,7 +36,14 @@ namespace AptDealzBuyer
 
                 InitializeComponent();
 
-                Application.Current.UserAppTheme = OSAppTheme.Light;
+                if (Settings.IsDarkMode)
+                {
+                    Application.Current.UserAppTheme = OSAppTheme.Dark;
+                }
+                else
+                {
+                    Application.Current.UserAppTheme = OSAppTheme.Light;
+                }
 
                 RegisterDependencies();
                 GetCurrentLocation();
@@ -46,7 +55,7 @@ namespace AptDealzBuyer
                 }
                 else
                 {
-                    MainPage = new MasterDataPage(true);
+                    MainPage = new MasterDataPage(IsNotification);
                     IsNotification = false;
                 }
             }
@@ -103,6 +112,7 @@ namespace AptDealzBuyer
                 CrossFirebasePushNotification.Current.OnNotificationReceived += (s, p) =>
                 {
                     System.Diagnostics.Debug.WriteLine("Received");
+                    MainPage = new MasterDataPage(true);
                 };
 
                 CrossFirebasePushNotification.Current.OnNotificationOpened += (s, p) =>

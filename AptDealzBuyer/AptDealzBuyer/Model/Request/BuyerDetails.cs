@@ -52,5 +52,8 @@ namespace AptDealzBuyer.Model.Request
 
         [JsonProperty("nationality")]
         public string Nationality { get; set; }
+
+        [JsonProperty("isNotificationMute")]
+        public bool IsNotificationMute { get; set; }
     }
 }

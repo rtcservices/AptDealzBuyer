@@ -49,30 +49,28 @@ namespace AptDealzBuyer.Views.OtherPages
         #endregion
 
         #region [ Events ]
-        private void ImgMenu_Tapped(object sender, EventArgs e)
+        private async void ImgMenu_Tapped(object sender, EventArgs e)
         {
-            Common.BindAnimation(image: ImgMenu);
-            //Common.OpenMenu();
+            try
+            {
+                await Common.BindAnimation(image: ImgMenu);
+                await Navigation.PushAsync(new SettingsPage());
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("DeactivateAccountPage/ImgMenu_Tapped: " + ex.Message);
+            }
         }
 
         private async void ImgNotification_Tapped(object sender, EventArgs e)
         {
-            var Tab = (Grid)sender;
-            if (Tab.IsEnabled)
+            try
             {
-                try
-                {
-                    Tab.IsEnabled = false;
-                    await Navigation.PushAsync(new DashboardPages.NotificationPage());
-                }
-                catch (Exception ex)
-                {
-                    Common.DisplayErrorMessage("DeactivateAccountPage/ImgNotification_Tapped: " + ex.Message);
-                }
-                finally
-                {
-                    Tab.IsEnabled = true;
-                }
+                await Navigation.PushAsync(new DashboardPages.NotificationPage());
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("DeactivateAccountPage/ImgNotification_Tapped: " + ex.Message);
             }
         }
 
@@ -83,38 +81,29 @@ namespace AptDealzBuyer.Views.OtherPages
 
         private async void ImgBack_Tapped(object sender, EventArgs e)
         {
-            Common.BindAnimation(imageButton: ImgBack);
+            await Common.BindAnimation(imageButton: ImgBack);
             await Navigation.PopAsync();
         }
 
         private async void BtnDeactivation_Clicked(object sender, EventArgs e)
         {
-            var Tab = (Button)sender;
-            if (Tab.IsEnabled)
+            try
             {
-                try
+                await Common.BindAnimation(button: BtnDeactivation);
+                if (!Common.EmptyFiels(txtReason.Text))
                 {
-                    Tab.IsEnabled = false;
-                    Common.BindAnimation(button: BtnDeactivation);
-                    if (!Common.EmptyFiels(txtReason.Text))
-                    {
-                        BoxReason.BackgroundColor = (Color)App.Current.Resources["appColor8"];
-                        await DependencyService.Get<IProfileRepository>().DeactivateAccount();
-                    }
-                    else
-                    {
-                        BoxReason.BackgroundColor = (Color)App.Current.Resources["appColor3"];
-                        Common.DisplayErrorMessage(Constraints.Required_Reason);
-                    }
+                    BoxReason.BackgroundColor = (Color)App.Current.Resources["appColor8"];
+                    await DependencyService.Get<IProfileRepository>().DeactivateAccount();
                 }
-                catch (Exception ex)
+                else
                 {
-                    Common.DisplayErrorMessage("DeactivateAccountPage/BtnDeactivation_Clicked: " + ex.Message);
+                    BoxReason.BackgroundColor = (Color)App.Current.Resources["appColor3"];
+                    Common.DisplayErrorMessage(Constraints.Required_Reason);
                 }
-                finally
-                {
-                    Tab.IsEnabled = true;
-                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("DeactivateAccountPage/BtnDeactivation_Clicked: " + ex.Message);
             }
         }
 

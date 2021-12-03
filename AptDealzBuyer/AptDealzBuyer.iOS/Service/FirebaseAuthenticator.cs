@@ -43,8 +43,6 @@ namespace AptDealzBuyer.iOS.Service
                 phoneNumber = (string)App.Current.Resources["CountryCode"] + phoneNumber;
                 _keyValuePairs = new TaskCompletionSource<Dictionary<bool, string>>();
 
-                Auth.DefaultInstance.Settings.AppVerificationDisabledForTesting = true;
-                
                 PhoneAuthProvider.DefaultInstance.VerifyPhoneNumber(
                     phoneNumber,
                     null,
@@ -67,6 +65,8 @@ namespace AptDealzBuyer.iOS.Service
 
                 if (error != null)
                 {
+                    App.Current.MainPage.DisplayAlert("OnVerificationResult-Error:", error.ToString(), "Ok");
+
                     keyValues.Add(false, Constraints.CouldNotSentOTP);
                     _keyValuePairs?.TrySetResult(keyValues);
                     return;

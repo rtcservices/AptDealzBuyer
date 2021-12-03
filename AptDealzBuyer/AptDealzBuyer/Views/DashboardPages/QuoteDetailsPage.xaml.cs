@@ -712,31 +712,29 @@ namespace AptDealzBuyer.Views.DashboardPages
         #endregion
 
         #region [ Events ]        
-        private void ImgMenu_Tapped(object sender, EventArgs e)
+        private async void ImgMenu_Tapped(object sender, EventArgs e)
         {
-            Common.BindAnimation(image: ImgMenu);
-            //Common.OpenMenu();
+                try
+                {
+                    await Common.BindAnimation(image: ImgMenu);
+                    await Navigation.PushAsync(new OtherPages.SettingsPage());
+                }
+                catch (Exception ex)
+                {
+                    Common.DisplayErrorMessage("QuoteDetailsPage/ImgMenu_Tapped: " + ex.Message);
+                }
         }
 
         private async void ImgNotification_Tapped(object sender, EventArgs e)
         {
-            var Tab = (Grid)sender;
-            if (Tab.IsEnabled)
-            {
                 try
                 {
-                    Tab.IsEnabled = false;
                     await Navigation.PushAsync(new NotificationPage());
                 }
                 catch (Exception ex)
                 {
                     Common.DisplayErrorMessage("QuoteDetailsPage/ImgNotification_Tapped: " + ex.Message);
                 }
-                finally
-                {
-                    Tab.IsEnabled = true;
-                }
-            }
         }
 
         private void ImgQuestion_Tapped(object sender, EventArgs e)
@@ -746,19 +744,15 @@ namespace AptDealzBuyer.Views.DashboardPages
 
         private async void ImgBack_Tapped(object sender, EventArgs e)
         {
-            Common.BindAnimation(imageButton: ImgBack);
+            await Common.BindAnimation(imageButton: ImgBack);
             await Navigation.PopAsync();
         }
 
         private async void BtnRevealContact_Clicked(object sender, EventArgs e)
         {
-            var Tab = (Button)sender;
-            if (Tab.IsEnabled)
-            {
                 try
                 {
-                    Tab.IsEnabled = false;
-                    Common.BindAnimation(button: BtnRevealContact);
+                    await Common.BindAnimation(button: BtnRevealContact);
                     if (BtnRevealContact.Text == Constraints.Str_RevealContact)
                     {
                         await QuotePayment(true);
@@ -772,56 +766,32 @@ namespace AptDealzBuyer.Views.DashboardPages
                 {
                     Common.DisplayErrorMessage("QuoteDetailsPage/BtnRevealContact_Clicked: " + ex.Message);
                 }
-                finally
-                {
-                    Tab.IsEnabled = true;
-                }
-            }
         }
 
         private async void BtnAcceptQuote_Clicked(object sender, EventArgs e)
         {
-            var Tab = (Button)sender;
-            if (Tab.IsEnabled)
-            {
                 try
                 {
-                    Tab.IsEnabled = false;
-                    Common.BindAnimation(button: BtnAcceptQuote);
+                    await Common.BindAnimation(button: BtnAcceptQuote);
                     await QuotePayment(false);
                 }
                 catch (Exception ex)
                 {
                     Common.DisplayErrorMessage("QuoteDetailsPage/BtnAcceptQuote_Clicked: " + ex.Message);
                 }
-                finally
-                {
-                    Tab.IsEnabled = true;
-                }
-            }
-
         }
 
         private async void BtnBackToQuote_Clicked(object sender, EventArgs e)
         {
-            var Tab = (Button)sender;
-            if (Tab.IsEnabled)
-            {
                 try
                 {
-                    Tab.IsEnabled = false;
-                    Common.BindAnimation(button: BtnBackToQuote);
+                    await Common.BindAnimation(button: BtnBackToQuote);
                     await Navigation.PopAsync();
                 }
                 catch (Exception ex)
                 {
                     Common.DisplayErrorMessage("QuoteDetailsPage/BtnBackToQuote_Clicked: " + ex.Message);
                 }
-                finally
-                {
-                    Tab.IsEnabled = true;
-                }
-            }
         }
 
         private void BtnLogo_Clicked(object sender, EventArgs e)

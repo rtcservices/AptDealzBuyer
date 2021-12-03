@@ -157,7 +157,7 @@ namespace AptDealzBuyer.Model.Request
 
         #region [ Extra Properties ]
         [JsonIgnore]
-        private string _ArrowImage { get; set; } = Constraints.Img_ArrowRight;
+        private string _ArrowImage { get; set; } = Constraints.Arrow_Right;
 
         [JsonIgnore]
         public string ArrowImage
@@ -239,7 +239,7 @@ namespace AptDealzBuyer.Model.Request
                 }
                 else
                 {
-                    return (Color)App.Current.Resources["appColor4"];
+                    return (Application.Current.UserAppTheme == OSAppTheme.Light) ? (Color)App.Current.Resources["appColor4"] : (Color)App.Current.Resources["appColor6"];
                 }
             }
         }

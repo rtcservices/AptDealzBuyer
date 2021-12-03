@@ -6,7 +6,8 @@
     xmlns:ext="clr-namespace:AptDealzBuyer.Extention"
     xmlns:iOS="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
     iOS:Page.UseSafeArea="True"
-    BackgroundColor="{StaticResource appColor6}"
+    BackgroundColor="{AppThemeBinding Dark={StaticResource appColor4},
+                                      Light={StaticResource appColor6}}"
     NavigationPage.HasNavigationBar="False">
     <ContentPage.Content>
         <Grid
@@ -24,7 +25,6 @@
                     Grid.Column="0"
                     HeightRequest="25"
                     HorizontalOptions="CenterAndExpand"
-                    Source="iconBackArrow.png"
                     VerticalOptions="CenterAndExpand">
                     <Image.GestureRecognizers>
                         <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ImgBack_Tapped" />
@@ -64,7 +64,8 @@
                 <StackLayout
                     Grid.Row="1"
                     Margin="20,0"
-                    BackgroundColor="{StaticResource appColor6}"
+                    BackgroundColor="{AppThemeBinding Dark={StaticResource appColor4},
+                                                      Light={StaticResource appColor6}}"
                     HorizontalOptions="CenterAndExpand"
                     Orientation="Horizontal"
                     Spacing="10"
@@ -72,7 +73,8 @@
                     <Frame
                         Margin="0"
                         Padding="0"
-                        BackgroundColor="{StaticResource appColor8}"
+                        BackgroundColor="{AppThemeBinding Dark={StaticResource appColor7},
+                                                          Light={StaticResource appColor8}}"
                         CornerRadius="5"
                         HasShadow="False"
                         HeightRequest="45"
@@ -87,7 +89,8 @@
                             MaxLength="1"
                             ReturnType="Next"
                             TextChanged="TxtOtpOne_TextChanged"
-                            TextColor="{StaticResource appColor4}"
+                            TextColor="{AppThemeBinding Dark={StaticResource appColor6},
+                                                        Light={StaticResource appColor4}}"
                             VerticalOptions="FillAndExpand"
                             VerticalTextAlignment="Center" />
 
@@ -96,7 +99,8 @@
                     <Frame
                         Margin="0"
                         Padding="0"
-                        BackgroundColor="{StaticResource appColor8}"
+                        BackgroundColor="{AppThemeBinding Dark={StaticResource appColor7},
+                                                          Light={StaticResource appColor8}}"
                         CornerRadius="5"
                         HasShadow="False"
                         HeightRequest="45"
@@ -111,7 +115,8 @@
                             MaxLength="1"
                             ReturnType="Next"
                             TextChanged="TxtOtpTwo_TextChanged"
-                            TextColor="{StaticResource appColor4}"
+                            TextColor="{AppThemeBinding Dark={StaticResource appColor6},
+                                                        Light={StaticResource appColor4}}"
                             VerticalOptions="FillAndExpand"
                             VerticalTextAlignment="Center" />
 
@@ -120,7 +125,8 @@
                     <Frame
                         Margin="0"
                         Padding="0"
-                        BackgroundColor="{StaticResource appColor8}"
+                        BackgroundColor="{AppThemeBinding Dark={StaticResource appColor7},
+                                                          Light={StaticResource appColor8}}"
                         CornerRadius="5"
                         HasShadow="False"
                         HeightRequest="45"
@@ -135,7 +141,8 @@
                             MaxLength="1"
                             ReturnType="Next"
                             TextChanged="TxtOtpThree_TextChanged"
-                            TextColor="{StaticResource appColor4}"
+                            TextColor="{AppThemeBinding Dark={StaticResource appColor6},
+                                                        Light={StaticResource appColor4}}"
                             VerticalOptions="FillAndExpand"
                             VerticalTextAlignment="Center" />
 
@@ -144,7 +151,8 @@
                     <Frame
                         Margin="0"
                         Padding="0"
-                        BackgroundColor="{StaticResource appColor8}"
+                        BackgroundColor="{AppThemeBinding Dark={StaticResource appColor7},
+                                                          Light={StaticResource appColor8}}"
                         CornerRadius="5"
                         HasShadow="False"
                         HeightRequest="45"
@@ -159,7 +167,8 @@
                             MaxLength="1"
                             ReturnType="Next"
                             TextChanged="TxtOtpFour_TextChanged"
-                            TextColor="{StaticResource appColor4}"
+                            TextColor="{AppThemeBinding Dark={StaticResource appColor6},
+                                                        Light={StaticResource appColor4}}"
                             VerticalOptions="FillAndExpand"
                             VerticalTextAlignment="Center" />
 
@@ -168,7 +177,8 @@
                     <Frame
                         Margin="0"
                         Padding="0"
-                        BackgroundColor="{StaticResource appColor8}"
+                        BackgroundColor="{AppThemeBinding Dark={StaticResource appColor7},
+                                                          Light={StaticResource appColor8}}"
                         CornerRadius="5"
                         HasShadow="False"
                         HeightRequest="45"
@@ -183,7 +193,8 @@
                             MaxLength="1"
                             ReturnType="Next"
                             TextChanged="TxtOtpFive_TextChanged"
-                            TextColor="{StaticResource appColor4}"
+                            TextColor="{AppThemeBinding Dark={StaticResource appColor6},
+                                                        Light={StaticResource appColor4}}"
                             VerticalOptions="FillAndExpand"
                             VerticalTextAlignment="Center" />
 
@@ -192,7 +203,8 @@
                     <Frame
                         Margin="0"
                         Padding="0"
-                        BackgroundColor="{StaticResource appColor8}"
+                        BackgroundColor="{AppThemeBinding Dark={StaticResource appColor7},
+                                                          Light={StaticResource appColor8}}"
                         CornerRadius="5"
                         HasShadow="False"
                         HeightRequest="45"
@@ -209,7 +221,8 @@
                             MaxLength="1"
                             ReturnType="Next"
                             TextChanged="TxtOtpSix_TextChanged"
-                            TextColor="{StaticResource appColor4}"
+                            TextColor="{AppThemeBinding Dark={StaticResource appColor6},
+                                                        Light={StaticResource appColor4}}"
                             VerticalOptions="FillAndExpand"
                             VerticalTextAlignment="Center" />
                     </Frame>
@@ -233,7 +246,8 @@
                     HorizontalOptions="CenterAndExpand"
                     Style="{StaticResource btnPrimary}"
                     Text="Resend OTP"
-                    TextColor="{StaticResource appColor4}" />
+                    TextColor="{AppThemeBinding Dark={StaticResource appColor6},
+                                                Light={StaticResource appColor4}}" />
             </Grid>
 
         </Grid>

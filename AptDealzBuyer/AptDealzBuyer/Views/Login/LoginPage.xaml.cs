@@ -282,47 +282,27 @@ namespace AptDealzBuyer.Views.Login
         #region [ Events ]  
         private async void StkSignup_Tapped(object sender, EventArgs e)
         {
-            var Tab = (StackLayout)sender;
-            if (Tab.IsEnabled)
+            try
             {
-                try
-                {
-                    Tab.IsEnabled = false;
-                    await Navigation.PushAsync(new Login.SignupPage());
-                }
-                catch (Exception ex)
-                {
-                    Common.DisplayErrorMessage("LoginPage/StkSignup_Tapped: " + ex.Message);
-                }
-                finally
-                {
-                    Tab.IsEnabled = true;
-                }
+                await Navigation.PushAsync(new Login.SignupPage());
             }
-
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("LoginPage/StkSignup_Tapped: " + ex.Message);
+            }
         }
 
         private async void BtnGetOtp_Clicked(object sender, EventArgs e)
         {
-            var Tab = (Button)sender;
-            if (Tab.IsEnabled)
+            try
             {
-                try
-                {
-                    Tab.IsEnabled = false;
-                    Common.BindAnimation(button: BtnGetOtp);
-                    await AuthenticateUser();
-                }
-                catch (Exception ex)
-                {
-                    Common.DisplayErrorMessage("LoginPage/BtnGetOtp_Clicked: " + ex.Message);
-                }
-                finally
-                {
-                    Tab.IsEnabled = true;
-                }
+                await Common.BindAnimation(button: BtnGetOtp);
+                await AuthenticateUser();
             }
-
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("LoginPage/BtnGetOtp_Clicked: " + ex.Message);
+            }
         }
 
         private void txtUserAuth_Unfocused(object sender, FocusEventArgs e)

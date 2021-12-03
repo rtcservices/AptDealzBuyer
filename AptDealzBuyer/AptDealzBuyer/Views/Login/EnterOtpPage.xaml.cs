@@ -349,31 +349,21 @@ namespace AptDealzBuyer.Views.Login
         #region [ Events ]
         private async void ImgBack_Tapped(object sender, EventArgs e)
         {
-            Common.BindAnimation(image: ImgBack);
+            await Common.BindAnimation(image: ImgBack);
             await Navigation.PopAsync();
         }
 
         private async void BtnSubmit_Tapped(object sender, EventArgs e)
         {
-            var Tab = (Button)sender;
-            if (Tab.IsEnabled)
-            {
                 try
                 {
-                    Tab.IsEnabled = false;
-                    Common.BindAnimation(button: BtnSubmit);
+                    await Common.BindAnimation(button: BtnSubmit);
                     await SubmitOTP();
                 }
                 catch (Exception ex)
                 {
                     Common.DisplayErrorMessage("EnterOtpPage/BtnSubmit_Tapped: " + ex.Message);
                 }
-                finally
-                {
-                    Tab.IsEnabled = true;
-                }
-            }
-
         }
 
         private async void BtnResentOtp_Tapped(object sender, EventArgs e)

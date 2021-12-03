@@ -1,13 +1,8 @@
 ﻿using Acr.UserDialogs;
 using AptDealzBuyer.API;
-using AptDealzBuyer.Model.Reponse;
 using AptDealzBuyer.Utility;
-using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 using Xamarin.Forms;
@@ -18,14 +13,20 @@ namespace AptDealzBuyer.Views.DashboardPages
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class QRCodePage : ContentPage
     {
+        #region [ Object ]
         private string OrderId;
+        #endregion
 
+        #region [ Ctor ]
         public QRCodePage(string OrderId = "")
         {
             InitializeComponent();
             this.OrderId = OrderId;
 
         }
+        #endregion
+
+        #region [ Methods ]
         protected async override void OnAppearing()
         {
             base.OnAppearing();
@@ -50,7 +51,7 @@ namespace AptDealzBuyer.Views.DashboardPages
                         imgQRCode.Source = Xamarin.Forms.ImageSource.FromStream(() => new MemoryStream(Convert.FromBase64String(imageBase64)));
                     }
                 }
-                else if(mResponse != null && !mResponse.Succeeded)
+                else if (mResponse != null && !mResponse.Succeeded)
                 {
                     imgQRCode.IsVisible = false;
                     lblQRCode.IsVisible = true;
@@ -62,7 +63,9 @@ namespace AptDealzBuyer.Views.DashboardPages
                 Common.DisplayErrorMessage("QRCodePage/GenerateQRCodeImageForBuyerApp: " + ex.Message);
             }
         }
+        #endregion
 
+        #region [ Events ]
         private void BtnLogo_Clicked(object sender, EventArgs e)
         {
             Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_Home));
@@ -70,23 +73,14 @@ namespace AptDealzBuyer.Views.DashboardPages
 
         private async void ImgNotification_Tapped(object sender, EventArgs e)
         {
-            var Tab = (Grid)sender;
-            if (Tab.IsEnabled)
-            {
                 try
                 {
-                    Tab.IsEnabled = false;
                     await Navigation.PushAsync(new NotificationPage());
                 }
                 catch (Exception ex)
                 {
                     Common.DisplayErrorMessage("QRCodePage/ImgNotification_Tapped: " + ex.Message);
                 }
-                finally
-                {
-                    Tab.IsEnabled = true;
-                }
-            }
         }
 
         private void ImgQuestion_Tapped(object sender, EventArgs e)
@@ -101,23 +95,24 @@ namespace AptDealzBuyer.Views.DashboardPages
             }
         }
 
-        private void ImgMenu_Tapped(object sender, EventArgs e)
+        private async void ImgMenu_Tapped(object sender, EventArgs e)
         {
-            try
-            {
-                Common.BindAnimation(image: ImgMenu);
-            }
-            catch (Exception ex)
-            {
-                Common.DisplayErrorMessage("QRCodePage/ImgMenu_Tapped: " + ex.Message);
-            }
+                try
+                {
+                    await Common.BindAnimation(image: ImgMenu);
+                    await Navigation.PushAsync(new OtherPages.SettingsPage());
+                }
+                catch (Exception ex)
+                {
+                    Common.DisplayErrorMessage("QRCodePage/ImgMenu_Tapped: " + ex.Message);
+                }
         }
 
         private async void ImgBack_Tapped(object sender, EventArgs e)
         {
             try
             {
-                Common.BindAnimation(imageButton: ImgBack);
+                await Common.BindAnimation(imageButton: ImgBack);
                 await Navigation.PopAsync();
             }
             catch (Exception ex)
@@ -125,5 +120,6 @@ namespace AptDealzBuyer.Views.DashboardPages
                 Common.DisplayErrorMessage("QRCodePage/ImgBack_Tapped: " + ex.Message);
             }
         }
+        #endregion
     }
 }

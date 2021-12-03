@@ -29,6 +29,10 @@ namespace AptDealzBuyer.Utility
         private static Regex PhoneNumber { get; set; } = new Regex(@"^[0-9]{10}$");
         private static Regex RegexPassword { get; set; } = new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{8,}$");
         private static Regex RegexPincode { get; set; } = new Regex(@"^[0-9]{6}$");
+
+        //private static Regex RegexURL { get; set; } = new Regex("((http|https)://)(www.)?[a-zA-Z0-9@:%._\\+~#?&//=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%._\\+~#?&//=]*)");
+        private static Regex RegexURL { get; set; } = new Regex(@"(http(s)?://)?([\w-]+\.)+[\w-]+(/[\w- ;,./?%&=]*)?");
+
         #endregion
 
         #region [ DisplayMessages ]
@@ -73,7 +77,12 @@ namespace AptDealzBuyer.Utility
             return Regex.Replace(str, "(\\B[A-Z])", " $1");
         }
 
-        public static async void BindAnimation(ImageButton imageButton = null, Button button = null, Grid grid = null, StackLayout stackLayout = null, Label label = null, Image image = null, Frame frame = null)
+        public static bool IsValidURL(this string value)
+        {
+            return (RegexURL.IsMatch($"{value}"));
+        }
+
+        public static async Task BindAnimation(ImageButton imageButton = null, Button button = null, Grid grid = null, StackLayout stackLayout = null, Label label = null, Image image = null, Frame frame = null)
         {
             try
             {
@@ -228,6 +237,8 @@ namespace AptDealzBuyer.Utility
                     return (int)GrievancesStatus.Open;
                 case "Closed":
                     return (int)GrievancesStatus.Closed;
+                case "ReOpened":
+                    return (int)GrievancesStatus.ReOpened;
                 case "All":
                     return (int)GrievancesStatus.All;
                 default:
@@ -235,14 +246,14 @@ namespace AptDealzBuyer.Utility
             }
         }
 
-        public static void CopyText(Label copyLabel, string message)
+        public static async void CopyText(Label copyLabel, string message)
         {
             try
             {
                 Clipboard.SetTextAsync(copyLabel.Text);
                 if (Clipboard.HasText)
                 {
-                    Common.BindAnimation(label: copyLabel);
+                    await Common.BindAnimation(label: copyLabel);
                     UserDialogs.Instance.Toast(message);
                 }
             }
@@ -334,7 +345,8 @@ namespace AptDealzBuyer.Utility
         Pending = 0,
         Open = 1,
         Closed = 2,
-        All = 3
+        ReOpened = 3,
+        All = 4
     }
 
     public enum GrievancesType

@@ -128,30 +128,28 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         #endregion
 
         #region [ Events ]       
-        private void ImgMenu_Tapped(object sender, EventArgs e)
+        private async void ImgMenu_Tapped(object sender, EventArgs e)
         {
-            Common.BindAnimation(image: ImgMenu);
-            //Common.OpenMenu();
+            try
+            {
+                await Common.BindAnimation(image: ImgMenu);
+                await Navigation.PushAsync(new OtherPages.SettingsPage());
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("PreviousRequirementView/ImgMenu_Tapped: " + ex.Message);
+            }
         }
 
         private async void ImgNotification_Tapped(object sender, EventArgs e)
         {
-            var Tab = (Grid)sender;
-            if (Tab.IsEnabled)
+            try
             {
-                try
-                {
-                    Tab.IsEnabled = false;
-                    await Navigation.PushAsync(new DashboardPages.NotificationPage());
-                }
-                catch (Exception ex)
-                {
-                    Common.DisplayErrorMessage("PreviousRequirementView/ImgNotification_Tapped: " + ex.Message);
-                }
-                finally
-                {
-                    Tab.IsEnabled = true;
-                }
+                await Navigation.PushAsync(new DashboardPages.NotificationPage());
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("PreviousRequirementView/ImgNotification_Tapped: " + ex.Message);
             }
         }
 
@@ -160,28 +158,29 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_FAQHelp));
         }
 
-        private void ImgBack_Tapped(object sender, EventArgs e)
+        private async void ImgBack_Tapped(object sender, EventArgs e)
         {
-            Common.BindAnimation(imageButton: ImgBack);
+            await Common.BindAnimation(imageButton: ImgBack);
             Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_Home));
-
         }
 
         private void FrmSortBy_Tapped(object sender, EventArgs e)
         {
             try
             {
-                if (ImgSort.Source.ToString().Replace("File: ", "") == Constraints.Img_SortASC)
+                var ImgASC = (Application.Current.UserAppTheme == OSAppTheme.Light) ? Constraints.Sort_ASC : Constraints.Sort_ASC_Dark;
+                var ImgDSC = (Application.Current.UserAppTheme == OSAppTheme.Light) ? Constraints.Sort_DSC : Constraints.Sort_DSC_Dark;
+
+                if (ImgSort.Source.ToString().Replace("File: ", "") == ImgASC)
                 {
-                    ImgSort.Source = Constraints.Img_SortDSC;
+                    ImgSort.Source = ImgDSC;
                     isAscending = false;
                 }
                 else
                 {
-                    ImgSort.Source = Constraints.Img_SortASC;
+                    ImgSort.Source = ImgASC;
                     isAscending = true;
                 }
-
                 pageNo = 1;
                 mRequirements.Clear();
                 GetPreviousRequirements(filterBy, title, isAscending);
@@ -203,15 +202,15 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                     viewCell.ForceUpdateSize();
                 }
                 var mRequirement = imgExp.BindingContext as Requirement;
-                if (mRequirement != null && mRequirement.ArrowImage == Constraints.Img_ArrowRight)
+                if (mRequirement != null && mRequirement.ArrowImage == Constraints.Arrow_Right)
                 {
-                    mRequirement.ArrowImage = Constraints.Img_ArrowDown;
-                    mRequirement.GridBg = (Color)App.Current.Resources["appColor8"];
+                    mRequirement.ArrowImage = Constraints.Arrow_Down;
+                    mRequirement.GridBg = (Application.Current.UserAppTheme == OSAppTheme.Light) ? (Color)App.Current.Resources["appColor8"] : Color.Transparent;
                     mRequirement.MoreDetail = true;
                 }
                 else
                 {
-                    mRequirement.ArrowImage = Constraints.Img_ArrowRight;
+                    mRequirement.ArrowImage = Constraints.Arrow_Right;
                     mRequirement.GridBg = Color.Transparent;
                     mRequirement.MoreDetail = false;
                 }
@@ -225,22 +224,14 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         private async void GrdViewPrevRequirement_Tapped(object sender, EventArgs e)
         {
             var GridExp = (Grid)sender;
-            if (GridExp.IsEnabled)
+            try
             {
-                try
-                {
-                    GridExp.IsEnabled = false;
-                    var mRequirement = GridExp.BindingContext as Requirement;
-                    await Navigation.PushAsync(new DashboardPages.ViewRequirememntPage(mRequirement.RequirementId, "previous"));
-                }
-                catch (Exception ex)
-                {
-                    Common.DisplayErrorMessage("PreviousRequirementView/GrdViewPrevRequirement_Tapped: " + ex.Message);
-                }
-                finally
-                {
-                    GridExp.IsEnabled = true;
-                }
+                var mRequirement = GridExp.BindingContext as Requirement;
+                await Navigation.PushAsync(new DashboardPages.ViewRequirememntPage(mRequirement.RequirementId, "previous"));
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("PreviousRequirementView/GrdViewPrevRequirement_Tapped: " + ex.Message);
             }
         }
 
@@ -333,42 +324,33 @@ namespace AptDealzBuyer.Views.MainTabbedPages
 
         private async void FrmFilterBy_Tapped(object sender, EventArgs e)
         {
-            var Tab = (Frame)sender;
-            if (Tab.IsEnabled)
+            try
             {
-                try
+                var sortby = new FilterPopup(filterBy, Constraints.Str_Active);
+                sortby.isRefresh += (s1, e1) =>
                 {
-                    Tab.IsEnabled = false;
-                    var sortby = new FilterPopup(filterBy, Constraints.Str_Active);
-                    sortby.isRefresh += (s1, e1) =>
+                    string result = s1.ToString();
+                    if (!Common.EmptyFiels(result))
                     {
-                        string result = s1.ToString();
-                        if (!Common.EmptyFiels(result))
+                        filterBy = result;
+                        if (filterBy == SortByField.ID.ToString())
                         {
-                            filterBy = result;
-                            if (filterBy == SortByField.ID.ToString())
-                            {
-                                lblFilterBy.Text = filterBy;
-                            }
-                            else
-                            {
-                                lblFilterBy.Text = filterBy.ToCamelCase();
-                            }
-                            pageNo = 1;
-                            mRequirements.Clear();
-                            GetPreviousRequirements(filterBy, title, isAscending);
+                            lblFilterBy.Text = filterBy;
                         }
-                    };
-                    await PopupNavigation.Instance.PushAsync(sortby);
-                }
-                catch (Exception ex)
-                {
-                    Common.DisplayErrorMessage("PreviousRequirementView/FrmFilterBy_Tapped: " + ex.Message);
-                }
-                finally
-                {
-                    Tab.IsEnabled = true;
-                }
+                        else
+                        {
+                            lblFilterBy.Text = filterBy.ToCamelCase();
+                        }
+                        pageNo = 1;
+                        mRequirements.Clear();
+                        GetPreviousRequirements(filterBy, title, isAscending);
+                    }
+                };
+                await PopupNavigation.Instance.PushAsync(sortby);
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("PreviousRequirementView/FrmFilterBy_Tapped: " + ex.Message);
             }
         }
 

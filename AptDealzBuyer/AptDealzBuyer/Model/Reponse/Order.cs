@@ -163,7 +163,7 @@ namespace AptDealzBuyer.Model.Reponse
                 {
                     return "Repost";
                 }
-                else if (OrderStatus == (int)Utility.OrderStatus.Shipped && PickupProductDirectly)
+                else if (OrderStatus == (int)Utility.OrderStatus.ReadyForPickup && PickupProductDirectly)
                 {
                     return "Show QR Code";
                 }
@@ -181,7 +181,7 @@ namespace AptDealzBuyer.Model.Reponse
         public bool OrderTrackVisibility { get; set; }
 
         [JsonIgnore]
-        private string _ArrowImage { get; set; } = Constraints.Img_ArrowRight;
+        private string _ArrowImage { get; set; } = Constraints.Arrow_Right;
 
         [JsonIgnore]
         public string ArrowImage

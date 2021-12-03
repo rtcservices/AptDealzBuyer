@@ -139,30 +139,28 @@ namespace AptDealzBuyer.Views.DashboardPages
         #region [ Events ]       
 
         #region [ Header Navigation ]
-        private void ImgMenu_Tapped(object sender, EventArgs e)
+        private async void ImgMenu_Tapped(object sender, EventArgs e)
         {
-            Common.BindAnimation(image: ImgMenu);
-            //Common.OpenMenu();
+            try
+            {
+                await Common.BindAnimation(image: ImgMenu);
+                await Navigation.PushAsync(new OtherPages.SettingsPage());
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("GrievancesPage/ImgMenu_Tapped: " + ex.Message);
+            }
         }
 
         private async void ImgNotification_Tapped(object sender, EventArgs e)
         {
-            var Tab = (Grid)sender;
-            if (Tab.IsEnabled)
+            try
             {
-                try
-                {
-                    Tab.IsEnabled = false;
-                    await Navigation.PushAsync(new DashboardPages.NotificationPage());
-                }
-                catch (Exception ex)
-                {
-                    Common.DisplayErrorMessage("GrievancesPage/ImgNotification_Tapped: " + ex.Message);
-                }
-                finally
-                {
-                    Tab.IsEnabled = true;
-                }
+                await Navigation.PushAsync(new DashboardPages.NotificationPage());
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("GrievancesPage/ImgNotification_Tapped: " + ex.Message);
             }
         }
 
@@ -173,7 +171,7 @@ namespace AptDealzBuyer.Views.DashboardPages
 
         private async void ImgBack_Tapped(object sender, EventArgs e)
         {
-            Common.BindAnimation(imageButton: ImgBack);
+            await Common.BindAnimation(imageButton: ImgBack);
             await Navigation.PopAsync();
         }
 
@@ -188,14 +186,17 @@ namespace AptDealzBuyer.Views.DashboardPages
         {
             try
             {
-                if (ImgSort.Source.ToString().Replace("File: ", "") == Constraints.Img_SortASC)
+                var ImgASC = (Application.Current.UserAppTheme == OSAppTheme.Light) ? Constraints.Sort_ASC : Constraints.Sort_ASC_Dark;
+                var ImgDSC = (Application.Current.UserAppTheme == OSAppTheme.Light) ? Constraints.Sort_DSC : Constraints.Sort_DSC_Dark;
+
+                if (ImgSort.Source.ToString().Replace("File: ", "") == ImgASC)
                 {
-                    ImgSort.Source = Constraints.Img_SortDSC;
+                    ImgSort.Source = ImgDSC;
                     isAssending = false;
                 }
                 else
                 {
-                    ImgSort.Source = Constraints.Img_SortASC;
+                    ImgSort.Source = ImgASC;
                     isAssending = true;
                 }
 
@@ -211,69 +212,51 @@ namespace AptDealzBuyer.Views.DashboardPages
 
         private async void FrmStatus_Tapped(object sender, EventArgs e)
         {
-            var Tab = (Frame)sender;
-            if (Tab.IsEnabled)
+            try
             {
-                try
+                var statusPopup = new StatusPopup(statusBy);
+                statusPopup.isRefresh += (s1, e1) =>
                 {
-                    Tab.IsEnabled = false;
-                    var statusPopup = new StatusPopup(statusBy);
-                    statusPopup.isRefresh += (s1, e1) =>
+                    string result = s1.ToString();
+                    if (!Common.EmptyFiels(result))
                     {
-                        string result = s1.ToString();
-                        if (!Common.EmptyFiels(result))
-                        {
-                            lblStatus.Text = result;
-                            statusBy = Common.GetGrievanceStatus(result);
-                            pageNo = 1;
-                            mGrievance.Clear();
-                            GetGrievance(statusBy, title, filterBy, isAssending);
-                        }
-                    };
-                    await PopupNavigation.Instance.PushAsync(statusPopup);
-                }
-                catch (Exception ex)
-                {
-                    Common.DisplayErrorMessage("GrievancesPage/FrmStatusBy_Tapped: " + ex.Message);
-                }
-                finally
-                {
-                    Tab.IsEnabled = true;
-                }
+                        lblStatus.Text = result;
+                        statusBy = Common.GetGrievanceStatus(result);
+                        pageNo = 1;
+                        mGrievance.Clear();
+                        GetGrievance(statusBy, title, filterBy, isAssending);
+                    }
+                };
+                await PopupNavigation.Instance.PushAsync(statusPopup);
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("GrievancesPage/FrmStatusBy_Tapped: " + ex.Message);
             }
         }
 
         private async void FrmFilterBy_Tapped(object sender, EventArgs e)
         {
-            var Tab = (Frame)sender;
-            if (Tab.IsEnabled)
+            try
             {
-                try
+                var sortby = new FilterPopup(filterBy, Constraints.Str_Grievances);
+                sortby.isRefresh += (s1, e1) =>
                 {
-                    Tab.IsEnabled = false;
-                    var sortby = new FilterPopup(filterBy, Constraints.Str_Grievances);
-                    sortby.isRefresh += (s1, e1) =>
+                    string result = s1.ToString();
+                    if (!Common.EmptyFiels(result))
                     {
-                        string result = s1.ToString();
-                        if (!Common.EmptyFiels(result))
-                        {
-                            filterBy = result;
-                            lblFilterBy.Text = result;
-                            pageNo = 1;
-                            mGrievance.Clear();
-                            GetGrievance(statusBy, title, filterBy, isAssending);
-                        }
-                    };
-                    await PopupNavigation.Instance.PushAsync(sortby);
-                }
-                catch (Exception ex)
-                {
-                    Common.DisplayErrorMessage("GrievancesPage/FrmFilterBy_Tapped: " + ex.Message);
-                }
-                finally
-                {
-                    Tab.IsEnabled = true;
-                }
+                        filterBy = result;
+                        lblFilterBy.Text = result;
+                        pageNo = 1;
+                        mGrievance.Clear();
+                        GetGrievance(statusBy, title, filterBy, isAssending);
+                    }
+                };
+                await PopupNavigation.Instance.PushAsync(sortby);
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("GrievancesPage/FrmFilterBy_Tapped: " + ex.Message);
             }
         }
 
@@ -309,22 +292,13 @@ namespace AptDealzBuyer.Views.DashboardPages
 
         private async void FrmAdd_Tapped(object sender, EventArgs e)
         {
-            var Tab = (Frame)sender;
-            if (Tab.IsEnabled)
+            try
             {
-                try
-                {
-                    Tab.IsEnabled = false;
-                    await Navigation.PushAsync(new MainTabbedPages.MainTabbedPage(Constraints.Str_RaiseGrievances, isNavigate: true));
-                }
-                catch (Exception ex)
-                {
-                    Common.DisplayErrorMessage("GrievancesPage/FrmAdd_Tapped: " + ex.Message);
-                }
-                finally
-                {
-                    Tab.IsEnabled = true;
-                }
+                await Navigation.PushAsync(new MainTabbedPages.MainTabbedPage(Constraints.Str_RaiseGrievances, isNavigate: true));
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("GrievancesPage/FrmAdd_Tapped: " + ex.Message);
             }
         }
 
@@ -332,22 +306,14 @@ namespace AptDealzBuyer.Views.DashboardPages
         private async void GrdViewGrievances_Tapped(object sender, EventArgs e)
         {
             var Tab = (Grid)sender;
-            if (Tab.IsEnabled)
+            try
             {
-                try
-                {
-                    Tab.IsEnabled = false;
-                    var mGrievance = Tab.BindingContext as Grievance;
-                    await Navigation.PushAsync(new GrievanceDetailsPage(mGrievance.GrievanceId));
-                }
-                catch (Exception ex)
-                {
-                    Common.DisplayErrorMessage("GrievancesPage/GrdViewGrievances_Tapped: " + ex.Message);
-                }
-                finally
-                {
-                    Tab.IsEnabled = true;
-                }
+                var mGrievance = Tab.BindingContext as Grievance;
+                await Navigation.PushAsync(new GrievanceDetailsPage(mGrievance.GrievanceId));
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("GrievancesPage/GrdViewGrievances_Tapped: " + ex.Message);
             }
         }
 

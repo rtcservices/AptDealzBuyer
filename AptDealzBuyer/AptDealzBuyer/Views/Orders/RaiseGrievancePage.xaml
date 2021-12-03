@@ -3,12 +3,12 @@
     x:Class="AptDealzBuyer.Views.Orders.RaiseGrievancePage"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:ext="clr-namespace:AptDealzBuyer.Extention"
     xmlns:ffImage="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
     xmlns:ffTransformer="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
     xmlns:iOS="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
     iOS:Page.UseSafeArea="True"
-    BackgroundColor="{StaticResource appColor6}"
+    BackgroundColor="{AppThemeBinding Dark={StaticResource appColor4},
+                                      Light={StaticResource appColor6}}"
     NavigationPage.HasNavigationBar="False">
     <ContentPage.Content>
 
@@ -96,7 +96,6 @@
                         x:Name="ImgBack"
                         Grid.Column="0"
                         Clicked="ImgBack_Tapped"
-                        Source="iconBackArrow.png"
                         Style="{StaticResource ImgBtnPrimary}" />
                     <Label
                         Grid.Column="1"
@@ -154,7 +153,7 @@
                                         HorizontalOptions="StartAndExpand"
                                         LineBreakMode="WordWrap"
                                         Style="{StaticResource lblMedium}"
-                                        Text="Quote Reference No" />
+                                        Text="Quote Id" />
                                     <Label
                                         x:Name="lblQuoteNo"
                                         Grid.Column="1"
@@ -492,7 +491,8 @@
 
                                 <Frame
                                     Grid.Row="2"
-                                    BackgroundColor="{StaticResource appColor8}"
+                                    BackgroundColor="{AppThemeBinding Dark={StaticResource appColor7},
+                                                                      Light={StaticResource appColor8}}"
                                     Style="{StaticResource frmBlank}">
                                     <Grid Margin="7" ColumnDefinitions="Auto,*,Auto,Auto">
 
@@ -522,7 +522,8 @@
 
                                         <BoxView
                                             Grid.Column="2"
-                                            BackgroundColor="{StaticResource appColor6}"
+                                            BackgroundColor="{AppThemeBinding Dark={StaticResource appColor4},
+                                                                              Light={StaticResource appColor6}}"
                                             HorizontalOptions="EndAndExpand"
                                             VerticalOptions="FillAndExpand"
                                             WidthRequest="1" />

@@ -271,7 +271,7 @@ namespace AptDealzBuyer.Views.Login
 
                 if (!keyValue.Key)
                 {
-                    var isTryAgain = await UserDialogs.Instance.ConfirmAsync(Constraints.CouldNotSentOTP, "Verification", "Try Again", "Goto Login");
+                    var isTryAgain = await UserDialogs.Instance.ConfirmAsync(Constraints.CouldNotSentOTP, "Verification", "Try Again", "Close");
                     if (isTryAgain)
                         return await SendOTP(phoneNumber);
                     else
@@ -294,28 +294,19 @@ namespace AptDealzBuyer.Views.Login
         #region [ Events ]
         private async void ImgBack_Tapped(object sender, EventArgs e)
         {
-            Common.BindAnimation(image: ImgBack);
+            await Common.BindAnimation(image: ImgBack);
             await Navigation.PopAsync();
         }
 
         private async void StkLogin_Tapped(object sender, EventArgs e)
         {
-            var Tab = (StackLayout)sender;
-            if (Tab.IsEnabled)
+            try
             {
-                try
-                {
-                    Tab.IsEnabled = false;
-                    await Navigation.PopAsync();
-                }
-                catch (Exception ex)
-                {
-                    Common.DisplayErrorMessage("SignupPage/StkLogin_Tapped: " + ex.Message);
-                }
-                finally
-                {
-                    Tab.IsEnabled = true;
-                }
+                await Navigation.PopAsync();
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("SignupPage/StkLogin_Tapped: " + ex.Message);
             }
         }
 
@@ -342,23 +333,14 @@ namespace AptDealzBuyer.Views.Login
 
         private async void BtnGetOtp_Clicked(object sender, EventArgs e)
         {
-            var Tab = (Button)sender;
-            if (Tab.IsEnabled)
+            try
             {
-                try
-                {
-                    Tab.IsEnabled = false;
-                    Common.BindAnimation(button: BtnGetOtp);
-                    await RegisterUser();
-                }
-                catch (Exception ex)
-                {
-                    Common.DisplayErrorMessage("SignupPage/GetOtp_Tapped: " + ex.Message);
-                }
-                finally
-                {
-                    Tab.IsEnabled = true;
-                }
+                await Common.BindAnimation(button: BtnGetOtp);
+                await RegisterUser();
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("SignupPage/GetOtp_Tapped: " + ex.Message);
             }
         }
 

@@ -21,6 +21,7 @@
 
         <x:Double x:Key="Font15">15</x:Double>
         <x:Double x:Key="Font14">14</x:Double>
+        <x:Double x:Key="Font12">12</x:Double>
 
         <!--#region [ Colors ]-->
         <Color x:Key="ErrorBackground">#ff4d4f</Color>
@@ -37,13 +38,72 @@
         <Color x:Key="appColor8">#F0F0F0</Color>
         <Color x:Key="appColor9">#8C8B8B</Color>
         <Color x:Key="appColor10">#60006027</Color>
+        <Color x:Key="appColor11">#2f4f4f</Color>
+        <Color x:Key="appColor12">#CAF3DB</Color>
+        <!--#endregion-->
+
+        <!--#region [ Labels ]-->
+        <Style x:Key="lblPrimary13" TargetType="Label">
+            <Setter Property="TextColor" Value="{AppThemeBinding Dark={StaticResource appColor8}, Light={StaticResource appColor7}}" />
+            <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+            <Setter Property="VerticalOptions" Value="CenterAndExpand" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="FontFamily" Value="Poppins" />
+        </Style>
+
+        <Style x:Key="lblHeader" TargetType="Label">
+            <Setter Property="TextColor" Value="{AppThemeBinding Dark={StaticResource appColor6}, Light={StaticResource appColor4}}" />
+            <Setter Property="HorizontalOptions" Value="StartAndExpand" />
+            <Setter Property="VerticalOptions" Value="CenterAndExpand" />
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="FontFamily" Value="Poppins-SemiBold" />
+        </Style>
+
+        <Style x:Key="lblBoldHeader" TargetType="Label">
+            <Setter Property="TextColor" Value="{AppThemeBinding Dark={StaticResource appColor6}, Light={StaticResource appColor4}}" />
+            <Setter Property="HorizontalOptions" Value="CenterAndExpand" />
+            <Setter Property="VerticalOptions" Value="CenterAndExpand" />
+            <Setter Property="FontFamily" Value="Poppins-SemiBold" />
+        </Style>
+
+        <Style x:Key="lblLight" TargetType="Label">
+            <Setter Property="TextColor" Value="{AppThemeBinding Dark={StaticResource appColor6}, Light={StaticResource appColor4}}" />
+            <Setter Property="VerticalTextAlignment" Value="Center" />
+            <Setter Property="VerticalOptions" Value="CenterAndExpand" />
+            <Setter Property="FontFamily" Value="Poppins" />
+            <Setter Property="FontSize" Value="15" />
+        </Style>
+
+        <Style x:Key="lblMedium" TargetType="Label">
+            <Setter Property="TextColor" Value="{AppThemeBinding Dark={StaticResource appColor6}, Light={StaticResource appColor4}}" />
+            <Setter Property="VerticalTextAlignment" Value="Center" />
+            <Setter Property="VerticalOptions" Value="CenterAndExpand" />
+            <Setter Property="FontFamily" Value="Poppins-Medium" />
+        </Style>
+
+        <Style x:Key="lblSemiBold" TargetType="Label">
+            <Setter Property="TextColor" Value="{AppThemeBinding Dark={StaticResource appColor6}, Light={StaticResource appColor4}}" />
+            <Setter Property="VerticalTextAlignment" Value="Center" />
+            <Setter Property="VerticalOptions" Value="CenterAndExpand" />
+            <Setter Property="FontFamily" Value="Poppins-SemiBold" />
+        </Style>
+
+        <Style x:Key="lblNotification" TargetType="Label">
+            <Setter Property="TextColor" Value="{AppThemeBinding Dark={StaticResource appColor6}, Light={StaticResource appColor4}}" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="VerticalTextAlignment" Value="Center" />
+            <Setter Property="VerticalOptions" Value="FillAndExpand" />
+            <Setter Property="HorizontalTextAlignment" Value="Center" />
+            <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+            <Setter Property="FontFamily" Value="Poppins-Medium" />
+        </Style>
         <!--#endregion-->
 
         <!--#region [ Frames ]-->
         <Style x:Key="frmEntry" TargetType="Frame">
             <Setter Property="Padding" Value="15,0" />
             <Setter Property="Margin" Value="0" />
-            <Setter Property="BackgroundColor" Value="Transparent" />
+            <Setter Property="BackgroundColor" Value="{AppThemeBinding Dark=Transparent, Light={StaticResource appColor8}}" />
             <Setter Property="BorderColor" Value="{StaticResource appColor8}" />
             <Setter Property="CornerRadius" Value="5" />
             <Setter Property="HasShadow" Value="False" />
@@ -55,7 +115,7 @@
         <Style x:Key="frmEntryGray" TargetType="Frame">
             <Setter Property="Padding" Value="15,0" />
             <Setter Property="Margin" Value="0" />
-            <Setter Property="BackgroundColor" Value="{StaticResource appColor8}" />
+            <Setter Property="BackgroundColor" Value="{AppThemeBinding Dark={StaticResource appColor7}, Light={StaticResource appColor8}}" />
             <Setter Property="BorderColor" Value="{StaticResource appColor8}" />
             <Setter Property="CornerRadius" Value="5" />
             <Setter Property="HasShadow" Value="False" />
@@ -104,7 +164,7 @@
 
         <!--#region [ Extentions ]-->
         <Style x:Key="entrPrimary" TargetType="ext:ExtEntry">
-            <Setter Property="TextColor" Value="{StaticResource appColor4}" />
+            <Setter Property="TextColor" Value="{AppThemeBinding Dark={StaticResource appColor6}, Light={StaticResource appColor4}}" />
             <Setter Property="PlaceholderColor" Value="{StaticResource appColor9}" />
             <Setter Property="VerticalOptions" Value="FillAndExpand" />
             <Setter Property="VerticalTextAlignment" Value="Center" />
@@ -114,7 +174,7 @@
         </Style>
 
         <Style x:Key="entrGray" TargetType="ext:ExtEntry">
-            <Setter Property="TextColor" Value="{StaticResource appColor4}" />
+            <Setter Property="TextColor" Value="{AppThemeBinding Dark={StaticResource appColor6}, Light={StaticResource appColor4}}" />
             <Setter Property="PlaceholderColor" Value="{StaticResource appColor7}" />
             <Setter Property="VerticalOptions" Value="FillAndExpand" />
             <Setter Property="VerticalTextAlignment" Value="Center" />
@@ -124,7 +184,7 @@
         </Style>
 
         <Style x:Key="pkPrimary" TargetType="Picker">
-            <Setter Property="TextColor" Value="{StaticResource appColor4}" />
+            <Setter Property="TextColor" Value="{AppThemeBinding Dark={StaticResource appColor6}, Light={StaticResource appColor4}}" />
             <Setter Property="TitleColor" Value="{StaticResource appColor9}" />
             <Setter Property="Margin" Value="0" />
             <Setter Property="VerticalOptions" Value="CenterAndExpand" />
@@ -135,70 +195,14 @@
         </Style>
 
         <Style x:Key="edPrimary" TargetType="Editor">
-            <Setter Property="TextColor" Value="{StaticResource appColor4}" />
+            <Setter Property="TextColor" Value="{AppThemeBinding Dark={StaticResource appColor6}, Light={StaticResource appColor4}}" />
             <Setter Property="PlaceholderColor" Value="{StaticResource appColor7}" />
             <Setter Property="Margin" Value="0" />
+            <Setter Property="BackgroundColor" Value="Transparent" />
             <Setter Property="VerticalOptions" Value="FillAndExpand" />
             <Setter Property="HorizontalOptions" Value="FillAndExpand" />
             <Setter Property="FontSize" Value="15" />
             <Setter Property="FontFamily" Value="Poppins" />
-        </Style>
-        <!--#endregion-->
-
-        <!--#region [ Labels ]-->
-        <Style x:Key="lblPrimary13" TargetType="Label">
-            <Setter Property="TextColor" Value="{StaticResource appColor7}" />
-            <Setter Property="HorizontalOptions" Value="FillAndExpand" />
-            <Setter Property="VerticalOptions" Value="CenterAndExpand" />
-            <Setter Property="FontSize" Value="13" />
-            <Setter Property="FontFamily" Value="Poppins" />
-        </Style>
-
-        <Style x:Key="lblHeader" TargetType="Label">
-            <Setter Property="TextColor" Value="{StaticResource appColor4}" />
-            <Setter Property="HorizontalOptions" Value="StartAndExpand" />
-            <Setter Property="VerticalOptions" Value="CenterAndExpand" />
-            <Setter Property="FontSize" Value="18" />
-            <Setter Property="FontFamily" Value="Poppins-SemiBold" />
-        </Style>
-
-        <Style x:Key="lblBoldHeader" TargetType="Label">
-            <Setter Property="TextColor" Value="{StaticResource appColor4}" />
-            <Setter Property="HorizontalOptions" Value="CenterAndExpand" />
-            <Setter Property="VerticalOptions" Value="CenterAndExpand" />
-            <Setter Property="FontFamily" Value="Poppins-SemiBold" />
-        </Style>
-
-        <Style x:Key="lblLight" TargetType="Label">
-            <Setter Property="TextColor" Value="{StaticResource appColor4}" />
-            <Setter Property="VerticalTextAlignment" Value="Center" />
-            <Setter Property="VerticalOptions" Value="CenterAndExpand" />
-            <Setter Property="FontFamily" Value="Poppins" />
-            <Setter Property="FontSize" Value="15" />
-        </Style>
-
-        <Style x:Key="lblMedium" TargetType="Label">
-            <Setter Property="TextColor" Value="{StaticResource appColor4}" />
-            <Setter Property="VerticalTextAlignment" Value="Center" />
-            <Setter Property="VerticalOptions" Value="CenterAndExpand" />
-            <Setter Property="FontFamily" Value="Poppins-Medium" />
-        </Style>
-
-        <Style x:Key="lblSemiBold" TargetType="Label">
-            <Setter Property="TextColor" Value="{StaticResource appColor4}" />
-            <Setter Property="VerticalTextAlignment" Value="Center" />
-            <Setter Property="VerticalOptions" Value="CenterAndExpand" />
-            <Setter Property="FontFamily" Value="Poppins-SemiBold" />
-        </Style>
-
-        <Style x:Key="lblNotification" TargetType="Label">
-            <Setter Property="TextColor" Value="{StaticResource appColor4}" />
-            <Setter Property="FontSize" Value="13" />
-            <Setter Property="VerticalTextAlignment" Value="Center" />
-            <Setter Property="VerticalOptions" Value="FillAndExpand" />
-            <Setter Property="HorizontalTextAlignment" Value="Center" />
-            <Setter Property="HorizontalOptions" Value="FillAndExpand" />
-            <Setter Property="FontFamily" Value="Poppins-Medium" />
         </Style>
         <!--#endregion-->
 
@@ -283,6 +287,7 @@
             <Setter Property="Padding" Value="10" />
             <Setter Property="Margin" Value="0" />
             <Setter Property="BackgroundColor" Value="Transparent" />
+            <Setter Property="Source" Value="{AppThemeBinding Dark=iconBackArrowWhite.png, Light=iconBackArrow.png}" />
         </Style>
 
         <Style x:Key="ImgBtnH40P13" TargetType="ImageButton">

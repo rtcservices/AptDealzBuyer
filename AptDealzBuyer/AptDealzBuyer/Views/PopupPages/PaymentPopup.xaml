@@ -9,7 +9,8 @@
     <Frame
         Margin="30,0"
         Padding="0"
-        BackgroundColor="{StaticResource appColor6}"
+        BackgroundColor="{AppThemeBinding Dark={StaticResource appColor4},
+                                          Light={StaticResource appColor6}}"
         BorderColor="{StaticResource appColor6}"
         CornerRadius="10"
         HasShadow="{OnPlatform Android=true,

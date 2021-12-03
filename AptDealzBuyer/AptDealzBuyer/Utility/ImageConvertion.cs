@@ -119,7 +119,10 @@ namespace AptDealzBuyer.Utility
                 ImageBytes = memoryStream.ToArray();
 
                 //Reduce Image size
-                ImageBytes = ImageConvertion.CompressImage(ImageBytes);
+
+                //  ImageBytes = ImageConvertion.CompressImage(ImageBytes);
+                var base64image = Convert.ToBase64String(ImageBytes);
+
                 memoryStream.Dispose();
                 Device.BeginInvokeOnMainThread(() =>
                 {
@@ -201,13 +204,14 @@ namespace AptDealzBuyer.Utility
                             file = await CrossMedia.Current.TakePhotoAsync(new Plugin.Media.Abstractions.StoreCameraMediaOptions
                             {
                                 SaveToAlbum = true,
-                                CompressionQuality = 50,
                                 DefaultCamera = CameraDevice.Rear,
                                 AllowCropping = true,
                                 PhotoSize = Plugin.Media.Abstractions.PhotoSize.Custom,
-                                //CustomPhotoSize = 50,
-                                CustomPhotoSize = 20
+                                CustomPhotoSize = 50
                             });
+
+                            // CustomPhotoSize = 50,
+                            // CompressionQuality = 50,
 
                             if (file == null)
                             {

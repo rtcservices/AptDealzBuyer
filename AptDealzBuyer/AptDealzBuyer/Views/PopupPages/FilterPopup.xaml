@@ -6,7 +6,8 @@
     xmlns:popup="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
     NavigationPage.HasNavigationBar="False">
     <Grid
-        BackgroundColor="{StaticResource appColor6}"
+        BackgroundColor="{AppThemeBinding Dark={StaticResource appColor4},
+                                          Light={StaticResource appColor6}}"
         RowDefinitions="Auto,Auto,Auto,Auto"
         RowSpacing="0"
         VerticalOptions="EndAndExpand">

@@ -9,7 +9,8 @@
     xmlns:iOS="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
     xmlns:pan="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
     iOS:Page.UseSafeArea="True"
-    BackgroundColor="{StaticResource appColor6}"
+    BackgroundColor="{AppThemeBinding Dark={StaticResource appColor4},
+                                      Light={StaticResource appColor6}}"
     NavigationPage.HasNavigationBar="False">
     <ContentPage.Content>
 
@@ -66,7 +67,7 @@
 
                     <Image
                         x:Name="ImgMenu"
-                        Grid.Column="0"
+                        Grid.Column="2"
                         Margin="0,0,0,0"
                         HeightRequest="30"
                         HorizontalOptions="StartAndExpand"
@@ -96,7 +97,6 @@
                         x:Name="ImgBack"
                         Grid.Column="0"
                         Clicked="ImgBack_Tapped"
-                        Source="iconBackArrow.png"
                         Style="{StaticResource ImgBtnPrimary}" />
                     <Label
                         Grid.Column="1"
@@ -368,7 +368,8 @@
                                                 <pan:PancakeView
                                                     Margin="{Binding IsUser, Converter={converter:BooleanToMessageMargin}}"
                                                     Padding="10"
-                                                    BackgroundColor="{StaticResource appColor8}"
+                                                    BackgroundColor="{AppThemeBinding Dark={StaticResource appColor11},
+                                                                                      Light={StaticResource appColor8}}"
                                                     CornerRadius="{Binding IsUser, Converter={converter:BooleanToPancakeRadius}}"
                                                     HorizontalOptions="{Binding IsUser, Converter={converter:BooleanToMessagePosition}}"
                                                     IsClippedToBounds="True"
@@ -426,7 +427,7 @@
                                                                     HorizontalOptions="EndAndExpand"
                                                                     Style="{StaticResource lblSemiBold}"
                                                                     Text="{Binding CreatedDate, StringFormat='{0:hh:mm tt}'}"
-                                                                    TextColor="{StaticResource appColor9}"
+                                                                    TextColor="{StaticResource appColor4}"
                                                                     VerticalOptions="EndAndExpand" />
                                                             </StackLayout>
                                                         </Grid>

@@ -41,7 +41,8 @@ namespace AptDealzBuyer.Views.PopupPages
                 lblFirstType.Text = GrievancesStatus.Pending.ToString();
                 lblSecondType.Text = GrievancesStatus.Open.ToString();
                 lblThirdType.Text = GrievancesStatus.Closed.ToString();
-                lblFourType.Text = GrievancesStatus.All.ToString();
+                lblFourType.Text = GrievancesStatus.ReOpened.ToString();
+                lblfiveType.Text = GrievancesStatus.All.ToString();
             }
             catch (Exception ex)
             {
@@ -70,10 +71,15 @@ namespace AptDealzBuyer.Views.PopupPages
                         ClearSource();
                         imgThirdType.Source = Constraints.Img_RadioSelected;
                     }
-                    else if (viewSource == (int)GrievancesStatus.All)
+                    else if (viewSource == (int)GrievancesStatus.ReOpened)
                     {
                         ClearSource();
                         imgFourType.Source = Constraints.Img_RadioSelected;
+                    }
+                    else if (viewSource == (int)GrievancesStatus.All)
+                    {
+                        ClearSource();
+                        imgfiveType.Source = Constraints.Img_RadioSelected;
                     }
                     else
                     {
@@ -94,6 +100,7 @@ namespace AptDealzBuyer.Views.PopupPages
             imgSecondType.Source = Constraints.Img_RedioUnSelected;
             imgThirdType.Source = Constraints.Img_RedioUnSelected;
             imgFourType.Source = Constraints.Img_RedioUnSelected;
+            imgfiveType.Source = Constraints.Img_RedioUnSelected;
         }
         #endregion
 
@@ -144,8 +151,8 @@ namespace AptDealzBuyer.Views.PopupPages
         {
             try
             {
-                BindSource((int)GrievancesStatus.All);
-                isRefresh?.Invoke(GrievancesStatus.All.ToString(), null);
+                BindSource((int)GrievancesStatus.ReOpened);
+                isRefresh?.Invoke(GrievancesStatus.ReOpened.ToString(), null);
                 PopupNavigation.Instance.PopAsync();
             }
             catch (Exception ex)
@@ -154,5 +161,19 @@ namespace AptDealzBuyer.Views.PopupPages
             }
         }
         #endregion
+
+        private void StkFiveType_Tapped(object sender, EventArgs e)
+        {
+            try
+            {
+                BindSource((int)GrievancesStatus.All);
+                isRefresh?.Invoke(GrievancesStatus.All.ToString(), null);
+                PopupNavigation.Instance.PopAsync();
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("StatusPopup/StkFiveType_Tapped: " + ex.Message);
+            }
+        }
     }
 }

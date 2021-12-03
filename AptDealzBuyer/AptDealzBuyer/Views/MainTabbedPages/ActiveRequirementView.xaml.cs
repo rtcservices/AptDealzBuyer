@@ -155,32 +155,29 @@ namespace AptDealzBuyer.Views.MainTabbedPages
 
         #region [ Events ]
         #region [ Header Navigation ]
-        private void ImgMenu_Tapped(object sender, EventArgs e)
+        private async void ImgMenu_Tapped(object sender, EventArgs e)
         {
-            Common.BindAnimation(image: ImgMenu);
-            //Common.OpenMenu();
+            try
+            {
+                await Common.BindAnimation(image: ImgMenu);
+                await Navigation.PushAsync(new OtherPages.SettingsPage());
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("ActiveRequirementView/ImgMenu_Tapped: " + ex.Message);
+            }
         }
 
         private async void ImgNotification_Tapped(object sender, EventArgs e)
         {
-            var Tab = (Grid)sender;
-            if (Tab.IsEnabled)
+            try
             {
-                try
-                {
-                    Tab.IsEnabled = false;
-                    await Navigation.PushAsync(new DashboardPages.NotificationPage());
-                }
-                catch (Exception ex)
-                {
-                    Common.DisplayErrorMessage("ActiveRequirementView/ImgNotification_Tapped: " + ex.Message);
-                }
-                finally
-                {
-                    Tab.IsEnabled = true;
-                }
+                await Navigation.PushAsync(new DashboardPages.NotificationPage());
             }
-
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("ActiveRequirementView/ImgNotification_Tapped: " + ex.Message);
+            }
         }
 
         private void ImgQuestion_Tapped(object sender, EventArgs e)
@@ -188,9 +185,9 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_FAQHelp));
         }
 
-        private void ImgBack_Tapped(object sender, EventArgs e)
+        private async void ImgBack_Tapped(object sender, EventArgs e)
         {
-            Common.BindAnimation(imageButton: ImgBack);
+            await Common.BindAnimation(imageButton: ImgBack);
             Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_Home));
         }
 
@@ -205,14 +202,17 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         {
             try
             {
-                if (ImgSort.Source.ToString().Replace("File: ", "") == Constraints.Img_SortASC)
+                var ImgASC = (Application.Current.UserAppTheme == OSAppTheme.Light) ? Constraints.Sort_ASC : Constraints.Sort_ASC_Dark;
+                var ImgDSC = (Application.Current.UserAppTheme == OSAppTheme.Light) ? Constraints.Sort_DSC : Constraints.Sort_DSC_Dark;
+
+                if (ImgSort.Source.ToString().Replace("File: ", "") == ImgASC)
                 {
-                    ImgSort.Source = Constraints.Img_SortDSC;
+                    ImgSort.Source = ImgDSC;
                     isAssending = false;
                 }
                 else
                 {
-                    ImgSort.Source = Constraints.Img_SortASC;
+                    ImgSort.Source = ImgASC;
                     isAssending = true;
                 }
 
@@ -228,42 +228,33 @@ namespace AptDealzBuyer.Views.MainTabbedPages
 
         private async void FrmFilterBy_Tapped(object sender, EventArgs e)
         {
-            var Tab = (Frame)sender;
-            if (Tab.IsEnabled)
+            try
             {
-                try
+                var sortby = new FilterPopup(filterBy, Constraints.Str_Active);
+                sortby.isRefresh += async (s1, e1) =>
                 {
-                    Tab.IsEnabled = false;
-                    var sortby = new FilterPopup(filterBy, Constraints.Str_Active);
-                    sortby.isRefresh += async (s1, e1) =>
+                    string result = s1.ToString();
+                    if (!Common.EmptyFiels(result))
                     {
-                        string result = s1.ToString();
-                        if (!Common.EmptyFiels(result))
+                        filterBy = result;
+                        if (filterBy == SortByField.ID.ToString())
                         {
-                            filterBy = result;
-                            if (filterBy == SortByField.ID.ToString())
-                            {
-                                lblFilterBy.Text = filterBy;
-                            }
-                            else
-                            {
-                                lblFilterBy.Text = filterBy.ToCamelCase();
-                            }
-                            pageNo = 1;
-                            mRequirements.Clear();
-                            await GetActiveRequirements(filterBy, title, isAssending);
+                            lblFilterBy.Text = filterBy;
                         }
-                    };
-                    await PopupNavigation.Instance.PushAsync(sortby);
-                }
-                catch (Exception ex)
-                {
-                    Common.DisplayErrorMessage("ActiveRequirementView/FrmFilter_Tapped: " + ex.Message);
-                }
-                finally
-                {
-                    Tab.IsEnabled = true;
-                }
+                        else
+                        {
+                            lblFilterBy.Text = filterBy.ToCamelCase();
+                        }
+                        pageNo = 1;
+                        mRequirements.Clear();
+                        await GetActiveRequirements(filterBy, title, isAssending);
+                    }
+                };
+                await PopupNavigation.Instance.PushAsync(sortby);
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("ActiveRequirementView/FrmFilter_Tapped: " + ex.Message);
             }
         }
 
@@ -296,6 +287,21 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         }
         #endregion
 
+        #region [ Listing ]
+        private async void GrdViewRequirement_Tapped(object sender, EventArgs e)
+        {
+            var GridExp = (Grid)sender;
+            try
+            {
+                var mRequirement = GridExp.BindingContext as Requirement;
+                await Navigation.PushAsync(new DashboardPages.ViewRequirememntPage(mRequirement.RequirementId));
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("ActiveRequirementView/GrdViewRequirement_Tapped: " + ex.Message);
+            }
+        }
+
         private void ImgExpand_Tapped(object sender, EventArgs e)
         {
             try
@@ -308,17 +314,17 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 }
 
                 var mRequirement = imgExp.BindingContext as Requirement;
-                if (mRequirement != null && mRequirement.ArrowImage == Constraints.Img_ArrowRight)
+                if (mRequirement != null && mRequirement.ArrowImage == Constraints.Arrow_Right)
                 {
-                    mRequirement.ArrowImage = Constraints.Img_ArrowDown;
-                    mRequirement.GridBg = (Color)App.Current.Resources["appColor8"];
+                    mRequirement.ArrowImage = Constraints.Arrow_Down;
+                    mRequirement.GridBg = (Application.Current.UserAppTheme == OSAppTheme.Light) ? (Color)App.Current.Resources["appColor8"] : Color.Transparent;
                     mRequirement.MoreDetail = true;
                     mRequirement.HideDetail = false;
                     mRequirement.NameFont = 15;
                 }
                 else
                 {
-                    mRequirement.ArrowImage = Constraints.Img_ArrowRight;
+                    mRequirement.ArrowImage = Constraints.Arrow_Right;
                     mRequirement.GridBg = Color.Transparent;
                     mRequirement.MoreDetail = false;
                     mRequirement.HideDetail = true;
@@ -331,71 +337,31 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             }
         }
 
-        private async void GrdViewRequirement_Tapped(object sender, EventArgs e)
-        {
-            var GridExp = (Grid)sender;
-            if (GridExp.IsEnabled)
-            {
-                try
-                {
-                    GridExp.IsEnabled = false;
-                    var mRequirement = GridExp.BindingContext as Requirement;
-                    await Navigation.PushAsync(new DashboardPages.ViewRequirememntPage(mRequirement.RequirementId));
-
-                }
-                catch (Exception ex)
-                {
-                    Common.DisplayErrorMessage("ActiveRequirementView/GrdViewRequirement_Tapped: " + ex.Message);
-                }
-                finally
-                {
-                    GridExp.IsEnabled = true;
-                }
-            }
-        }
-
-        #region [ Listing ]
         private async void ImgDelete_Tapped(object sender, EventArgs e)
         {
             var imgExp = (Image)sender;
-            if (imgExp.IsEnabled)
+            try
             {
-                try
-                {
-                    imgExp.IsEnabled = false;
-                    var mRequirement = imgExp.BindingContext as Requirement;
-                    await DeleteRequirement(mRequirement.RequirementId);
-                }
-                catch (Exception ex)
-                {
-                    Common.DisplayErrorMessage("ActiveRequirementView/ImgDelete_Tapped: " + ex.Message);
-                }
-                finally
-                {
-                    imgExp.IsEnabled = true;
-                }
+                var mRequirement = imgExp.BindingContext as Requirement;
+                await DeleteRequirement(mRequirement.RequirementId);
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("ActiveRequirementView/ImgDelete_Tapped: " + ex.Message);
             }
         }
 
         private async void FrmDelete_Tapped(object sender, EventArgs e)
         {
             var Tab = (Frame)sender;
-            if (Tab.IsEnabled)
+            try
             {
-                try
-                {
-                    Tab.IsEnabled = false;
-                    var mRequirement = Tab.BindingContext as Requirement;
-                    await DeleteRequirement(mRequirement.RequirementId);
-                }
-                catch (Exception ex)
-                {
-                    Common.DisplayErrorMessage("ActiveRequirementView/FrmDelete_Tapped: " + ex.Message);
-                }
-                finally
-                {
-                    Tab.IsEnabled = true;
-                }
+                var mRequirement = Tab.BindingContext as Requirement;
+                await DeleteRequirement(mRequirement.RequirementId);
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("ActiveRequirementView/FrmDelete_Tapped: " + ex.Message);
             }
         }
 
@@ -447,13 +413,13 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             await GetActiveRequirements(filterBy, title, isAssending);
             lstRequirements.IsRefreshing = false;
         }
-        #endregion
-
-        #endregion
-
         private void lstRequirements_ItemTapped(object sender, ItemTappedEventArgs e)
         {
             lstRequirements.SelectedItem = null;
         }
+        #endregion
+
+        #endregion
+
     }
 }

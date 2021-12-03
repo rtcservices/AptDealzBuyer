@@ -1,11 +1,8 @@
 ﻿using Acr.UserDialogs;
-using AptDealzBuyer.Interfaces;
 using AptDealzBuyer.Model.Request;
 using AptDealzBuyer.Repository;
 using AptDealzBuyer.Utility;
-using Rg.Plugins.Popup.Services;
 using System;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
@@ -228,30 +225,28 @@ namespace AptDealzBuyer.Views.DashboardPages
         #endregion
 
         #region [ Events ]
-        private void ImgMenu_Tapped(object sender, EventArgs e)
+        private async void ImgMenu_Tapped(object sender, EventArgs e)
         {
-            Common.BindAnimation(image: ImgMenu);
-            //Common.OpenMenu();
+            try
+            {
+                await Common.BindAnimation(image: ImgMenu);
+                await Navigation.PushAsync(new OtherPages.SettingsPage());
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("GrievanceDetailsPage/ImgMenu_Tapped: " + ex.Message);
+            }
         }
 
         private async void ImgNotification_Tapped(object sender, EventArgs e)
         {
-            var Tab = (Grid)sender;
-            if (Tab.IsEnabled)
+            try
             {
-                try
-                {
-                    Tab.IsEnabled = false;
-                    await Navigation.PushAsync(new DashboardPages.NotificationPage());
-                }
-                catch (Exception ex)
-                {
-                    Common.DisplayErrorMessage("GrievanceDetailsPage/ImgNotification_Tapped: " + ex.Message);
-                }
-                finally
-                {
-                    Tab.IsEnabled = true;
-                }
+                await Navigation.PushAsync(new DashboardPages.NotificationPage());
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("GrievanceDetailsPage/ImgNotification_Tapped: " + ex.Message);
             }
         }
 
@@ -262,29 +257,20 @@ namespace AptDealzBuyer.Views.DashboardPages
 
         private async void ImgBack_Tapped(object sender, EventArgs e)
         {
-            Common.BindAnimation(imageButton: ImgBack);
+            await Common.BindAnimation(imageButton: ImgBack);
             await Navigation.PopAsync();
         }
 
         private async void BtnSubmit_Tapped(object sender, EventArgs e)
         {
-            var Tab = (Button)sender;
-            if (Tab.IsEnabled)
+            try
             {
-                try
-                {
-                    Tab.IsEnabled = false;
-                    Common.BindAnimation(button: BtnSubmit);
-                    await SubmitGrievanceResponse();
-                }
-                catch (Exception ex)
-                {
-                    Common.DisplayErrorMessage("GrievanceDetailsPage/BtnSubmit_Tapped: " + ex.Message);
-                }
-                finally
-                {
-                    Tab.IsEnabled = true;
-                }
+                await Common.BindAnimation(button: BtnSubmit);
+                await SubmitGrievanceResponse();
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("GrievanceDetailsPage/BtnSubmit_Tapped: " + ex.Message);
             }
         }
 
@@ -341,22 +327,14 @@ namespace AptDealzBuyer.Views.DashboardPages
         private async void ImgDocument_Clicked(object sender, EventArgs e)
         {
             var imgButton = (ImageButton)sender;
-            if (imgButton.IsEnabled)
+            try
             {
-                try
-                {
-                    imgButton.IsEnabled = false;
-                    var url = imgButton.BindingContext as string;
-                    await GenerateWebView.GenerateView(url);
-                }
-                catch (Exception ex)
-                {
-                    Common.DisplayErrorMessage("GrievancesPage/ImgDocument_Clicked: " + ex.Message);
-                }
-                finally
-                {
-                    imgButton.IsEnabled = true;
-                }
+                var url = imgButton.BindingContext as string;
+                await GenerateWebView.GenerateView(url);
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("GrievancesPage/ImgDocument_Clicked: " + ex.Message);
             }
         }
         #endregion

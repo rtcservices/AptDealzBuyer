@@ -37,7 +37,7 @@ namespace AptDealzBuyer.Views.DashboardPages
         }
         #endregion
 
-        #region Methods
+        #region [ Methods ]
         public void Dispose()
         {
             GC.Collect();
@@ -168,11 +168,18 @@ namespace AptDealzBuyer.Views.DashboardPages
         }
         #endregion
 
-        #region Events      
-        private void ImgMenu_Tapped(object sender, EventArgs e)
+        #region [ Events ]     
+        private async void ImgMenu_Tapped(object sender, EventArgs e)
         {
-            Common.BindAnimation(image: ImgMenu);
-            //Common.OpenMenu();
+            try
+            {
+                await Common.BindAnimation(image: ImgMenu);
+                await Navigation.PushAsync(new OtherPages.SettingsPage());
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("NotificationPage/ImgMenu_Tapped: " + ex.Message);
+            }
         }
 
         private void ImgQuestion_Tapped(object sender, EventArgs e)
@@ -180,9 +187,9 @@ namespace AptDealzBuyer.Views.DashboardPages
             Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_FAQHelp));
         }
 
-        private void ImgBack_Tapped(object sender, EventArgs e)
+        private async void ImgBack_Tapped(object sender, EventArgs e)
         {
-            Common.BindAnimation(imageButton: ImgBack);
+            await Common.BindAnimation(imageButton: ImgBack);
             Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_Home));
         }
 
@@ -225,51 +232,42 @@ namespace AptDealzBuyer.Views.DashboardPages
                 Common.DisplayErrorMessage("NotificationPage/lstNotification_Refreshing: " + ex.Message);
             }
         }
-        #endregion
 
         private async void GrdList_Tapped(object sender, EventArgs e)
         {
             var Tab = (Grid)sender;
-            if (Tab.IsEnabled)
+            try
             {
-                try
+                var mNotification = Tab.BindingContext as NotificationData;
+                if (mNotification != null && !Common.EmptyFiels(mNotification.NotificationId))
                 {
-                    Tab.IsEnabled = false;
-                    var mNotification = Tab.BindingContext as NotificationData;
-                    if (mNotification != null && !Common.EmptyFiels(mNotification.NotificationId))
-                    {
-                        await SetNoficiationAsRead(mNotification.NotificationId);
+                    await SetNoficiationAsRead(mNotification.NotificationId);
 
-                        if (mNotification.NavigationScreen == (int)NavigationScreen.RequirementDetails)
-                        {
-                            await Navigation.PushAsync(new DashboardPages.ViewRequirememntPage(mNotification.ParentKeyId));
-                        }
-                        else if (mNotification.NavigationScreen == (int)NavigationScreen.QuoteDetails)
-                        {
-                            await Navigation.PushAsync(new QuoteDetailsPage(mNotification.ParentKeyId));
-                        }
-                        else if (mNotification.NavigationScreen == (int)NavigationScreen.OrderDetails)
-                        {
-                            await Navigation.PushAsync(new Orders.OrderDetailsPage(mNotification.ParentKeyId));
-                        }
-                        else if (mNotification.NavigationScreen == (int)NavigationScreen.GrievanceDetails)
-                        {
-                            await Navigation.PushAsync(new GrievanceDetailsPage(mNotification.ParentKeyId));
-                        }
-                        else if (mNotification.NavigationScreen == (int)NavigationScreen.SupportChatDetails)
-                        {
-                            await Navigation.PushAsync(new ContactSupportPage());
-                        }
+                    if (mNotification.NavigationScreen == (int)NavigationScreen.RequirementDetails)
+                    {
+                        await Navigation.PushAsync(new DashboardPages.ViewRequirememntPage(mNotification.ParentKeyId));
+                    }
+                    else if (mNotification.NavigationScreen == (int)NavigationScreen.QuoteDetails)
+                    {
+                        await Navigation.PushAsync(new QuoteDetailsPage(mNotification.ParentKeyId));
+                    }
+                    else if (mNotification.NavigationScreen == (int)NavigationScreen.OrderDetails)
+                    {
+                        await Navigation.PushAsync(new Orders.OrderDetailsPage(mNotification.ParentKeyId));
+                    }
+                    else if (mNotification.NavigationScreen == (int)NavigationScreen.GrievanceDetails)
+                    {
+                        await Navigation.PushAsync(new GrievanceDetailsPage(mNotification.ParentKeyId));
+                    }
+                    else if (mNotification.NavigationScreen == (int)NavigationScreen.SupportChatDetails)
+                    {
+                        await Navigation.PushAsync(new ContactSupportPage());
                     }
                 }
-                catch (Exception ex)
-                {
-                    Common.DisplayErrorMessage("NotificationPage/GrdList_Tapped: " + ex.Message);
-                }
-                finally
-                {
-                    Tab.IsEnabled = true;
-                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("NotificationPage/GrdList_Tapped: " + ex.Message);
             }
         }
 
@@ -277,5 +275,6 @@ namespace AptDealzBuyer.Views.DashboardPages
         {
             lstNotification.SelectedItem = null;
         }
+        #endregion
     }
 }

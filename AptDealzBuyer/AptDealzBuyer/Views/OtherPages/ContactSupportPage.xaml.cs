@@ -124,6 +124,19 @@ namespace AptDealzBuyer.Views.OtherPages
                 App.chatStoppableTimer.Stop();
                 App.chatStoppableTimer = null;
             }
+
+            if (App.chatStoppableTimer == null)
+            {
+                App.chatStoppableTimer = new StoppableTimer(TimeSpan.FromSeconds(1), async () =>
+                {
+                    if (Common.PreviousNotificationCount != Common.NotificationCount)
+                    {
+                        Common.PreviousNotificationCount = Common.NotificationCount;
+                        await GetMessages();
+                    }
+                });
+            }
+            App.chatStoppableTimer.Start();
         }
 
         protected async override void OnAppearing()
@@ -144,7 +157,6 @@ namespace AptDealzBuyer.Views.OtherPages
                     JArray result = (JArray)mResponse.Data;
                     if (result != null)
                     {
-                        //txtMessage.Text = string.Empty;
                         mMessageList = result.ToObject<List<ChatSupport>>();
                         if (mMessageList != null && mMessageList.Count > 0)
                         {
@@ -168,29 +180,39 @@ namespace AptDealzBuyer.Views.OtherPages
                                     }
                                 }
                             }
-                            lstChar.IsVisible = true;
-                            lblNoRecord.IsVisible = false;
-                            //lstChar.ItemsSource = mMessageList.ToList();
 
-                            var mMessage = mMessageList.LastOrDefault();
-                            if (mMessage != null)
-                                lstChar.ScrollTo(mMessage, ScrollToPosition.End, false);
+                            Device.BeginInvokeOnMainThread(() =>
+                            {
+                                lstChar.IsVisible = true;
+                                lblNoRecord.IsVisible = false;
+                                //lstChar.ItemsSource = mMessageList.ToList();
+
+                                var mMessage = mMessageList.LastOrDefault();
+                                if (mMessage != null)
+                                    lstChar.ScrollTo(mMessage, ScrollToPosition.End, false);
+                            });
                         }
                         else
                         {
-                            lstChar.IsVisible = false;
-                            lblNoRecord.IsVisible = true;
+                            Device.BeginInvokeOnMainThread(() =>
+                            {
+                                lstChar.IsVisible = false;
+                                lblNoRecord.IsVisible = true;
+                            });
                         }
                     }
                 }
                 else
                 {
-                    lstChar.IsVisible = false;
-                    lblNoRecord.IsVisible = true;
-                    if (mResponse != null && !Common.EmptyFiels(mResponse.Message))
-                        lblNoRecord.Text = mResponse.Message;
-                    else
-                        lblNoRecord.Text = Constraints.Something_Wrong;
+                    Device.BeginInvokeOnMainThread(() =>
+                    {
+                        lstChar.IsVisible = false;
+                        lblNoRecord.IsVisible = true;
+                        if (mResponse != null && !Common.EmptyFiels(mResponse.Message))
+                            lblNoRecord.Text = mResponse.Message;
+                        else
+                            lblNoRecord.Text = Constraints.Something_Wrong;
+                    });
                 }
             }
             catch (Exception ex)
@@ -230,32 +252,29 @@ namespace AptDealzBuyer.Views.OtherPages
         #endregion
 
         #region [ Events ]
-        private void ImgMenu_Tapped(object sender, EventArgs e)
+        private async void ImgMenu_Tapped(object sender, EventArgs e)
         {
-            Common.BindAnimation(image: ImgMenu);
-            //Common.OpenMenu();
+            try
+            {
+                await Common.BindAnimation(image: ImgMenu);
+                await Navigation.PushAsync(new OtherPages.SettingsPage());
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("ContactSupportPage/ImgMenu_Tapped: " + ex.Message);
+            }
         }
 
         private async void ImgNotification_Tapped(object sender, EventArgs e)
         {
-            var Tab = (Grid)sender;
-            if (Tab.IsEnabled)
+            try
             {
-                try
-                {
-                    Tab.IsEnabled = false;
-                    await Navigation.PushAsync(new DashboardPages.NotificationPage());
-                }
-                catch (Exception ex)
-                {
-                    Common.DisplayErrorMessage("ContactSupportPage/ImgNotification_Tapped: " + ex.Message);
-                }
-                finally
-                {
-                    Tab.IsEnabled = true;
-                }
+                await Navigation.PushAsync(new DashboardPages.NotificationPage());
             }
-
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("ContactSupportPage/ImgNotification_Tapped: " + ex.Message);
+            }
         }
 
         private void ImgQuestion_Tapped(object sender, EventArgs e)
@@ -265,7 +284,7 @@ namespace AptDealzBuyer.Views.OtherPages
 
         private async void ImgBack_Tapped(object sender, EventArgs e)
         {
-            Common.BindAnimation(imageButton: ImgBack);
+            await Common.BindAnimation(imageButton: ImgBack);
             await Navigation.PopAsync();
         }
 
@@ -276,23 +295,14 @@ namespace AptDealzBuyer.Views.OtherPages
 
         private async void BtnSend_Clicked(object sender, EventArgs e)
         {
-            var Tab = (ImageButton)sender;
-            if (Tab.IsEnabled)
+            try
             {
-                try
-                {
-                    Tab.IsEnabled = false;
-                    Common.BindAnimation(imageButton: BtnSend);
-                    await SentMessage();
-                }
-                catch (Exception ex)
-                {
-                    Common.DisplayErrorMessage("ContactSupportPage/BtnSend_Clicked: " + ex.Message);
-                }
-                finally
-                {
-                    Tab.IsEnabled = true;
-                }
+                await Common.BindAnimation(imageButton: BtnSend);
+                await SentMessage();
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("ContactSupportPage/BtnSend_Clicked: " + ex.Message);
             }
         }
 

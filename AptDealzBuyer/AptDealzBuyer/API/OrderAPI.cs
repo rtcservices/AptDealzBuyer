@@ -139,14 +139,11 @@ namespace AptDealzBuyer.API
                         mResponse = await DependencyService.Get<IAuthenticationRepository>().APIResponse(response);
                         if (response.IsSuccessStatusCode)
                         {
-                            if (mResponse != null && mResponse.Succeeded)
-                            {
-                                var contentStream = await response.Content.ReadAsStreamAsync();
-                                mResponse.Succeeded = true;
-                                byte[] buffer = ImageConvertion.streamToByteArray(contentStream);
-                                contentStream.Read(buffer, 0, (int)contentStream.Length);
-                                mResponse.Data = Convert.ToBase64String(buffer);
-                            }
+                            var contentStream = await response.Content.ReadAsStreamAsync();
+                            mResponse.Succeeded = true;
+                            byte[] buffer = ImageConvertion.streamToByteArray(contentStream);
+                            contentStream.Read(buffer, 0, (int)contentStream.Length);
+                            mResponse.Data = Convert.ToBase64String(buffer);
                         }
                     }
                 }

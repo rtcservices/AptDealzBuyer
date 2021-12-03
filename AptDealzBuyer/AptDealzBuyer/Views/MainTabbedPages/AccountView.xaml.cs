@@ -511,32 +511,29 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         #endregion
 
         #region [ Events ]        
-        private void ImgMenu_Tapped(object sender, EventArgs e)
+        private async void ImgMenu_Tapped(object sender, EventArgs e)
         {
-            Common.BindAnimation(image: ImgMenu);
-            //Common.OpenMenu();
+            try
+            {
+                await Common.BindAnimation(image: ImgMenu);
+                await Navigation.PushAsync(new OtherPages.SettingsPage());
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("AccountView/ImgMenu_Tapped: " + ex.Message);
+            }
         }
 
         private async void ImgNotification_Tapped(object sender, EventArgs e)
         {
-            var Tab = (Grid)sender;
-            if (Tab.IsEnabled)
+            try
             {
-                try
-                {
-                    Tab.IsEnabled = false;
-                    await Navigation.PushAsync(new DashboardPages.NotificationPage());
-                }
-                catch (Exception ex)
-                {
-                    Common.DisplayErrorMessage("AccountView/ImgNotification_Tapped: " + ex.Message);
-                }
-                finally
-                {
-                    Tab.IsEnabled = true;
-                }
+                await Navigation.PushAsync(new DashboardPages.NotificationPage());
             }
-
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("AccountView/ImgNotification_Tapped: " + ex.Message);
+            }
         }
 
         private void ImgQuestion_Tapped(object sender, EventArgs e)
@@ -544,9 +541,9 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_FAQHelp));
         }
 
-        private void ImgBack_Tapped(object sender, EventArgs e)
+        private async void ImgBack_Tapped(object sender, EventArgs e)
         {
-            Common.BindAnimation(imageButton: ImgBack);
+            await Common.BindAnimation(imageButton: ImgBack);
             Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_Home));
         }
 
@@ -554,8 +551,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         {
             try
             {
-                BtnUpdate.IsEnabled = false;
-                Common.BindAnimation(button: BtnUpdate);
+                await Common.BindAnimation(button: BtnUpdate);
                 await UpdateProfile();
             }
             catch (Exception ex)
@@ -566,23 +562,14 @@ namespace AptDealzBuyer.Views.MainTabbedPages
 
         private async void BtnDeactivate_Clicked(object sender, EventArgs e)
         {
-            var Tab = (Button)sender;
-            if (Tab.IsEnabled)
+            try
             {
-                try
-                {
-                    Tab.IsEnabled = false;
-                    Common.BindAnimation(button: BtnDeactivate);
-                    await Navigation.PushAsync(new OtherPages.DeactivateAccountPage());
-                }
-                catch (Exception ex)
-                {
-                    Common.DisplayErrorMessage("AccountView/BtnDeactivate_Clicked: " + ex.Message);
-                }
-                finally
-                {
-                    Tab.IsEnabled = true;
-                }
+                await Common.BindAnimation(button: BtnDeactivate);
+                await Navigation.PushAsync(new OtherPages.DeactivateAccountPage());
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("AccountView/BtnDeactivate_Clicked: " + ex.Message);
             }
         }
 
@@ -590,7 +577,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         {
             try
             {
-                Common.BindAnimation(image: ImgCamera);
+                await Common.BindAnimation(image: ImgCamera);
                 UserDialogs.Instance.ShowLoading(Constraints.Loading);
                 ImageConvertion.SelectedImagePath = imgUser;
                 ImageConvertion.SetNullSource((int)FileUploadCategory.ProfilePicture);
@@ -615,23 +602,14 @@ namespace AptDealzBuyer.Views.MainTabbedPages
 
         private async void Logout_Tapped(object sender, EventArgs e)
         {
-            var Tab = (Button)sender;
-            if (Tab.IsEnabled)
+            try
             {
-                try
-                {
-                    Tab.IsEnabled = false;
-                    Common.BindAnimation(button: BtnLogout);
-                    await DependencyService.Get<IAuthenticationRepository>().DoLogout();
-                }
-                catch (Exception ex)
-                {
-                    Common.DisplayErrorMessage("AccountView/Logout_Tapped: " + ex.Message);
-                }
-                finally
-                {
-                    Tab.IsEnabled = true;
-                }
+                await Common.BindAnimation(button: BtnLogout);
+                await DependencyService.Get<IAuthenticationRepository>().DoLogout();
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("AccountView/Logout_Tapped: " + ex.Message);
             }
         }
 

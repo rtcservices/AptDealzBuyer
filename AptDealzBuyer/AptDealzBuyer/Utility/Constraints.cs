@@ -58,12 +58,14 @@
         public const string Img_SwitchOff = "iconSwitchOff.png";
         public const string Img_SwitchOn = "iconSwitchOn.png";
 
-        public const string Img_ArrowRight = "iconRightArrow.png";
-        public const string Img_ArrowDown = "iconDownArrow.png";
+        public const string Arrow_Right = "iconRightArrow.png";
+        public const string Arrow_Down = "iconDownArrow.png";
         public const string Img_ArrowUp = "iconUpArrow.png";
 
-        public const string Img_SortASC = "iconSortASC.png";
-        public const string Img_SortDSC = "iconSortDSC.png";
+        public const string Sort_ASC = "iconSortASC.png";
+        public const string Sort_ASC_Dark = "iconSortASCWhite.png";
+        public const string Sort_DSC = "iconSortDSC.png";
+        public const string Sort_DSC_Dark = "iconSortDSCWhite.png";
 
         public const string Img_CheckBoxUnChecked = "iconUncheck.png";
         public const string Img_CheckBoxChecked = "iconCheck.png";
@@ -82,19 +84,27 @@
         public const string Img_Contact = "imgContact.jpg";
         public const string Img_UploadImage = "imgUploadImage.png";
         public const string Img_ProductBanner = "iconProductBanner.png";
+        public const string Img_ProductBannerWhite = "iconProductBannerWhite.png";
         public const string Img_Music = "iconMusic.png";
         public const string Img_Video = "iconVideo.png";
         public const string Img_File = "iconFiles2.png";
 
-        public const string Img_HomeActive = "iconHomeActive.png";
-        public const string Img_RequirementsActive = "iconRequirementsActive.png";
-        public const string Img_OrdersActive = "iconOrdersActive.png";
-        public const string Img_AccountActive = "iconAccountActive.png";
 
         public const string Img_Home = "iconHome.png";
+        public const string Img_HomeDark = "iconHomeWhite.png";
+        public const string Img_HomeActive = "iconHomeActive.png";
+
         public const string Img_Requirements = "iconRequirements.png";
+        public const string Img_RequirementsDark = "iconManageSellerWhite.png";
+        public const string Img_RequirementsActive = "iconRequirementsActive.png";
+
         public const string Img_Orders = "iconOrders.png";
+        public const string Img_OrdersDark = "iconOrdersWhite.png";
+        public const string Img_OrdersActive = "iconOrdersActive.png";
+
         public const string Img_Account = "iconAccount.png";
+        public const string Img_AccountDark = "iconAccountWhite.png";
+        public const string Img_AccountActive = "iconAccountActive.png";
 
         public const string Img_ActiveRequirements = "imgActiveRequirements.png";
         public const string Img_PostRequirements = "imgPostRequirements.png";
@@ -134,7 +144,7 @@
         public const string Loading = "Loading...";
         public const string Logout = "Logout";
         #endregion
-     
+
         public const string Required_Documents = "Please upload documents!";
 
         #region [ Alert Message ]
@@ -224,7 +234,7 @@
         public const string CopiedSellerId = "Copied Seller Id!";
         public const string CopiedRequirementId = "Copied Requirement ID!";
         public const string CopiedOrderId = "Copied Order Id!";
-        public const string CopiedQuoteRefNo = "Copied Quote Reference No!";
+        public const string CopiedQuoteRefNo = "Copied Quote Id!";
         public const string CopiedGrievanceId = "Copied Grievance Id!";
         #endregion
     }

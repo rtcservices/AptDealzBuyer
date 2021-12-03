@@ -67,10 +67,10 @@ namespace AptDealzBuyer.Views.Orders
             Dispose();
         }
 
-        protected override void OnAppearing()
+        protected async override void OnAppearing()
         {
             base.OnAppearing();
-            GetOrderDetails();
+            await GetOrderDetails();
         }
 
         private void BindSellerAddress(SellerAddressDetails mSellerAddress)
@@ -233,48 +233,107 @@ namespace AptDealzBuyer.Views.Orders
             }
         }
 
-        private void BindOrderStatus(int Status, bool DeliveryConfirmation, bool OrderCancelAllowed)
+        private void BindOrderStatus(int Status, bool DeliveryConfirmation, bool OrderCancelAllowed, string TrackingUrl, bool PickupProductDirectly)
         {
             try
             {
-                if ((Status == (int)OrderStatus.Shipped || Status == (int)OrderStatus.Delivered ||
-                    Status == (int)OrderStatus.Completed) && (DeliveryConfirmation == false))
+                if ((Status == (int)OrderStatus.Shipped ||
+                    Status == (int)OrderStatus.Delivered ||
+                    Status == (int)OrderStatus.Completed) &&
+                    (DeliveryConfirmation == false))
                 {
                     //Visible only ConfirmDelivery Button
                     GrdTrackOrderAndRaiseGrvInMainGrid.IsVisible = false;
                     BtnShowQrCodeInMainGrid.IsVisible = false;
                     GrdScanQRCodeImageInMainGrid.IsVisible = false;
-
-                    GrdAllSubGrid.IsVisible = true;
-                    BtnConfirmDeliveryInSubGrid.IsVisible = true;
                     GrdRateAndReportInSubGrid.IsVisible = false;
                     GrdWarningAndRaiseComplainInSubGrid.IsVisible = false;
                     GrdCancelOrderInSubGrid.IsVisible = false;
 
-                    if (true)
+                    if (Status == (int)OrderStatus.Shipped || Status == (int)OrderStatus.Delivered)
+                    {
+                        BtnConfirmDeliveryInSubGrid.IsVisible = true;
+                    }
+
+                    if (Status <= (int)OrderStatus.Shipped)
+                    {
+                        if (!Common.EmptyFiels(TrackingUrl) && Common.IsValidURL(TrackingUrl))
+                            BtnTrackOrder.IsVisible = true;
+                        else
+                            BtnTrackOrder.IsVisible = false;
+
+                        GrdTrackOrderAndRaiseGrvInMainGrid.IsVisible = true;
+                    }
+
+                    if (Status == (int)OrderStatus.Completed)
                     {
                         BtnRaiseGrievance.IsVisible = false;
+                        GrdRateAndReportInSubGrid.IsVisible = true;
                     }
                     else
-                    { BtnRaiseGrievance.IsVisible = true; }
+                    {
+                        BtnRaiseGrievance.IsVisible = true;
+                        GrdRateAndReportInSubGrid.IsVisible = false;
+                    }
                 }
-                else if (Status == (int)OrderStatus.Pending || Status == (int)OrderStatus.Accepted ||
-                    Status == (int)OrderStatus.Delivered || Status == (int)OrderStatus.CancelledFromBuyer)
+                else if (Status == (int)OrderStatus.Pending ||
+                    Status == (int)OrderStatus.Accepted ||
+                    Status == (int)OrderStatus.Delivered ||
+                    Status == (int)OrderStatus.CancelledFromBuyer)
                 {
                     //Nothing to show
-                    GrdTrackOrderAndRaiseGrvInMainGrid.IsVisible = false;
+
+                    if (Status <= (int)OrderStatus.Shipped && !Common.EmptyFiels(TrackingUrl) && TrackingUrl.IsValidURL())
+                    {
+                        BtnTrackOrder.IsVisible = true;
+                        GrdTrackOrderAndRaiseGrvInMainGrid.IsVisible = true;
+                    }
+                    else
+                    {
+                        BtnTrackOrder.IsVisible = false;
+                        GrdTrackOrderAndRaiseGrvInMainGrid.IsVisible = false;
+                    }
+
                     GrdScanQRCodeImageInMainGrid.IsVisible = false;
                     BtnShowQrCodeInMainGrid.IsVisible = false;
+                    GrdWarningAndRaiseComplainInSubGrid.IsVisible = false;
 
-                    GrdAllSubGrid.IsVisible = false;
+                    //Cancelled From Buyer
+                    if (Status == (int)OrderStatus.CancelledFromBuyer)
+                    {
+                        BtnRepostReqt1.IsVisible = true;
+                    }
+                    else
+                    {
+                        BtnRepostReqt1.IsVisible = false;
+                    }
+
                 }
                 else if (Status == (int)OrderStatus.ReadyForPickup)
                 {
                     //visible Warning Msg,Raise Complain button ,Qr Code image   
-                    GrdTrackOrderAndRaiseGrvInMainGrid.IsVisible = false;
-                    BtnShowQrCodeInMainGrid.IsVisible = true;
 
-                    GrdAllSubGrid.IsVisible = true;
+                    if (Status <= (int)OrderStatus.Shipped)
+                    {
+                        if (!Common.EmptyFiels(TrackingUrl) && Common.IsValidURL(TrackingUrl))
+                            BtnTrackOrder.IsVisible = true;
+                        else
+                            BtnTrackOrder.IsVisible = false;
+
+                        GrdTrackOrderAndRaiseGrvInMainGrid.IsVisible = true;
+                    }
+
+                    if (PickupProductDirectly)
+                    {
+                        BtnShowQrCodeInMainGrid.IsVisible = true;
+                    }
+                    else
+                    {
+                        BtnShowQrCodeInMainGrid.IsVisible = false;
+                    }
+
+                    GrdTrackOrderAndRaiseGrvInMainGrid.IsVisible = true;
+
                     GrdWarningAndRaiseComplainInSubGrid.IsVisible = true;
                     BtnConfirmDeliveryInSubGrid.IsVisible = false;
                     GrdRateAndReportInSubGrid.IsVisible = false;
@@ -283,11 +342,16 @@ namespace AptDealzBuyer.Views.Orders
                 else if (Status == (int)OrderStatus.Shipped)
                 {
                     //visible Track order and Raise grv buttons
+                    if (!Common.EmptyFiels(TrackingUrl) && Common.IsValidURL(TrackingUrl))
+                        BtnTrackOrder.IsVisible = true;
+                    else
+                        BtnTrackOrder.IsVisible = false;
+
                     GrdTrackOrderAndRaiseGrvInMainGrid.IsVisible = true;
                     BtnShowQrCodeInMainGrid.IsVisible = false;
                     GrdScanQRCodeImageInMainGrid.IsVisible = false;
 
-                    GrdAllSubGrid.IsVisible = false;
+                    GrdWarningAndRaiseComplainInSubGrid.IsVisible = false;
                 }
                 else if (Status == (int)OrderStatus.Completed)
                 {
@@ -296,18 +360,19 @@ namespace AptDealzBuyer.Views.Orders
                     BtnShowQrCodeInMainGrid.IsVisible = false;
                     GrdScanQRCodeImageInMainGrid.IsVisible = false;
 
-                    GrdAllSubGrid.IsVisible = true;
                     GrdRateAndReportInSubGrid.IsVisible = true;
                     GrdCancelOrderInSubGrid.IsVisible = false;
                     GrdWarningAndRaiseComplainInSubGrid.IsVisible = false;
                     BtnConfirmDeliveryInSubGrid.IsVisible = false;
 
-                    if (true)
+                    if (Status == (int)OrderStatus.Completed)
                     {
                         BtnRaiseGrievance.IsVisible = false;
                     }
                     else
-                    { BtnRaiseGrievance.IsVisible = true; }
+                    {
+                        BtnRaiseGrievance.IsVisible = true;
+                    }
                 }
 
                 if (OrderCancelAllowed)
@@ -330,9 +395,15 @@ namespace AptDealzBuyer.Views.Orders
                 {
                     #region [ Details ]
                     if (mOrder.PickupProductDirectly)
+                    {
                         lblPinCodeTitle.Text = Constraints.Str_ProductPickupPINCode;
+                        lblExpected.Text = "Expected Pickup Date";
+                    }
                     else
+                    {
                         lblPinCodeTitle.Text = Constraints.Str_ShippingPINCode;
+                        lblExpected.Text = "Expected Delivery Date";
+                    }
 
                     lblOrderId.Text = mOrder.OrderNo;
                     lblRequirementId.Text = mOrder.RequirementNo;
@@ -386,7 +457,18 @@ namespace AptDealzBuyer.Views.Orders
                     lblOriginProduct.Text = mOrder.Country;
                     lblInvoiceNo.Text = mOrder.OrderNo;
                     lblTotalAmount.Text = "Rs " + mOrder.TotalAmount;
-                    lblExpectedDate.Text = mOrder.ExpectedDelivery.ToString(Constraints.Str_DateFormate);
+
+                    if (mOrder.ExpectedDelivery == null || mOrder.ExpectedDelivery.Date == DateTime.MinValue.Date)
+                    {
+                        lblExpectedDate.IsVisible = false;
+                        lblExpected.IsVisible = false;
+                    }
+                    else
+                    {
+                        lblExpectedDate.Text = mOrder.ExpectedDelivery.ToString(Constraints.Str_DateFormate);
+                        lblExpected.IsVisible = true;
+                        lblExpectedDate.IsVisible = true;
+                    }
 
                     lblOrderStatus.Text = mOrder.OrderStatusDescr;
                     #endregion
@@ -397,10 +479,9 @@ namespace AptDealzBuyer.Views.Orders
                     #endregion
 
                     #region [ Status ]
-                    BindOrderStatus(mOrder.OrderStatus, mOrder.IsDeliveryConfirmedFromBuyer, mOrder.IsOrderCancelAllowed);
+                    BindOrderStatus(mOrder.OrderStatus, mOrder.IsDeliveryConfirmedFromBuyer, mOrder.IsOrderCancelAllowed, mOrder.TrackingLink, mOrder.PickupProductDirectly);
                     #endregion
                 }
-
             }
             catch (Exception ex)
             {
@@ -476,7 +557,6 @@ namespace AptDealzBuyer.Views.Orders
             {
                 UserDialogs.Instance.HideLoading();
             }
-
         }
 
         private async Task ShowQRCodeImage()
@@ -499,33 +579,6 @@ namespace AptDealzBuyer.Views.Orders
         #endregion
 
         #region [ Events ]
-        private void ImgMenu_Tapped(object sender, EventArgs e)
-        {
-            Common.BindAnimation(image: ImgMenu);
-            //Common.OpenMenu();
-        }
-
-        private async void ImgNotification_Tapped(object sender, EventArgs e)
-        {
-            var Tab = (Grid)sender;
-            if (Tab.IsEnabled)
-            {
-                try
-                {
-                    Tab.IsEnabled = false;
-                    await Navigation.PushAsync(new DashboardPages.NotificationPage());
-                }
-                catch (Exception ex)
-                {
-                    Common.DisplayErrorMessage("OrderDetailsPage/ImgNotification_Tapped: " + ex.Message);
-                }
-                finally
-                {
-                    Tab.IsEnabled = true;
-                }
-            }
-        }
-
         private void ImgQuestion_Tapped(object sender, EventArgs e)
         {
             Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_FAQHelp));
@@ -533,7 +586,7 @@ namespace AptDealzBuyer.Views.Orders
 
         private async void ImgBack_Tapped(object sender, EventArgs e)
         {
-            Common.BindAnimation(imageButton: ImgBack);
+            await Common.BindAnimation(imageButton: ImgBack);
             await Navigation.PopAsync();
         }
 
@@ -556,151 +609,189 @@ namespace AptDealzBuyer.Views.Orders
             }
         }
 
-        private async void BtnRateSeller_Clicked(object sender, EventArgs e)
+
+        #region [ Settings ]
+        bool isSettingsEnable = false;
+        private async void ImgMenu_Tapped(object sender, EventArgs e)
         {
-            var Tab = (Button)sender;
-            if (Tab.IsEnabled)
+            if (isSettingsEnable)
             {
                 try
                 {
-                    Tab.IsEnabled = false;
-                    Common.BindAnimation(button: BtnRateSeller);
+                    await Common.BindAnimation(image: ImgMenu);
+                    isSettingsEnable = false;
+                    await Navigation.PushAsync(new OtherPages.SettingsPage());
+                    isSettingsEnable = true;
+                }
+                catch (Exception ex)
+                {
+                    Common.DisplayErrorMessage("OrderDetailsPage/ImgMenu_Tapped: " + ex.Message);
+                }
+            }
+        }
+
+        #endregion
+
+        #region [ Notification ]
+        bool isNotificationEnable = true;
+        private async void ImgNotification_Tapped(object sender, EventArgs e)
+        {
+            if (isNotificationEnable)
+            {
+                try
+                {
+                    isNotificationEnable = false;
+                    await Navigation.PushAsync(new DashboardPages.NotificationPage());
+                    isNotificationEnable = true;
+                }
+                catch (Exception ex)
+                {
+                    Common.DisplayErrorMessage("OrderDetailsPage/ImgNotification_Tapped: " + ex.Message);
+                }
+            }
+        }
+        #endregion
+
+        #region [ Rate Seller ]
+        bool isRateSellerEnable = true;
+        private async void BtnRateSeller_Clicked(object sender, EventArgs e)
+        {
+            var Tab = (Button)sender;
+            if (isRateSellerEnable)
+            {
+                try
+                {
+                    isRateSellerEnable = false;
+                    await Common.BindAnimation(button: BtnRateSeller);
                     await RatingReview(true);
+                    isRateSellerEnable = true;
                 }
                 catch (Exception ex)
                 {
                     Common.DisplayErrorMessage("OrderDetailsPage/BtnRateSeller_Clicked: " + ex.Message);
                 }
-                finally
-                {
-                    Tab.IsEnabled = true;
-                }
             }
         }
+        #endregion
 
+        #region [ Rate Product ]
+        bool isRateProductEnable = true;
         private async void BtnRateProduct_Clicked(object sender, EventArgs e)
         {
-            var Tab = (Button)sender;
-            if (Tab.IsEnabled)
+            if (isRateProductEnable)
             {
                 try
                 {
-                    Tab.IsEnabled = false;
-                    Common.BindAnimation(button: BtnRateProduct);
+                    isRateProductEnable = false;
+                    await Common.BindAnimation(button: BtnRateProduct);
                     await RatingReview(false);
+                    isRateProductEnable = true;
                 }
                 catch (Exception ex)
                 {
                     Common.DisplayErrorMessage("OrderDetailsPage/BtnRateProduct_Clicked: " + ex.Message);
                 }
-                finally
-                {
-                    Tab.IsEnabled = true;
-                }
             }
         }
+        #endregion
 
-        private void BtnRateAptDealz_Clicked(object sender, EventArgs e)
+        #region [ Rate AptDealz ]
+        bool isRateAptDealzEnable = true;
+        private async void BtnRateAptDealz_Clicked(object sender, EventArgs e)
         {
-
-            var Tab = (Button)sender;
-            if (Tab.IsEnabled)
+            if (isRateAptDealzEnable)
             {
                 try
                 {
-                    Tab.IsEnabled = false;
-                    Common.BindAnimation(button: BtnRateAptDealz);
+                    isRateAptDealzEnable = false;
+                    await Common.BindAnimation(button: BtnRateAptDealz);
+                    isRateAptDealzEnable = true;
                 }
                 catch (Exception ex)
                 {
                     Common.DisplayErrorMessage("OrderDetailsPage/BtnRateAptDealz_Clicked: " + ex.Message);
                 }
-                finally
-                {
-                    Tab.IsEnabled = true;
-                }
             }
         }
+        #endregion
 
+        #region [ Repost Reqt ]
+        bool isRepostReqtEnable = true;
         private async void BtnRepostReqt_Clicked(object sender, EventArgs e)
         {
-            var Tab = (Button)sender;
-            if (Tab.IsEnabled)
+            if (isRepostReqtEnable)
             {
                 try
                 {
-                    Tab.IsEnabled = false;
-                    Common.BindAnimation(button: BtnRepostReqt);
+                    isRepostReqtEnable = false;
+                    await Common.BindAnimation(button: BtnRepostReqt);
                     await Navigation.PushAsync(new DashboardPages.PostNewRequiremntPage(mOrder.RequirementId));
+                    isRepostReqtEnable = true;
                 }
                 catch (Exception ex)
                 {
                     Common.DisplayErrorMessage("OrderDetailsPage/BtnRepostReqt_Clicked: " + ex.Message);
                 }
-                finally
-                {
-                    Tab.IsEnabled = true;
-                }
             }
         }
+        #endregion
 
+        #region [ Raise Grievance ]
+        bool isRaiseGrievanceEnable = true;
         private async void BtnRaiseGrievance_Tapped(object sender, EventArgs e)
         {
-            var Tab = (Button)sender;
-            if (Tab.IsEnabled)
+            if (isRaiseGrievanceEnable)
             {
                 try
                 {
-                    Tab.IsEnabled = false;
-                    Common.BindAnimation(button: BtnRaiseGrievance);
+                    isRaiseGrievanceEnable = false;
+                    await Common.BindAnimation(button: BtnRaiseGrievance);
                     await Navigation.PushAsync(new Orders.RaiseGrievancePage(OrderId));
+                    isRaiseGrievanceEnable = true;
                 }
                 catch (Exception ex)
                 {
                     Common.DisplayErrorMessage("OrderDetailsPage/BtnRaiseGrievance_Tapped: " + ex.Message);
                 }
-                finally
-                {
-                    Tab.IsEnabled = true;
-                }
             }
         }
+        #endregion
 
+        #region [ Cancel Order ]
+        bool isCancelOrderEnable = true;
         private async void BtnCancelOrder_Tapped(object sender, EventArgs e)
         {
-            var Tab = (Button)sender;
-            if (Tab.IsEnabled)
+            if (isCancelOrderEnable)
             {
                 try
                 {
-                    Tab.IsEnabled = false;
-                    Common.BindAnimation(button: BtnCancelOrder);
+                    isCancelOrderEnable = false;
+                    await Common.BindAnimation(button: BtnCancelOrder);
                     await CancelOrder();
+                    isCancelOrderEnable = true;
                 }
                 catch (Exception ex)
                 {
                     Common.DisplayErrorMessage("OrderDetailsPage/BtnCancelOrder_Tapped: " + ex.Message);
                 }
-                finally
-                {
-                    Tab.IsEnabled = true;
-                }
             }
-
         }
+        #endregion
 
-        private void BtnTrackOrder_Tapped(object sender, EventArgs e)
+        #region [ Track Order ]
+        bool isTrackOrderEnable = true;
+        private async void BtnTrackOrder_Tapped(object sender, EventArgs e)
         {
-            var Tab = (Button)sender;
-            if (Tab.IsEnabled)
+            if (isTrackOrderEnable)
             {
+                isTrackOrderEnable = false;
                 try
                 {
-                    Tab.IsEnabled = false;
-                    Common.BindAnimation(button: BtnTrackOrder);
-                    if (mOrder != null && mOrder.TrackingLink != null && mOrder.TrackingLink.Length > 10)
+                    await Common.BindAnimation(button: BtnTrackOrder);
+                    if (mOrder != null && !Common.EmptyFiels(mOrder.TrackingLink) && mOrder.TrackingLink.IsValidURL())
                     {
-                        Xamarin.Essentials.Launcher.OpenAsync(new Uri(mOrder.TrackingLink));
+                        var trackinglink = "http://" + mOrder.TrackingLink.Replace("http://", "").Replace("https://", "");
+                        Xamarin.Essentials.Launcher.OpenAsync(new Uri(trackinglink));
                     }
                     else
                     {
@@ -711,102 +802,82 @@ namespace AptDealzBuyer.Views.Orders
                 {
                     Common.DisplayErrorMessage("OrderDetailsPage/BtnTrack_Tapped: " + ex.Message);
                 }
-                finally
-                {
-                    Tab.IsEnabled = true;
-                }
+
+                isTrackOrderEnable = true;
             }
         }
+        #endregion
 
+        #region [ Confirm Delivery ]
+        bool isConfirmDeliveryEnable = true;
         private async void BtnConfirmDelivery_Clicked(object sender, EventArgs e)
         {
-            var Tab = (Button)sender;
-            if (Tab.IsEnabled)
+            if (isConfirmDeliveryEnable)
             {
                 try
                 {
-                    Tab.IsEnabled = false;
-                    Common.BindAnimation(button: BtnConfirmDeliveryInSubGrid);
+                    isConfirmDeliveryEnable = false;
+                    await Common.BindAnimation(button: BtnConfirmDeliveryInSubGrid);
                     await ConfirmDelivery();
+                    isConfirmDeliveryEnable = true;
                 }
                 catch (Exception ex)
                 {
                     Common.DisplayErrorMessage("OrderDetailsPage/BtnConfirmDelivery: " + ex.Message);
-                }
-                finally
-                {
-                    Tab.IsEnabled = true;
                 }
             }
         }
 
         private async void BtnShowQrCode_Clicked(object sender, EventArgs e)
         {
-            var Tab = (Button)sender;
-            if (Tab.IsEnabled)
+            try
             {
-                try
-                {
-                    Tab.IsEnabled = false;
-                    Common.BindAnimation(button: BtnShowQrCodeInMainGrid);
-                    await ShowQRCodeImage();
-                }
-                catch (Exception ex)
-                {
-                    Common.DisplayErrorMessage("OrderDetailsPage/BtnShowQrCode_Clicked: " + ex.Message);
-                }
-                finally
-                {
-                    Tab.IsEnabled = true;
-                }
+                await Common.BindAnimation(button: BtnShowQrCodeInMainGrid);
+                await ShowQRCodeImage();
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("OrderDetailsPage/BtnShowQrCode_Clicked: " + ex.Message);
             }
         }
+        #endregion
 
         private async void CopyString_Tapped(object sender, EventArgs e)
         {
             var stackLayout = (StackLayout)sender;
-            if (stackLayout.IsEnabled)
+            try
             {
-                try
+                if (!Common.EmptyFiels(stackLayout.ClassId))
                 {
-                    stackLayout.IsEnabled = false;
-                    if (!Common.EmptyFiels(stackLayout.ClassId))
+                    if (stackLayout.ClassId == "OrderId")
                     {
-                        if (stackLayout.ClassId == "OrderId")
+                        string message = Constraints.CopiedOrderId;
+                        Common.CopyText(lblOrderId, message);
+                    }
+                    else if (stackLayout.ClassId == "RequirementId")
+                    {
+                        if (!Common.EmptyFiels(mOrder.RequirementId))
                         {
-                            string message = Constraints.CopiedOrderId;
-                            Common.CopyText(lblOrderId, message);
+                            string message = Constraints.CopiedRequirementId;
+                            Common.CopyText(lblRequirementId, message);
+                            await Navigation.PushAsync(new ViewRequirememntPage(mOrder.RequirementId));
                         }
-                        else if (stackLayout.ClassId == "RequirementId")
+                    }
+                    else if (stackLayout.ClassId == "QuoteRefNo")
+                    {
+                        if (!Common.EmptyFiels(mOrder.QuoteId))
                         {
-                            if (!Common.EmptyFiels(mOrder.RequirementId))
-                            {
-                                string message = Constraints.CopiedRequirementId;
-                                Common.CopyText(lblRequirementId, message);
-                                await Navigation.PushAsync(new ViewRequirememntPage(mOrder.RequirementId));
-                            }
-                        }
-                        else if (stackLayout.ClassId == "QuoteRefNo")
-                        {
-                            if (!Common.EmptyFiels(mOrder.QuoteId))
-                            {
-                                string message = Constraints.CopiedQuoteRefNo;
-                                Common.CopyText(lblQuoteRefNo, message);
-                                await Navigation.PushAsync(new QuoteDetailsPage(mOrder.QuoteId));
-                            }
+                            string message = Constraints.CopiedQuoteRefNo;
+                            Common.CopyText(lblQuoteRefNo, message);
+                            await Navigation.PushAsync(new QuoteDetailsPage(mOrder.QuoteId));
                         }
                     }
                 }
-                catch (Exception ex)
-                {
-                    Common.DisplayErrorMessage("OrderDetailsPage/CopyString_Tapped: " + ex.Message);
-                }
-                finally
-                {
-                    stackLayout.IsEnabled = true;
-                }
             }
-
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("OrderDetailsPage/CopyString_Tapped: " + ex.Message);
+            }
         }
         #endregion
     }

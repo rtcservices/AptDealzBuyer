@@ -71,44 +71,26 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         #region [ Events ]
         private async void ImgMenu_Tapped(object sender, EventArgs e)
         {
-            var Tab = (Image)sender;
-            if (Tab.IsEnabled)
+            try
             {
-                try
-                {
-                    Common.BindAnimation(image: ImgMenu);
-                    Tab.IsEnabled = false;
-                    await Navigation.PushAsync(new OtherPages.SettingsPage());
-                }
-                catch (Exception ex)
-                {
-                    Common.DisplayErrorMessage("HomeView/ImgNotification_Tapped: " + ex.Message);
-                }
-                finally
-                {
-                    Tab.IsEnabled = true;
-                }
+                await Common.BindAnimation(image: ImgMenu);
+                await Navigation.PushAsync(new OtherPages.SettingsPage());
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("HomeView/ImgNotification_Tapped: " + ex.Message);
             }
         }
 
         private async void ImgNotification_Tapped(object sender, EventArgs e)
         {
-            var Tab = (Grid)sender;
-            if (Tab.IsEnabled)
+            try
             {
-                try
-                {
-                    Tab.IsEnabled = false;
-                    await Navigation.PushAsync(new DashboardPages.NotificationPage());
-                }
-                catch (Exception ex)
-                {
-                    Common.DisplayErrorMessage("HomeView/ImgNotification_Tapped: " + ex.Message);
-                }
-                finally
-                {
-                    Tab.IsEnabled = true;
-                }
+                await Navigation.PushAsync(new DashboardPages.NotificationPage());
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("HomeView/ImgNotification_Tapped: " + ex.Message);
             }
         }
 
@@ -120,46 +102,38 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         private async void BtnMenu_Tapped(object sender, EventArgs e)
         {
             var Tab = (Frame)sender;
-            if (Tab.IsEnabled)
+            try
             {
-                try
-                {
-                    Tab.IsEnabled = false;
-                    var menuName = Tab.BindingContext as HomeMenu;
+                var menuName = Tab.BindingContext as HomeMenu;
 
-                    if (menuName != null && menuName.MenuName == Constraints.Str_PostNewRequirements)
-                    {
-                        await Navigation.PushAsync(new DashboardPages.PostNewRequiremntPage());
-                    }
-                    else if (menuName != null && menuName.MenuName == Constraints.Str_Notifications)
-                    {
-                        await Navigation.PushAsync(new DashboardPages.NotificationPage());
-                    }
-                    else if (menuName != null && menuName.MenuName == Constraints.Str_ContactSupport)
-                    {
-                        await Navigation.PushAsync(new OtherPages.ContactSupportPage());
-                    }
-                    else if (menuName != null && menuName.MenuName == Constraints.Str_Grievances)
-                    {
-                        await Navigation.PushAsync(new DashboardPages.GrievancesPage());
-                    }
-                    else if (menuName != null && menuName.MenuName == Constraints.Str_WeSupport)
-                    {
-                        await Navigation.PushAsync(new OtherPages.WeSupportPage());
-                    }
-                    else if (menuName != null && menuName.MenuName != null)
-                    {
-                        Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(menuName.MenuName, isNavigate: true));
-                    }
-                }
-                catch (Exception ex)
+                if (menuName != null && menuName.MenuName == Constraints.Str_PostNewRequirements)
                 {
-                    Common.DisplayErrorMessage("HomeView/BtnMenu_Tapped: " + ex.Message);
+                    await Navigation.PushAsync(new DashboardPages.PostNewRequiremntPage());
                 }
-                finally
+                else if (menuName != null && menuName.MenuName == Constraints.Str_Notifications)
                 {
-                    Tab.IsEnabled = true;
+                    await Navigation.PushAsync(new DashboardPages.NotificationPage());
                 }
+                else if (menuName != null && menuName.MenuName == Constraints.Str_ContactSupport)
+                {
+                    await Navigation.PushAsync(new OtherPages.ContactSupportPage());
+                }
+                else if (menuName != null && menuName.MenuName == Constraints.Str_Grievances)
+                {
+                    await Navigation.PushAsync(new DashboardPages.GrievancesPage());
+                }
+                else if (menuName != null && menuName.MenuName == Constraints.Str_WeSupport)
+                {
+                    await Navigation.PushAsync(new OtherPages.WeSupportPage());
+                }
+                else if (menuName != null && menuName.MenuName != null)
+                {
+                    Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(menuName.MenuName, isNavigate: true));
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("HomeView/BtnMenu_Tapped: " + ex.Message);
             }
         }
         #endregion

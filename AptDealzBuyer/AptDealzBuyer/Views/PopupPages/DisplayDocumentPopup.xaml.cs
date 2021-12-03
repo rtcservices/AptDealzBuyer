@@ -1,7 +1,9 @@
-﻿using AptDealzBuyer.Utility;
+﻿using Acr.UserDialogs;
+using AptDealzBuyer.Utility;
 using Rg.Plugins.Popup.Pages;
 using Rg.Plugins.Popup.Services;
 using System;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -34,13 +36,15 @@ namespace AptDealzBuyer.Views.PopupPages
             return false;
         }
 
-        protected override void OnAppearing()
+        protected async override void OnAppearing()
         {
             base.OnAppearing();
-            BindAttachmentOnUI();
+            UserDialogs.Instance.ShowLoading("Loading...");
+            await BindAttachmentOnUI();
+            UserDialogs.Instance.HideLoading();
         }
 
-        public async void BindAttachmentOnUI()
+        public async Task BindAttachmentOnUI()
         {
             try
             {
@@ -48,7 +52,7 @@ namespace AptDealzBuyer.Views.PopupPages
                     FileExtension.ToLower() == ".jpeg" ||
                     FileExtension.ToLower() == ".png")
                 {
-                    BindImageBase64(Base64File);
+                    await BindImageBase64(Base64File);
                 }
                 else if (FileExtension.ToLower() == ".mp4" ||
                          FileExtension.ToLower() == ".3gp" ||
@@ -57,7 +61,7 @@ namespace AptDealzBuyer.Views.PopupPages
                          FileExtension.ToLower() == ".flv" ||
                          FileExtension.ToLower() == ".webm")
                 {
-                    BindVideoBase64(Base64File);
+                    await BindVideoBase64(Base64File);
                 }
                 else if (FileExtension.ToLower() == ".mp3" ||
                          FileExtension.ToLower() == ".wav" ||
@@ -65,11 +69,11 @@ namespace AptDealzBuyer.Views.PopupPages
                          FileExtension.ToLower() == ".acc" ||
                          FileExtension.ToLower() == ".ogg")
                 {
-                    BindAudioBase64(Base64File);
+                    await BindAudioBase64(Base64File);
                 }
                 else if (FileExtension.ToLower() == ".txt")
                 {
-                    BindTextBase64(Base64File);
+                    await BindTextBase64(Base64File);
                 }
                 else
                 {
@@ -82,7 +86,7 @@ namespace AptDealzBuyer.Views.PopupPages
             }
         }
 
-        private void BindImageBase64(string base64)
+        private async Task BindImageBase64(string base64)
         {
             try
             {
@@ -98,7 +102,7 @@ namespace AptDealzBuyer.Views.PopupPages
             }
         }
 
-        private void BindVideoBase64(string base64)
+        private async Task BindVideoBase64(string base64)
         {
             try
             {
@@ -114,7 +118,7 @@ namespace AptDealzBuyer.Views.PopupPages
             }
         }
 
-        private void BindAudioBase64(string base64)
+        private async Task BindAudioBase64(string base64)
         {
             try
             {
@@ -130,7 +134,7 @@ namespace AptDealzBuyer.Views.PopupPages
             }
         }
 
-        private void BindTextBase64(string base64)
+        private async Task BindTextBase64(string base64)
         {
             try
             {
