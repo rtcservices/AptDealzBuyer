@@ -40,8 +40,8 @@
         public const string Str_Right = "✓";
         public const string Str_Wrong = "✕";
 
-        public const string RP_UserName = "rzp_test_PUJtE9p3XLuGe8";
-        public const string RP_Password = "42HIrjeUTXOHNC84Ldl3aDzL";
+        public const string RP_UserName = "rzp_test_JRsla5mkRABqyk";
+        public const string RP_Password = "Z5tRUkYSvUwHYIHsUyR2KaSx";
         public const string RP_PayNow = "PayNow";
         public const string RP_PaidResponse = "PaidResponse";
         public const string RP_RevealPayNow = "RevealPayNow";
