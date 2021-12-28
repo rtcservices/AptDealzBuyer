@@ -133,7 +133,8 @@ namespace AptDealzBuyer.API
                 {
                     using (var hcf = new HttpClientFactory(token: Common.Token))
                     {
-                        string url = "https://aptdealzapidev.azurewebsites.net/api/v1/Order/GenerateQRCodeImageForBuyerApp/" + orderId;
+                        var BaseURL = (string)App.Current.Resources["BaseURL"];
+                        string url = BaseURL + "api/v1/Order/GenerateQRCodeImageForBuyerApp/" + orderId;
                         //string url = string.Format(EndPointURL.GenerateQRCodeImageForBuyerApp, (int)App.Current.Resources["Version"], orderId);
                         var response = await hcf.client.GetAsync(url);
                         mResponse = await DependencyService.Get<IAuthenticationRepository>().APIResponse(response);

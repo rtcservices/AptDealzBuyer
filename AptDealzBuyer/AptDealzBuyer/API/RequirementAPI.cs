@@ -199,7 +199,8 @@ namespace AptDealzBuyer.API
                     {
                         //string url = string.Format(EndPointURL.GetAmountToBePaidToRevealBuyerContact, (int)App.Current.Resources["Version"]);
 
-                        string url = "https://aptdealzapidev.azurewebsites.net/api/v1/Requirement/GetAmountToBePaidToRevealBuyerContact";
+                        var BaseURL = (string)App.Current.Resources["BaseURL"];
+                        string url = BaseURL + "api/v1/Requirement/GetAmountToBePaidToRevealBuyerContact";
                         var response = await hcf.PostAsync(url, requestJson);
                         mResponse = await DependencyService.Get<IAuthenticationRepository>().APIResponse(response);
                     }
