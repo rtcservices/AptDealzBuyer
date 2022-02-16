@@ -503,6 +503,14 @@
                                     Text="Submit"
                                     VerticalOptions="EndAndExpand" />
                             </Grid>
+
+                            <Button
+                                x:Name="BtnReopenGrievance"
+                                Grid.Row="2" IsVisible="false"
+                                Margin="20,10,20,20" Clicked="BtnReopenGrievance_Clicked"
+                                Style="{StaticResource btnPrimary}"
+                                Text="Reopen Grievance"
+                                VerticalOptions="EndAndExpand" />
                         </Grid>
 
                     </ScrollView>

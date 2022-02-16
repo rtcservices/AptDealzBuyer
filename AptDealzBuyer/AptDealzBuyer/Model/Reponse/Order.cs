@@ -107,6 +107,9 @@ namespace AptDealzBuyer.Model.Reponse
         [JsonProperty("isOrderCancelAllowed")]
         public bool IsOrderCancelAllowed { get; set; }
 
+        [JsonProperty("isGrievancePeriodOver")]
+        public bool IsGrievancePeriodOver { get; set; }
+
         [JsonProperty("sellerContact")]
         public SellerContact SellerContact { get; set; }
 
@@ -126,16 +129,22 @@ namespace AptDealzBuyer.Model.Reponse
         public int SellerEarnings { get; set; }
 
         [JsonProperty("sellerRating")]
-        public int SellerRating { get; set; }
+        public decimal SellerRating { get; set; }
 
         [JsonProperty("productRating")]
-        public int ProductRating { get; set; }
+        public decimal ProductRating { get; set; }
 
         [JsonProperty("shippingAddressDetails")]
         public ShippingAddressDetails ShippingAddressDetails { get; set; }
 
         [JsonProperty("isDeliveryConfirmedFromBuyer")]
         public bool IsDeliveryConfirmedFromBuyer { get; set; }
+
+        [JsonProperty("gstin")]
+        public string Gstin { get; set; }
+
+        [JsonProperty("isReseller")]
+        public bool IsReseller { get; set; }
 
         #region [ Extra Properties ]
         [JsonIgnore]

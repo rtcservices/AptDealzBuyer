@@ -22,9 +22,11 @@
         <x:Int64 x:Key="RevealContact">1</x:Int64>
         <!--#endregion-->
 
+        <!--#region [ Fonts ]-->
         <x:Double x:Key="Font15">15</x:Double>
         <x:Double x:Key="Font14">14</x:Double>
         <x:Double x:Key="Font12">12</x:Double>
+        <!--#endregion-->
 
         <!--#region [ Colors ]-->
         <Color x:Key="ErrorBackground">#ff4d4f</Color>

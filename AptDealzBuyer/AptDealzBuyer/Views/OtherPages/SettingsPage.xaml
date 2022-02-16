@@ -129,11 +129,11 @@
                         <BoxView Grid.Row="0" Style="{StaticResource boxHorizontal}" />
 
                         <!--  Alert Tone  -->
-                        <!--<Grid
+                        <Grid
                             Grid.Row="1"
                             Padding="20"
-                            ColumnDefinitions="*,*"
-                            ColumnSpacing="0">
+                            ColumnDefinitions="Auto,*"
+                            ColumnSpacing="15">
                             <Label
                                 Grid.Column="0"
                                 FontSize="15"
@@ -143,41 +143,41 @@
 
                             <Frame
                                 Grid.Column="1"
-                                Margin="0"
-                                Padding="0"
-                                BackgroundColor="Transparent"
-                                BorderColor="{StaticResource appColor8}"
-                                CornerRadius="5"
-                                HasShadow="False">
+                                HorizontalOptions="FillAndExpand"
+                                Style="{StaticResource frmBlank}">
 
-                                <Grid
-                                    Padding="10,0"
-                                    ColumnDefinitions="*,Auto"
-                                    ColumnSpacing="0">
+                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="0">
                                     <Picker
                                         x:Name="pkAlertTone"
                                         Title="Tone"
                                         Grid.Column="0"
+                                        Margin="10,0"
+                                        BackgroundColor="Transparent"
                                         HeightRequest="45"
-                                        SelectedIndexChanged="pkAlertTone_SelectedIndexChanged"
                                         Style="{StaticResource pkPrimary}"
                                         Unfocused="Picker_Unfocused" />
+
+
                                     <ImageButton
                                         x:Name="BtnAlertTone"
                                         Grid.Column="1"
-                                        Margin="0,0,0,0"
-                                        Padding="0"
-                                        BackgroundColor="Transparent"
                                         Clicked="BtnAlertTone_Clicked"
-                                        HeightRequest="20"
                                         HorizontalOptions="EndAndExpand"
                                         Source="iconDownArrow.png"
-                                        VerticalOptions="CenterAndExpand"
-                                        WidthRequest="20" />
+                                        Style="{StaticResource ImgBtnPrimary}" />
                                 </Grid>
                             </Frame>
+
+                            <!--<Button
+                                x:Name="BtnNotificationTone"
+                                Grid.Column="1"
+                                Padding="10,0"
+                                Clicked="BtnNotificationTone_Clicked"
+                                HeightRequest="43"
+                                Style="{StaticResource btnPrimary}"
+                                Text="Select Tone" />-->
                         </Grid>
-                        <BoxView Grid.Row="1" Style="{StaticResource boxHorizontal}" />-->
+                        <BoxView Grid.Row="1" Style="{StaticResource boxHorizontal}" />
 
                         <!--  Notifications  -->
                         <Grid

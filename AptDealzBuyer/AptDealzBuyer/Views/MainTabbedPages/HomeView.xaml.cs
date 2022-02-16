@@ -86,7 +86,8 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         {
             try
             {
-                await Navigation.PushAsync(new DashboardPages.NotificationPage());
+                await Navigation.PushAsync(new DashboardPages.NotificationPage("HomeView"));
+                //await Navigation.PushAsync(new DashboardPages.NotificationPage());
             }
             catch (Exception ex)
             {
@@ -112,7 +113,9 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 }
                 else if (menuName != null && menuName.MenuName == Constraints.Str_Notifications)
                 {
-                    await Navigation.PushAsync(new DashboardPages.NotificationPage());
+                    await Navigation.PushAsync(new DashboardPages.NotificationPage("HomeView/BtnMenu_Tapped"));
+                    //await Navigation.PushAsync(new DashboardPages.NotificationPage());
+
                 }
                 else if (menuName != null && menuName.MenuName == Constraints.Str_ContactSupport)
                 {

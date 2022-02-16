@@ -38,12 +38,14 @@
         #region [ Requirement API ]
         public const string CreateRequirement = "api/v{0}/Requirement/Create";
         public const string GetRequirement = "api/v{0}/Requirement/Get?PageNumber={1}&PageSize={2}";
-        public const string GetRequirementById = "api/v{0}/Requirement/Get/{1}";
+        //public const string GetRequirementById = "api/v{0}/Requirement/Get/{1}";
+        public const string GetRequirementById = "api/v{0}/Requirement/GetBuyerRequirementDetails/{1}";
         public const string GetAllMyActiveRequirements = "api/v{0}/Requirement/GetAllMyActiveRequirements";
         public const string GetMyPreviousRequirements = "api/v{0}/Requirement/GetMyPreviousRequirements";
         public const string DeleteRequirement = "api/v{0}/Requirement/Delete/{1}";
         public const string CancelRequirement = "api/v{0}/Requirement/CancelRequirement?RequirementId={1}";
         public const string UpdateStatusRequirement = "api/v{0}/Requirement/UpdateStatus";
+        public const string GetAmountToBePaidToRevealBuyerContact = "api​/v{0}​/Requirement​/GetAmountToBePaidToRevealBuyerContact";
         #endregion
 
         #region [ Quote API ]
@@ -57,6 +59,7 @@
         #region [ Order API ]
         public const string GetOrderDetailsForBuyer = "api/v{0}/Order/GetOrderDetailsForBuyer/{1}";
         public const string GetOrdersForBuyer = "api/v{0}/Order/GetOrdersForBuyer";
+        public const string GetOrdersForRaiseGrievanceByBuyer = "api/v{0}/Order/GetOrdersForRaiseGrievanceByBuyer";
         public const string CancelOrder = "api/v{0}/Order/CancelOrder/{1}";
         public const string CreateOrder = "api/v{0}/Order/Create";
         public const string OrderPayment = "api/v{0}/Order/Create/Payment";
@@ -75,6 +78,7 @@
         public const string GetGrievancesDetailsForBuyer = "api/v{0}/Grievance/GetGrievancesDetailsForBuyer/{1}";
         public const string CreateGrievanceFromBuyer = "api/v{0}/Grievance/CreateGrievanceFromBuyer";
         public const string SubmitGrievanceResponseFromBuyer = "api/v{0}/Grievance/SubmitGrievanceResponseFromBuyer";
+        public const string ReOpenGrievance = "api/v{0}/Grievance/ReOpenGrievance";
         #endregion
 
         #region [ Notification API ]
@@ -93,15 +97,12 @@
         public const string GetAllAffiliations = "api/v{0}/Affiliations/GetAllAffiliations";
         #endregion
 
-        #region MyRegion
-        public const string GetAmountToBePaidToRevealBuyerContact = "api​/v{0}​/Requirement​/GetAmountToBePaidToRevealBuyerContact";
+        #region [ AppSettings API ]
         public const string GetPrivacyPolicyTermsAndConditions = "api/v{0}/AppSettings/GetPrivacyPolicyTermsAndConditions";
         public const string GetFAQ = "api/v{0}/AppSettings/GetFAQ";
         public const string GetAppPromoBar = "api/v{0}/AppSettings/GetAppPromoBar";
         public const string AboutAptdealzBuyerApp = "api/v{0}/AppSettings/AboutAptdealzBuyerApp";
         #endregion
-
-       
     }
 }
 

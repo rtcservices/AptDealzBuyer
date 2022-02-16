@@ -55,5 +55,8 @@ namespace AptDealzBuyer.Model.Request
 
         [JsonProperty("isNotificationMute")]
         public bool IsNotificationMute { get; set; }
+
+        [JsonProperty("gstin")]
+        public string Gstin { get; set; }
     }
 }

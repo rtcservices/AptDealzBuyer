@@ -20,9 +20,7 @@ namespace AptDealzBuyer.Utility
         public static string Token { get; set; }
         public static string NotificationCount { get; set; }
         public static string PreviousNotificationCount { get; set; }
-        public static string TempNotificationCount { get; set; }
-        public static string SessionId { get; set; } = string.Empty;
-        public static int SessionTimeOut { get; set; } = 15;
+        public static string TempNotificationCount { get; set; }       
         #endregion
 
         #region [ Regex Properties ]
@@ -32,7 +30,7 @@ namespace AptDealzBuyer.Utility
 
         //private static Regex RegexURL { get; set; } = new Regex("((http|https)://)(www.)?[a-zA-Z0-9@:%._\\+~#?&//=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%._\\+~#?&//=]*)");
         private static Regex RegexURL { get; set; } = new Regex(@"(http(s)?://)?([\w-]+\.)+[\w-]+(/[\w- ;,./?%&=]*)?");
-
+        private static Regex RegexGST { get; set; } = new Regex(@"[0-9]{2}[A-Z]{3}[ABCFGHLJPTF]{1}[A-Z]{1}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}");
         #endregion
 
         #region [ DisplayMessages ]
@@ -79,7 +77,16 @@ namespace AptDealzBuyer.Utility
 
         public static bool IsValidURL(this string value)
         {
-            return (RegexURL.IsMatch($"{value}"));
+            return RegexURL.IsMatch($"{value}");
+        }
+
+        public static bool IsValidGSTPIN(this string value)
+        {
+            value = value.Trim();
+            if (value.Length == 15)
+                return RegexGST.IsMatch($"{value}");
+            else
+                return false;
         }
 
         public static async Task BindAnimation(ImageButton imageButton = null, Button button = null, Grid grid = null, StackLayout stackLayout = null, Label label = null, Image image = null, Frame frame = null)
@@ -270,8 +277,12 @@ namespace AptDealzBuyer.Utility
             Settings.RefreshToken = string.Empty;
             Settings.UserId = string.Empty;
             Settings.LoginTrackingKey = string.Empty;
-            //Settings.fcm_token = string.Empty; don't empty this token
+            Settings.IsNotification = false;
+            mBuyerDetail = null;
+            Token = string.Empty;
+            mCountries = null;            
 
+            //Settings.fcm_token = string.Empty; don't empty this token
             App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
             if (App.stoppableTimer != null)
                 App.stoppableTimer.Stop();

@@ -104,7 +104,8 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             var Tab = (Grid)sender;
             try
             {
-                await Navigation.PushAsync(new NotificationPage());
+                await Navigation.PushAsync(new DashboardPages.NotificationPage("FaqHelpView"));
+                //await Navigation.PushAsync(new DashboardPages.NotificationPage());
             }
             catch (Exception ex)
             {

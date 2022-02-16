@@ -117,6 +117,7 @@ namespace AptDealzBuyer.Views.DashboardPages
                     lblStatus.Text = mGrievance.StatusDescr.ToCamelCase();
                     lblSolution.Text = mGrievance.PreferredSolution;
 
+                    #region [ IssueDescription ]
                     if (Common.EmptyFiels(mGrievance.IssueDescription))
                     {
                         lblDescription.Text = "No description found";
@@ -125,7 +126,9 @@ namespace AptDealzBuyer.Views.DashboardPages
                     {
                         lblDescription.Text = mGrievance.IssueDescription;
                     }
+                    #endregion
 
+                    #region [ GrievanceRespons Chat ]
                     if (mGrievance.GrievanceResponses != null && mGrievance.GrievanceResponses.Count > 0)
                     {
                         foreach (var grievanceResponses in mGrievance.GrievanceResponses)
@@ -151,6 +154,7 @@ namespace AptDealzBuyer.Views.DashboardPages
                         lstResponse.IsVisible = false;
                         lblNoRecord.IsVisible = true;
                     }
+                    #endregion
 
                     AttachDocumentList();
                     GrdMessage.IsVisible = mGrievance.EnableResponseFromUser;
@@ -159,10 +163,12 @@ namespace AptDealzBuyer.Views.DashboardPages
                         if (mGrievance.Status == (int)GrievancesStatus.Closed)
                         {
                             GrdMessage.IsVisible = false;
+                            BtnReopenGrievance.IsVisible = true;
                         }
                         else
                         {
                             GrdMessage.IsVisible = true;
+                            BtnReopenGrievance.IsVisible = false;
                         }
                     }
                 }
@@ -197,7 +203,6 @@ namespace AptDealzBuyer.Views.DashboardPages
             {
                 UserDialogs.Instance.HideLoading();
             }
-
         }
 
         private void AttachDocumentList()
@@ -242,7 +247,8 @@ namespace AptDealzBuyer.Views.DashboardPages
         {
             try
             {
-                await Navigation.PushAsync(new DashboardPages.NotificationPage());
+                await Navigation.PushAsync(new DashboardPages.NotificationPage("GrievanceDetailsPage"));
+                //await Navigation.PushAsync(new DashboardPages.NotificationPage());
             }
             catch (Exception ex)
             {
@@ -335,6 +341,23 @@ namespace AptDealzBuyer.Views.DashboardPages
             catch (Exception ex)
             {
                 Common.DisplayErrorMessage("GrievancesPage/ImgDocument_Clicked: " + ex.Message);
+            }
+        }
+
+        private async void BtnReopenGrievance_Clicked(object sender, EventArgs e)
+        {
+            try
+            {
+                await DependencyService.Get<IGrievanceRepository>().ReOpenGrievance(GrievanceId);
+                await GetGrievancesDetails();
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("GrievanceDetailsPage/BtnReopenGrievance_Clicked: " + ex.Message);
+            }
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
             }
         }
         #endregion

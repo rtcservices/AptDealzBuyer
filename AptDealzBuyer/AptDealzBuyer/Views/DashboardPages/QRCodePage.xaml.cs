@@ -75,9 +75,10 @@ namespace AptDealzBuyer.Views.DashboardPages
         {
                 try
                 {
-                    await Navigation.PushAsync(new NotificationPage());
-                }
-                catch (Exception ex)
+                await Navigation.PushAsync(new DashboardPages.NotificationPage("QRCodePage"));
+                //await Navigation.PushAsync(new DashboardPages.NotificationPage());
+            }
+            catch (Exception ex)
                 {
                     Common.DisplayErrorMessage("QRCodePage/ImgNotification_Tapped: " + ex.Message);
                 }

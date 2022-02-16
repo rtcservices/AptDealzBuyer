@@ -1,7 +1,11 @@
 ﻿using AptDealzBuyer.API;
+using AptDealzBuyer.Interfaces;
 using AptDealzBuyer.Utility;
 using AptDealzBuyer.Views.DashboardPages;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -10,35 +14,50 @@ namespace AptDealzBuyer.Views.OtherPages
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class SettingsPage : ContentPage
     {
+        Dictionary<int, string> mRingtones = new Dictionary<int, string>();
+
         #region [ Ctor ]
         public SettingsPage()
         {
-            InitializeComponent();
-
-            MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount); MessagingCenter.Subscribe<string>(this, Constraints.Str_NotificationCount, (count) =>
+            try
             {
-                if (!Common.EmptyFiels(Common.NotificationCount))
+                InitializeComponent();
+
+                if (DeviceInfo.Platform == DevicePlatform.Android)
                 {
-                    lblNotificationCount.Text = count;
-                    frmNotification.IsVisible = true;
+                    DependencyService.Get<IOpenWriteSettings>().GrantWriteSettings();
+                }
+
+                MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount);
+                MessagingCenter.Subscribe<string>(this, Constraints.Str_NotificationCount, (count) =>
+                {
+                    if (!Common.EmptyFiels(Common.NotificationCount))
+                    {
+                        lblNotificationCount.Text = count;
+                        frmNotification.IsVisible = true;
+                    }
+                    else
+                    {
+                        frmNotification.IsVisible = false;
+                        lblNotificationCount.Text = string.Empty;
+                    }
+                });
+
+
+                if (Common.mBuyerDetail != null && Common.mBuyerDetail.IsNotificationMute)
+                {
+                    BtnMuteNotifications.Source = Constraints.Img_SwitchOn;
+                    lblmute.Text = "On";
                 }
                 else
                 {
-                    frmNotification.IsVisible = false;
-                    lblNotificationCount.Text = string.Empty;
+                    BtnMuteNotifications.Source = Constraints.Img_SwitchOff;
+                    lblmute.Text = "Off";
                 }
-            });
-
-
-            if (Common.mBuyerDetail.IsNotificationMute)
-            {
-                BtnMuteNotifications.Source = Constraints.Img_SwitchOn;
-                lblmute.Text = "On";
             }
-            else
+            catch (Exception ex)
             {
-                BtnMuteNotifications.Source = Constraints.Img_SwitchOff;
-                lblmute.Text = "Off";
+                Common.DisplayErrorMessage("SettingsPage/Ctor: " + ex.Message);
             }
         }
         #endregion
@@ -62,6 +81,27 @@ namespace AptDealzBuyer.Views.OtherPages
             Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage("Home"));
             return true;
         }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            try
+            {
+                mRingtones = Xamarin.Forms.DependencyService.Get<IRingtoneManager>().GetRingtones();
+                if (mRingtones != null && mRingtones.Count > 0)
+                {
+                    pkAlertTone.ItemsSource = mRingtones.Select(x => x.Value).OrderBy(x => x).ToList();
+                    if (!Common.EmptyFiels(Settings.NotificationToneName))
+                    {
+                        pkAlertTone.SelectedItem = Settings.NotificationToneName;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("SettingsPage/OnAppearing: " + ex.Message);
+            }
+        }
         #endregion
 
         #region [ Events ]
@@ -74,7 +114,8 @@ namespace AptDealzBuyer.Views.OtherPages
         {
             try
             {
-                await Navigation.PushAsync(new NotificationPage());
+                await Navigation.PushAsync(new DashboardPages.NotificationPage("SettingsPage"));
+                //await Navigation.PushAsync(new DashboardPages.NotificationPage());
             }
             catch (Exception ex)
             {
@@ -103,16 +144,6 @@ namespace AptDealzBuyer.Views.OtherPages
         {
             Settings.IsDarkMode = true;
             Application.Current.UserAppTheme = OSAppTheme.Dark;
-        }
-
-        private void pkAlertTone_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void BtnAlertTone_Clicked(object sender, EventArgs e)
-        {
-            // pkAlertTone.Focus();
         }
 
         private async void BtnMuteNotifications_Clicked(object sender, EventArgs e)
@@ -154,7 +185,31 @@ namespace AptDealzBuyer.Views.OtherPages
 
         private void Picker_Unfocused(object sender, FocusEventArgs e)
         {
+            try
+            {
+                if (!Common.EmptyFiels(pkAlertTone.SelectedItem as string))
+                {
+                    var tone = pkAlertTone.SelectedItem as string;
+                    var selectedToneId = mRingtones.Where(x => x.Value == tone).FirstOrDefault().Key;
 
+                    Xamarin.Forms.DependencyService.Get<IRingtoneManager>().PlayRingTone(selectedToneId);
+                    Xamarin.Forms.DependencyService.Get<IRingtoneManager>().SaveRingTone(selectedToneId);
+
+                    if (!Common.EmptyFiels(Settings.NotificationToneName))
+                    {
+                        pkAlertTone.SelectedItem = Settings.NotificationToneName;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("SettingsPage/Picker_Unfocused: " + ex.Message);
+            }
+        }
+
+        private void BtnAlertTone_Clicked(object sender, EventArgs e)
+        {
+            pkAlertTone.Focus();
         }
         #endregion
     }

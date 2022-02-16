@@ -13,9 +13,10 @@ namespace AptDealzBuyer.Droid.DependencService
 {
     public class NotificationHelper : INotificationHelper
     {
-        const string channelId = "default";
-        const string channelName = "Default";
-        const string channelDescription = "The default channel for notifications.";
+        #region [ Properties ]
+        const string channelId = "fcm_fallback_notification_channel";
+        const string channelName = "Miscellaneous";
+
         const int pendingIntentId = 0;
 
         public const string TitleKey = "title";
@@ -26,16 +27,18 @@ namespace AptDealzBuyer.Droid.DependencService
         NotificationManager manager;
 
         public event EventHandler NotificationReceived;
+        #endregion
 
-        //        Android.Net.Uri mute = Android.Net.Uri.Parse(Application.Context.PackageName + "/" + Resource.Raw.s);
-        //        Android.Net.Uri unmute = Android.Net.Uri.Parse(Application.Context.PackageName + "/" + Resource.Raw.note);
         /// <summary>
         /// Initializes Required Properties for Notification in Android.
         /// </summary>
         /// <returns></returns>
         public void Initialize()
         {
-            CreateNotificationChannel();
+            if (!channelInitialized)
+            {
+                CreateNotificationChannel();
+            }
         }
 
         /// <summary>
@@ -46,31 +49,45 @@ namespace AptDealzBuyer.Droid.DependencService
         /// <returns></returns>
         public int ScheduleNotification(string title, string message)
         {
-            if (AptDealzBuyer.Utility.Settings.IsMuteMode)
+            try
             {
-                return 0;
-            }
+                if (Utility.Settings.IsMuteMode)
+                {
+                    return 0;
+                }
 
-            if (!channelInitialized)
+                if (!channelInitialized)
+                {
+                    CreateNotificationChannel();
+                }
+
+                messageId++;
+
+                Intent intent = new Intent(AndroidApp.Context, typeof(MainActivity));
+                intent.PutExtra(TitleKey, title);
+                intent.PutExtra(MessageKey, message);
+
+                PendingIntent pendingIntent = PendingIntent.GetActivity(AndroidApp.Context, pendingIntentId, intent, PendingIntentFlags.OneShot);
+
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(AndroidApp.Context, channelId)
+                    .SetContentIntent(pendingIntent)
+                    .SetContentTitle(title)
+                    .SetContentText(message)
+                    .SetSmallIcon(Resource.Drawable.iconLogo);
+
+                var notificationsound = MainActivity.DefaultNotificationSoundURI;
+                if (notificationsound != null)
+                {
+                    builder.SetSound(notificationsound);
+                }
+
+                var notification = builder.Build();
+                manager.Notify(messageId, notification);
+            }
+            catch (Exception ex)
             {
-                CreateNotificationChannel();
+                Common.DisplayErrorMessage("NotificationHelper/ScheduleNotification: " + ex.Message);
             }
-
-            messageId++;
-
-            Intent intent = new Intent(AndroidApp.Context, typeof(MainActivity));
-            intent.PutExtra(TitleKey, title);
-            intent.PutExtra(MessageKey, message);
-
-            PendingIntent pendingIntent = PendingIntent.GetActivity(AndroidApp.Context, pendingIntentId, intent, PendingIntentFlags.OneShot);
-
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(AndroidApp.Context, channelId)
-                .SetContentIntent(pendingIntent)
-                .SetContentTitle(title)
-                .SetContentText(message)
-                .SetSmallIcon(Resource.Drawable.iconLogo);
-            var notification = builder.Build();
-            manager.Notify(messageId, notification);
 
             return messageId;
         }
@@ -94,27 +111,45 @@ namespace AptDealzBuyer.Droid.DependencService
         /// <summary>
         /// Creates Notification Channel for Android.
         /// </summary>
-        void CreateNotificationChannel()
+        public void CreateNotificationChannel(NotificationChannel chan = null)
         {
-            var alarmAttributes = new AudioAttributes.Builder()
-                    .SetContentType(AudioContentType.Sonification)
-                    .SetUsage(AudioUsageKind.Notification).Build();
-
-            manager = (NotificationManager)AndroidApp.Context.GetSystemService(AndroidApp.NotificationService);
-
-            if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
+            try
             {
-                var channelNameJava = new Java.Lang.String(channelName);
-                var channel = new NotificationChannel(channelId, channelNameJava, NotificationImportance.Default)
+                manager = (NotificationManager)AndroidApp.Context.GetSystemService(AndroidApp.NotificationService);
+
+                if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
                 {
-                    Description = channelDescription,
-                };
 
-                channel.LockscreenVisibility = NotificationVisibility.Public;
-                manager.CreateNotificationChannel(channel);
+                    if (chan != null)
+                    {
+                        manager.CreateNotificationChannel(chan);
+                    }
+                    else
+                    {
+                        var channelNameJava = new Java.Lang.String(channelName);
+                        var channel = new NotificationChannel(channelId, channelNameJava, NotificationImportance.High);
+                        channel.EnableVibration(true);
+                        channel.LockscreenVisibility = NotificationVisibility.Public;
+
+                        var notificationsound = MainActivity.DefaultNotificationSoundURI;
+                        if (notificationsound != null)
+                        {
+                            var alarmAttributes = new AudioAttributes.Builder()
+                                                       .SetContentType(AudioContentType.Sonification)
+                                                       .SetUsage(AudioUsageKind.NotificationRingtone).Build();
+
+                            channel.SetSound(notificationsound, alarmAttributes);
+                        }
+                        manager.CreateNotificationChannel(channel);
+                    }
+                }
+
+                channelInitialized = true;
             }
-
-            channelInitialized = true;
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("NotificationHelper/CreateNotificationChannel: " + ex.Message);
+            }
         }
     }
 }

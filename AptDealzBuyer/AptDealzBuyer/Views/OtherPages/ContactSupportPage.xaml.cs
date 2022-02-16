@@ -269,7 +269,8 @@ namespace AptDealzBuyer.Views.OtherPages
         {
             try
             {
-                await Navigation.PushAsync(new DashboardPages.NotificationPage());
+                await Navigation.PushAsync(new DashboardPages.NotificationPage("ContactSupportPage"));
+                //await Navigation.PushAsync(new DashboardPages.NotificationPage());
             }
             catch (Exception ex)
             {

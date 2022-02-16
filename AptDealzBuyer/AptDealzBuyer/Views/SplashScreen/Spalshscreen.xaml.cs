@@ -55,6 +55,7 @@ namespace AptDealzBuyer.Views.SplashScreen
                 else
                 {
                     Common.Token = Settings.UserToken;
+                    
                     App.Current.MainPage = new MasterDataPage();
                 }
             }

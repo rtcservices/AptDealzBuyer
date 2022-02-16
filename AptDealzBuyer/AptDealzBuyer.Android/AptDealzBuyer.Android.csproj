@@ -47,6 +47,7 @@
     <EmbedAssembliesIntoApk>false</EmbedAssembliesIntoApk>
     <AndroidUseSharedRuntime>true</AndroidUseSharedRuntime>
     <MandroidI18n />
+    <AndroidEnableMultiDex>false</AndroidEnableMultiDex>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -174,7 +175,9 @@
     <Compile Include="DependencService\FirebaseAuthenticator.cs" />
     <Compile Include="DependencService\HtmlToPDFService.cs" />
     <Compile Include="DependencService\NotificationHelper.cs" />
+    <Compile Include="DependencService\OpenWriteSettings.cs" />
     <Compile Include="DependencService\PhoneDialer.cs" />
+    <Compile Include="DependencService\RingtoneManagerService.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="MainApplication.cs" />
     <Compile Include="MyFirebaseIIDService.cs" />

@@ -10,13 +10,12 @@ namespace AptDealzBuyer.Views.MasterData
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class MasterDataPage : MasterDetailPage
     {
-
-        public MasterDataPage(bool isNotification = false)
+        public MasterDataPage()
         {
             InitializeComponent();
             try
             {
-                BindNavigation(isNotification);
+                BindNavigation();
 
                 var backgroundWorker = new BackgroundWorker();
                 backgroundWorker.DoWork += delegate
@@ -38,16 +37,29 @@ namespace AptDealzBuyer.Views.MasterData
             }
         }
 
-        void BindNavigation(bool isNotification = false)
+        void BindNavigation()
         {
             try
             {
                 Common.MasterData = this;
                 Common.MasterData.Master = new MenuPage();
-                if (isNotification == false)
+
+                if (!Settings.IsNotification)
+                {
                     Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_Home));
+                }
                 else
-                    Common.MasterData.Detail = new NavigationPage(new Views.DashboardPages.NotificationPage());
+                {
+                    if (Common.mBuyerDetail != null && !Common.EmptyFiels(Common.mBuyerDetail.BuyerId) && !Common.EmptyFiels(Common.Token))
+                    {
+                        Common.MasterData.Detail = new NavigationPage(new Views.DashboardPages.NotificationPage("MasterdetailPage"));
+                    }
+                    else
+                    {
+                        Common.MasterData.Detail = new Views.SplashScreen.Spalshscreen();
+                    }
+                    Settings.IsNotification = false;
+                }
 
                 MasterBehavior = MasterBehavior.Popover;
                 Common.MasterData.IsGestureEnabled = false;

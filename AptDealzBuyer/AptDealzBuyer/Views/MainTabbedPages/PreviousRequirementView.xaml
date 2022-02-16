@@ -220,7 +220,10 @@
                             <ViewCell>
                                 <Grid RowSpacing="0">
 
-                                    <Grid BackgroundColor="{Binding GridBg, Mode=TwoWay}" ColumnDefinitions="*,Auto">
+                                    <Grid
+                                        BackgroundColor="{Binding GridBg, Mode=TwoWay}"
+                                        ColumnDefinitions="*,Auto"
+                                        ColumnSpacing="0">
                                         <Grid
                                             Grid.Column="0"
                                             Padding="15,15,0,15"
@@ -228,30 +231,29 @@
                                             RowSpacing="0">
 
                                             <!--  Visible Grid  -->
-                                            <StackLayout
+                                            <Grid
                                                 Grid.Row="0"
-                                                HorizontalOptions="FillAndExpand"
-                                                Orientation="Horizontal"
+                                                ColumnDefinitions="Auto,*"
                                                 VerticalOptions="CenterAndExpand">
 
                                                 <Label
-                                                    Margin="0"
+                                                    Grid.Column="0"
                                                     FontSize="{StaticResource Font15}"
                                                     HorizontalOptions="StartAndExpand"
                                                     Style="{StaticResource lblMedium}"
                                                     Text="{Binding RequirementNo}" />
 
                                                 <Label
-                                                    Margin="0"
-                                                    FontSize="{StaticResource Font15}"
+                                                    Grid.Column="1"
+                                                    FontSize="{StaticResource Font14}"
                                                     HorizontalOptions="EndAndExpand"
                                                     Style="{StaticResource lblMedium}"
                                                     Text="{Binding Status}"
                                                     TextColor="{Binding StatusColor}" />
-                                            </StackLayout>
+                                            </Grid>
 
                                             <Label
-                                                Grid.Row="1"
+                                                Grid.Row="1" 
                                                 HorizontalOptions="StartAndExpand"
                                                 Style="{StaticResource lblLight}"
                                                 Text="{Binding Title}" />

@@ -154,8 +154,6 @@
         public const string Logout = "Logout";
         #endregion
 
-        public const string Required_Documents = "Please upload documents!";
-
         #region [ Alert Message ]
         public const string CouldNotSentOTP = "Could not send Verification Code to the given number!";
         public const string DoYouWantToExit = "Do you really want to exit?";
@@ -183,6 +181,7 @@
         public const string InValid_PhoneNumber = "Please enter valid phone number!";
         public const string InValid_OTP = "Verification code is invalid! Try again!";
         public const string InValid_Nationality = "Please enter valid nationality!";
+        public const string InValid_GST = "Please enter valid GST number!";
 
         public const string InValid_Pincode = "Please enter valid pincode!";
         public const string InValid_DeliveryPinCode = "Please enter valid delivery location pin code!";
@@ -210,6 +209,8 @@
         public const string Required_Description = "Please enter description!";
         public const string Required_Quantity = "Please enter quantity!";
         public const string Required_PriceEstimation = "Please enter Total Price Estimation!";
+        public const string Required_GstNO = "Please enter GST number!";
+        public const string Required_GSTTandCAgreement = "Please agree GST terms and conditions!";
         public const string Required_Delivery_PinCode = "Please enter delivery location pin code!";
         public const string Same_Delivery_Shipping_PinCode = "Delivery location and Shipping pin code should be same!";
 
@@ -230,9 +231,11 @@
 
         public const string Required_ComplainType = "Please select complaint type!";
         public const string Required_Response = "Please enter your message!";
+
+        public const string Required_Documents = "Please upload documents!";
+        public const string Required_Reason = "Please enter the reason for rejection!";
         #endregion
 
-        public const string Required_Reason = "Please enter the reason for rejection!";
         #region [ Success ]
         public const string OTPSent = "OTP Verification Code Sent Successfully";
         public const string InstantVerification = "you don't get any code, it is instant verification. Please try to login with email address";

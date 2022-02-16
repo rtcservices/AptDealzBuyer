@@ -112,6 +112,8 @@ namespace AptDealzBuyer.Model.Request
         [JsonProperty("unit")]
         public string Unit { get; set; }
 
+        [JsonProperty("isReseller")]
+        public bool IsReseller { get; set; }
 
         #region [ Extra Properties ]
         [JsonIgnore]
@@ -119,8 +121,6 @@ namespace AptDealzBuyer.Model.Request
         {
             get
             {
-                //double amount;
-                //amount = UnitPrice + HandlingCharges + ShippingCharges + InsuranceCharges;
                 return $"Rs {TotalQuoteAmount}";
             }
         }

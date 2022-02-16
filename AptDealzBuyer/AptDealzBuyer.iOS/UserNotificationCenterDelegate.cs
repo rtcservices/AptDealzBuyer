@@ -16,7 +16,7 @@ namespace AptDealzBuyer.iOS
 
             // Tell system to display the notification anyway or use
             // `None` to say we have handled the display locally.
-            completionHandler(UNNotificationPresentationOptions.Alert);
+            completionHandler(UNNotificationPresentationOptions.Sound | UNNotificationPresentationOptions.Alert | UNNotificationPresentationOptions.Badge);
         }
     }
 }

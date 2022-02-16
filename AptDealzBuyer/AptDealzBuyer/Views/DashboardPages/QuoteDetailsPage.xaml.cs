@@ -134,7 +134,6 @@ namespace AptDealzBuyer.Views.DashboardPages
                     lblCountryOrigin.Text = mQuote.Country;
                     lblTotalAmount.Text = "Rs " + mQuote.TotalQuoteAmount;
 
-
                     if (!Common.EmptyFiels(mQuote.ShippingPinCode))
                     {
                         lblShippingPINCode.Text = mQuote.ShippingPinCode;
@@ -164,7 +163,7 @@ namespace AptDealzBuyer.Views.DashboardPages
                         lblComments.Text = mQuote.Comments;
                     }
 
-
+                    lblIsReseller.Text = mQuote.IsReseller ? Constraints.Str_Right : Constraints.Str_Wrong;
 
                     if (mQuote.Days.Contains("Expired"))
                     {
@@ -714,27 +713,28 @@ namespace AptDealzBuyer.Views.DashboardPages
         #region [ Events ]        
         private async void ImgMenu_Tapped(object sender, EventArgs e)
         {
-                try
-                {
-                    await Common.BindAnimation(image: ImgMenu);
-                    await Navigation.PushAsync(new OtherPages.SettingsPage());
-                }
-                catch (Exception ex)
-                {
-                    Common.DisplayErrorMessage("QuoteDetailsPage/ImgMenu_Tapped: " + ex.Message);
-                }
+            try
+            {
+                await Common.BindAnimation(image: ImgMenu);
+                await Navigation.PushAsync(new OtherPages.SettingsPage());
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("QuoteDetailsPage/ImgMenu_Tapped: " + ex.Message);
+            }
         }
 
         private async void ImgNotification_Tapped(object sender, EventArgs e)
         {
-                try
-                {
-                    await Navigation.PushAsync(new NotificationPage());
-                }
-                catch (Exception ex)
-                {
-                    Common.DisplayErrorMessage("QuoteDetailsPage/ImgNotification_Tapped: " + ex.Message);
-                }
+            try
+            {
+                await Navigation.PushAsync(new DashboardPages.NotificationPage("QuoteDetailsPage"));
+                //await Navigation.PushAsync(new DashboardPages.NotificationPage());
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("QuoteDetailsPage/ImgNotification_Tapped: " + ex.Message);
+            }
         }
 
         private void ImgQuestion_Tapped(object sender, EventArgs e)
@@ -750,48 +750,48 @@ namespace AptDealzBuyer.Views.DashboardPages
 
         private async void BtnRevealContact_Clicked(object sender, EventArgs e)
         {
-                try
+            try
+            {
+                await Common.BindAnimation(button: BtnRevealContact);
+                if (BtnRevealContact.Text == Constraints.Str_RevealContact)
                 {
-                    await Common.BindAnimation(button: BtnRevealContact);
-                    if (BtnRevealContact.Text == Constraints.Str_RevealContact)
-                    {
-                        await QuotePayment(true);
-                    }
-                    else
-                    {
-                        DependencyService.Get<IDialer>().Dial(App.Current.Resources["CountryCode"] + BtnRevealContact.Text);
-                    }
+                    await QuotePayment(true);
                 }
-                catch (Exception ex)
+                else
                 {
-                    Common.DisplayErrorMessage("QuoteDetailsPage/BtnRevealContact_Clicked: " + ex.Message);
+                    DependencyService.Get<IDialer>().Dial(App.Current.Resources["CountryCode"] + BtnRevealContact.Text);
                 }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("QuoteDetailsPage/BtnRevealContact_Clicked: " + ex.Message);
+            }
         }
 
         private async void BtnAcceptQuote_Clicked(object sender, EventArgs e)
         {
-                try
-                {
-                    await Common.BindAnimation(button: BtnAcceptQuote);
-                    await QuotePayment(false);
-                }
-                catch (Exception ex)
-                {
-                    Common.DisplayErrorMessage("QuoteDetailsPage/BtnAcceptQuote_Clicked: " + ex.Message);
-                }
+            try
+            {
+                await Common.BindAnimation(button: BtnAcceptQuote);
+                await QuotePayment(false);
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("QuoteDetailsPage/BtnAcceptQuote_Clicked: " + ex.Message);
+            }
         }
 
         private async void BtnBackToQuote_Clicked(object sender, EventArgs e)
         {
-                try
-                {
-                    await Common.BindAnimation(button: BtnBackToQuote);
-                    await Navigation.PopAsync();
-                }
-                catch (Exception ex)
-                {
-                    Common.DisplayErrorMessage("QuoteDetailsPage/BtnBackToQuote_Clicked: " + ex.Message);
-                }
+            try
+            {
+                await Common.BindAnimation(button: BtnBackToQuote);
+                await Navigation.PopAsync();
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("QuoteDetailsPage/BtnBackToQuote_Clicked: " + ex.Message);
+            }
         }
 
         private void BtnLogo_Clicked(object sender, EventArgs e)
@@ -824,6 +824,8 @@ namespace AptDealzBuyer.Views.DashboardPages
                     {
                         string message = Constraints.CopiedRequirementId;
                         Common.CopyText(lblRequirementId, message);
+
+                        Navigation.PushAsync(new DashboardPages.ViewRequirememntPage(mQuote.RequirementId));
                     }
                     else if (stackLayout.ClassId == "QuoteRefNo")
                     {

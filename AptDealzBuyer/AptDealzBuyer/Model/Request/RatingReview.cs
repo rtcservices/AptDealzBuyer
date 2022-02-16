@@ -12,5 +12,8 @@ namespace AptDealzBuyer.Model.Request
 
         [JsonProperty("sellerRating")]
         public decimal SellerRating { get; set; }
+
+        [JsonProperty("sellerProductRating")]
+        public decimal SellerProductRating { get; set; }
     }
 }

@@ -156,7 +156,8 @@ namespace AptDealzBuyer.Views.DashboardPages
         {
             try
             {
-                await Navigation.PushAsync(new DashboardPages.NotificationPage());
+                await Navigation.PushAsync(new DashboardPages.NotificationPage("GrievancesPage"));
+                //await Navigation.PushAsync(new DashboardPages.NotificationPage());
             }
             catch (Exception ex)
             {

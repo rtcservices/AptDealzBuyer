@@ -13,7 +13,7 @@ namespace AptDealzBuyer.API
     class OrderAPI
     {
         #region [ GET ]
-        public async Task<Response> GetOrdersForBuyer(int? Status = null, string Title = "", string SortBy = "", bool? IsAscending = null, int PageNumber = 1, int PageSize = 10)
+        public async Task<Response> GetOrdersForBuyer(int? Status = null, string Title = "", string SortBy = "", bool? IsAscending = null, int PageNumber = 1, int PageSize = 10, bool isOrder = true)
         {
             Response mResponse = new Response();
             try
@@ -22,7 +22,17 @@ namespace AptDealzBuyer.API
                 {
                     using (var hcf = new HttpClientFactory(token: Common.Token))
                     {
-                        string url = string.Format(EndPointURL.GetOrdersForBuyer + "?PageNumber={1}&PageSize={2}", (int)App.Current.Resources["Version"], PageNumber, PageSize);
+                        var endpoint = string.Empty;
+                        if (isOrder)
+                        {
+                            endpoint = EndPointURL.GetOrdersForBuyer;
+                        }
+                        else
+                        {
+                            endpoint = EndPointURL.GetOrdersForRaiseGrievanceByBuyer;
+                        }
+
+                        string url = string.Format(endpoint + "?PageNumber={1}&PageSize={2}", (int)App.Current.Resources["Version"], PageNumber, PageSize);
 
                         if (Status > 0)
                             url += "&Status=" + Status;
@@ -41,7 +51,7 @@ namespace AptDealzBuyer.API
                 {
                     if (await Common.InternetConnection())
                     {
-                        await GetOrdersForBuyer(Status, Title, SortBy, IsAscending, PageNumber, PageSize);
+                        await GetOrdersForBuyer(Status, Title, SortBy, IsAscending, PageNumber, PageSize, isOrder);
                     }
                 }
             }

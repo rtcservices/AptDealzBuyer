@@ -154,6 +154,14 @@ namespace AptDealzBuyer.Model.Request
         [JsonProperty("quotes")]
         public int Quotes { get; set; }
 
+        [JsonProperty("isReseller")]
+        public bool IsReseller { get; set; }
+
+        [JsonProperty("agreeGSTc")]
+        public bool AgreeGSTc { get; set; }
+
+        [JsonProperty("gstin")]
+        public string Gstin { get; set; }
 
         #region [ Extra Properties ]
         [JsonIgnore]

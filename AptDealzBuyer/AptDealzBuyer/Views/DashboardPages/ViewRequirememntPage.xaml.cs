@@ -152,35 +152,26 @@ namespace AptDealzBuyer.Views.DashboardPages
                     {
                         lblDeliveryDateValue.Text = mRequirement.ExpectedDeliveryDate.ToString(Constraints.Str_DateFormate);
                     }
-
                     if (!Common.EmptyFiels(mRequirement.DeliveryLocationPinCode))
                     {
                         lblLocPinCode.Text = mRequirement.DeliveryLocationPinCode;
                     }
-
                     if (!Common.EmptyFiels((string)mRequirement.PreferredSourceOfSupply))
                     {
                         lblPreferredSource.Text = (string)mRequirement.PreferredSourceOfSupply;
                     }
 
-                    if (mRequirement.NeedInsuranceCoverage)
+                    if (!Common.EmptyFiels(mRequirement.Gstin))
                     {
-                        lblNeedInsurance.Text = Constraints.Str_Right;
+                        StkGSTNumber.IsVisible = true;
+                        lblGSTNumber.Text = mRequirement.Gstin;
                     }
                     else
                     {
-                        lblNeedInsurance.Text = Constraints.Str_Wrong;
+                        StkGSTNumber.IsVisible = false;
                     }
 
-                    if (mRequirement.PreferInIndiaProducts)
-                    {
-                        lblPreferInIndiaProducts.Text = Constraints.Str_Right;
-                    }
-                    else
-                    {
-                        lblPreferInIndiaProducts.Text = Constraints.Str_Wrong;
-                    }
-
+                    #region [ Checkboxes ]
                     if (mRequirement.PickupProductDirectly)
                     {
                         lblDeliveryDate.Text = Constraints.Str_ExpectedPickupDate;
@@ -194,9 +185,15 @@ namespace AptDealzBuyer.Views.DashboardPages
                         lblPreferSeller.Text = Constraints.Str_Wrong;
                     }
 
-                    //List of Quote
+                    lblNeedInsurance.Text = mRequirement.NeedInsuranceCoverage ? Constraints.Str_Right : Constraints.Str_Wrong;
+                    lblPreferInIndiaProducts.Text = mRequirement.PreferInIndiaProducts ? Constraints.Str_Right : Constraints.Str_Wrong;
+                    lblIsReseller.Text = mRequirement.IsReseller ? Constraints.Str_Right : Constraints.Str_Wrong;
+                    #endregion
+
+                    #region [ List of Quote ]
                     mQuoteList = mRequirement.ReceivedQuotes;
                     GetListOfQuotes(filterBy, false);
+                    #endregion
 
                     #region [ Address ]
                     lblBillingAddress.Text = mRequirement.BillingAddressName + "\n"
@@ -338,7 +335,8 @@ namespace AptDealzBuyer.Views.DashboardPages
         {
             try
             {
-                await Navigation.PushAsync(new NotificationPage());
+                await Navigation.PushAsync(new DashboardPages.NotificationPage("ViewRequirememntPage"));
+                //await Navigation.PushAsync(new DashboardPages.NotificationPage());
             }
             catch (Exception ex)
             {

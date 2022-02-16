@@ -115,6 +115,7 @@
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
 
                                 <Grid Grid.Row="0" RowSpacing="10">
@@ -368,6 +369,7 @@
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
                                     <!--  Requested Quantity  -->
                                     <StackLayout Grid.Row="0">
@@ -525,6 +527,55 @@
                                                 HorizontalOptions="EndAndExpand"
                                                 Style="{StaticResource lblMedium}" />
 
+                                        </StackLayout>
+
+                                        <BoxView Style="{StaticResource boxHorizontal}" />
+                                    </StackLayout>
+                                </Grid>
+
+                                <!--  Gst Number / Is Reseller  -->
+                                <Grid
+                                    Grid.Row="3"
+                                  
+                                    RowDefinitions="Auto,Auto"
+                                    RowSpacing="10">
+                                    <StackLayout Grid.Row="0">
+                                        <StackLayout
+                                            Margin="20,0"
+                                            HorizontalOptions="FillAndExpand"
+                                            Orientation="Horizontal">
+
+                                            <Label
+                                                HorizontalOptions="StartAndExpand"
+                                                Style="{StaticResource lblLight}"
+                                                Text="Is Reseller" />
+
+                                            <Label
+                                                x:Name="lblIsReseller"
+                                                FontSize="{StaticResource Font15}"
+                                                HorizontalOptions="EndAndExpand"
+                                                Style="{StaticResource lblMedium}" />
+                                        </StackLayout>
+
+                                        <BoxView Style="{StaticResource boxHorizontal}" />
+                                    </StackLayout>
+
+                                    <StackLayout x:Name="StkGSTNumber" Grid.Row="1">
+                                        <StackLayout
+                                            Margin="20,0"
+                                            HorizontalOptions="FillAndExpand"
+                                            Orientation="Horizontal">
+
+                                            <Label
+                                                HorizontalOptions="StartAndExpand"
+                                                Style="{StaticResource lblLight}"
+                                                Text="Gst Number" />
+
+                                            <Label
+                                                x:Name="lblGstNumber"
+                                                FontSize="{StaticResource Font15}"
+                                                HorizontalOptions="EndAndExpand"
+                                                Style="{StaticResource lblMedium}" />
                                         </StackLayout>
 
                                         <BoxView Style="{StaticResource boxHorizontal}" />
@@ -706,9 +757,6 @@
                                         </StackLayout>
                                         <!--#endregion-->
 
-
-
-
                                         <!--#region [ Row 2 | Track Order / Raise Grievance Buttons | Shipped ]-->
                                         <Grid
                                             x:Name="GrdTrackOrderAndRaiseGrvInMainGrid"
@@ -748,8 +796,7 @@
                                         </Grid>
                                         <!--#endregion-->
 
-
-                                        <!--#region [ Cancelled by buyer ]-->
+                                        <!--#region [ Row 2 | Cancelled by buyer ]-->
                                         <Button
                                             x:Name="BtnRepostReqt1"
                                             Grid.Row="2"
@@ -992,8 +1039,6 @@
                                     </Grid>
                                     <!--#endregion-->
                                 </StackLayout>
-
-
 
                                 <!--  Cancel Order | isOrderCancelAllowed = true  -->
                                 <Grid

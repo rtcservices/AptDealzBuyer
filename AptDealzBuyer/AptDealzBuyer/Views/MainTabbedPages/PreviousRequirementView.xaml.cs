@@ -145,7 +145,8 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         {
             try
             {
-                await Navigation.PushAsync(new DashboardPages.NotificationPage());
+                await Navigation.PushAsync(new DashboardPages.NotificationPage("PreviousRequirementView"));
+                //await Navigation.PushAsync(new DashboardPages.NotificationPage());
             }
             catch (Exception ex)
             {

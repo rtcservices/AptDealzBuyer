@@ -55,7 +55,7 @@ namespace AptDealzBuyer.Services
                 var mResponse = await grievanceAPI.SubmitGrievanceResponseFromBuyer(GrievanceId, Message);
                 if (mResponse != null && mResponse.Succeeded)
                 {
-                    if (!(bool)mResponse.Data)                        
+                    if (!(bool)mResponse.Data)
                         Common.DisplayErrorMessage(mResponse.Message);
                 }
                 else
@@ -74,7 +74,37 @@ namespace AptDealzBuyer.Services
             {
                 UserDialogs.Instance.HideLoading();
             }
+        }
 
+        public async Task ReOpenGrievance(string GrievanceId)
+        {
+            try
+            {
+                UserDialogs.Instance.ShowLoading(Constraints.Loading);
+                var mResponse = await grievanceAPI.ReOpenGrievance(GrievanceId);
+                if (mResponse != null && mResponse.Succeeded)
+                {
+                    if (!Common.EmptyFiels(mResponse.Message))
+                        Common.DisplaySuccessMessage(mResponse.Message);
+                    else
+                        Common.DisplaySuccessMessage("Grievance Status Updated Successfully");
+                }
+                else
+                {
+                    if (mResponse != null && !Common.EmptyFiels(mResponse.Message))
+                        Common.DisplayErrorMessage(mResponse.Message);
+                    else
+                        Common.DisplayErrorMessage(Constraints.Something_Wrong);
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("GrievanceRepository/ReOpenGrievance: " + ex.Message);
+            }
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
+            }
         }
     }
 }

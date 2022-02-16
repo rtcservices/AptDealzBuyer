@@ -78,11 +78,12 @@
     <Compile Include="Service\FirebaseAuthenticator.cs" />
     <Compile Include="Service\HtmlToPDFService.cs" />
     <Compile Include="Service\PhoneDialer.cs" />
+    <Compile Include="Service\RingtoneManagerService.cs" />
     <Compile Include="UserNotificationCenterDelegate.cs" />
     <None Include="Entitlements.plist" />
-    <BundleResource Include="GoogleService-Info.plist" />
     <None Include="Info.plist" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <BundleResource Include="GoogleService-Info.plist" />
     <BundleResource Include="Resources\Poppins-Medium.ttf" />
     <BundleResource Include="Resources\Poppins-SemiBold.ttf" />
     <BundleResource Include="Resources\Poppins.ttf" />

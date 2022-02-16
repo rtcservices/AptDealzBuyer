@@ -4,8 +4,6 @@ using AptDealzBuyer.Utility;
 using AptDealzBuyer.Views.MasterData;
 using Plugin.FirebasePushNotification;
 using Plugin.LocalNotification;
-using Plugin.Permissions;
-using Plugin.Permissions.Abstractions;
 using System;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -19,8 +17,6 @@ namespace AptDealzBuyer
         public static int longitude = 0;
         public static StoppableTimer stoppableTimer;
         public static StoppableTimer chatStoppableTimer;
-        public static bool IsNotification = false;
-
         #endregion 
 
         #region [ Constructor ]
@@ -31,7 +27,9 @@ namespace AptDealzBuyer
                 Device.SetFlags(new string[]
                 {
                     "MediaElement_Experimental",
-                    "AppTheme_Experimental"
+                    "AppTheme_Experimental",
+                    "FastRenderers_Experimental",
+                    "CollectionView_Experimental"
                 });
 
                 InitializeComponent();
@@ -45,19 +43,12 @@ namespace AptDealzBuyer
                     Application.Current.UserAppTheme = OSAppTheme.Light;
                 }
 
+                var mainPage = new Views.SplashScreen.Spalshscreen();
                 RegisterDependencies();
                 GetCurrentLocation();
                 BindCrossFirebasePushNotification();
 
-                if (!IsNotification)
-                {
-                    MainPage = new Views.SplashScreen.Spalshscreen();
-                }
-                else
-                {
-                    MainPage = new MasterDataPage(IsNotification);
-                    IsNotification = false;
-                }
+                MainPage = mainPage;
             }
             catch (Exception ex)
             {
@@ -103,7 +94,7 @@ namespace AptDealzBuyer
                 CrossFirebasePushNotification.Current.OnTokenRefresh += (s, p) =>
                 {
                     System.Diagnostics.Debug.WriteLine($"TOKEN : {p.Token}");
-                    if (DeviceInfo.Platform == DevicePlatform.iOS)
+                    if (DeviceInfo.Platform == DevicePlatform.iOS && !Common.EmptyFiels(p.Token))
                     {
                         Utility.Settings.fcm_token = p.Token;
                     }
@@ -112,12 +103,25 @@ namespace AptDealzBuyer
                 CrossFirebasePushNotification.Current.OnNotificationReceived += (s, p) =>
                 {
                     System.Diagnostics.Debug.WriteLine("Received");
-                    MainPage = new MasterDataPage(true);
+                    //if (Settings.IsNotification)
+                    //{
+                    //    if (Common.mBuyerDetail != null && !Common.EmptyFiels(Common.mBuyerDetail.BuyerId) && !Common.EmptyFiels(Common.Token))
+                    //    {
+                    //        MainPage = new MasterDataPage();
+                    //    }
+                    //    else
+                    //    {
+                            MainPage = new Views.SplashScreen.Spalshscreen();
+                    //    }
+                    //}
+
+                    //App.Current.MainPage.DisplayAlert("Alert3", "App > OnNotificationReceived" + Settings.IsNotification, "ok");
                 };
 
                 CrossFirebasePushNotification.Current.OnNotificationOpened += (s, p) =>
                 {
-                    IsNotification = true;
+                    Settings.IsNotification = true;
+                    //App.Current.MainPage.DisplayAlert("Alert4", "App > OnNotificationOpened" + Settings.IsNotification, "ok");
                 };
 
                 CrossFirebasePushNotification.Current.OnNotificationAction += (s, p) =>
@@ -132,11 +136,13 @@ namespace AptDealzBuyer
                             System.Diagnostics.Debug.WriteLine($"{data.Key} : {data.Value}");
                         }
                     }
+                    //App.Current.MainPage.DisplayAlert("Alert5", "App > OnNotificationAction" + Settings.IsNotification, "ok");
                 };
 
                 CrossFirebasePushNotification.Current.OnNotificationDeleted += (s, p) =>
                 {
                     System.Diagnostics.Debug.WriteLine("Deleted");
+                    //App.Current.MainPage.DisplayAlert("Alert6", "App > OnNotificationDeleted" + Settings.IsNotification, "ok");
                 };
             }
             catch (Exception ex)

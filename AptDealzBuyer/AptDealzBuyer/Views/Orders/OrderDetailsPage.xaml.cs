@@ -73,6 +73,130 @@ namespace AptDealzBuyer.Views.Orders
             await GetOrderDetails();
         }
 
+        private async Task GetOrderDetails()
+        {
+            try
+            {
+                mOrder = await DependencyService.Get<IOrderRepository>().GetOrderDetails(OrderId);
+                if (mOrder != null)
+                {
+                    #region [ Details ]
+                    if (mOrder.PickupProductDirectly)
+                    {
+                        lblPinCodeTitle.Text = Constraints.Str_ProductPickupPINCode;
+                        lblExpected.Text = Constraints.Str_ExpectedPickupDate;
+                    }
+                    else
+                    {
+                        lblPinCodeTitle.Text = Constraints.Str_ShippingPINCode;
+                        lblExpected.Text = Constraints.Str_ExpectedDeliveryDate;
+                    }
+
+                    lblOrderId.Text = mOrder.OrderNo;
+                    lblRequirementId.Text = mOrder.RequirementNo;
+                    lblRequirementTitle.Text = mOrder.Title;
+                    lblQuoteRefNo.Text = mOrder.QuoteNo;
+                    lblBuyerName.Text = mOrder.BuyerContact.Name;
+                    if (mOrder.SellerContact != null && !Common.EmptyFiels(mOrder.SellerContact.SellerId) && !Common.EmptyFiels(mOrder.SellerContact.UserId))
+                    {
+                        StkSellerName.IsVisible = true;
+                        StkSellerPhoneNo.IsVisible = true;
+                        StkSellerEmail.IsVisible = true;
+                        lblContactSellerLabel.IsVisible = true;
+                        lblSellerContact.IsVisible = true;
+
+                        lblSellerName.Text = mOrder.SellerContact.Name;
+                        lblSellerPNumber.Text = mOrder.SellerContact.PhoneNumber;
+                        lblSellerEmail.Text = mOrder.SellerContact.Email;
+                        lblSellerContact.Text = mOrder.SellerContact.PhoneNumber;
+                    }
+                    else
+                    {
+                        StkSellerName.IsVisible = false;
+                        StkSellerPhoneNo.IsVisible = false;
+                        StkSellerEmail.IsVisible = false;
+                        lblContactSellerLabel.IsVisible = false;
+                        lblSellerContact.IsVisible = false;
+
+                        lblSellerName.Text = string.Empty;
+                        lblSellerPNumber.Text = string.Empty;
+                        lblSellerEmail.Text = string.Empty;
+                        lblSellerContact.Text = string.Empty;
+                    }
+
+                    if (!Common.EmptyFiels(mOrder.ShippingPincode))
+                    {
+                        StkShippingPINCode.IsVisible = true;
+                        lblShippingPINCode.Text = mOrder.ShippingPincode;
+                    }
+                    else
+                    {
+                        StkShippingPINCode.IsVisible = false;
+                        lblShippingPINCode.Text = string.Empty;
+                    }
+
+                    lblRequestedQuantity.Text = mOrder.RequestedQuantity + " " + mOrder.Unit;
+                    lblUnitPrice.Text = "Rs " + mOrder.UnitPrice;
+                    lblNetAmount.Text = "Rs " + mOrder.NetAmount;
+                    lblHandlingCharges.Text = "Rs " + mOrder.HandlingCharges;
+                    lblShippingCharges.Text = "Rs " + mOrder.ShippingCharges;
+                    lblInsuranceCharges.Text = "Rs " + mOrder.InsuranceCharges;
+                    lblOriginProduct.Text = mOrder.Country;
+                    lblInvoiceNo.Text = mOrder.OrderNo;
+                    lblTotalAmount.Text = "Rs " + mOrder.TotalAmount;
+
+                    if (mOrder.ExpectedDelivery == null || mOrder.ExpectedDelivery.Date == DateTime.MinValue.Date)
+                    {
+                        lblExpectedDate.IsVisible = false;
+                        lblExpected.IsVisible = false;
+                    }
+                    else
+                    {
+                        lblExpectedDate.Text = mOrder.ExpectedDelivery.ToString(Constraints.Str_DateFormate);
+                        lblExpected.IsVisible = true;
+                        lblExpectedDate.IsVisible = true;
+                    }
+
+                    lblOrderStatus.Text = mOrder.OrderStatusDescr;
+                    lblIsReseller.Text = mOrder.IsReseller ? Constraints.Str_Right : Constraints.Str_Wrong;
+                    if (!Common.EmptyFiels(mOrder.Gstin))
+                    {
+                        StkGSTNumber.IsVisible = true;
+                        lblGstNumber.Text = mOrder.Gstin;
+                    }
+                    else
+                    {
+                        StkGSTNumber.IsVisible = false;
+                    }
+                    #endregion
+
+                    #region [ Rating ]
+                    if (mOrder.SellerRating > 0)
+                    {
+                        rvSeller.Value = Convert.ToDouble(mOrder.SellerRating);
+                    }
+                    if (mOrder.ProductRating > 0)
+                    {
+                        rvProduct.Value = Convert.ToDouble(mOrder.ProductRating);
+                    }
+                    #endregion
+
+                    #region [ Address ]
+                    BindSellerAddress(mOrder.SellerAddressDetails);
+                    BindShippingAddress(mOrder.ShippingAddressDetails);
+                    #endregion
+
+                    #region [ Status ]
+                    BindUIAsPerOrderStatus(mOrder.OrderStatus, mOrder.IsDeliveryConfirmedFromBuyer, mOrder.IsOrderCancelAllowed, mOrder.TrackingLink, mOrder.PickupProductDirectly, mOrder.IsGrievancePeriodOver);
+                    #endregion
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("OrderDetailsPage/GetOrderDetails: " + ex.Message);
+            }
+        }
+
         private void BindSellerAddress(SellerAddressDetails mSellerAddress)
         {
             try
@@ -233,151 +357,38 @@ namespace AptDealzBuyer.Views.Orders
             }
         }
 
-        private void BindOrderStatus(int Status, bool DeliveryConfirmation, bool OrderCancelAllowed, string TrackingUrl, bool PickupProductDirectly)
+        private void BindUIAsPerOrderStatus(int Status, bool DeliveryConfirmation, bool OrderCancelAllowed, string TrackingUrl, bool PickupProductDirectly, bool GrievancePeriodOver)
         {
             try
             {
-                if ((Status == (int)OrderStatus.Shipped ||
-                    Status == (int)OrderStatus.Delivered ||
-                    Status == (int)OrderStatus.Completed) &&
-                    (DeliveryConfirmation == false))
+                if ((Status == (int)OrderStatus.Shipped || Status == (int)OrderStatus.Delivered || Status == (int)OrderStatus.Completed) && (DeliveryConfirmation == false))
                 {
-                    //Visible only ConfirmDelivery Button
-                    GrdTrackOrderAndRaiseGrvInMainGrid.IsVisible = false;
-                    BtnShowQrCodeInMainGrid.IsVisible = false;
-                    GrdScanQRCodeImageInMainGrid.IsVisible = false;
-                    GrdRateAndReportInSubGrid.IsVisible = false;
-                    GrdWarningAndRaiseComplainInSubGrid.IsVisible = false;
-                    GrdCancelOrderInSubGrid.IsVisible = false;
-
-                    if (Status == (int)OrderStatus.Shipped || Status == (int)OrderStatus.Delivered)
-                    {
-                        BtnConfirmDeliveryInSubGrid.IsVisible = true;
-                    }
-
-                    if (Status <= (int)OrderStatus.Shipped)
-                    {
-                        if (!Common.EmptyFiels(TrackingUrl) && Common.IsValidURL(TrackingUrl))
-                            BtnTrackOrder.IsVisible = true;
-                        else
-                            BtnTrackOrder.IsVisible = false;
-
-                        GrdTrackOrderAndRaiseGrvInMainGrid.IsVisible = true;
-                    }
-
-                    if (Status == (int)OrderStatus.Completed)
-                    {
-                        BtnRaiseGrievance.IsVisible = false;
-                        GrdRateAndReportInSubGrid.IsVisible = true;
-                    }
-                    else
-                    {
-                        BtnRaiseGrievance.IsVisible = true;
-                        GrdRateAndReportInSubGrid.IsVisible = false;
-                    }
+                    UIForNotDeliveryConfirmationOrder(Status, TrackingUrl, GrievancePeriodOver);
                 }
-                else if (Status == (int)OrderStatus.Pending ||
-                    Status == (int)OrderStatus.Accepted ||
-                    Status == (int)OrderStatus.Delivered ||
-                    Status == (int)OrderStatus.CancelledFromBuyer)
+                else if (Status == (int)OrderStatus.Pending || Status == (int)OrderStatus.Accepted || Status == (int)OrderStatus.Delivered || Status == (int)OrderStatus.CancelledFromBuyer)
                 {
-                    //Nothing to show
-
-                    if (Status <= (int)OrderStatus.Shipped && !Common.EmptyFiels(TrackingUrl) && TrackingUrl.IsValidURL())
-                    {
-                        BtnTrackOrder.IsVisible = true;
-                        GrdTrackOrderAndRaiseGrvInMainGrid.IsVisible = true;
-                    }
-                    else
-                    {
-                        BtnTrackOrder.IsVisible = false;
-                        GrdTrackOrderAndRaiseGrvInMainGrid.IsVisible = false;
-                    }
-
-                    GrdScanQRCodeImageInMainGrid.IsVisible = false;
-                    BtnShowQrCodeInMainGrid.IsVisible = false;
-                    GrdWarningAndRaiseComplainInSubGrid.IsVisible = false;
-
-                    //Cancelled From Buyer
-                    if (Status == (int)OrderStatus.CancelledFromBuyer)
-                    {
-                        BtnRepostReqt1.IsVisible = true;
-                    }
-                    else
-                    {
-                        BtnRepostReqt1.IsVisible = false;
-                    }
-
+                    UIForPendingOrAcceptedOrDeliveredOrCancelledOrder(Status, TrackingUrl);
                 }
                 else if (Status == (int)OrderStatus.ReadyForPickup)
                 {
-                    //visible Warning Msg,Raise Complain button ,Qr Code image   
-
-                    if (Status <= (int)OrderStatus.Shipped)
-                    {
-                        if (!Common.EmptyFiels(TrackingUrl) && Common.IsValidURL(TrackingUrl))
-                            BtnTrackOrder.IsVisible = true;
-                        else
-                            BtnTrackOrder.IsVisible = false;
-
-                        GrdTrackOrderAndRaiseGrvInMainGrid.IsVisible = true;
-                    }
-
-                    if (PickupProductDirectly)
-                    {
-                        BtnShowQrCodeInMainGrid.IsVisible = true;
-                    }
-                    else
-                    {
-                        BtnShowQrCodeInMainGrid.IsVisible = false;
-                    }
-
-                    GrdTrackOrderAndRaiseGrvInMainGrid.IsVisible = true;
-
-                    GrdWarningAndRaiseComplainInSubGrid.IsVisible = true;
-                    BtnConfirmDeliveryInSubGrid.IsVisible = false;
-                    GrdRateAndReportInSubGrid.IsVisible = false;
-                    GrdCancelOrderInSubGrid.IsVisible = false;
+                    UIForReadyForPickupOrder(Status, TrackingUrl, PickupProductDirectly);
                 }
                 else if (Status == (int)OrderStatus.Shipped)
                 {
-                    //visible Track order and Raise grv buttons
-                    if (!Common.EmptyFiels(TrackingUrl) && Common.IsValidURL(TrackingUrl))
-                        BtnTrackOrder.IsVisible = true;
-                    else
-                        BtnTrackOrder.IsVisible = false;
-
-                    GrdTrackOrderAndRaiseGrvInMainGrid.IsVisible = true;
-                    BtnShowQrCodeInMainGrid.IsVisible = false;
-                    GrdScanQRCodeImageInMainGrid.IsVisible = false;
-
-                    GrdWarningAndRaiseComplainInSubGrid.IsVisible = false;
+                    UIForShippedOrder(TrackingUrl);
                 }
                 else if (Status == (int)OrderStatus.Completed)
                 {
-                    //Visible Rating / Repost Req and Raise Grv Buttons   
-                    GrdTrackOrderAndRaiseGrvInMainGrid.IsVisible = false;
-                    BtnShowQrCodeInMainGrid.IsVisible = false;
-                    GrdScanQRCodeImageInMainGrid.IsVisible = false;
-
-                    GrdRateAndReportInSubGrid.IsVisible = true;
-                    GrdCancelOrderInSubGrid.IsVisible = false;
-                    GrdWarningAndRaiseComplainInSubGrid.IsVisible = false;
-                    BtnConfirmDeliveryInSubGrid.IsVisible = false;
-
-                    if (Status == (int)OrderStatus.Completed)
-                    {
-                        BtnRaiseGrievance.IsVisible = false;
-                    }
-                    else
-                    {
-                        BtnRaiseGrievance.IsVisible = true;
-                    }
+                    UIForCompletedOrder(GrievancePeriodOver);
                 }
 
                 if (OrderCancelAllowed)
                 {
                     GrdCancelOrderInSubGrid.IsVisible = true;
+                }
+                else
+                {
+                    GrdCancelOrderInSubGrid.IsVisible = false;
                 }
             }
             catch (Exception ex)
@@ -386,106 +397,170 @@ namespace AptDealzBuyer.Views.Orders
             }
         }
 
-        private async Task GetOrderDetails()
+        private void UIForReadyForPickupOrder(int Status, string TrackingUrl, bool PickupProductDirectly)
         {
             try
             {
-                mOrder = await DependencyService.Get<IOrderRepository>().GetOrderDetails(OrderId);
-                if (mOrder != null)
+                //visible Warning Msg,Raise Complain button ,Qr Code image   
+                if (Status <= (int)OrderStatus.Shipped)
                 {
-                    #region [ Details ]
-                    if (mOrder.PickupProductDirectly)
-                    {
-                        lblPinCodeTitle.Text = Constraints.Str_ProductPickupPINCode;
-                        lblExpected.Text = "Expected Pickup Date";
-                    }
+                    if (!Common.EmptyFiels(TrackingUrl) && Common.IsValidURL(TrackingUrl))
+                        BtnTrackOrder.IsVisible = true;
                     else
-                    {
-                        lblPinCodeTitle.Text = Constraints.Str_ShippingPINCode;
-                        lblExpected.Text = "Expected Delivery Date";
-                    }
+                        BtnTrackOrder.IsVisible = false;
 
-                    lblOrderId.Text = mOrder.OrderNo;
-                    lblRequirementId.Text = mOrder.RequirementNo;
-                    lblRequirementTitle.Text = mOrder.Title;
-                    lblQuoteRefNo.Text = mOrder.QuoteNo;
-                    lblBuyerName.Text = mOrder.BuyerContact.Name;
-                    if (mOrder.SellerContact != null && !Common.EmptyFiels(mOrder.SellerContact.SellerId) && !Common.EmptyFiels(mOrder.SellerContact.UserId))
-                    {
-                        StkSellerName.IsVisible = true;
-                        StkSellerPhoneNo.IsVisible = true;
-                        StkSellerEmail.IsVisible = true;
-                        lblContactSellerLabel.IsVisible = true;
-                        lblSellerContact.IsVisible = true;
+                    GrdTrackOrderAndRaiseGrvInMainGrid.IsVisible = true;
+                }
 
-                        lblSellerName.Text = mOrder.SellerContact.Name;
-                        lblSellerPNumber.Text = mOrder.SellerContact.PhoneNumber;
-                        lblSellerEmail.Text = mOrder.SellerContact.Email;
-                        lblSellerContact.Text = mOrder.SellerContact.PhoneNumber;
-                    }
-                    else
-                    {
-                        StkSellerName.IsVisible = false;
-                        StkSellerPhoneNo.IsVisible = false;
-                        StkSellerEmail.IsVisible = false;
-                        lblContactSellerLabel.IsVisible = false;
-                        lblSellerContact.IsVisible = false;
+                if (PickupProductDirectly)
+                {
+                    BtnShowQrCodeInMainGrid.IsVisible = true;
+                }
+                else
+                {
+                    BtnShowQrCodeInMainGrid.IsVisible = false;
+                }
 
-                        lblSellerName.Text = string.Empty;
-                        lblSellerPNumber.Text = string.Empty;
-                        lblSellerEmail.Text = string.Empty;
-                        lblSellerContact.Text = string.Empty;
-                    }
+                GrdTrackOrderAndRaiseGrvInMainGrid.IsVisible = true;
 
-                    if (!Common.EmptyFiels(mOrder.ShippingPincode))
-                    {
-                        StkShippingPINCode.IsVisible = true;
-                        lblShippingPINCode.Text = mOrder.ShippingPincode;
-                    }
-                    else
-                    {
-                        StkShippingPINCode.IsVisible = false;
-                        lblShippingPINCode.Text = string.Empty;
-                    }
+                GrdWarningAndRaiseComplainInSubGrid.IsVisible = true;
+                BtnConfirmDeliveryInSubGrid.IsVisible = false;
+                GrdRateAndReportInSubGrid.IsVisible = false;
+                GrdCancelOrderInSubGrid.IsVisible = false;
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("OrderDetailsPage/UIForReadyForPickup: " + ex.Message);
+            }
+        }
 
-                    lblRequestedQuantity.Text = mOrder.RequestedQuantity + " " + mOrder.Unit;
-                    lblUnitPrice.Text = "Rs " + mOrder.UnitPrice;
-                    lblNetAmount.Text = "Rs " + mOrder.NetAmount;
-                    lblHandlingCharges.Text = "Rs " + mOrder.HandlingCharges;
-                    lblShippingCharges.Text = "Rs " + mOrder.ShippingCharges;
-                    lblInsuranceCharges.Text = "Rs " + mOrder.InsuranceCharges;
-                    lblOriginProduct.Text = mOrder.Country;
-                    lblInvoiceNo.Text = mOrder.OrderNo;
-                    lblTotalAmount.Text = "Rs " + mOrder.TotalAmount;
+        private void UIForShippedOrder(string TrackingUrl)
+        {
+            try
+            {
+                //visible Track order and Raise grv buttons
+                if (!Common.EmptyFiels(TrackingUrl) && Common.IsValidURL(TrackingUrl))
+                    BtnTrackOrder.IsVisible = true;
+                else
+                    BtnTrackOrder.IsVisible = false;
 
-                    if (mOrder.ExpectedDelivery == null || mOrder.ExpectedDelivery.Date == DateTime.MinValue.Date)
-                    {
-                        lblExpectedDate.IsVisible = false;
-                        lblExpected.IsVisible = false;
-                    }
-                    else
-                    {
-                        lblExpectedDate.Text = mOrder.ExpectedDelivery.ToString(Constraints.Str_DateFormate);
-                        lblExpected.IsVisible = true;
-                        lblExpectedDate.IsVisible = true;
-                    }
+                GrdTrackOrderAndRaiseGrvInMainGrid.IsVisible = true;
+                BtnShowQrCodeInMainGrid.IsVisible = false;
+                GrdScanQRCodeImageInMainGrid.IsVisible = false;
 
-                    lblOrderStatus.Text = mOrder.OrderStatusDescr;
-                    #endregion
+                GrdWarningAndRaiseComplainInSubGrid.IsVisible = false;
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("OrderDetailsPage/UIForShipped: " + ex.Message);
+            }
+        }
 
-                    #region [ Address ]
-                    BindSellerAddress(mOrder.SellerAddressDetails);
-                    BindShippingAddress(mOrder.ShippingAddressDetails);
-                    #endregion
+        private void UIForCompletedOrder(bool GrievancePeriodOver)
+        {
+            try
+            {
+                //Visible Rating / Repost Req and Raise Grv Buttons   
+                GrdTrackOrderAndRaiseGrvInMainGrid.IsVisible = false;
+                BtnShowQrCodeInMainGrid.IsVisible = false;
+                GrdScanQRCodeImageInMainGrid.IsVisible = false;
 
-                    #region [ Status ]
-                    BindOrderStatus(mOrder.OrderStatus, mOrder.IsDeliveryConfirmedFromBuyer, mOrder.IsOrderCancelAllowed, mOrder.TrackingLink, mOrder.PickupProductDirectly);
-                    #endregion
+                GrdRateAndReportInSubGrid.IsVisible = true;
+                GrdCancelOrderInSubGrid.IsVisible = false;
+                GrdWarningAndRaiseComplainInSubGrid.IsVisible = false;
+                BtnConfirmDeliveryInSubGrid.IsVisible = false;
+
+                if (GrievancePeriodOver)
+                    BtnRaiseGrievance.IsVisible = false;
+                else
+                    BtnRaiseGrievance.IsVisible = true;
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("OrderDetailsPage/UIForCompleted: " + ex.Message);
+            }
+        }
+
+        private void UIForPendingOrAcceptedOrDeliveredOrCancelledOrder(int Status, string TrackingUrl)
+        {
+            try
+            {
+                //Nothing to show
+                if (Status <= (int)OrderStatus.Shipped && !Common.EmptyFiels(TrackingUrl) && TrackingUrl.IsValidURL())
+                {
+                    BtnTrackOrder.IsVisible = true;
+                    GrdTrackOrderAndRaiseGrvInMainGrid.IsVisible = true;
+                }
+                else
+                {
+                    BtnTrackOrder.IsVisible = false;
+                    GrdTrackOrderAndRaiseGrvInMainGrid.IsVisible = false;
+                }
+
+                GrdScanQRCodeImageInMainGrid.IsVisible = false;
+                BtnShowQrCodeInMainGrid.IsVisible = false;
+                GrdWarningAndRaiseComplainInSubGrid.IsVisible = false;
+
+                //Cancelled From Buyer
+                if (Status == (int)OrderStatus.CancelledFromBuyer)
+                {
+                    BtnRepostReqt1.IsVisible = true;
+                }
+                else
+                {
+                    BtnRepostReqt1.IsVisible = false;
                 }
             }
             catch (Exception ex)
             {
-                Common.DisplayErrorMessage("OrderDetailsPage/GetOrderDetails: " + ex.Message);
+                Common.DisplayErrorMessage("OrderDetailsPage/Pending-Accepted-Delivered-Cancelled: " + ex.Message);
+            }
+        }
+
+        private void UIForNotDeliveryConfirmationOrder(int Status, string TrackingUrl, bool GrievancePeriodOver)
+        {
+            try
+            {
+                //Visible only ConfirmDelivery Button
+                GrdTrackOrderAndRaiseGrvInMainGrid.IsVisible = false;
+                BtnShowQrCodeInMainGrid.IsVisible = false;
+                GrdScanQRCodeImageInMainGrid.IsVisible = false;
+                GrdRateAndReportInSubGrid.IsVisible = false;
+                GrdWarningAndRaiseComplainInSubGrid.IsVisible = false;
+                GrdCancelOrderInSubGrid.IsVisible = false;
+
+                if (Status == (int)OrderStatus.Shipped || Status == (int)OrderStatus.Delivered)
+                {
+                    BtnConfirmDeliveryInSubGrid.IsVisible = true;
+                }
+
+                if (Status <= (int)OrderStatus.Shipped)
+                {
+                    if (!Common.EmptyFiels(TrackingUrl) && Common.IsValidURL(TrackingUrl))
+                        BtnTrackOrder.IsVisible = true;
+                    else
+                        BtnTrackOrder.IsVisible = false;
+
+                    GrdTrackOrderAndRaiseGrvInMainGrid.IsVisible = true;
+                }
+
+                if (Status == (int)OrderStatus.Completed)
+                {
+                    if (GrievancePeriodOver)
+                        BtnRaiseGrievance.IsVisible = false;
+                    else
+                        BtnRaiseGrievance.IsVisible = true;
+
+                    GrdRateAndReportInSubGrid.IsVisible = true;
+                }
+                else
+                {
+                    GrdRateAndReportInSubGrid.IsVisible = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("OrderDetailsPage/NotDeliveryConfirmation: " + ex.Message);
             }
         }
 
@@ -532,7 +607,7 @@ namespace AptDealzBuyer.Views.Orders
                 }
                 else
                 {
-                    mRatingReview.SellerRating = (decimal)rvProduct.Value;
+                    mRatingReview.SellerProductRating = (decimal)rvProduct.Value;
                     mResponse = await rateAndReviewAPI.ReviewSellerProduct(mRatingReview);
                 }
 
@@ -641,7 +716,8 @@ namespace AptDealzBuyer.Views.Orders
                 try
                 {
                     isNotificationEnable = false;
-                    await Navigation.PushAsync(new DashboardPages.NotificationPage());
+                    await Navigation.PushAsync(new DashboardPages.NotificationPage("OrderDetailsPage"));
+                    //await Navigation.PushAsync(new DashboardPages.NotificationPage());
                     isNotificationEnable = true;
                 }
                 catch (Exception ex)

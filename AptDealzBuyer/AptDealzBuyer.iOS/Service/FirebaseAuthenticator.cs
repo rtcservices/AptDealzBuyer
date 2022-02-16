@@ -27,6 +27,9 @@ namespace AptDealzBuyer.iOS.Service
                 var tcs = new TaskCompletionSource<string>();
                 Auth.DefaultInstance.SignInWithPasswordAsync(username, password)
                     .ContinueWith((task) => OnAuthCompleted(task, tcs));
+
+                //App.Current.MainPage.DisplayAlert("Alert1", "LoginAsync > succesfull" + username + " " +password , "ok");
+
                 return tcs.Task;
             }
             catch (Exception ex)
@@ -48,6 +51,7 @@ namespace AptDealzBuyer.iOS.Service
                     null,
                     new VerificationResultHandler(OnVerificationResult));
 
+                //App.Current.MainPage.DisplayAlert("Alert2", "SendOtpCodeAsync", "ok");
                 return _keyValuePairs.Task;
             }
             catch (Exception ex)
@@ -87,11 +91,13 @@ namespace AptDealzBuyer.iOS.Service
         {
             try
             {
+                //App.Current.MainPage.DisplayAlert("Alert3", "VerifyOtpCodeAsync" + code, "ok");
                 var tcs = new TaskCompletionSource<string>();
 
                 var credential = PhoneAuthProvider.DefaultInstance.GetCredential(_verificationId, code);
                 Auth.DefaultInstance.SignInWithCredentialAsync(credential).ContinueWith((task) => OnAuthCompleted(task, tcs));
 
+                //App.Current.MainPage.DisplayAlert("Alert4", "VerifyOtpCodeAsync > Succesfull return" + code, "ok");
                 return tcs.Task;
             }
             catch (Exception ex)

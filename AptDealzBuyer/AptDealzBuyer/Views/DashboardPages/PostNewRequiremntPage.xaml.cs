@@ -26,13 +26,17 @@ namespace AptDealzBuyer.Views.DashboardPages
         private List<string> selectedSubCategory;
 
         private string relativePath = string.Empty;
+        private string ErrorMessage = string.Empty;
+
         private bool isIndiaProducts = false;
         private bool isPickupProductFromSeller = false;
         private bool isNeedInsuranceCoverage = false;
+        private bool isReseller = false;
+        private bool isGstTandMAgree = false;
+
         private string RequirementId;
         private Requirement mRequirement;
         private string subCategoryName;
-        private string ErrorMessage = string.Empty;
         #endregion
 
         #region [ Constructor ]
@@ -114,7 +118,6 @@ namespace AptDealzBuyer.Views.DashboardPages
                     {
                         selectedSubCategory = mRequirement.SubCategories;
                         subCategoryName = mRequirement.SubCategories.FirstOrDefault();
-                        //SubCategory.Text = string.Join(",", selectedSubCategory);
                     }
 
                     if (!Common.EmptyFiels(mRequirement.ProductImage))
@@ -144,6 +147,7 @@ namespace AptDealzBuyer.Views.DashboardPages
                         txtEstimation.Text = mRequirement.TotalPriceEstimation.ToString();
                     }
 
+                    #region [ Checkbox ]
                     if (mRequirement.PreferInIndiaProducts)
                     {
                         isIndiaProducts = true;
@@ -174,13 +178,41 @@ namespace AptDealzBuyer.Views.DashboardPages
                         imgInsCoverage.Source = Constraints.Img_CheckBoxChecked;
                     }
 
+                    if (mRequirement.IsReseller)
+                    {
+                        isReseller = true;
+                        StkGstNumber.IsVisible = true;
+                        if (!Common.EmptyFiels(mRequirement.Gstin))
+                        {
+                            txtGSTNumber.IsReadOnly = true;
+                            txtGSTNumber.Text = mRequirement.Gstin;
+                        }
+                        imgReseller.Source = Constraints.Img_CheckBoxChecked;
+                    }
+                    else
+                    {
+                        isReseller = false;
+                        imgReseller.Source = Constraints.Img_CheckBoxUnChecked;
+                    }
+
+                    if (mRequirement.AgreeGSTc)
+                    {
+                        imgGSTTandM.Source = Constraints.Img_CheckBoxChecked;
+                        isGstTandMAgree = true;
+                    }
+                    else
+                    {
+                        imgGSTTandM.Source = Constraints.Img_CheckBoxUnChecked;
+                        isGstTandMAgree = false;
+                    }
+                    #endregion
+
                     if (!Common.EmptyFiels(mRequirement.DeliveryLocationPinCode))
                     {
                         txtLocationPinCode.Text = mRequirement.DeliveryLocationPinCode;
                     }
 
                     #region [ Address ]
-
                     txtName.Text = mRequirement.BillingAddressName;
                     txtBuilding.Text = mRequirement.BillingAddressBuilding;
                     txtStreet.Text = mRequirement.BillingAddressStreet;
@@ -199,6 +231,20 @@ namespace AptDealzBuyer.Views.DashboardPages
                         txtSACity.Text = mRequirement.ShippingAddressCity;
                         txtSAState.Text = mRequirement.ShippingAddressState;
                         txtSAPinCode.Text = mRequirement.ShippingAddressPinCode;
+
+                        if (mRequirement.BillingAddressName == mRequirement.ShippingAddressName
+                         && mRequirement.BillingAddressBuilding == mRequirement.ShippingAddressBuilding
+                         && mRequirement.BillingAddressStreet == mRequirement.ShippingAddressStreet
+                         && mRequirement.BillingAddressCity == mRequirement.ShippingAddressCity
+                         && mRequirement.BillingAddressState == mRequirement.ShippingAddressState
+                         && mRequirement.BillingAddressPinCode == mRequirement.ShippingAddressPinCode)
+                        {
+                            imgSameAddress.Source = Constraints.Img_CheckBoxChecked;
+                        }
+                        else
+                        {
+                            imgSameAddress.Source = Constraints.Img_CheckBoxUnChecked;
+                        }
                     }
 
                     #endregion
@@ -242,6 +288,7 @@ namespace AptDealzBuyer.Views.DashboardPages
                     txtTitle.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
                     txtDescription.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
                     txtSourceSupply.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
+                    txtGSTNumber.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
 
                     txtName.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
                     txtBuilding.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
@@ -285,6 +332,11 @@ namespace AptDealzBuyer.Views.DashboardPages
                             txtCity.Text = mBuyerDetail.City;
                             txtState.Text = mBuyerDetail.State;
                             txtPinCode.Text = mBuyerDetail.PinCode;
+                            if (!Common.EmptyFiels(mBuyerDetail.Gstin))
+                            {
+                                txtGSTNumber.Text = mBuyerDetail.Gstin;
+                                txtGSTNumber.IsReadOnly = true;
+                            }
                         }
                     }
                 }
@@ -358,7 +410,8 @@ namespace AptDealzBuyer.Views.DashboardPages
                     || Common.EmptyFiels(txtBuilding.Text) || Common.EmptyFiels(txtStreet.Text)
                     || Common.EmptyFiels(txtCity.Text) || Common.EmptyFiels(txtState.Text)
                     || Common.EmptyFiels(txtPinCode.Text) || pkQuantityUnits.SelectedIndex == -1
-                    || Common.EmptyFiels(txtEstimation.Text))
+                    || Common.EmptyFiels(txtEstimation.Text) || (isReseller && Common.EmptyFiels(txtGSTNumber.Text))
+                    || isReseller && !Common.EmptyFiels(txtGSTNumber.Text) && !txtGSTNumber.Text.IsValidGSTPIN())
                 {
                     RequiredFields();
                     isValid = false;
@@ -391,6 +444,18 @@ namespace AptDealzBuyer.Views.DashboardPages
                 else if (Common.EmptyFiels(txtEstimation.Text))
                 {
                     Common.DisplayErrorMessage(Constraints.Required_PriceEstimation);
+                }
+                else if (isReseller && Common.EmptyFiels(txtGSTNumber.Text))
+                {
+                    Common.DisplayErrorMessage(Constraints.Required_GstNO);
+                }
+                else if (isReseller && !Common.EmptyFiels(txtGSTNumber.Text) && !txtGSTNumber.Text.IsValidGSTPIN())
+                {
+                    Common.DisplayErrorMessage(Constraints.InValid_GST);
+                }
+                else if (!isGstTandMAgree)
+                {
+                    Common.DisplayErrorMessage(Constraints.Required_GSTTandCAgreement);
                 }
                 else if (Common.EmptyFiels(txtLocationPinCode.Text) && !isPickupProductFromSeller)
                 {
@@ -522,6 +587,14 @@ namespace AptDealzBuyer.Views.DashboardPages
                     BoxPinCode.BackgroundColor = (Color)App.Current.Resources["appColor3"];
                 }
 
+                if (isReseller && Common.EmptyFiels(txtGSTNumber.Text))
+                {
+                    BoxGSTNumber.BackgroundColor = (Color)App.Current.Resources["appColor3"];
+                }
+                else if (isReseller && !Common.EmptyFiels(txtGSTNumber.Text) && !txtGSTNumber.Text.IsValidGSTPIN())
+                {
+                    BoxGSTNumber.BackgroundColor = (Color)App.Current.Resources["appColor3"];
+                }
             }
             catch (Exception ex)
             {
@@ -629,6 +702,10 @@ namespace AptDealzBuyer.Views.DashboardPages
                     else if (entry.ClassId == "PriceEstimation")
                     {
                         BoxPriceEstimation.BackgroundColor = (Color)App.Current.Resources["appColor8"];
+                    }
+                    else if (entry.ClassId == "GSTNumber" && isReseller && !Common.EmptyFiels(txtGSTNumber.Text) && txtGSTNumber.Text.IsValidGSTPIN())
+                    {
+                        BoxGSTNumber.BackgroundColor = (Color)App.Current.Resources["appColor8"];
                     }
                     else if (entry.ClassId == "Name")
                     {
@@ -757,6 +834,9 @@ namespace AptDealzBuyer.Views.DashboardPages
                 txtState.Text = txtState.Text.Trim();
                 txtPinCode.Text = txtPinCode.Text.Trim();
 
+                if (!Common.EmptyFiels(txtGSTNumber.Text))
+                    txtGSTNumber.Text = txtGSTNumber.Text.Trim();
+
                 if (!Common.EmptyFiels(txtSAName.Text))
                     txtSAName.Text = txtSAName.Text.Trim();
                 if (!Common.EmptyFiels(txtSABuilding.Text))
@@ -799,6 +879,7 @@ namespace AptDealzBuyer.Views.DashboardPages
                 mRequirement.Unit = pkQuantityUnits.SelectedItem.ToString();
                 mRequirement.TotalPriceEstimation = Convert.ToDecimal(txtEstimation.Text);
 
+                #region [ Address ]
                 mRequirement.BillingAddressName = txtName.Text;
                 mRequirement.BillingAddressBuilding = txtBuilding.Text;
                 mRequirement.BillingAddressStreet = txtStreet.Text;
@@ -816,10 +897,19 @@ namespace AptDealzBuyer.Views.DashboardPages
                 {
                     mRequirement.ShippingAddressLandmark = txtSALandmark.Text;
                 }
+                #endregion
 
+                #region [ Checkbox ]
                 mRequirement.PreferInIndiaProducts = isIndiaProducts;
                 mRequirement.PickupProductDirectly = isPickupProductFromSeller;
                 mRequirement.NeedInsuranceCoverage = isNeedInsuranceCoverage;
+                mRequirement.IsReseller = isReseller;
+                mRequirement.AgreeGSTc = isGstTandMAgree;
+                if (isReseller)
+                {
+                    mRequirement.Gstin = txtGSTNumber.Text;
+                }
+                #endregion
 
                 if (!Common.EmptyFiels(relativePath))
                 {
@@ -1063,27 +1153,28 @@ namespace AptDealzBuyer.Views.DashboardPages
         #region [ Header Navigation ]
         private async void ImgMenu_Tapped(object sender, EventArgs e)
         {
-                try
-                {
-                    await Common.BindAnimation(image: ImgMenu);
-                    await Navigation.PushAsync(new OtherPages.SettingsPage());
-                }
-                catch (Exception ex)
-                {
-                    Common.DisplayErrorMessage("PostNewRequiremntPage/ImgMenu_Tapped: " + ex.Message);
-                }
+            try
+            {
+                await Common.BindAnimation(image: ImgMenu);
+                await Navigation.PushAsync(new OtherPages.SettingsPage());
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("PostNewRequiremntPage/ImgMenu_Tapped: " + ex.Message);
+            }
         }
 
         private async void ImgNotification_Tapped(object sender, EventArgs e)
         {
-                try
-                {
-                    await Navigation.PushAsync(new NotificationPage());
-                }
-                catch (Exception ex)
-                {
-                    Common.DisplayErrorMessage("PostNewRequiremntPage/ImgNotification_Tapped: " + ex.Message);
-                }
+            try
+            {
+                await Navigation.PushAsync(new DashboardPages.NotificationPage("PostNewRequiremntPage"));
+                //await Navigation.PushAsync(new DashboardPages.NotificationPage());
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("PostNewRequiremntPage/ImgNotification_Tapped: " + ex.Message);
+            }
         }
 
         private void ImgQuestion_Tapped(object sender, EventArgs e)
@@ -1170,6 +1261,50 @@ namespace AptDealzBuyer.Views.DashboardPages
             catch (Exception ex)
             {
                 Common.DisplayErrorMessage("PostNewRequiremntPage/StkInsCoverage_Tapped: " + ex.Message);
+            }
+        }
+
+        private void StkReseller_Tapped(object sender, EventArgs e)
+        {
+            try
+            {
+                if (imgReseller.Source.ToString().Replace("File: ", "") == Constraints.Img_CheckBoxChecked)
+                {
+                    isReseller = false;
+                    StkGstNumber.IsVisible = false;
+                    imgReseller.Source = Constraints.Img_CheckBoxUnChecked;
+                }
+                else
+                {
+                    isReseller = true;
+                    StkGstNumber.IsVisible = true;
+                    imgReseller.Source = Constraints.Img_CheckBoxChecked;
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("PostNewRequiremntPage/StkReseller_Tapped: " + ex.Message);
+            }
+        }
+
+        private void StkGSTTandM_Tapped(object sender, EventArgs e)
+        {
+            try
+            {
+                if (imgGSTTandM.Source.ToString().Replace("File: ", "") == Constraints.Img_CheckBoxChecked)
+                {
+                    isGstTandMAgree = false;
+                    imgGSTTandM.Source = Constraints.Img_CheckBoxUnChecked;
+                }
+                else
+                {
+                    isGstTandMAgree = true;
+                    imgGSTTandM.Source = Constraints.Img_CheckBoxChecked;
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("PostNewRequiremntPage/StkGSTTandM_Tapped: " + ex.Message);
             }
         }
         #endregion
@@ -1304,6 +1439,7 @@ namespace AptDealzBuyer.Views.DashboardPages
         {
             Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_Home));
         }
-        #endregion
+
+        #endregion        
     }
 }

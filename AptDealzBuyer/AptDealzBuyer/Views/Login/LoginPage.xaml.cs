@@ -156,17 +156,20 @@ namespace AptDealzBuyer.Views.Login
                     else
                     {
                         UserDialogs.Instance.ShowLoading(Constraints.Loading);
+                        //await App .Current.MainPage.DisplayAlert("Alert101", "Before CheckPhoneNumberExists > succesfull", "ok");
                         var mResponse = await authenticationAPI.CheckPhoneNumberExists(txtUserAuth.Text);
                         if (mResponse != null)
                         {
                             bool isValidNumber = (bool)mResponse.Data;
                             if (isValidNumber && mResponse != null)
                             {
+                             //await   App.Current.MainPage.DisplayAlert("Alert6", "CheckPhoneNumberExists > succesfull", "ok");
                                 var result = await Xamarin.Forms.DependencyService.Get<IFirebaseAuthenticator>().SendOtpCodeAsync(txtUserAuth.Text);
                                 var keyValue = result.FirstOrDefault();
 
                                 if (keyValue.Key)
                                 {
+                                 //await   App.Current.MainPage.DisplayAlert("Alert7", "SendOtpCodeAsync > succesfull", "ok");
                                     if (keyValue.Value == Constraints.OTPSent)
                                     {
                                         await Navigation.PushAsync(new Views.Login.EnterOtpPage(txtUserAuth.Text, false));
@@ -174,6 +177,7 @@ namespace AptDealzBuyer.Views.Login
                                     }
                                     else
                                     {
+                                        await App .Current.MainPage.DisplayAlert("Alert8", "PhoneAuthToken >" + Settings.PhoneAuthToken, "ok");
                                         Settings.PhoneAuthToken = keyValue.Value;
 
                                         var mLogin = FillLogin();
@@ -248,6 +252,7 @@ namespace AptDealzBuyer.Views.Login
             {
                 if (mResponse != null && mResponse.Succeeded)
                 {
+                    //await App.Current.MainPage.DisplayAlert("Alert5", "BuyerAuthPhone > succesfull", "ok");
                     var jObject = (Newtonsoft.Json.Linq.JObject)mResponse.Data;
                     if (jObject != null)
                     {
@@ -260,6 +265,7 @@ namespace AptDealzBuyer.Views.Login
                             Common.Token = mBuyer.JwToken;
                             Settings.UserToken = mBuyer.JwToken;
 
+                            //await App.Current.MainPage.DisplayAlert("Alert17", "LoginPage > NavigateToDashboard to MasterDataPage", "ok");
                             App.Current.MainPage = new MasterDataPage();
                         }
                     }

@@ -18,6 +18,7 @@ namespace AptDealzBuyer.API
             Response mResponse = new Response();
             try
             {
+                //await App.Current.MainPage.DisplayAlert("Alert13", "BuyerAuthPhone" , "ok");
                 if (CrossConnectivity.Current.IsConnected)
                 {
                     var requestJson = JsonConvert.SerializeObject(mAuthenticatePhone);
@@ -82,6 +83,7 @@ namespace AptDealzBuyer.API
             Response mResponse = new Response();
             try
             {
+                //await App.Current.MainPage.DisplayAlert("Alert14", "CheckPhoneNumberExists", "ok");
                 if (CrossConnectivity.Current.IsConnected)
                 {
                     string requestJson = "{\"phoneNumber\":\"" + phoneNumber + "\"}";

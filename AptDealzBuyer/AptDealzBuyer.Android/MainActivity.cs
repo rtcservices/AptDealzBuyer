@@ -7,6 +7,7 @@ using Android.OS;
 using Android.Runtime;
 using Android.Widget;
 using AndroidX.AppCompat.App;
+using AptDealzBuyer.Constants;
 using AptDealzBuyer.Droid.DependencService;
 using AptDealzBuyer.Interfaces;
 using AptDealzBuyer.Model;
@@ -17,29 +18,33 @@ using FFImageLoading.Forms.Platform;
 using Firebase;
 using Newtonsoft.Json;
 using Org.Json;
+using Plugin.CurrentActivity;
 using Plugin.FirebasePushNotification;
 using Plugin.Permissions;
 using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
+using Xamarin.Essentials;
 using Xamarin.Forms;
+using AndroidApp = Android.App.Application;
 
 namespace AptDealzBuyer.Droid
 {
-    [Activity(Label = "Aptdealz", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = true,
-        ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize)]
+    [Activity(Label = "Aptdealz", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity, IPaymentResultWithDataListener
     {
         #region [ Properties ]
+        public static Android.Net.Uri DefaultNotificationSoundURI { get; set; }
         public string MerchantName = "AptDealz";
         public string paymentColor = "#006027";
         public bool isReveal = false;
         #endregion
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             AppCompatDelegate.DefaultNightMode = AppCompatDelegate.ModeNightNo;
+            CrossCurrentActivity.Current.Init(this, savedInstanceState);
 
             FirebaseApp.InitializeApp(this);
 
@@ -47,7 +52,6 @@ namespace AptDealzBuyer.Droid
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
 
             FirebasePushNotificationManager.ProcessIntent(this, Intent);
-            //CreateNotificationFromIntent(Intent);
             Xamarin.Forms.DependencyService.Register<IFirebaseAuthenticator, FirebaseAuthenticator>();
 
             CachedImageRenderer.Init(true);
@@ -59,25 +63,49 @@ namespace AptDealzBuyer.Droid
             CameraPermission();
             // GetPermission();
 
+            #region [ Get Notification Tone Name ]
+            var notificationManager = (NotificationManager)AndroidApp.Context.GetSystemService(AndroidApp.NotificationService);
+            var activeChannel = notificationManager.GetNotificationChannel("fcm_fallback_notification_channel");
+            if (activeChannel != null && activeChannel.Sound != null)
+            {
+                if (!Common.EmptyFiels(activeChannel.Sound.Query))
+                {
+                    Settings.NotificationToneName = activeChannel.Sound.Query.Split('&')[0].Replace("title=", "");
+                }
+            }
+            else
+            {
+                activeChannel = notificationManager.GetNotificationChannel("default");
+                if (activeChannel != null && activeChannel.Sound != null)
+                {
+                    if (!Common.EmptyFiels(activeChannel.Sound.Query))
+                    {
+                        Settings.NotificationToneName = activeChannel.Sound.Query.Split('&')[0].Replace("title=", "");
+                    }
+                }
+            }
+            #endregion
+
             LoadApplication(new App());
 
+            #region [ MessagingCenter - RazorPay ]
             MessagingCenter.Subscribe<RazorPayload>(this, Constraints.RP_PayNow, (payload) =>
-             {
-                 isReveal = false;
-                 string username = Constraints.RP_UserName;
-                 string password = Constraints.RP_Password;
+                 {
+                     isReveal = false;
+                     string username = Constraints.RP_UserName;
+                     string password = Constraints.RP_Password;
 
-                 PayViaRazor(payload, username, password);
-             });
+                     PayViaRazor(payload, username, password);
+                 });
 
             MessagingCenter.Subscribe<RazorPayload>(this, Constraints.RP_RevealPayNow, (payload) =>
             {
                 isReveal = true;
-
                 string username = Constraints.RP_UserName;
                 string password = Constraints.RP_Password;
                 PayViaRazor(payload, username, password);
             });
+            #endregion
         }
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
@@ -104,6 +132,21 @@ namespace AptDealzBuyer.Droid
         protected override void OnNewIntent(Intent intent)
         {
             FirebasePushNotificationManager.ProcessIntent(this, intent);
+            CreateNotificationFromIntent(intent);
+        }
+
+        void CreateNotificationFromIntent(Intent intent)
+        {
+            if (intent?.Extras != null)
+            {
+                var isEnable = Preferences.Get(AppKeys.Notification, true);
+                if (isEnable)
+                {
+                    string title = intent.Extras.GetString(NotificationHelper.TitleKey);
+                    string message = intent.Extras.GetString(NotificationHelper.MessageKey);
+                    DependencyService.Get<INotificationHelper>().ReceiveNotification(title, message);
+                }
+            }
         }
         #endregion
 
@@ -148,7 +191,7 @@ namespace AptDealzBuyer.Droid
                 {
                     using (var request = new HttpRequestMessage(new HttpMethod("POST"), "https://api.razorpay.com/v1/orders"))
                     {
-                        var plainTextBytes = Encoding.UTF8.GetBytes($"{username}:{password}");
+                        var plainTextBytes = System.Text.Encoding.UTF8.GetBytes($"{username}:{password}");
                         var basicAuthKey = Convert.ToBase64String(plainTextBytes);
 
                         request.Headers.TryAddWithoutValidation("Authorization", $"Basic {basicAuthKey}");
@@ -222,7 +265,7 @@ namespace AptDealzBuyer.Droid
                     const string Camerapermission = Manifest.Permission.Camera;
                     if (CheckSelfPermission(Camerapermission) != (int)Android.Content.PM.Permission.Granted)
                     {
-                        RequestPermissions(new string[] { Manifest.Permission.Camera }, 101);
+                        RequestPermissions(new string[] { Manifest.Permission.Camera, }, 101);
                     }
                 }
             }

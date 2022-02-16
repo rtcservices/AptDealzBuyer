@@ -150,6 +150,38 @@ namespace AptDealzBuyer.API
             }
             return mResponse;
         }
+
+        public async Task<Response> ReOpenGrievance(string grievanceId)
+        {
+            Response mResponse = new Response();
+            try
+            {
+                if (CrossConnectivity.Current.IsConnected)
+                {
+                    string requestJson = "{\"grievanceId\":\"" + grievanceId + "\"}";
+                    using (var hcf = new HttpClientFactory(token: Common.Token))
+                    {
+                        string url = string.Format(EndPointURL.ReOpenGrievance, (int)App.Current.Resources["Version"]);
+                        var responseHttp = await hcf.PostAsync(url, requestJson);
+                        mResponse = await DependencyService.Get<IAuthenticationRepository>().APIResponse(responseHttp);
+                    }
+                }
+                else
+                {
+                    if (await Common.InternetConnection())
+                    {
+                        await ReOpenGrievance(grievanceId);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                mResponse.Succeeded = false;
+                mResponse.Message = ex.Message;
+                Common.DisplayErrorMessage("GrievanceAPI/ReOpenGrievance: " + ex.Message);
+            }
+            return mResponse;
+        }
         #endregion
     }
 }

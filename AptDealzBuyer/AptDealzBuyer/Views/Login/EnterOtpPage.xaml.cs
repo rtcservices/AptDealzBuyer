@@ -153,6 +153,7 @@ namespace AptDealzBuyer.Views.Login
                             Settings.LoginTrackingKey = mBuyer.LoginTrackingKey == "00000000-0000-0000-0000-000000000000" ? Settings.LoginTrackingKey : mBuyer.LoginTrackingKey;
                             Common.Token = mBuyer.JwToken;
                             Settings.UserToken = mBuyer.JwToken;
+                            //await App.Current.MainPage.DisplayAlert("Alert17", "EnterOtpPage > NavigateToDashboard to MasterDataPage", "ok");
 
                             App.Current.MainPage = new MasterDataPage();
                         }

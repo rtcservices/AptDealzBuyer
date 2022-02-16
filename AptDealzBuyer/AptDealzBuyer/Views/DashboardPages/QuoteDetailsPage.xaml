@@ -124,6 +124,7 @@
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
 
                                 <StackLayout Grid.Row="0" ClassId="RequirementId">
@@ -384,6 +385,26 @@
                                 </StackLayout>
 
                                 <StackLayout Grid.Row="12">
+                                    <StackLayout
+                                        Margin="20,0"
+                                        HorizontalOptions="FillAndExpand"
+                                        Orientation="Horizontal">
+
+                                        <Label
+                                            HorizontalOptions="StartAndExpand"
+                                            Style="{StaticResource lblLight}"
+                                            Text="Is Reseller" />
+                                        <Label
+                                            x:Name="lblIsReseller"
+                                            FontSize="{StaticResource Font15}"
+                                            HorizontalOptions="EndAndExpand"
+                                            Style="{StaticResource lblMedium}" />
+                                    </StackLayout>
+
+                                    <BoxView Style="{StaticResource boxHorizontal}" />
+                                </StackLayout>
+
+                                <StackLayout Grid.Row="13">
                                     <Grid
                                         Margin="20,0"
                                         ColumnDefinitions="Auto,*"

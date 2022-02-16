@@ -68,11 +68,22 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             try
             {
                 OrderAPI orderAPI = new OrderAPI();
+                Response mResponse = new Response();
+
                 if (isLoader)
                 {
                     UserDialogs.Instance.ShowLoading(Constraints.Loading);
                 }
-                var mResponse = await orderAPI.GetOrdersForBuyer(StatusBy, Title, FilterBy, SortBy, pageNo, pageSize);
+
+                if (isGrievance)
+                {
+                    mResponse = await orderAPI.GetOrdersForBuyer(StatusBy, Title, FilterBy, SortBy, pageNo, pageSize, false);
+                }
+                else
+                {
+                    mResponse = await orderAPI.GetOrdersForBuyer(StatusBy, Title, FilterBy, SortBy, pageNo, pageSize);
+                }
+
                 if (mResponse != null && mResponse.Succeeded)
                 {
                     JArray result = (JArray)mResponse.Data;
@@ -87,13 +98,14 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                         if (isGrievance)
                         {
                             lblHeader.Text = "Raise Grievances";
-
+                            FrmStatus.IsVisible = false;
                             mOrder.IsSelectGrievance = true;
                             mOrder.OrderActionVisibility = false;
                             mOrder.OrderTrackVisibility = false;
                         }
                         else
                         {
+                            FrmStatus.IsVisible = true;
                             mOrder.IsSelectGrievance = false;
                             if (Common.EmptyFiels(mOrder.OrderAction))
                                 mOrder.OrderActionVisibility = false;
@@ -186,7 +198,8 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         {
             try
             {
-                await Navigation.PushAsync(new DashboardPages.NotificationPage());
+                await Navigation.PushAsync(new DashboardPages.NotificationPage("OrderView"));
+                //await Navigation.PushAsync(new DashboardPages.NotificationPage());
             }
             catch (Exception ex)
             {

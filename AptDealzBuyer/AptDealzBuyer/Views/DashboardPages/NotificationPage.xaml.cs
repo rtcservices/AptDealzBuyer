@@ -23,11 +23,13 @@ namespace AptDealzBuyer.Views.DashboardPages
         #endregion
 
         #region [ Constructor ]
-        public NotificationPage()
+        //public NotificationPage()
+        public NotificationPage(string PageName)
         {
             try
             {
                 InitializeComponent();
+                //App.Current.MainPage.DisplayAlert("Alert101", PageName, "Ok");
                 mNotificationsList = new List<NotificationData>();
             }
             catch (Exception ex)

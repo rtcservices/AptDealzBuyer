@@ -6,7 +6,6 @@ using System;
 using Xamarin.Forms;
 
 [assembly: Dependency(typeof(CloseAppOnBackButton))]
-
 namespace AptDealzBuyer.Droid.DependencService
 {
     public class CloseAppOnBackButton : ICloseAppOnBackButton, IDisposable
@@ -17,6 +16,7 @@ namespace AptDealzBuyer.Droid.DependencService
             try
             {
                 var activity = (Activity)Xamarin.Forms.Forms.Context;
+                activity.SetResult(Result.Canceled);
                 activity.FinishAffinity();
             }
             catch (Exception ex)
