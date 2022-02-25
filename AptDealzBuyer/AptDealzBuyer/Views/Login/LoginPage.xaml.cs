@@ -177,7 +177,7 @@ namespace AptDealzBuyer.Views.Login
                                     }
                                     else
                                     {
-                                        await App .Current.MainPage.DisplayAlert("Alert8", "PhoneAuthToken >" + Settings.PhoneAuthToken, "ok");
+                                        //await App .Current.MainPage.DisplayAlert("Alert8", "PhoneAuthToken >" + Settings.PhoneAuthToken, "ok");
                                         Settings.PhoneAuthToken = keyValue.Value;
 
                                         var mLogin = FillLogin();

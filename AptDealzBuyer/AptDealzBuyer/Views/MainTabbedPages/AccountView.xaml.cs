@@ -61,7 +61,6 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                     txtState.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
                     txtCity.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
                     txtLandmark.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
-                    txtGSTNumber.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
                 }
 
                 BtnUpdate.IsEnabled = false;
@@ -165,12 +164,6 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                     {
                         imgUser.Source = Constraints.Img_UserAccount;
                     }
-
-                    if (!Common.EmptyFiels(mBuyerDetails.Gstin))
-                    {
-                        txtGSTNumber.Text = mBuyerDetails.Gstin;
-                        txtGSTNumber.IsReadOnly = true;
-                    }
                     if (!Common.EmptyFiels(mBuyerDetails.Building))
                     {
                         txtBuildingNumber.Text = mBuyerDetails.Building;
@@ -221,8 +214,6 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                     isUpdate = true;
                 else if (!Common.EmptyFiels(mBuyerDetail.Nationality) && mBuyerDetail.Nationality != pkNationality.Text)
                     isUpdate = true;
-                else if (mBuyerDetail.Gstin != txtGSTNumber.Text)
-                    isUpdate = true;
                 else if (mBuyerDetail.Building != txtBuildingNumber.Text)
                     isUpdate = true;
                 else if (mBuyerDetail.Street != txtStreet.Text)
@@ -249,22 +240,20 @@ namespace AptDealzBuyer.Views.MainTabbedPages
 
         }
 
-        private Model.Request.BuyerDetails FillProfileDetails()
+        private Model.Request.BuyerDetails UpdateProfileDetails()
         {
             try
             {
-                if (!Common.EmptyFiels(relativePath))
-                {
-                    string baseURL = (string)App.Current.Resources["BaseURL"];
-                    mBuyerDetail.ProfilePhoto = relativePath.Replace(baseURL, "");
-                }
-
                 mBuyerDetail.UserId = mBuyerDetail.BuyerId;
                 mBuyerDetail.FullName = txtFullName.Text;
                 mBuyerDetail.Email = txtEmailAddress.Text;
                 mBuyerDetail.PhoneNumber = txtPhoneNumber.Text;
 
-                mBuyerDetail.Gstin = txtGSTNumber.Text;
+                if (!Common.EmptyFiels(relativePath))
+                {
+                    string baseURL = (string)App.Current.Resources["BaseURL"];
+                    mBuyerDetail.ProfilePhoto = relativePath.Replace(baseURL, "");
+                }
                 mBuyerDetail.Building = txtBuildingNumber.Text;
                 mBuyerDetail.Street = txtStreet.Text;
                 mBuyerDetail.City = txtCity.Text;
@@ -288,10 +277,8 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             bool isValid = false;
             try
             {
-                if (Common.EmptyFiels(txtFullName.Text) || Common.EmptyFiels(txtPhoneNumber.Text)
-                    || Common.EmptyFiels(txtState.Text) || Common.EmptyFiels(txtCity.Text)
-                    || Common.EmptyFiels(pkNationality.Text)
-                    || (!Common.EmptyFiels(txtGSTNumber.Text) && !txtGSTNumber.Text.IsValidGSTPIN()))
+                if (Common.EmptyFiels(txtFullName.Text) || Common.EmptyFiels(txtPhoneNumber.Text) ||
+                    Common.EmptyFiels(txtState.Text) || Common.EmptyFiels(pkNationality.Text))
                 {
                     RequiredFields();
                     isValid = false;
@@ -308,10 +295,6 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 else if (!txtPhoneNumber.Text.IsValidPhone())
                 {
                     Common.DisplayErrorMessage(Constraints.InValid_PhoneNumber);
-                }
-                else if (!Common.EmptyFiels(txtGSTNumber.Text) && !txtGSTNumber.Text.IsValidGSTPIN())
-                {
-                    Common.DisplayErrorMessage(Constraints.InValid_GST);
                 }
                 else if (Common.EmptyFiels(txtCity.Text))
                 {
@@ -359,11 +342,6 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                     BoxPhoneNumber.BackgroundColor = (Color)App.Current.Resources["appColor3"];
                 }
 
-                if (Common.EmptyFiels(txtCity.Text))
-                {
-                    BoxCity.BackgroundColor = (Color)App.Current.Resources["appColor3"];
-                }
-
                 if (Common.EmptyFiels(txtState.Text))
                 {
                     BoxState.BackgroundColor = (Color)App.Current.Resources["appColor3"];
@@ -372,11 +350,6 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 if (Common.EmptyFiels(pkNationality.Text))
                 {
                     BoxNationality.BackgroundColor = (Color)App.Current.Resources["appColor3"];
-                }
-
-                if (!Common.EmptyFiels(txtGSTNumber.Text) && !txtGSTNumber.Text.IsValidGSTPIN())
-                {
-                    BoxGSTNumber.BackgroundColor = (Color)App.Current.Resources["appColor3"];
                 }
             }
             catch (Exception ex)
@@ -431,7 +404,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                         return;
 
                     FieldsTrim();
-                    var mBuyerDetails = FillProfileDetails();
+                    var mBuyerDetails = UpdateProfileDetails();
 
                     var mResponse = await profileAPI.SaveProfile(mBuyerDetails);
                     if (mResponse != null && mResponse.Succeeded)
@@ -478,10 +451,6 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                     {
                         BoxFullName.BackgroundColor = (Color)App.Current.Resources["appColor8"];
                     }
-                    else if (entry.ClassId == "City")
-                    {
-                        BoxCity.BackgroundColor = (Color)App.Current.Resources["appColor8"];
-                    }
                     else if (entry.ClassId == "State")
                     {
                         BoxState.BackgroundColor = (Color)App.Current.Resources["appColor8"];
@@ -489,10 +458,6 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                     else if (entry.ClassId == "PhoneNumber")
                     {
                         BoxPhoneNumber.BackgroundColor = (Color)App.Current.Resources["appColor8"];
-                    }
-                    else if (entry.ClassId == "GSTNumber" && !Common.EmptyFiels(txtGSTNumber.Text) && txtGSTNumber.Text.IsValidGSTPIN())
-                    {
-                        BoxGSTNumber.BackgroundColor = (Color)App.Current.Resources["appColor8"];
                     }
                 }
 
@@ -522,9 +487,13 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                     txtPinCode.Text = txtPinCode.Text.Trim();
                     isValid = await DependencyService.Get<IProfileRepository>().ValidPincode(txtPinCode.Text);
                     if (isValid)
+                    {
                         BoxPincode.BackgroundColor = (Color)App.Current.Resources["appColor8"];
+                    }
                     else
+                    {
                         BoxPincode.BackgroundColor = (Color)App.Current.Resources["appColor3"];
+                    }
                 }
                 else
                 {
@@ -559,8 +528,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         {
             try
             {
-                await Navigation.PushAsync(new DashboardPages.NotificationPage("AccountView"));
-                //await Navigation.PushAsync(new DashboardPages.NotificationPage());
+                await Navigation.PushAsync(new DashboardPages.NotificationPage());
             }
             catch (Exception ex)
             {

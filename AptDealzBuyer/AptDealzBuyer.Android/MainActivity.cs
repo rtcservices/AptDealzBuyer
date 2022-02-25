@@ -30,12 +30,12 @@ using AndroidApp = Android.App.Application;
 
 namespace AptDealzBuyer.Droid
 {
-    [Activity(Label = "Aptdealz", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize)]
+    [Activity(Label = "Quotesouk", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity, IPaymentResultWithDataListener
     {
         #region [ Properties ]
         public static Android.Net.Uri DefaultNotificationSoundURI { get; set; }
-        public string MerchantName = "AptDealz";
+        public string MerchantName = "Quotesouk";
         public string paymentColor = "#006027";
         public bool isReveal = false;
         #endregion

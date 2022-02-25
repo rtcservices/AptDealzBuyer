@@ -7,7 +7,7 @@
     <Application.Resources>
 
         <!--#region [ BaseURL / HardCodes ]-->
-        <x:String x:Key="GreenColorCode">006027</x:String>
+        <x:String x:Key="GreenColorCode">#5d0060</x:String>
         <x:String x:Key="Currency">INR</x:String>
         <x:String x:Key="CountryCode">+91</x:String>
         <!--  Dev URL  -->
@@ -33,17 +33,17 @@
         <Color x:Key="SuccessBackground">#52c41a</Color>
         <Color x:Key="WarningBackground">#1890ff</Color>
 
-        <Color x:Key="appColor1">#006027</Color>
+        <Color x:Key="appColor1">#7f017e</Color>
         <Color x:Key="appColor2">#E50019</Color>
         <Color x:Key="appColor3">#90ff0000</Color>
         <Color x:Key="appColor4">#1A1818</Color>
-        <Color x:Key="appColor5">#FC9200</Color>
+        <Color x:Key="appColor5">#243dcb</Color>
         <Color x:Key="appColor6">#ffffff</Color>
         <Color x:Key="appColor7">#bbbbbb</Color>
         <Color x:Key="appColor8">#F0F0F0</Color>
         <Color x:Key="appColor9">#8C8B8B</Color>
         <Color x:Key="appColor10">#60006027</Color>
-        <Color x:Key="appColor11">#2f4f4f</Color>
+        <Color x:Key="appColor11">#5d0060</Color>
         <Color x:Key="appColor12">#CAF3DB</Color>
         <!--#endregion-->
 
@@ -94,7 +94,7 @@
         </Style>
 
         <Style x:Key="lblNotification" TargetType="Label">
-            <Setter Property="TextColor" Value="{AppThemeBinding Dark={StaticResource appColor6}, Light={StaticResource appColor4}}" />
+            <Setter Property="TextColor" Value="{AppThemeBinding Dark={StaticResource appColor6}, Light={StaticResource appColor6}}" />
             <Setter Property="FontSize" Value="13" />
             <Setter Property="VerticalTextAlignment" Value="Center" />
             <Setter Property="VerticalOptions" Value="FillAndExpand" />

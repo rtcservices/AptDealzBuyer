@@ -37,6 +37,19 @@ namespace AptDealzBuyer.Views.DashboardPages
                 Common.DisplayErrorMessage("NotificationPage/Ctor: " + ex.Message);
             }
         }
+        public NotificationPage()
+        {
+            try
+            {
+                InitializeComponent();
+                //App.Current.MainPage.DisplayAlert("Alert101", PageName, "Ok");
+                mNotificationsList = new List<NotificationData>();
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("NotificationPage/Ctor: " + ex.Message);
+            }
+        }
         #endregion
 
         #region [ Methods ]
