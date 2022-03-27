@@ -60,11 +60,11 @@
     <WarningLevel>4</WarningLevel>
     <MtouchArch>ARM64</MtouchArch>
     <BuildIpa>true</BuildIpa>
-    <CodesignKey>iPhone Distribution: SyamKumar Thundiyil Sasidharan (Z5A8L9L245)</CodesignKey>
+    <CodesignKey>Apple Development: RESMY SIVASANKARAN BABU (3KQM2P3V27)</CodesignKey>
     <CodesignEntitlements>
     </CodesignEntitlements>
-    <CodesignProvision>Buyer_AdHoc_10-12-2021</CodesignProvision>
     <MtouchExtraArgs>--optimize=experimental-xforms-product-type</MtouchExtraArgs>
+    <MtouchLink>SdkOnly</MtouchLink>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
     <AppExtensionDebugBundleId />
@@ -81,10 +81,10 @@
     <None Include="Entitlements.plist" />
     <None Include="Info.plist" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <BundleResource Include="GoogleService-Info.plist" />
     <BundleResource Include="Resources\Poppins-Medium.ttf" />
     <BundleResource Include="Resources\Poppins-SemiBold.ttf" />
     <BundleResource Include="Resources\Poppins.ttf" />
+    <BundleResource Include="GoogleService-Info.plist" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Resources\LaunchScreen.storyboard" />
