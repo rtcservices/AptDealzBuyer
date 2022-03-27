@@ -8,6 +8,7 @@ namespace AptDealzBuyer.Repository
     public interface IProfileRepository
     {
         Task<bool> ValidPincode(string pinCode, string pinCodeName = null);
+        Task<List<State>> GetStateByCountryId(int CountryId);
 
         Task<List<Category>> GetCategory();
 

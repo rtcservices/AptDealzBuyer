@@ -45,7 +45,7 @@ namespace AptDealzBuyer
 
                 var mainPage = new Views.SplashScreen.Spalshscreen();
                 RegisterDependencies();
-                GetCurrentLocation();
+                //GetCurrentLocation();
                 BindCrossFirebasePushNotification();
 
                 MainPage = mainPage;

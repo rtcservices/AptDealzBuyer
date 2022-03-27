@@ -43,13 +43,17 @@ namespace AptDealzBuyer.API
                                 || responseJson.Contains(Constraints.Str_AccountDeactivated) && response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                         {
                             mCategory = null;
-                            MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount);
-                            Common.ClearAllData();
                         }
                         else
                         {
                             mCategory = null;
                         }
+                        if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                        {
+                            Common.ClearAllData();
+                            MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount);
+                        }
+
                     }
                 }
                 else
@@ -99,12 +103,15 @@ namespace AptDealzBuyer.API
                                 || responseJson.Contains(Constraints.Str_AccountDeactivated) && response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                         {
                             mSubCategory = null;
-                            MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount);
-                            Common.ClearAllData();
                         }
                         else
                         {
                             mSubCategory = null;
+                        }
+                        if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                        {
+                            Common.ClearAllData();
+                            MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount);
                         }
                     }
                 }

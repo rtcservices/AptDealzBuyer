@@ -5,9 +5,11 @@ using AptDealzBuyer.Model.Reponse;
 using AptDealzBuyer.Model.Request;
 using AptDealzBuyer.Repository;
 using AptDealzBuyer.Utility;
+using dotMorten.Xamarin.Forms;
 using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
@@ -20,10 +22,22 @@ namespace AptDealzBuyer.Views.DashboardPages
     public partial class PostNewRequiremntPage : ContentPage
     {
         #region [ Objects ]     
+        private ObservableCollection<string> _mStatesData;
+        public ObservableCollection<string> mStatesData
+        {
+            get { return _mStatesData; }
+            set
+            {
+                _mStatesData = value;
+                OnPropertyChanged("mStatesData");
+            }
+        }
+        private List<State> mStates { get; set; }
         private BuyerDetails mBuyerDetail;
         private List<Category> mCategories;
         private List<SubCategory> mSubCategories;
         private List<string> selectedSubCategory;
+        private ProfileAPI profileAPI;
 
         private string relativePath = string.Empty;
         private string ErrorMessage = string.Empty;
@@ -33,9 +47,11 @@ namespace AptDealzBuyer.Views.DashboardPages
         private bool isNeedInsuranceCoverage = false;
         private bool isReseller = false;
         private bool isGstTandMAgree = false;
+        private bool IsImageUploading = false;
 
         private string RequirementId;
         private Requirement mRequirement;
+        bool isFirstLoad = true;
         private string subCategoryName;
         #endregion
 
@@ -88,10 +104,40 @@ namespace AptDealzBuyer.Views.DashboardPages
         #region [ Get / Bind Data ]
         protected async override void OnAppearing()
         {
+            if (IsImageUploading) return;
             base.OnAppearing();
             await GetRequirementDetails();
         }
-
+        private async Task GetStateByCountryId(int CountryId)
+        {
+            try
+            {
+                UserDialogs.Instance.ShowLoading(Constraints.Loading);
+                mStates = await DependencyService.Get<IProfileRepository>().GetStateByCountryId(CountryId);
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("AddSellerView/GetStateByCountryId: " + ex.Message);
+                UserDialogs.Instance.HideLoading();
+            }
+            UserDialogs.Instance.HideLoading();
+        }
+        private async Task GetCountries()
+        {
+            try
+            {
+                Common.mCountries = await profileAPI.GetCountry();
+                var Country = Common.mCountries.Where(x => x.Name.ToLower() == "India".ToLower().ToString()).FirstOrDefault();
+                if (Country != null)
+                {
+                   await GetStateByCountryId(Country.CountryId);
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("AccountView/GetCountries: " + ex.Message);
+            }
+        }
         private async Task GetRequirementDetails()
         {
             try
@@ -217,7 +263,7 @@ namespace AptDealzBuyer.Views.DashboardPages
                     txtBuilding.Text = mRequirement.BillingAddressBuilding;
                     txtStreet.Text = mRequirement.BillingAddressStreet;
                     txtCity.Text = mRequirement.BillingAddressCity;
-                    txtState.Text = mRequirement.BillingAddressState;
+                    pkState.Text = mRequirement.BillingAddressState;
                     txtPinCode.Text = mRequirement.BillingAddressPinCode;
 
                     if (!Common.EmptyFiels(mRequirement.ShippingAddressName) || !Common.EmptyFiels(mRequirement.ShippingAddressBuilding)
@@ -229,7 +275,7 @@ namespace AptDealzBuyer.Views.DashboardPages
                         txtSABuilding.Text = mRequirement.ShippingAddressBuilding;
                         txtSAStreet.Text = mRequirement.ShippingAddressStreet;
                         txtSACity.Text = mRequirement.ShippingAddressCity;
-                        txtSAState.Text = mRequirement.ShippingAddressState;
+                        pkSAState.Text = mRequirement.ShippingAddressState;
                         txtSAPinCode.Text = mRequirement.ShippingAddressPinCode;
 
                         if (mRequirement.BillingAddressName == mRequirement.ShippingAddressName
@@ -260,10 +306,21 @@ namespace AptDealzBuyer.Views.DashboardPages
             }
         }
 
-        private void BindProperties()
+        private async void BindProperties()
         {
             try
             {
+                profileAPI = new ProfileAPI();
+                if (Common.mCountries == null || Common.mCountries.Count == 0)
+                    await GetCountries();
+                else
+                {
+                    var Country = Common.mCountries.Where(x => x.Name.ToLower() == "India".ToLower().ToString()).FirstOrDefault();
+                    if (Country != null)
+                    {
+                        await GetStateByCountryId(Country.CountryId);
+                    }
+                }
                 mCategories = new List<Category>();
                 mSubCategories = new List<SubCategory>();
                 selectedSubCategory = new List<string>();
@@ -294,13 +351,11 @@ namespace AptDealzBuyer.Views.DashboardPages
                     txtBuilding.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
                     txtStreet.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
                     txtCity.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
-                    txtState.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
 
                     txtSAName.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
                     txtSABuilding.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
                     txtSAStreet.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
                     txtSACity.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
-                    txtSAState.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
                     txtSALandmark.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
                 }
             }
@@ -330,7 +385,7 @@ namespace AptDealzBuyer.Views.DashboardPages
                             txtBuilding.Text = mBuyerDetail.Building;
                             txtStreet.Text = mBuyerDetail.Street;
                             txtCity.Text = mBuyerDetail.City;
-                            txtState.Text = mBuyerDetail.State;
+                            pkState.Text = mBuyerDetail.State;
                             txtPinCode.Text = mBuyerDetail.PinCode;
                             if (!Common.EmptyFiels(mBuyerDetail.Gstin))
                             {
@@ -408,7 +463,7 @@ namespace AptDealzBuyer.Views.DashboardPages
                     || pkCategory.SelectedIndex == -1 || pkSubCategory.SelectedIndex == -1
                     || Common.EmptyFiels(txtQuantity.Text) || Common.EmptyFiels(txtName.Text)
                     || Common.EmptyFiels(txtBuilding.Text) || Common.EmptyFiels(txtStreet.Text)
-                    || Common.EmptyFiels(txtCity.Text) || Common.EmptyFiels(txtState.Text)
+                    || Common.EmptyFiels(txtCity.Text) || Common.EmptyFiels(pkState.Text)
                     || Common.EmptyFiels(txtPinCode.Text) || pkQuantityUnits.SelectedIndex == -1
                     || Common.EmptyFiels(txtEstimation.Text) || (isReseller && Common.EmptyFiels(txtGSTNumber.Text))
                     || isReseller && !Common.EmptyFiels(txtGSTNumber.Text) && !txtGSTNumber.Text.IsValidGSTPIN())
@@ -477,9 +532,13 @@ namespace AptDealzBuyer.Views.DashboardPages
                 {
                     Common.DisplayErrorMessage(Constraints.Required_Billing_City);
                 }
-                else if (Common.EmptyFiels(txtState.Text))
+                else if (Common.EmptyFiels(pkState.Text))
                 {
                     Common.DisplayErrorMessage(Constraints.Required_Billing_State);
+                }
+                else if (mStates.Where(x => x.Name.ToLower() == pkState.Text.ToLower()).Count() == 0)
+                {
+                    Common.DisplayErrorMessage(Constraints.InValid_Billing_State);
                 }
                 else if (Common.EmptyFiels(txtPinCode.Text))
                 {
@@ -494,7 +553,7 @@ namespace AptDealzBuyer.Views.DashboardPages
                 {
                     if (Common.EmptyFiels(txtSAName.Text) || Common.EmptyFiels(txtSABuilding.Text)
                         || Common.EmptyFiels(txtSAStreet.Text) || Common.EmptyFiels(txtSACity.Text)
-                        || Common.EmptyFiels(txtSAState.Text) || Common.EmptyFiels(txtSAPinCode.Text))
+                        || Common.EmptyFiels(pkSAState.Text) || Common.EmptyFiels(txtSAPinCode.Text))
                     {
                         return RequiredShippingAddressFields();
                     }
@@ -577,7 +636,7 @@ namespace AptDealzBuyer.Views.DashboardPages
                     BoxCity.BackgroundColor = (Color)App.Current.Resources["appColor3"];
                 }
 
-                if (Common.EmptyFiels(txtState.Text))
+                if (Common.EmptyFiels(pkState.Text))
                 {
                     BoxState.BackgroundColor = (Color)App.Current.Resources["appColor3"];
                 }
@@ -623,7 +682,11 @@ namespace AptDealzBuyer.Views.DashboardPages
             {
                 BoxSACity.BackgroundColor = (Color)App.Current.Resources["appColor3"];
             }
-            if (Common.EmptyFiels(txtSAState.Text))
+            if (Common.EmptyFiels(pkSAState.Text))
+            {
+                BoxSAState.BackgroundColor = (Color)App.Current.Resources["appColor3"];
+            }
+            else if (mStates.Where(x => x.Name.ToLower() == pkSAState.Text.ToLower()).Count() == 0)
             {
                 BoxSAState.BackgroundColor = (Color)App.Current.Resources["appColor3"];
             }
@@ -665,9 +728,13 @@ namespace AptDealzBuyer.Views.DashboardPages
             {
                 Common.DisplayErrorMessage(Constraints.Required_Shipping_City);
             }
-            else if (Common.EmptyFiels(txtSAState.Text))
+            else if (Common.EmptyFiels(pkSAState.Text))
             {
                 Common.DisplayErrorMessage(Constraints.Required_Shipping_State);
+            }
+            else if (mStates.Where(x => x.Name.ToLower() == pkSAState.Text.ToLower()).Count() == 0)
+            {
+                Common.DisplayErrorMessage(Constraints.InValid_Shipping_State);
             }
             else if (Common.EmptyFiels(txtSAPinCode.Text))
             {
@@ -681,10 +748,21 @@ namespace AptDealzBuyer.Views.DashboardPages
             return isValid;
         }
 
-        private void UnfocussedFields(Entry entry = null, Editor editor = null, Picker picker = null)
+        private void UnfocussedFields(Entry entry = null, Editor editor = null, Picker picker = null, ExtAutoSuggestBox autoSuggestBox = null)
         {
             try
             {
+                if (autoSuggestBox != null)
+                {
+                    if (autoSuggestBox.ClassId == "BAState")
+                    {
+                        BoxState.BackgroundColor = (Color)App.Current.Resources["appColor8"];
+                    }
+                    if (autoSuggestBox.ClassId == "SAState")
+                    {
+                        BoxState.BackgroundColor = (Color)App.Current.Resources["appColor8"];
+                    }
+                }
                 if (entry != null)
                 {
                     if (entry.ClassId == "Title")
@@ -831,7 +909,7 @@ namespace AptDealzBuyer.Views.DashboardPages
                 txtBuilding.Text = txtBuilding.Text.Trim();
                 txtStreet.Text = txtStreet.Text.Trim();
                 txtCity.Text = txtCity.Text.Trim();
-                txtState.Text = txtState.Text.Trim();
+                pkState.Text = pkState.Text.Trim();
                 txtPinCode.Text = txtPinCode.Text.Trim();
 
                 if (!Common.EmptyFiels(txtGSTNumber.Text))
@@ -845,8 +923,8 @@ namespace AptDealzBuyer.Views.DashboardPages
                     txtSAStreet.Text = txtSAStreet.Text.Trim();
                 if (!Common.EmptyFiels(txtSACity.Text))
                     txtSACity.Text = txtSACity.Text.Trim();
-                if (!Common.EmptyFiels(txtSAState.Text))
-                    txtSAState.Text = txtSAState.Text.Trim();
+                if (!Common.EmptyFiels(pkSAState.Text))
+                    pkSAState.Text = pkSAState.Text.Trim();
                 if (!Common.EmptyFiels(txtSAPinCode.Text))
                     txtSAPinCode.Text = txtSAPinCode.Text.Trim();
                 if (!Common.EmptyFiels(txtSALandmark.Text))
@@ -884,14 +962,14 @@ namespace AptDealzBuyer.Views.DashboardPages
                 mRequirement.BillingAddressBuilding = txtBuilding.Text;
                 mRequirement.BillingAddressStreet = txtStreet.Text;
                 mRequirement.BillingAddressCity = txtCity.Text;
-                mRequirement.BillingAddressState = txtState.Text;
+                mRequirement.BillingAddressState = pkState.Text;
                 mRequirement.BillingAddressPinCode = txtPinCode.Text;
 
                 mRequirement.ShippingAddressName = txtSAName.Text;
                 mRequirement.ShippingAddressBuilding = txtSABuilding.Text;
                 mRequirement.ShippingAddressStreet = txtSAStreet.Text;
                 mRequirement.ShippingAddressCity = txtSACity.Text;
-                mRequirement.ShippingAddressState = txtSAState.Text;
+                mRequirement.ShippingAddressState = pkSAState.Text;
                 mRequirement.ShippingAddressPinCode = txtSAPinCode.Text;
                 if (!Common.EmptyFiels(txtSALandmark.Text))
                 {
@@ -1048,14 +1126,14 @@ namespace AptDealzBuyer.Views.DashboardPages
                 txtBuilding.Text = string.Empty;
                 txtStreet.Text = string.Empty;
                 txtCity.Text = string.Empty;
-                txtState.Text = string.Empty;
+                pkState.Text = string.Empty;
                 txtPinCode.Text = string.Empty;
 
                 txtSAName.Text = string.Empty;
                 txtSABuilding.Text = string.Empty;
                 txtSAStreet.Text = string.Empty;
                 txtSACity.Text = string.Empty;
-                txtSAState.Text = string.Empty;
+                pkSAState.Text = string.Empty;
                 txtSAPinCode.Text = string.Empty;
                 txtSALandmark.Text = string.Empty;
 
@@ -1119,7 +1197,7 @@ namespace AptDealzBuyer.Views.DashboardPages
                     txtSABuilding.Text = string.Empty;
                     txtSAStreet.Text = string.Empty;
                     txtSACity.Text = string.Empty;
-                    txtSAState.Text = string.Empty;
+                    pkSAState.Text = string.Empty;
                     txtSAPinCode.Text = string.Empty;
                     txtSALandmark.Text = string.Empty;
                 }
@@ -1130,14 +1208,14 @@ namespace AptDealzBuyer.Views.DashboardPages
                     UnfocussedFields(entry: txtSABuilding);
                     UnfocussedFields(entry: txtSAStreet);
                     UnfocussedFields(entry: txtSACity);
-                    UnfocussedFields(entry: txtSAState);
+                    UnfocussedFields(autoSuggestBox: pkSAState);
                     UnfocussedFields(entry: txtSAPinCode);
                     //UnfocussedFields(entry: txtSALandmark);
                     txtSAName.Text = txtName.Text;
                     txtSABuilding.Text = txtBuilding.Text;
                     txtSAStreet.Text = txtStreet.Text;
                     txtSACity.Text = txtCity.Text;
-                    txtSAState.Text = txtState.Text;
+                    pkSAState.Text = pkState.Text;
                     txtSAPinCode.Text = txtPinCode.Text;
                     txtSALandmark.Text = mBuyerDetail.Landmark;
                 }
@@ -1365,6 +1443,7 @@ namespace AptDealzBuyer.Views.DashboardPages
         {
             try
             {
+                IsImageUploading = true;
                 UserDialogs.Instance.ShowLoading(Constraints.Loading);
                 ImageConvertion.SelectedImagePath = ImgProductImage;
                 ImageConvertion.SetNullSource((int)FileUploadCategory.RequirementImages);
@@ -1382,6 +1461,7 @@ namespace AptDealzBuyer.Views.DashboardPages
             finally
             {
                 UserDialogs.Instance.HideLoading();
+                IsImageUploading = false;
             }
         }
 
@@ -1440,6 +1520,142 @@ namespace AptDealzBuyer.Views.DashboardPages
             Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_Home));
         }
 
-        #endregion        
+        #endregion
+
+        #region [ AutoSuggestBox-state ]
+        int stateI = 0;
+        private void AutoSuggestBox_StateTextChanged(object sender, AutoSuggestBoxTextChangedEventArgs e)
+        {
+            try
+            {
+                if (DeviceInfo.Platform == DevicePlatform.iOS)
+                {
+                    if (isFirstLoad || stateI < 2)
+                    {
+                        isFirstLoad = false;
+                        pkState.IsSuggestionListOpen = false;
+                        stateI++;
+                        return;
+                    }
+                }
+
+                if (mStatesData == null)
+                    mStatesData = new ObservableCollection<string>();
+
+                if (mStatesData != null)
+                    mStatesData.Clear();
+                if (!string.IsNullOrEmpty(pkState.Text))
+                {
+                    mStatesData = new ObservableCollection<string>(mStates.Where(x => x.Name.ToLower().Contains(pkState.Text.ToLower())).Select(x => x.Name));
+                }
+                else
+                {
+                    mStatesData = new ObservableCollection<string>(mStates.Select(x => x.Name));
+                }
+            }
+            catch (Exception ex)
+            {
+                //Common.DisplayErrorMessage("AddSellerView/AutoSuggestBox_StateTextChanged: " + ex.Message);
+            }
+        }
+
+        private void AutoSuggestBox_StateQuerySubmitted(object sender, AutoSuggestBoxQuerySubmittedEventArgs e)
+        {
+            try
+            {
+                if (e.ChosenSuggestion != null)
+                {
+                    pkState.Text = e.ChosenSuggestion.ToString();
+                }
+                else
+                {
+                    // User hit Enter from the search box. Use args.QueryText to determine what to do.
+                    pkState.Unfocus();
+                }
+            }
+            catch (Exception ex)
+            {
+                //Common.DisplayErrorMessage("AddSellerView/AutoSuggestBox_QuerySubmitted: " + ex.Message);
+            }
+        }
+
+        private void AutoSuggestBox_StateSuggestionChosen(object sender, AutoSuggestBoxSuggestionChosenEventArgs e)
+        {
+            pkState.Text = e.SelectedItem.ToString();
+        }
+        #endregion
+
+        private void AutoSuggestBox_Unfocused(object sender, FocusEventArgs e)
+        {
+            var autoSuggestBox = (ExtAutoSuggestBox)sender;
+            if (!Common.EmptyFiels(autoSuggestBox.Text))
+            {
+                UnfocussedFields(autoSuggestBox: autoSuggestBox);
+            }
+        }
+        #region [ AutoSuggestBox-state Sales]
+        int stateSaI = 0;
+        private void AutoSuggestBox_SaStateTextChanged(object sender, AutoSuggestBoxTextChangedEventArgs e)
+        {
+            try
+            {
+                if (DeviceInfo.Platform == DevicePlatform.iOS)
+                {
+                    if (isFirstLoad || stateSaI < 2)
+                    {
+                        isFirstLoad = false;
+                        pkSAState.IsSuggestionListOpen = false;
+                        stateSaI++;
+                        return;
+                    }
+                }
+
+                if (mStatesData == null)
+                    mStatesData = new ObservableCollection<string>();
+
+                if (mStatesData != null)
+                    mStatesData.Clear();
+                if (!string.IsNullOrEmpty(pkSAState.Text))
+                {
+                    mStatesData = new ObservableCollection<string>(mStates.Where(x => x.Name.ToLower().Contains(pkSAState.Text.ToLower())).Select(x => x.Name));
+                }
+                else
+                {
+                    mStatesData = new ObservableCollection<string>(mStates.Select(x => x.Name));
+                }
+            }
+            catch (Exception ex)
+            {
+                //Common.DisplayErrorMessage("AddSellerView/AutoSuggestBox_StateTextChanged: " + ex.Message);
+            }
+        }
+
+        private void AutoSuggestBox_SaStateQuerySubmitted(object sender, AutoSuggestBoxQuerySubmittedEventArgs e)
+        {
+            try
+            {
+                if (e.ChosenSuggestion != null)
+                {
+                    pkSAState.Text = e.ChosenSuggestion.ToString();
+                }
+                else
+                {
+                    // User hit Enter from the search box. Use args.QueryText to determine what to do.
+                    pkSAState.Unfocus();
+                }
+            }
+            catch (Exception ex)
+            {
+                //Common.DisplayErrorMessage("AddSellerView/AutoSuggestBox_QuerySubmitted: " + ex.Message);
+            }
+        }
+
+        private void AutoSuggestBox_SaStateSuggestionChosen(object sender, AutoSuggestBoxSuggestionChosenEventArgs e)
+        {
+            pkSAState.Text = e.SelectedItem.ToString();
+        }
+        #endregion
+
+
     }
 }

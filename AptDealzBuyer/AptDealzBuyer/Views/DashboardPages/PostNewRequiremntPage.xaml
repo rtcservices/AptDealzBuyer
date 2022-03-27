@@ -8,6 +8,7 @@
     xmlns:ffTransformer="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
     xmlns:iOS="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
     iOS:Page.UseSafeArea="True"
+    x:Name="page1"
     BackgroundColor="{AppThemeBinding Dark={StaticResource appColor4},
                                       Light={StaticResource appColor6}}"
     NavigationPage.HasNavigationBar="False">
@@ -678,6 +679,30 @@
                                         <Label Style="{StaticResource lblPrimary13}" Text="State" />
                                         <Label Text="*" TextColor="{StaticResource appColor2}" />
                                     </StackLayout>
+
+                                    <ext:ExtAutoSuggestBox
+                                                x:Name="pkState"
+                                                Margin="0,0"
+                                                ClassId="BAState"
+                                                HorizontalOptions="FillAndExpand"
+                                                ItemsSource="{Binding mStatesData, Mode=TwoWay, Source={x:Reference page1}}"
+                                                PlaceholderTextColor="{StaticResource appColor7}"
+                                                QuerySubmitted="AutoSuggestBox_StateQuerySubmitted"
+                                                SuggestionChosen="AutoSuggestBox_StateSuggestionChosen"
+                                                TabIndex="10"
+                                                TextChanged="AutoSuggestBox_StateTextChanged"
+                                                TextColor="{AppThemeBinding Dark={StaticResource appColor6},
+                                                                            Light={StaticResource appColor4}}"
+                                                Unfocused="AutoSuggestBox_Unfocused" />
+
+                                    <BoxView x:Name="BoxState" Style="{StaticResource boxHorizontal}" />
+                                </StackLayout>
+                                
+                                <!--<StackLayout Grid.Row="5" Spacing="{OnPlatform Android=0, iOS=7}">
+                                    <StackLayout HorizontalOptions="StartAndExpand" Orientation="Horizontal">
+                                        <Label Style="{StaticResource lblPrimary13}" Text="State" />
+                                        <Label Text="*" TextColor="{StaticResource appColor2}" />
+                                    </StackLayout>
                                     <ext:ExtEntry
                                         x:Name="txtState"
                                         ClassId="State"
@@ -685,7 +710,7 @@
                                         Style="{StaticResource entrPrimary}"
                                         Unfocused="Entry_Unfocused" />
                                     <BoxView x:Name="BoxState" Style="{StaticResource boxHorizontal}" />
-                                </StackLayout>
+                                </StackLayout>-->
 
                                 <StackLayout Grid.Row="6" Spacing="{OnPlatform Android=0, iOS=7}">
                                     <StackLayout HorizontalOptions="StartAndExpand" Orientation="Horizontal">
@@ -847,7 +872,7 @@
                                         <BoxView x:Name="BoxSACity" Style="{StaticResource boxHorizontal}" />
                                     </StackLayout>
 
-                                    <StackLayout Grid.Row="5" Spacing="{OnPlatform Android=0, iOS=7}">
+                                    <!--<StackLayout Grid.Row="5" Spacing="{OnPlatform Android=0, iOS=7}">
                                         <StackLayout HorizontalOptions="StartAndExpand" Orientation="Horizontal">
                                             <Label Style="{StaticResource lblPrimary13}" Text="State" />
                                             <Label
@@ -862,7 +887,32 @@
                                             Style="{StaticResource entrPrimary}"
                                             Unfocused="Entry_Unfocused" />
                                         <BoxView x:Name="BoxSAState" Style="{StaticResource boxHorizontal}" />
+                                    </StackLayout>-->
+
+                                    <StackLayout Grid.Row="5" Spacing="{OnPlatform Android=0, iOS=7}">
+                                        <StackLayout HorizontalOptions="StartAndExpand" Orientation="Horizontal">
+                                            <Label x:Name="lblSAState" Style="{StaticResource lblPrimary13}" Text="State" />
+                                            <Label Text="*" TextColor="{StaticResource appColor2}" />
+                                        </StackLayout>
+
+                                        <ext:ExtAutoSuggestBox
+                                                x:Name="pkSAState"
+                                                Margin="0,0"
+                                                ClassId="SAState"
+                                                HorizontalOptions="FillAndExpand"
+                                                ItemsSource="{Binding mStatesData, Mode=TwoWay, Source={x:Reference page1}}"
+                                                PlaceholderTextColor="{StaticResource appColor7}"
+                                                QuerySubmitted="AutoSuggestBox_SaStateQuerySubmitted"
+                                                SuggestionChosen="AutoSuggestBox_SaStateSuggestionChosen"
+                                                TabIndex="10"
+                                                TextChanged="AutoSuggestBox_SaStateTextChanged"
+                                                TextColor="{AppThemeBinding Dark={StaticResource appColor6},
+                                                                            Light={StaticResource appColor4}}"
+                                                Unfocused="AutoSuggestBox_Unfocused" />
+
+                                        <BoxView x:Name="BoxSAState" Style="{StaticResource boxHorizontal}" />
                                     </StackLayout>
+
 
                                     <StackLayout Grid.Row="6" Spacing="{OnPlatform Android=0, iOS=7}">
                                         <StackLayout HorizontalOptions="StartAndExpand" Orientation="Horizontal">

@@ -223,7 +223,7 @@ namespace AptDealzBuyer.Views.DashboardPages
                     decimal amount = 0;
 
                     RequirementAPI requirementAPI = new RequirementAPI();
-                    var mResponse = await requirementAPI.GetAmountToBePaidToRevealBuyerContact(mQuote.RequirementId);
+                    var mResponse = await requirementAPI.GetAmountToBePaidToRevealSellerContact(mQuote.QuoteId);
                     if (mResponse != null && mResponse.Succeeded)
                     {
                         var jObject = (JObject)mResponse.Data;

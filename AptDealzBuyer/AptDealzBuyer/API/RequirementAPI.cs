@@ -186,21 +186,20 @@ namespace AptDealzBuyer.API
             }
             return mResponse;
         }
-
-        public async Task<Response> GetAmountToBePaidToRevealBuyerContact(string requirementId)
+        public async Task<Response> GetAmountToBePaidToRevealSellerContact(string quoteId)
         {
             Response mResponse = new Response();
             try
             {
                 if (CrossConnectivity.Current.IsConnected)
                 {
-                    string requestJson = "{\"requirementId\":\"" + requirementId + "\"}";
+                    string requestJson = "{\"quoteId\":\"" + quoteId + "\"}";
                     using (var hcf = new HttpClientFactory(token: Common.Token))
                     {
                         //string url = string.Format(EndPointURL.GetAmountToBePaidToRevealBuyerContact, (int)App.Current.Resources["Version"]);
 
                         var BaseURL = (string)App.Current.Resources["BaseURL"];
-                        string url = BaseURL + "api/v1/Requirement/GetAmountToBePaidToRevealBuyerContact";
+                        string url = BaseURL + "api/v1/Quote/GetAmountToBePaidToRevealSellerContact";
                         var response = await hcf.PostAsync(url, requestJson);
                         mResponse = await DependencyService.Get<IAuthenticationRepository>().APIResponse(response);
                     }
@@ -209,7 +208,7 @@ namespace AptDealzBuyer.API
                 {
                     if (await Common.InternetConnection())
                     {
-                        await GetAmountToBePaidToRevealBuyerContact(requirementId);
+                        await GetAmountToBePaidToRevealSellerContact(quoteId);
                     }
                 }
             }
@@ -217,11 +216,10 @@ namespace AptDealzBuyer.API
             {
                 mResponse.Succeeded = false;
                 mResponse.Message = ex.Message;
-                Common.DisplayErrorMessage("RequirementAPI/CancelRequirement: " + ex.Message);
+                Common.DisplayErrorMessage("RequirementAPI/GetAmountToBePaidToRevealSellerContact: " + ex.Message);
             }
             return mResponse;
         }
-
 
         #endregion
 

@@ -16,7 +16,19 @@ namespace AptDealzBuyer.Services
     {
         CategoryAPI categoryAPI = new CategoryAPI();
         ProfileAPI profileAPI = new ProfileAPI();
-
+        public async Task<List<State>> GetStateByCountryId(int CountryId)
+        {
+            List<State> mState = new List<State>();
+            try
+            {
+                mState = await profileAPI.GetStateByCountryId(CountryId);
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("ProfileRepository/GetStateByCountryId: " + ex.Message);
+            }
+            return mState;
+        }
         public async Task<bool> ValidPincode(string pinCode, string pinCodeName = null)
         {
             bool isValid = false;

@@ -49,6 +49,8 @@ namespace AptDealzBuyer.API
             Response mResponse = new Response();
             try
             {
+                if (string.IsNullOrWhiteSpace(Common.Token))
+                    return mResponse;
                 if (CrossConnectivity.Current.IsConnected)
                 {
                     using (var hcf = new HttpClientFactory(token: Common.Token))
@@ -73,8 +75,8 @@ namespace AptDealzBuyer.API
                         else if (respons.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
                         {
                             mResponse.Message = Constraints.ServiceUnavailable;
-                            MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount);
-                            Common.ClearAllData();
+                            //MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount);
+                            //Common.ClearAllData();
                         }
                         else if (respons.StatusCode == System.Net.HttpStatusCode.InternalServerError)
                         {
@@ -85,8 +87,8 @@ namespace AptDealzBuyer.API
                             else
                             {
                                 mResponse.Message = Constraints.Something_Wrong_Server;
-                                MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount);
-                                Common.ClearAllData();
+                                //MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount);
+                                //Common.ClearAllData();
                             }
                         }
                         else if (responseJson.Contains(Constraints.Str_AccountDeactivated) && respons.StatusCode == System.Net.HttpStatusCode.Unauthorized)

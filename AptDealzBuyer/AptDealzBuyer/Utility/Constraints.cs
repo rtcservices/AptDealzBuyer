@@ -46,9 +46,9 @@
         #endregion
 
         #region [ Production RazorPay ]
-        public const string RP_MerchantId = "HbW0qOiAlCsSMi";
-        public const string RP_UserName = "rzp_test_vo5zGl2YTwdLjk";
-        public const string RP_Password = "bXvtQZ4HdiVjwtMc3b7z8Zoe";
+        public const string RP_MerchantId = "It5hmU5HcU7hvf";
+        public const string RP_UserName = "rzp_test_gcFbU9S9mYhR8c";
+        public const string RP_Password = "mlyzbMv2eEuS2xhmdOWypFBm";
         #endregion
 
         public const string RP_PayNow = "PayNow";
@@ -181,6 +181,9 @@
         public const string InValid_PhoneNumber = "Please enter valid phone number!";
         public const string InValid_OTP = "Verification code is invalid! Try again!";
         public const string InValid_Nationality = "Please enter valid nationality!";
+        public const string InValid_State = "Please enter valid state!";
+        public const string InValid_Billing_State = "Please enter valid billing state!";
+        public const string InValid_Shipping_State = "Please enter valid shipping state!";
         public const string InValid_GST = "Please enter valid GST number!";
 
         public const string InValid_Pincode = "Please enter valid pincode!";

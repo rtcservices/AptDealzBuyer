@@ -36,6 +36,7 @@ namespace AptDealzBuyer.Views.Login
 
         protected override void OnDisappearing()
         {
+            UserDialogs.Instance.HideLoading();
             base.OnDisappearing();
             Dispose();
         }
@@ -43,6 +44,8 @@ namespace AptDealzBuyer.Views.Login
         protected override void OnAppearing()
         {
             base.OnAppearing();
+            UserDialogs.Instance.HideLoading();
+            //Common.ClearAllData();
             BindProperties();
         }
 

@@ -36,7 +36,7 @@ namespace AptDealzBuyer.Droid
         #region [ Properties ]
         public static Android.Net.Uri DefaultNotificationSoundURI { get; set; }
         public string MerchantName = "Quotesouk";
-        public string paymentColor = "#006027";
+        public string paymentColor = "#5D0060";
         public bool isReveal = false;
         #endregion
 
@@ -238,7 +238,7 @@ namespace AptDealzBuyer.Droid
 
                 options.Put("name", MerchantName); //Merchant Name
                 options.Put("description", $"Order Id. {payload.receipt}");
-                options.Put("image", "https://s3.amazonaws.com/rzp-mobile/images/rzp.png");
+                //options.Put("image", "https://s3.amazonaws.com/rzp-mobile/images/rzp.png");
                 options.Put("order_id", orderId); //from response of step 3.
                 options.Put("theme.color", paymentColor);
                 options.Put("currency", payload.currency);
@@ -282,8 +282,8 @@ namespace AptDealzBuyer.Droid
 
             if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.Lollipop)
             {
-                const string AccessFineLocationpermission = Manifest.Permission.AccessFineLocation;
-                const string AccessCoarseLocationpermission = Manifest.Permission.AccessCoarseLocation;
+                //const string AccessFineLocationpermission = Manifest.Permission.AccessFineLocation;
+                //const string AccessCoarseLocationpermission = Manifest.Permission.AccessCoarseLocation;
                 const string AccessLocationExtraCommandspermission = Manifest.Permission.AccessLocationExtraCommands;
                 const string AccessMockLocationpermission = Manifest.Permission.AccessMockLocation;
                 const string AccessNetworkStatepermission = Manifest.Permission.AccessNetworkState;
@@ -295,11 +295,12 @@ namespace AptDealzBuyer.Droid
                 const string CallPhonepermission = Manifest.Permission.CallPhone;
                 const string ReadContactspermission = Manifest.Permission.ReadContacts;
                 const string WriteContactspermission = Manifest.Permission.WriteContacts;
-                const string ReadCallLogpermission = Manifest.Permission.ReadCallLog;
+                //const string ReadCallLogpermission = Manifest.Permission.ReadCallLog;
 
-                if (CheckSelfPermission(AccessFineLocationpermission) != (int)Android.Content.PM.Permission.Granted
-                   || CheckSelfPermission(AccessCoarseLocationpermission) != (int)Android.Content.PM.Permission.Granted
-                   || CheckSelfPermission(AccessLocationExtraCommandspermission) != (int)Android.Content.PM.Permission.Granted
+                if (
+                   // CheckSelfPermission(AccessFineLocationpermission) != (int)Android.Content.PM.Permission.Granted
+                   //|| CheckSelfPermission(AccessCoarseLocationpermission) != (int)Android.Content.PM.Permission.Granted || 
+                   CheckSelfPermission(AccessLocationExtraCommandspermission) != (int)Android.Content.PM.Permission.Granted
                    || CheckSelfPermission(AccessMockLocationpermission) != (int)Android.Content.PM.Permission.Granted
                    || CheckSelfPermission(AccessNetworkStatepermission) != (int)Android.Content.PM.Permission.Granted
                    || CheckSelfPermission(ChangeWifiStatepermission) != (int)Android.Content.PM.Permission.Granted
@@ -310,12 +311,12 @@ namespace AptDealzBuyer.Droid
                    || CheckSelfPermission(CallPhonepermission) != (int)Android.Content.PM.Permission.Granted
                    || CheckSelfPermission(ReadContactspermission) != (int)Android.Content.PM.Permission.Granted
                    || CheckSelfPermission(WriteContactspermission) != (int)Android.Content.PM.Permission.Granted
-                   || CheckSelfPermission(ReadCallLogpermission) != (int)Android.Content.PM.Permission.Granted
+                   //|| CheckSelfPermission(ReadCallLogpermission) != (int)Android.Content.PM.Permission.Granted
                    )
                 {
                     RequestPermissions(new string[]  {
-                        Manifest.Permission.AccessFineLocation,
-                        Manifest.Permission.AccessCoarseLocation,
+                        //Manifest.Permission.AccessFineLocation,
+                        //Manifest.Permission.AccessCoarseLocation,
                         Manifest.Permission.AccessLocationExtraCommands,
                         Manifest.Permission.AccessMockLocation,
                         Manifest.Permission.AccessNetworkState,
@@ -327,7 +328,7 @@ namespace AptDealzBuyer.Droid
                         Manifest.Permission.CallPhone,
                         Manifest.Permission.ReadContacts,
                         Manifest.Permission.WriteContacts,
-                        Manifest.Permission.ReadCallLog,
+                        //Manifest.Permission.ReadCallLog,
                     },
                 101);
                 }

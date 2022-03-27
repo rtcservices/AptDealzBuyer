@@ -1,11 +1,14 @@
 ﻿using Acr.UserDialogs;
 using AptDealzBuyer.API;
 using AptDealzBuyer.Extention;
+using AptDealzBuyer.Model.Reponse;
 using AptDealzBuyer.Model.Request;
 using AptDealzBuyer.Repository;
 using AptDealzBuyer.Utility;
+using dotMorten.Xamarin.Forms;
 using Rg.Plugins.Popup.Services;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -36,6 +39,17 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 OnPropertyChanged("mCountriesData");
             }
         }
+        private ObservableCollection<string> _mStatesData;
+        public ObservableCollection<string> mStatesData
+        {
+            get { return _mStatesData; }
+            set
+            {
+                _mStatesData = value;
+                OnPropertyChanged("mStatesData");
+            }
+        }
+        private List<State> mStates { get; set; }
         #endregion
 
         #region [ Objects ]          
@@ -58,7 +72,6 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 if (DeviceInfo.Platform == DevicePlatform.Android)
                 {
                     txtFullName.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
-                    txtState.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
                     txtCity.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
                     txtLandmark.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
                 }
@@ -105,7 +118,20 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 UserDialogs.Instance.HideLoading();
             }
         }
-
+        private async Task GetStateByCountryId(int CountryId)
+        {
+            try
+            {
+                UserDialogs.Instance.ShowLoading(Constraints.Loading);
+                mStates = await DependencyService.Get<IProfileRepository>().GetStateByCountryId(CountryId);
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("AddSellerView/GetStateByCountryId: " + ex.Message);
+                UserDialogs.Instance.HideLoading();
+            }
+            UserDialogs.Instance.HideLoading();
+        }
         private async Task GetCountries()
         {
             try
@@ -122,20 +148,26 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         {
             try
             {
-                if (Common.mBuyerDetail == null || Common.EmptyFiels(Common.mBuyerDetail.BuyerId) || isUpdateProfile)
-                {
-                    mBuyerDetail = await DependencyService.Get<IProfileRepository>().GetMyProfileData();
-                    Common.mBuyerDetail = mBuyerDetail;
-                }
-                else
-                {
-                    mBuyerDetail = Common.mBuyerDetail;
-                }
-
+                mBuyerDetail = await DependencyService.Get<IProfileRepository>().GetMyProfileData();
+                Common.mBuyerDetail = mBuyerDetail;
                 if (Common.mBuyerDetail != null && !Common.EmptyFiels(Common.mBuyerDetail.BuyerId))
                 {
                     GetProfileDetails(Common.mBuyerDetail);
                 }
+                //if (Common.mBuyerDetail == null || Common.EmptyFiels(Common.mBuyerDetail.BuyerId) || isUpdateProfile)
+                //{
+                //    mBuyerDetail = await DependencyService.Get<IProfileRepository>().GetMyProfileData();
+                //    Common.mBuyerDetail = mBuyerDetail;
+                //}
+                //else
+                //{
+                //    mBuyerDetail = Common.mBuyerDetail;
+                //}
+
+                //if (Common.mBuyerDetail != null && !Common.EmptyFiels(Common.mBuyerDetail.BuyerId))
+                //{
+                //    GetProfileDetails(Common.mBuyerDetail);
+                //}
             }
             catch (Exception ex)
             {
@@ -154,6 +186,11 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                     txtEmailAddress.Text = mBuyerDetails.Email;
                     txtPhoneNumber.Text = mBuyerDetails.PhoneNumber;
 
+                    if (!Common.EmptyFiels(mBuyerDetails.Gstin))
+                    {
+                        txtGSTNumber.Text = mBuyerDetails.Gstin;
+                        txtGSTNumber.IsReadOnly = true;
+                    }
                     if (!Common.EmptyFiels(mBuyerDetails.ProfilePhoto))
                     {
                         string baseURL = (string)App.Current.Resources["BaseURL"];
@@ -182,7 +219,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                     }
                     if (!Common.EmptyFiels(mBuyerDetails.State))
                     {
-                        txtState.Text = mBuyerDetails.State;
+                        pkState.Text = mBuyerDetails.State;
                     }
                     if (!Common.EmptyFiels(mBuyerDetails.PinCode))
                     {
@@ -191,6 +228,11 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                     if (mBuyerDetails.CountryId > 0 && Common.mCountries != null && Common.mCountries.Count() > 0)
                     {
                         pkNationality.Text = Common.mCountries.Where(x => x.CountryId == mBuyerDetails.CountryId).FirstOrDefault().Name;
+                        var Country = Common.mCountries.Where(x => x.Name.ToLower() == pkNationality.Text.ToLower().ToString()).FirstOrDefault();
+                        if (Country != null)
+                        {
+                            GetStateByCountryId(Country.CountryId).ConfigureAwait(false);
+                        }
                     }
                 }
             }
@@ -224,7 +266,9 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                     isUpdate = true;
                 else if (mBuyerDetail.Landmark != txtLandmark.Text)
                     isUpdate = true;
-                else if (mBuyerDetail.State != txtState.Text)
+                else if (mBuyerDetail.State != pkState.Text)
+                    isUpdate = true;
+                else if (mBuyerDetail.Gstin != txtGSTNumber.Text)
                     isUpdate = true;
                 else if (isUpdatPhoto)
                     isUpdate = true;
@@ -262,8 +306,9 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                     mBuyerDetail.CountryId = Common.mCountries.Where(x => x.Name.ToLower() == pkNationality.Text.ToLower().ToString()).FirstOrDefault()?.CountryId;
                 }
                 mBuyerDetail.Landmark = txtLandmark.Text;
-                mBuyerDetail.State = txtState.Text;
+                mBuyerDetail.State = pkState.Text;
                 mBuyerDetail.PinCode = txtPinCode.Text;
+                mBuyerDetail.Gstin = txtGSTNumber.Text;
             }
             catch (Exception ex)
             {
@@ -278,7 +323,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             try
             {
                 if (Common.EmptyFiels(txtFullName.Text) || Common.EmptyFiels(txtPhoneNumber.Text) ||
-                    Common.EmptyFiels(txtState.Text) || Common.EmptyFiels(pkNationality.Text))
+                    Common.EmptyFiels(pkState.Text) || Common.EmptyFiels(pkNationality.Text))
                 {
                     RequiredFields();
                     isValid = false;
@@ -304,13 +349,21 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 {
                     Common.DisplayErrorMessage(Constraints.Required_Nationality);
                 }
-                else if (Common.EmptyFiels(txtState.Text))
+                else if (Common.EmptyFiels(pkState.Text))
                 {
                     Common.DisplayErrorMessage(Constraints.Required_State);
+                }
+                else if (mStates.Where(x => x.Name.ToLower() == pkState.Text.ToLower()).Count() == 0)
+                {
+                    Common.DisplayErrorMessage(Constraints.InValid_State);
                 }
                 else if (Common.EmptyFiels(txtPinCode.Text))
                 {
                     Common.DisplayErrorMessage(Constraints.Required_PinCode);
+                }
+                else if (!Common.EmptyFiels(txtGSTNumber.Text) && !txtGSTNumber.Text.IsValidGSTPIN())
+                {
+                    Common.DisplayErrorMessage(Constraints.InValid_GST);
                 }
                 else if (Common.mCountries.Where(x => x.Name.ToLower() == pkNationality.Text.ToLower()).Count() == 0)
                 {
@@ -342,7 +395,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                     BoxPhoneNumber.BackgroundColor = (Color)App.Current.Resources["appColor3"];
                 }
 
-                if (Common.EmptyFiels(txtState.Text))
+                if (Common.EmptyFiels(pkState.Text))
                 {
                     BoxState.BackgroundColor = (Color)App.Current.Resources["appColor3"];
                 }
@@ -364,7 +417,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             {
                 txtFullName.Text = txtFullName.Text.Trim();
                 txtPhoneNumber.Text = txtPhoneNumber.Text.Trim();
-                txtState.Text = txtState.Text.Trim();
+                pkState.Text = pkState.Text.Trim();
 
                 if (!Common.EmptyFiels(txtBuildingNumber.Text))
                 {
@@ -656,6 +709,11 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                 if (e.ChosenSuggestion != null)
                 {
                     pkNationality.Text = e.ChosenSuggestion.ToString();
+                    var Country = Common.mCountries.Where(x => x.Name.ToLower() == pkNationality.Text.ToLower().ToString()).FirstOrDefault();
+                    if (Country != null)
+                    {
+                        GetStateByCountryId(Country.CountryId).ConfigureAwait(false);
+                    }
                 }
                 else
                 {
@@ -673,6 +731,11 @@ namespace AptDealzBuyer.Views.MainTabbedPages
         private void AutoSuggestBox_SuggestionChosen(object sender, dotMorten.Xamarin.Forms.AutoSuggestBoxSuggestionChosenEventArgs e)
         {
             pkNationality.Text = e.SelectedItem.ToString();
+            var Country = Common.mCountries.Where(x => x.Name.ToLower() == pkNationality.Text.ToLower().ToString()).FirstOrDefault();
+            if (Country != null)
+            {
+                GetStateByCountryId(Country.CountryId).ConfigureAwait(false);
+            }
         }
 
         private void AutoSuggestBox_Unfocused(object sender, FocusEventArgs e)
@@ -684,6 +747,72 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             }
         }
         #endregion
+
+
+        #region [ AutoSuggestBox-state ]
+        int stateI = 0;
+        private void AutoSuggestBox_StateTextChanged(object sender, AutoSuggestBoxTextChangedEventArgs e)
+        {
+            try
+            {
+                if (DeviceInfo.Platform == DevicePlatform.iOS)
+                {
+                    if (isFirstLoad || stateI < 2)
+                    {
+                        isFirstLoad = false;
+                        pkState.IsSuggestionListOpen = false;
+                        stateI++;
+                        return;
+                    }
+                }
+
+                if (mStatesData == null)
+                    mStatesData = new ObservableCollection<string>();
+
+                if (mStatesData != null)
+                    mStatesData.Clear();
+                if (!string.IsNullOrEmpty(pkState.Text))
+                {
+                    mStatesData = new ObservableCollection<string>(mStates.Where(x => x.Name.ToLower().Contains(pkState.Text.ToLower())).Select(x => x.Name));
+                }
+                else
+                {
+                    mStatesData = new ObservableCollection<string>(mStates.Select(x => x.Name));
+                }
+            }
+            catch (Exception ex)
+            {
+                //Common.DisplayErrorMessage("AddSellerView/AutoSuggestBox_StateTextChanged: " + ex.Message);
+            }
+        }
+
+        private void AutoSuggestBox_StateQuerySubmitted(object sender, AutoSuggestBoxQuerySubmittedEventArgs e)
+        {
+            try
+            {
+                if (e.ChosenSuggestion != null)
+                {
+                    pkState.Text = e.ChosenSuggestion.ToString();
+                }
+                else
+                {
+                    // User hit Enter from the search box. Use args.QueryText to determine what to do.
+                    pkState.Unfocus();
+                }
+            }
+            catch (Exception ex)
+            {
+                //Common.DisplayErrorMessage("AddSellerView/AutoSuggestBox_QuerySubmitted: " + ex.Message);
+            }
+        }
+
+        private void AutoSuggestBox_StateSuggestionChosen(object sender, AutoSuggestBoxSuggestionChosenEventArgs e)
+        {
+            pkState.Text = e.SelectedItem.ToString();
+        }
+        #endregion
+
+
         private void Entry_Unfocused(object sender, FocusEventArgs e)
         {
             var entry = (ExtEntry)sender;
