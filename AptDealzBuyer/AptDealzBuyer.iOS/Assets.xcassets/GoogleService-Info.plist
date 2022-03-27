@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>266079060342-t1ahp49vl2p8rodcmj3absg3st8p12f8.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.266079060342-t1ahp49vl2p8rodcmj3absg3st8p12f8</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>266079060342-1rkr89g95kttst1kvcalgmj2meu7j3a0.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCsvEOXmr0o1GGbdYNvocMOAbftprP_Rsc</string>
+	<key>GCM_SENDER_ID</key>
+	<string>266079060342</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.zartek.quotesoukbuyer</string>
+	<key>PROJECT_ID</key>
+	<string>quotesouk</string>
+	<key>STORAGE_BUCKET</key>
+	<string>quotesouk.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:266079060342:ios:0b58e53d95fd57f40a3a57</string>
+</dict>
+</plist>
