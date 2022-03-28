@@ -14,6 +14,7 @@ namespace AptDealzBuyer.Views.OtherPages
     {
         public event EventHandler PaidEvent;
         private bool isSuccess = false;
+        private bool isSuccessPushed = false;
 
         public CheckOutPage(string url)
         {
@@ -59,6 +60,8 @@ namespace AptDealzBuyer.Views.OtherPages
 
                 if (isSuccess)
                 {
+                    if (isSuccessPushed) return;
+                    isSuccessPushed = true;
                     Navigation.PopAsync();
                     if (PaidEvent != null)
                         PaidEvent(keyValuePairs, EventArgs.Empty);

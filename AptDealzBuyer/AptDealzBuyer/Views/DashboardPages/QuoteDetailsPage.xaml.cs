@@ -459,6 +459,7 @@ namespace AptDealzBuyer.Views.DashboardPages
                             var url = urls.FirstOrDefault();
                             var orderId = urls.LastOrDefault();
                             var checkoutPage = new CheckOutPage(url);
+                            var isPaid = false;
                             checkoutPage.PaidEvent += (s1, e1) =>
                             {
                                 MessagingCenter.Unsubscribe<RazorResponse>(this, Constraints.RP_PaidRevealResponse);
@@ -477,6 +478,8 @@ namespace AptDealzBuyer.Views.DashboardPages
                                     razorResponse.isPaid = false;
                                     razorResponse.OrderId = orderId;
                                 }
+                                if (isPaid) return;
+                                isPaid = true;
                                 MakeOrder(razorResponse, mOrder);
                             };
                             await Navigation.PushAsync(checkoutPage);
@@ -669,6 +672,7 @@ namespace AptDealzBuyer.Views.DashboardPages
                         var url = urls.FirstOrDefault();
                         var orderId = urls.LastOrDefault();
                         var checkoutPage = new CheckOutPage(url);
+                        var isPaid = false;
                         checkoutPage.PaidEvent += async (s1, e1) =>
                         {
                             MessagingCenter.Unsubscribe<RazorResponse>(this, Constraints.RP_PaidRevealResponse);
@@ -692,6 +696,8 @@ namespace AptDealzBuyer.Views.DashboardPages
                             mRevealSellerContact.PaymentStatus = razorResponse.isPaid ? (int)RevealContactStatus.Success : (int)RevealContactStatus.Failure;
                             mRevealSellerContact.RazorPayOrderId = razorResponse.OrderId;
                             mRevealSellerContact.RazorPayPaymentId = razorResponse.PaymentId;
+                            if (isPaid) return;
+                            isPaid = true;
                             BtnRevealContact.Text = await DependencyService.Get<IQuoteRepository>().RevealContact(mRevealSellerContact);
                         };
                         await Navigation.PushAsync(checkoutPage);
