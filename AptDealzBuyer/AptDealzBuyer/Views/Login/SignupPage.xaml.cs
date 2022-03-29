@@ -98,6 +98,10 @@ namespace AptDealzBuyer.Views.Login
             {
                 Common.DisplayErrorMessage("SignupPage/Validations: " + ex.Message);
             }
+            if (!isValid)
+            {
+                RequiredFields();
+            }
             return isValid;
         }
 
@@ -110,12 +114,12 @@ namespace AptDealzBuyer.Views.Login
                     BoxFullName.BackgroundColor = (Color)App.Current.Resources["appColor3"];
                 }
 
-                if (Common.EmptyFiels(txtEmailAddress.Text))
+                if (Common.EmptyFiels(txtEmailAddress.Text) || !txtEmailAddress.Text.IsValidEmail())
                 {
                     BoxEmailAddress.BackgroundColor = (Color)App.Current.Resources["appColor3"];
                 }
 
-                if (Common.EmptyFiels(txtPhoneNumber.Text))
+                if (Common.EmptyFiels(txtPhoneNumber.Text) || !txtEmailAddress.Text.IsValidPhone())
                 {
                     BoxPhoneNumber.BackgroundColor = (Color)App.Current.Resources["appColor3"];
                 }
