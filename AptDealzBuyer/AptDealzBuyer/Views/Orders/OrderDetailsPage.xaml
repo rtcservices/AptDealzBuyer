@@ -786,6 +786,7 @@
                                                 Margin="0"
                                                 Padding="0"
                                                 BorderWidth="1"
+                                                x:Name="BtnGrievanceButtonAccept"
                                                 Clicked="BtnRaiseGrievance_Tapped"
                                                 FontSize="{StaticResource Font15}"
                                                 HeightRequest="40"

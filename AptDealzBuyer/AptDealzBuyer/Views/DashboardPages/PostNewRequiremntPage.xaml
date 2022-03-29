@@ -307,6 +307,7 @@
                                         <ext:ExtEntry
                                             x:Name="txtQuantity"
                                             ClassId="Quantity"
+                                            MaxLength="5"
                                             Keyboard="Numeric"
                                             Style="{StaticResource entrPrimary}"
                                             Unfocused="Entry_Unfocused" />
@@ -385,6 +386,7 @@
                                             x:Name="txtEstimation"
                                             Grid.Column="1"
                                             ClassId="PriceEstimation"
+                                            MaxLength="6"
                                             Keyboard="Numeric"
                                             Style="{StaticResource entrPrimary}"
                                             Unfocused="Entry_Unfocused" />

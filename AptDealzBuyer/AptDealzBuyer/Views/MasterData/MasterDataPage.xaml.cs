@@ -22,7 +22,7 @@ namespace AptDealzBuyer.Views.MasterData
                 {
                     if (App.stoppableTimer == null)
                     {
-                        App.stoppableTimer = new StoppableTimer(TimeSpan.FromSeconds(3), () =>
+                        App.stoppableTimer = new StoppableTimer(TimeSpan.FromMinutes(1), () =>
                         {
                             GetNotificationCount();
                         });

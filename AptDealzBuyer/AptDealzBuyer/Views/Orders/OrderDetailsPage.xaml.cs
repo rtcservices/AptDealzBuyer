@@ -495,8 +495,17 @@ namespace AptDealzBuyer.Views.Orders
                 {
                     BtnTrackOrder.IsVisible = false;
                     GrdTrackOrderAndRaiseGrvInMainGrid.IsVisible = false;
+                    if (Status == (int)OrderStatus.Accepted)
+                    {
+                        GrdTrackOrderAndRaiseGrvInMainGrid.IsVisible = true;
+                        BtnGrievanceButtonAccept.IsVisible = true;
+                    }
+                    else
+                    {
+                        BtnGrievanceButtonAccept.IsVisible = false;
+                    }
                 }
-
+               
                 GrdScanQRCodeImageInMainGrid.IsVisible = false;
                 BtnShowQrCodeInMainGrid.IsVisible = false;
                 GrdWarningAndRaiseComplainInSubGrid.IsVisible = false;

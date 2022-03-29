@@ -34,11 +34,10 @@ namespace AptDealzBuyer.Views.DashboardPages
         }
         private List<State> mStates { get; set; }
         private BuyerDetails mBuyerDetail;
-        private List<Category> mCategories;
-        private List<SubCategory> mSubCategories;
-        private List<string> selectedSubCategory;
+        private List<Category> mCategories = new List<Category>();
+        private List<SubCategory> mSubCategories = new List<SubCategory>();
+        private List<string> selectedSubCategory = new List<string>();
         private ProfileAPI profileAPI;
-
         private string relativePath = string.Empty;
         private string ErrorMessage = string.Empty;
 
@@ -106,7 +105,6 @@ namespace AptDealzBuyer.Views.DashboardPages
         {
             if (IsImageUploading) return;
             base.OnAppearing();
-            await GetRequirementDetails();
         }
         private async Task GetStateByCountryId(int CountryId)
         {
@@ -149,7 +147,10 @@ namespace AptDealzBuyer.Views.DashboardPages
                 mRequirement = await DependencyService.Get<IRequirementRepository>().GetRequirementById(RequirementId);
                 if (mRequirement != null && !Common.EmptyFiels(mRequirement.RequirementId))
                 {
-
+                    if(mCategories.Count == 0)
+                    {
+                        await BindCategories();
+                    }
                     if (!Common.EmptyFiels(mRequirement.Title))
                     {
                         txtTitle.Text = mRequirement.Title;
@@ -158,12 +159,17 @@ namespace AptDealzBuyer.Views.DashboardPages
                     if (!Common.EmptyFiels(mRequirement.Category))
                     {
                         pkCategory.SelectedItem = mRequirement.Category;
-
+                        var categoryId = mCategories.Where(x => x.Name == pkCategory.SelectedItem.ToString()).FirstOrDefault()?.CategoryId;
+                        await GetSubCategoryByCategoryId(categoryId);
                     }
                     if (mRequirement.SubCategories != null)
                     {
                         selectedSubCategory = mRequirement.SubCategories;
                         subCategoryName = mRequirement.SubCategories.FirstOrDefault();
+                        if (!Common.EmptyFiels(subCategoryName))
+                        {
+                            pkSubCategory.SelectedItem = subCategoryName;
+                        }
                     }
 
                     if (!Common.EmptyFiels(mRequirement.ProductImage))
@@ -321,11 +327,12 @@ namespace AptDealzBuyer.Views.DashboardPages
                         await GetStateByCountryId(Country.CountryId);
                     }
                 }
-                mCategories = new List<Category>();
-                mSubCategories = new List<SubCategory>();
-                selectedSubCategory = new List<string>();
+                //mCategories = new List<Category>();
+                //mSubCategories = new List<SubCategory>();
+                //selectedSubCategory = new List<string>();
                 BindBillingAddress();
-                BindCategories();
+                await BindCategories();
+                await GetRequirementDetails();
                 CapitalizeWord();
                 dpExpectedDeliveryDate.NullableDate = null;
                 dpExpectedDeliveryDate.MinimumDate = DateTime.Today;
@@ -413,7 +420,7 @@ namespace AptDealzBuyer.Views.DashboardPages
             }
         }
 
-        private async void BindCategories()
+        private async Task BindCategories()
         {
             try
             {
@@ -426,7 +433,7 @@ namespace AptDealzBuyer.Views.DashboardPages
                 if (pkCategory.SelectedItem != null)
                 {
                     var categoryId = mCategories.Where(x => x.Name == pkCategory.SelectedItem.ToString()).FirstOrDefault()?.CategoryId;
-                    GetSubCategoryByCategoryId(categoryId);
+                    await GetSubCategoryByCategoryId(categoryId);
                 }
             }
             catch (Exception ex)
@@ -435,7 +442,7 @@ namespace AptDealzBuyer.Views.DashboardPages
             }
         }
 
-        private async void GetSubCategoryByCategoryId(string categoryId)
+        private async Task GetSubCategoryByCategoryId(string categoryId)
         {
             try
             {

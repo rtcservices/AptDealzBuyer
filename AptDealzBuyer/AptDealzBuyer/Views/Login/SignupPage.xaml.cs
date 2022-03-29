@@ -47,6 +47,7 @@ namespace AptDealzBuyer.Views.Login
         protected override void OnAppearing()
         {
             base.OnAppearing();
+            MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount);
 
             if (isChecked)
                 imgCheck.Source = Constraints.Img_CheckBoxChecked;
