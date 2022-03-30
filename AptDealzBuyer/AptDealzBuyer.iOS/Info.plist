@@ -63,7 +63,7 @@
 		<string>remote-notification</string>
 	</array>
 	<key>FirebaseAppDelegateProxyEnabled</key>
-	<true/>
+	<false/>
 	<key>CFBundleShortVersionString</key>
 	<string>2</string>
 	<key>CFBundleURLTypes</key>
