@@ -11,9 +11,9 @@
         <x:String x:Key="Currency">INR</x:String>
         <x:String x:Key="CountryCode">+91</x:String>
         <!--  Dev URL  -->
-        <x:String x:Key="BaseURL">https://aptdealzstaging1api.azurewebsites.net/</x:String>
+        <!--<x:String x:Key="BaseURL">https://aptdealzstaging1api.azurewebsites.net/</x:String>-->
         <!--  Production URL  -->
-        <!--<x:String x:Key="BaseURL">https://aptdealzapi.azurewebsites.net/</x:String>-->
+        <x:String x:Key="BaseURL">https://aptdealzapi.azurewebsites.net/</x:String>
 
         <x:Int32 x:Key="Version">1</x:Int32>
         <x:Int32 x:Key="PageNumber">1</x:Int32>

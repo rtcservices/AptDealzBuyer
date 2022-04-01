@@ -67,10 +67,9 @@
     <MtouchArch>ARM64</MtouchArch>
     <BuildIpa>true</BuildIpa>
     <CodesignKey>iPhone Distribution: APTDEALZ BUYER HUB AND E-TRADING PRIVATE LIMITED (5Y89QMBS2T)</CodesignKey>
-    <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
     <MtouchExtraArgs>--optimize=experimental-xforms-product-type</MtouchExtraArgs>
     <MtouchLink>SdkOnly</MtouchLink>
-    <CodesignProvision>MyDeviceProfile</CodesignProvision>
+    <CodesignProvision>QuotesoukBuyerStore</CodesignProvision>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
     <AppExtensionDebugBundleId />
