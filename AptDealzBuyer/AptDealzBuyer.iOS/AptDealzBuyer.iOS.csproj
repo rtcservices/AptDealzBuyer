@@ -27,7 +27,9 @@
     <MtouchArch>x86_64</MtouchArch>
     <MtouchLink>SdkOnly</MtouchLink>
     <MtouchDebug>true</MtouchDebug>
-    <CodesignKey>iPhone Developer</CodesignKey>
+    <CodesignKey>iPhone Developer: RESMY SIVASANKARAN BABU (3KQM2P3V27)</CodesignKey>
+    <CodesignProvision>buyerquotesoukdev</CodesignProvision>
+    <CodesignEntitlements>Info.plist</CodesignEntitlements>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
     <DebugType>none</DebugType>
@@ -37,6 +39,8 @@
     <WarningLevel>4</WarningLevel>
     <MtouchLink>None</MtouchLink>
     <MtouchArch>x86_64</MtouchArch>
+    <CodesignProvision>MyDeviceProfile</CodesignProvision>
+    <CodesignKey>iPhone Distribution: APTDEALZ BUYER HUB AND E-TRADING PRIVATE LIMITED (5Y89QMBS2T)</CodesignKey>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
     <DebugSymbols>true</DebugSymbols>
@@ -47,11 +51,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <MtouchArch>ARM64</MtouchArch>
-    <CodesignKey>iPhone Developer</CodesignKey>
+    <CodesignKey>iPhone Distribution: APTDEALZ BUYER HUB AND E-TRADING PRIVATE LIMITED (5Y89QMBS2T)</CodesignKey>
     <MtouchDebug>true</MtouchDebug>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
     <MtouchLink>SdkOnly</MtouchLink>
     <MtouchInterpreter>-all</MtouchInterpreter>
+    <CodesignProvision>MyDeviceProfile</CodesignProvision>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
     <DebugType>none</DebugType>
@@ -62,11 +67,10 @@
     <MtouchArch>ARM64</MtouchArch>
     <BuildIpa>true</BuildIpa>
     <CodesignKey>iPhone Distribution: APTDEALZ BUYER HUB AND E-TRADING PRIVATE LIMITED (5Y89QMBS2T)</CodesignKey>
-    <CodesignEntitlements>
-    </CodesignEntitlements>
+    <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
     <MtouchExtraArgs>--optimize=experimental-xforms-product-type</MtouchExtraArgs>
     <MtouchLink>SdkOnly</MtouchLink>
-    <CodesignProvision>QuotesoukBuyerStore</CodesignProvision>
+    <CodesignProvision>MyDeviceProfile</CodesignProvision>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
     <AppExtensionDebugBundleId />
