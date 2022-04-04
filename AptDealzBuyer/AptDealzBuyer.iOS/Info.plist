@@ -26,7 +26,7 @@
 	<key>CFBundleIdentifier</key>
 	<string>com.zartek.quotesoukbuyer</string>
 	<key>CFBundleVersion</key>
-	<string>3.5</string>
+	<string>3.6</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>CFBundleName</key>
@@ -41,22 +41,16 @@
 	</array>
 	<key>UIUserInterfaceStyle</key>
 	<string>Light</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Need location for geolocator plugin.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>This app needs access to the camera to take photos.</string>
+	<string>Allowing camera access will enable us to capture photos from camera to set image as profile photo, add photos for Requirements and Grievances</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>This app needs access to photos.</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>This app needs access to microphone.</string>
+	<string>Allowing camera access will enable us to pick photos to set image as profile photo, add photos for Requirements and Grievances</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>This app needs access to the photo gallery.</string>
+	<string>Allowing camera access will enable us to pick photos to set image as profile photo, add photos for Requirements and Grievances.</string>
 	<key>NSContactsUsageDescription</key>
-	<string>Contacts</string>
+	<string>Allowing Contacts access will enable us to dial sellers</string>
 	<key>NSCalendarsUsageDescription</key>
 	<string>Quotesouk need to access calendar for better application experience.</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Quotesouk need to access your location for better application experience</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>
