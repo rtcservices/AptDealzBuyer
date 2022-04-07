@@ -40,10 +40,10 @@ namespace AptDealzBuyer.Views.OtherPages
             {
                 Dictionary<string, string> keyValuePairs = new Dictionary<string, string>();
                 var data = e.Url;
-                if (data.StartsWith("https://purple-field-04c774300.azurestaticapps.net/login"))
+                if (data.StartsWith("https://quotesouk.azurewebsites.net/login"))
                 {
                     isSuccess = true;
-                    var dataResponse = data.Replace("https://purple-field-04c774300.azurestaticapps.net/login?", "");
+                    var dataResponse = data.Replace("https://quotesouk.azurewebsites.net/login?", "");
                     if (!string.IsNullOrEmpty(dataResponse))
                     {
                         var datas = dataResponse.Split('&');

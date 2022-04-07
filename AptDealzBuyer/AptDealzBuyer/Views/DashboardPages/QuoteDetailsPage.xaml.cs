@@ -450,7 +450,7 @@ namespace AptDealzBuyer.Views.DashboardPages
                                 name = Common.mBuyerDetail.FullName
                             },
                             callback_method = "get",
-                            callback_url = "https://purple-field-04c774300.azurestaticapps.net/login",
+                            callback_url = "https://quotesouk.azurewebsites.net/login",
                         };
                         RazorPayUtility razorPayUtility = new RazorPayUtility();
                         var urls = await razorPayUtility.PayViaRazor(payload, mPayLoad, Constraints.RP_UserName, Constraints.RP_Password);
@@ -663,7 +663,7 @@ namespace AptDealzBuyer.Views.DashboardPages
                             name = Common.mBuyerDetail.FullName
                         },
                         callback_method = "get",
-                        callback_url = "https://purple-field-04c774300.azurestaticapps.net/login",
+                        callback_url = "https://quotesouk.azurewebsites.net/login",
                     };
                     RazorPayUtility razorPayUtility = new RazorPayUtility();
                     var urls = await razorPayUtility.PayViaRazor(payload, mPayLoad, Constraints.RP_UserName, Constraints.RP_Password);
