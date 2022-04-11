@@ -40,19 +40,23 @@
         public const string Str_Right = "✓";
         public const string Str_Wrong = "✕";
 
-        #if RELEASE
-            #region [ Production RazorPay ]
-                public const string RP_MerchantId = "It5hmU5HcU7hvf";
-                public const string RP_UserName = "rzp_live_2qVFfyxWrnY5My";
-                public const string RP_Password = "2HQUZcva71BDl5GciQP3boJ2";
-        #endregion
-        #else
-            #region [ Dev RazorPay ]
-                    public const string RP_MerchantId = "It5hmU5HcU7hvf";
-                    public const string RP_UserName = "rzp_test_gcFbU9S9mYhR8c";
-                    public const string RP_Password = "mlyzbMv2eEuS2xhmdOWypFBm";
-            #endregion
-        #endif
+        //public const string RP_MerchantId = "It5hmU5HcU7hvf";
+        //public const string RP_UserName = "rzp_live_2qVFfyxWrnY5My";
+        //public const string RP_Password = "2HQUZcva71BDl5GciQP3boJ2";
+
+        //#if DEBUG
+        //        #region [ Production RazorPay ]
+        //        public const string RP_MerchantId = "It5hmU5HcU7hvf";
+        //                public const string RP_UserName = "rzp_live_2qVFfyxWrnY5My";
+        //                public const string RP_Password = "2HQUZcva71BDl5GciQP3boJ2";
+        //        #endregion
+        //        #else
+        //            #region [ Dev RazorPay ]
+        public const string RP_MerchantId = "It5hmU5HcU7hvf";
+        public const string RP_UserName = "rzp_test_gcFbU9S9mYhR8c";
+        public const string RP_Password = "mlyzbMv2eEuS2xhmdOWypFBm";
+        //            #endregion
+        //        #endif
 
         public const string RP_PayNow = "PayNow";
         public const string RP_PaidResponse = "PaidResponse";
@@ -183,7 +187,7 @@
         public const string InValid_Email = "Please enter valid email address!";
         public const string InValid_PhoneNumber = "Please enter valid phone number!";
         public const string InValid_OTP = "Verification code is invalid! Try again!";
-        public const string InValid_Nationality = "Please enter valid nationality!";
+        public const string InValid_Nationality = "Please enter valid country!";
         public const string InValid_State = "Please enter valid state!";
         public const string InValid_Billing_State = "Please enter valid billing state!";
         public const string InValid_Shipping_State = "Please enter valid shipping state!";
@@ -204,7 +208,7 @@
         public const string Required_Street = "Please enter street!";
         public const string Required_City = "Please enter city!";
         public const string Required_State = "Please enter state!";
-        public const string Required_Nationality = "Please enter nationality!";
+        public const string Required_Nationality = "Please enter country!";
         public const string Required_PinCode = "Please enter pincode!";
         public const string Required_Landmark = "Please enter landmark!";
 

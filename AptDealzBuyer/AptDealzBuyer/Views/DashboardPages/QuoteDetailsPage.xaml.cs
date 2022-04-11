@@ -368,7 +368,13 @@ namespace AptDealzBuyer.Views.DashboardPages
                 mOrderPayment.RazorPayOrderId = mRazorResponse.OrderId;
                 mOrderPayment.PaymentStatus = mRazorResponse.isPaid ? (int)Utility.PaymentStatus.Success : (int)Utility.PaymentStatus.Failed;
 
-                UserDialogs.Instance.ShowLoading(Constraints.Loading);
+                try
+                {
+                    UserDialogs.Instance.ShowLoading(Constraints.Loading);
+                }
+                catch (Exception ex)
+                {
+                }
                 mResponse = await orderAPI.CreateOrderPayment(mOrderPayment);
                 if (mResponse != null && mResponse.Succeeded)
                 {
@@ -431,8 +437,11 @@ namespace AptDealzBuyer.Views.DashboardPages
                         MessagingCenter.Subscribe<RazorResponse>(this, Constraints.RP_PaidResponse, async (razorResponse) =>
                         {
                             // Make Order
-                            MakeOrder(razorResponse, mOrder);
+                            MessagingCenter.Unsubscribe<RazorResponse>(this, Constraints.RP_PaidRevealResponse);
                             MessagingCenter.Unsubscribe<RazorResponse>(this, Constraints.RP_PaidResponse);
+                            
+                            MakeOrder(razorResponse, mOrder);
+                            //MessagingCenter.Unsubscribe<RazorResponse>(this, Constraints.RP_PaidResponse);
                         });
                     }
                     else
@@ -460,7 +469,7 @@ namespace AptDealzBuyer.Views.DashboardPages
                             var orderId = urls.LastOrDefault();
                             var checkoutPage = new CheckOutPage(url);
                             var isPaid = false;
-                            checkoutPage.PaidEvent += (s1, e1) =>
+                            checkoutPage.PaidEvent += async (s1, e1) =>
                             {
                                 MessagingCenter.Unsubscribe<RazorResponse>(this, Constraints.RP_PaidRevealResponse);
                                 MessagingCenter.Unsubscribe<RazorResponse>(this, Constraints.RP_PaidResponse);
@@ -477,6 +486,8 @@ namespace AptDealzBuyer.Views.DashboardPages
                                 {
                                     razorResponse.isPaid = false;
                                     razorResponse.OrderId = orderId;
+                                    var contactPopup = new PopupPages.SuccessPopup("Payment failed ", false);
+                                    await PopupNavigation.Instance.PushAsync(contactPopup);
                                 }
                                 if (isPaid) return;
                                 isPaid = true;
@@ -497,6 +508,8 @@ namespace AptDealzBuyer.Views.DashboardPages
             }
             finally
             {
+                BtnRevealContact.IsEnabled = true;
+                BtnAcceptQuote.IsEnabled = true;
                 UserDialogs.Instance.HideLoading();
             }
         }
@@ -505,6 +518,18 @@ namespace AptDealzBuyer.Views.DashboardPages
         {
             try
             {
+                if (razorResponse != null && !razorResponse.isPaid)
+                {
+                    string message = "Payment failed ";
+
+                    if (!Common.EmptyFiels(razorResponse.OrderId))
+                        message += "OrderId: " + razorResponse.OrderId + " ";
+                    if (!Common.EmptyFiels(razorResponse.PaymentId))
+                        message += "PaymentId: " + razorResponse.PaymentId + " ";
+                    var contactPopup = new PopupPages.SuccessPopup(message, false);
+                    await PopupNavigation.Instance.PushAsync(contactPopup);
+                    return;
+                }
                 razorResponse.OrderNo = mOrder.OrderId;
                 var mResponse = await OrderPayment(razorResponse);
                 if (mResponse != null && mResponse.Succeeded)
@@ -540,12 +565,10 @@ namespace AptDealzBuyer.Views.DashboardPages
                     {
                         string message = "Payment failed ";
 
-                        if (Common.EmptyFiels(razorResponse.OrderId))
+                        if (!Common.EmptyFiels(razorResponse.OrderId))
                             message += "OrderId: " + razorResponse.OrderId + " ";
-
-                        if (Common.EmptyFiels(razorResponse.PaymentId))
+                        if (!Common.EmptyFiels(razorResponse.PaymentId))
                             message += "PaymentId: " + razorResponse.PaymentId + " ";
-
                         var contactPopup = new PopupPages.SuccessPopup(message, false);
                         await PopupNavigation.Instance.PushAsync(contactPopup);
                     }
@@ -619,33 +642,43 @@ namespace AptDealzBuyer.Views.DashboardPages
 
                 if (DeviceInfo.Platform == DevicePlatform.Android)
                 {
+                    RevealSellerContact mRevealSellerContact = new RevealSellerContact();
+                    mRevealSellerContact.QuoteId = QuoteId;
+                    mRevealSellerContact.PaymentStatus = (int)RevealContactStatus.Success;
+                    mRevealSellerContact.RazorPayOrderId =  Guid.NewGuid().ToString();
+                    mRevealSellerContact.RazorPayPaymentId = Guid.NewGuid().ToString();
+
                     MessagingCenter.Send<RazorPayload>(payload, Constraints.RP_RevealPayNow);
+                    BtnRevealContact.IsEnabled = false;
+                    BtnAcceptQuote.IsEnabled = false;
                     MessagingCenter.Subscribe<RazorResponse>(this, Constraints.RP_PaidRevealResponse, async (razorResponse) =>
                      {
+                         MessagingCenter.Unsubscribe<RazorResponse>(this, Constraints.RP_PaidRevealResponse);
+                         MessagingCenter.Unsubscribe<RazorResponse>(this, Constraints.RP_PaidResponse);
                          if (razorResponse != null && !razorResponse.isPaid)
                          {
                              string message = "Payment failed ";
 
                              if (!Common.EmptyFiels(razorResponse.OrderId))
                                  message += "OrderId: " + razorResponse.OrderId + " ";
-
                              if (!Common.EmptyFiels(razorResponse.PaymentId))
                                  message += "PaymentId: " + razorResponse.PaymentId + " ";
-
-                             if (message != null)
-                                 Common.DisplayErrorMessage(message);
+                             var contactPopup = new PopupPages.SuccessPopup(message, false);
+                             await PopupNavigation.Instance.PushAsync(contactPopup);
+                             return;
                          }
 
-
-                         RevealSellerContact mRevealSellerContact = new RevealSellerContact();
+                         mRevealSellerContact = new RevealSellerContact();
                          mRevealSellerContact.QuoteId = QuoteId;
                          mRevealSellerContact.PaymentStatus = razorResponse.isPaid ? (int)RevealContactStatus.Success : (int)RevealContactStatus.Failure;
                          mRevealSellerContact.RazorPayOrderId = razorResponse.OrderId;
                          mRevealSellerContact.RazorPayPaymentId = razorResponse.PaymentId;
-
-                         BtnRevealContact.Text = await DependencyService.Get<IQuoteRepository>().RevealContact(mRevealSellerContact);
-
-                         MessagingCenter.Unsubscribe<RazorResponse>(this, Constraints.RP_PaidRevealResponse);
+                         //if (razorResponse.isPaid)
+                         var phNo = await DependencyService.Get<IQuoteRepository>().RevealContact(mRevealSellerContact);
+                         BtnRevealContact.IsEnabled = true;
+                         BtnRevealContact.Text = phNo;
+                         BtnAcceptQuote.IsEnabled = true;
+                         GetQuoteDetails();
                      });
                 }
                 else
@@ -690,6 +723,9 @@ namespace AptDealzBuyer.Views.DashboardPages
                             {
                                 razorResponse.isPaid = false;
                                 razorResponse.OrderId = orderId;
+
+                                var contactPopup = new PopupPages.SuccessPopup("Payment failed ", false);
+                                await PopupNavigation.Instance.PushAsync(contactPopup);
                             }
                             RevealSellerContact mRevealSellerContact = new RevealSellerContact();
                             mRevealSellerContact.QuoteId = QuoteId;
@@ -698,7 +734,14 @@ namespace AptDealzBuyer.Views.DashboardPages
                             mRevealSellerContact.RazorPayPaymentId = razorResponse.PaymentId;
                             if (isPaid) return;
                             isPaid = true;
-                            BtnRevealContact.Text = await DependencyService.Get<IQuoteRepository>().RevealContact(mRevealSellerContact);
+
+                            if (razorResponse.isPaid)
+                            {
+                                BtnRevealContact.Text = await DependencyService.Get<IQuoteRepository>().RevealContact(mRevealSellerContact);
+                                rfView.IsRefreshing = true;
+                                await GetQuoteDetails();
+                                rfView.IsRefreshing = false;
+                            }
                         };
                         await Navigation.PushAsync(checkoutPage);
                     }
@@ -707,10 +750,13 @@ namespace AptDealzBuyer.Views.DashboardPages
             }
             catch (Exception ex)
             {
+                IsBusy = false;
                 Common.DisplayErrorMessage("QuoteDetailsPage/RevealSellerContact: " + ex.Message);
             }
             finally
             {
+                BtnRevealContact.IsEnabled = true;
+                BtnAcceptQuote.IsEnabled = true;
                 UserDialogs.Instance.HideLoading();
             }
         }
@@ -816,6 +862,7 @@ namespace AptDealzBuyer.Views.DashboardPages
             catch (Exception ex)
             {
                 Common.DisplayErrorMessage("QuoteDetailsPage/RefreshView_Refreshing: " + ex.Message);
+                rfView.IsRefreshing = false;
             }
         }
 

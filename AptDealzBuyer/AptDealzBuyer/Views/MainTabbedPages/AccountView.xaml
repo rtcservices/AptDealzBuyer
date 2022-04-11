@@ -312,7 +312,7 @@
 
                                 <StackLayout Grid.Row="8" Spacing="{OnPlatform Android=0, iOS=7}">
                                     <StackLayout HorizontalOptions="StartAndExpand" Orientation="Horizontal">
-                                        <Label Style="{StaticResource lblPrimary13}" Text="Nationality" />
+                                        <Label Style="{StaticResource lblPrimary13}" Text="Country" />
                                         <Label Text="*" TextColor="{StaticResource appColor2}" />
                                     </StackLayout>
 

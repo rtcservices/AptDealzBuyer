@@ -20,7 +20,13 @@ namespace AptDealzBuyer.Services
             string PhoneNumber = Constraints.Str_RevealContact;
             try
             {
-                UserDialogs.Instance.ShowLoading(Constraints.Loading);
+                try
+                {
+                    UserDialogs.Instance.ShowLoading(Constraints.Loading);
+                }
+                catch(Exception ex)
+                {
+                }
                 var mResponse = await quoteAPI.RevealSellerContact(mRevealSellerContact);
                 if (mResponse != null && mResponse.Succeeded)
                 {

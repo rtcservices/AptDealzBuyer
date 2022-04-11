@@ -36,13 +36,21 @@ namespace AptDealzBuyer.Utility
         #region [ DisplayMessages ]
         public static void DisplayErrorMessage(string errormessage)
         {
-            UserDialogs.Instance.Toast(new ToastConfig(errormessage)
+            try
             {
-                Position = ToastPosition.Top,
-                BackgroundColor = (Color)App.Current.Resources["ErrorBackground"],
-                MessageTextColor = (Color)App.Current.Resources["appColor6"],
-                Duration = new TimeSpan(0, 0, 5),
-            });
+                UserDialogs.Instance.Toast(new ToastConfig(errormessage)
+                {
+                    Position = ToastPosition.Top,
+                    BackgroundColor = (Color)App.Current.Resources["ErrorBackground"],
+                    MessageTextColor = (Color)App.Current.Resources["appColor6"],
+                    Duration = new TimeSpan(0, 0, 5),
+                });
+            }
+            catch (Exception e)
+            {
+                //use a log message
+            }
+           
         }
 
         public static void DisplaySuccessMessage(string successmessage)

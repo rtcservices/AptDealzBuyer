@@ -66,13 +66,13 @@
     <AndroidSigningStorePass>zar$859Tek#quotesBuy452</AndroidSigningStorePass>
     <AndroidSigningKeyPass>zar$859Tek#quotesBuy452</AndroidSigningKeyPass>
     <AndroidCreatePackagePerAbi>false</AndroidCreatePackagePerAbi>
-    <AndroidPackageFormat>aab</AndroidPackageFormat>
+    <AndroidPackageFormat>apk</AndroidPackageFormat>
     <AndroidUseAapt2>true</AndroidUseAapt2>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Android" />
     <Reference Include="RazorPayBindingForXamarin">
-      <HintPath>DLL\RazorPayBindingForXamarin.dll</HintPath>
+      <HintPath>DLL\1.6.19\RazorPayBindingForXamarin.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -152,6 +152,9 @@
     <PackageReference Include="Xamarin.Essentials" Version="1.6.1" />
     <PackageReference Include="Xamarin.Forms.PancakeView">
       <Version>2.3.0.763-beta</Version>
+    </PackageReference>
+    <PackageReference Include="Xamarin.GooglePlayServices.Auth.Api.Phone">
+      <Version>117.1.0</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.GooglePlayServices.Base">
       <Version>71.1610.0</Version>
@@ -419,6 +422,8 @@
     <AndroidResource Include="Resources\drawable\iconGreenDownArrow.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="DLL\1.5.14\RazorPayBindingForXamarin.dll" />
+    <Content Include="DLL\1.6.19\RazorPayBindingForXamarin.dll" />
     <Content Include="DLL\RazorPayBindingForXamarin.dll" />
     <AndroidResource Include="Resources\drawable\iconSad.png" />
     <AndroidResource Include="Resources\drawable\iconVideo.png" />
