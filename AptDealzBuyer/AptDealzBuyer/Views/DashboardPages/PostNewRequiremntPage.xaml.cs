@@ -32,6 +32,17 @@ namespace AptDealzBuyer.Views.DashboardPages
                 OnPropertyChanged("mStatesData");
             }
         }
+
+        private ObservableCollection<string> _mStatesSaData;
+        public ObservableCollection<string> mStatesSaData
+        {
+            get { return _mStatesSaData; }
+            set
+            {
+                _mStatesSaData = value;
+                OnPropertyChanged("mStatesSaData");
+            }
+        }
         private List<State> mStates { get; set; }
         private BuyerDetails mBuyerDetail;
         private List<Category> mCategories = new List<Category>();
@@ -1619,18 +1630,18 @@ namespace AptDealzBuyer.Views.DashboardPages
                     }
                 }
 
-                if (mStatesData == null)
-                    mStatesData = new ObservableCollection<string>();
+                if (mStatesSaData == null)
+                    mStatesSaData = new ObservableCollection<string>();
 
                 if (mStatesData != null)
                     mStatesData.Clear();
                 if (!string.IsNullOrEmpty(pkSAState.Text))
                 {
-                    mStatesData = new ObservableCollection<string>(mStates.Where(x => x.Name.ToLower().Contains(pkSAState.Text.ToLower())).Select(x => x.Name));
+                    mStatesSaData = new ObservableCollection<string>(mStates.Where(x => x.Name.ToLower().Contains(pkSAState.Text.ToLower())).Select(x => x.Name));
                 }
                 else
                 {
-                    mStatesData = new ObservableCollection<string>(mStates.Select(x => x.Name));
+                    mStatesSaData = new ObservableCollection<string>(mStates.Select(x => x.Name));
                 }
             }
             catch (Exception ex)

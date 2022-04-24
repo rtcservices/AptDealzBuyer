@@ -26,7 +26,7 @@
 	<key>CFBundleIdentifier</key>
 	<string>com.zartek.quotesoukbuyer</string>
 	<key>CFBundleVersion</key>
-	<string>3.7</string>
+	<string>3.8</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>CFBundleName</key>
@@ -88,5 +88,7 @@
 			<string>Editor</string>
 		</dict>
 	</array>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Quotesouk need to access your location for better user experience</string>
 </dict>
 </plist>

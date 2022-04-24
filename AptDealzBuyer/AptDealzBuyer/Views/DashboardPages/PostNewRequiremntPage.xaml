@@ -902,7 +902,7 @@
                                                 Margin="0,0"
                                                 ClassId="SAState"
                                                 HorizontalOptions="FillAndExpand"
-                                                ItemsSource="{Binding mStatesData, Mode=TwoWay, Source={x:Reference page1}}"
+                                                ItemsSource="{Binding mStatesSaData, Mode=TwoWay, Source={x:Reference page1}}"
                                                 PlaceholderTextColor="{StaticResource appColor7}"
                                                 QuerySubmitted="AutoSuggestBox_SaStateQuerySubmitted"
                                                 SuggestionChosen="AutoSuggestBox_SaStateSuggestionChosen"
