@@ -91,7 +91,22 @@ namespace AptDealzBuyer.Views.DashboardPages
             }
             return true;
         }
-
+        private async void GetNotificationCount()
+        {
+            try
+            {
+                var notificationCount = await DependencyService.Get<INotificationRepository>().GetNotificationCount();
+                if (!Common.EmptyFiels(notificationCount))
+                {
+                    Common.NotificationCount = notificationCount;
+                    MessagingCenter.Send<string>(Common.NotificationCount, Constraints.Str_NotificationCount);
+                }
+            }
+            catch (Exception ex)
+            {
+                //  Common.DisplayErrorMessage("MasterDataPage/GetNotificationCount: " + ex.Message);
+            }
+        }
         private async Task GetNotification()
         {
             try
@@ -103,6 +118,7 @@ namespace AptDealzBuyer.Views.DashboardPages
                         Common.Token = Settings.UserToken;
                     }
                 }
+                GetNotificationCount();
 
                 NotificationAPI notificationAPI = new NotificationAPI();
                 UserDialogs.Instance.ShowLoading(Constraints.Loading);

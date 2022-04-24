@@ -1,5 +1,6 @@
 ﻿using AptDealzBuyer.Interfaces;
 using AptDealzBuyer.iOS.Service;
+using AptDealzBuyer.Utility;
 using DLToolkit.Forms.Controls;
 using FFImageLoading.Forms.Platform;
 using Foundation;
@@ -109,6 +110,10 @@ namespace AptDealzBuyer.iOS
                 FirebasePushNotificationManager.DidReceiveMessage(userInfo);
                 completionHandler(UIBackgroundFetchResult.NewData);
                 ProcessNotification(userInfo);
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    MessagingCenter.Send<string>(string.Empty, Constraints.NotificationReceived);
+                });
             }
             catch (Exception ex)
             {

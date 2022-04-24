@@ -18,7 +18,7 @@ namespace AptDealzBuyer.Utility
         public static Model.Request.BuyerDetails mBuyerDetail { get; set; }
         public static List<Country> mCountries { get; set; }
         public static string Token { get; set; }
-        public static string NotificationCount { get; set; }
+        public static string NotificationCount { get; set; } = string.Empty;
         public static string PreviousNotificationCount { get; set; }
         public static string TempNotificationCount { get; set; }       
         #endregion
@@ -299,14 +299,15 @@ namespace AptDealzBuyer.Utility
             Settings.UserId = string.Empty;
             Settings.LoginTrackingKey = string.Empty;
             Settings.IsNotification = false;
+            NotificationCount = string.Empty;
             mBuyerDetail = null;
             Token = string.Empty;
             mCountries = null;            
 
             //Settings.fcm_token = string.Empty; don't empty this token
             App.Current.MainPage = new NavigationPage(new Views.Login.LoginPage());
-            if (App.stoppableTimer != null)
-                App.stoppableTimer.Stop();
+            //if (App.stoppableTimer != null)
+            //    App.stoppableTimer.Stop();
         }
         #endregion
     }

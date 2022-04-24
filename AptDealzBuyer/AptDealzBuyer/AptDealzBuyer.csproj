@@ -19,6 +19,7 @@
     <PackageReference Include="Plugin.FirebasePushNotification" Version="3.3.10" />
     <PackageReference Include="Plugin.LocalNotification" Version="5.0.6" />
     <PackageReference Include="Plugin.Permissions" Version="6.0.1" />
+    <PackageReference Include="Plugin.StoreReview" Version="3.3.1" />
     <PackageReference Include="Polly" Version="7.2.2" />
     <PackageReference Include="Rg.Plugins.Popup" Version="2.0.0.11" />
     <PackageReference Include="SkiaRate.Forms" Version="0.5.2-pre" />

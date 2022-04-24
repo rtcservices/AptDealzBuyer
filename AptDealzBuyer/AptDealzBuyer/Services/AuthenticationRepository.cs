@@ -78,6 +78,7 @@ namespace AptDealzBuyer.Services
                             Common.DisplayErrorMessage(mResponse.Message);
                     }
                     MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount);
+                    MessagingCenter.Unsubscribe<string>(this, Constraints.NotificationReceived);
                     Common.ClearAllData();
                 }
             }

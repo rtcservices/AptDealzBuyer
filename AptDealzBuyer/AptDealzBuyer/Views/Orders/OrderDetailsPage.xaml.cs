@@ -5,10 +5,12 @@ using AptDealzBuyer.Model.Request;
 using AptDealzBuyer.Repository;
 using AptDealzBuyer.Utility;
 using AptDealzBuyer.Views.DashboardPages;
+using Plugin.StoreReview;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -782,6 +784,39 @@ namespace AptDealzBuyer.Views.Orders
 
         #region [ Rate AptDealz ]
         bool isRateAptDealzEnable = true;
+        private Task RateApplicationInApp()
+        {
+            if (CrossStoreReview.IsSupported)
+            {
+                Device.BeginInvokeOnMainThread(async () =>
+                {
+                    await CrossStoreReview.Current.RequestReview(true);
+                });
+
+            }
+
+            return Task.CompletedTask;
+        }
+        private Task RateApplicationOnStore()
+        {
+            if (CrossStoreReview.IsSupported)
+            {
+                Device.BeginInvokeOnMainThread(async () =>
+                {
+                    if (DeviceInfo.Platform == DevicePlatform.Android)
+                    {
+                        CrossStoreReview.Current.OpenStoreReviewPage("com.zartek.quotesouk.buyer");
+                    }
+                    else
+                    {
+                        CrossStoreReview.Current.OpenStoreReviewPage("1616384508");
+                    }
+                });
+                Preferences.Set("application_rated", true);
+            }
+
+            return Task.CompletedTask;
+        }
         private async void BtnRateAptDealz_Clicked(object sender, EventArgs e)
         {
             if (isRateAptDealzEnable)
@@ -789,7 +824,7 @@ namespace AptDealzBuyer.Views.Orders
                 try
                 {
                     isRateAptDealzEnable = false;
-                    await Common.BindAnimation(button: BtnRateAptDealz);
+                    await Task.Run(() => RateApplicationOnStore());
                     isRateAptDealzEnable = true;
                 }
                 catch (Exception ex)

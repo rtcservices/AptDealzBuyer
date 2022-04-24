@@ -86,6 +86,7 @@
 
                 <StackLayout Grid.Row="0" Padding="20,15">
                     <Label Style="{StaticResource lblHeader}" Text="Dashboard" />
+                    <Label x:Name="lblStag" IsVisible="false" Style="{StaticResource lblHeader}" Text="Stagging" />
                 </StackLayout>
 
                 <flv:FlowListView

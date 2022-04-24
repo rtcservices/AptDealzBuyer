@@ -976,7 +976,7 @@
                                                 Style="{StaticResource lblLight}"
                                                 Text="Rate AptDealz" />
 
-                                            <skiaRate:RatingView
+                                            <!--<skiaRate:RatingView
                                                 x:Name="rvAptDealz"
                                                 Grid.Row="2"
                                                 Grid.Column="1"
@@ -987,16 +987,17 @@
                                                                                   Light={StaticResource appColor1}}"
                                                 RatingType="Half"
                                                 VerticalOptions="FillAndExpand"
-                                                Value="0" />
+                                                Value="0" />-->
 
                                             <Button
                                                 x:Name="BtnRateAptDealz"
                                                 Grid.Row="2"
-                                                Grid.Column="2"
+                                                Grid.ColumnSpan="2"
+                                                Grid.Column="1"
                                                 Padding="10,0"
                                                 Clicked="BtnRateAptDealz_Clicked"
                                                 HeightRequest="35"
-                                                HorizontalOptions="EndAndExpand"
+                                                HorizontalOptions="FillAndExpand"
                                                 Style="{StaticResource btnBorder}"
                                                 Text="Rate"
                                                 VerticalOptions="Center" />

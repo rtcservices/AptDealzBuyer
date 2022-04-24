@@ -6,6 +6,7 @@ using Android.Support.V4.App;
 using AptDealzBuyer.Droid.DependencService;
 using AptDealzBuyer.Utility;
 using System;
+using Xamarin.Forms;
 using AndroidApp = Android.App.Application;
 
 [assembly: Xamarin.Forms.Dependency(typeof(NotificationHelper))]
@@ -51,6 +52,7 @@ namespace AptDealzBuyer.Droid.DependencService
         {
             try
             {
+
                 if (Utility.Settings.IsMuteMode)
                 {
                     return 0;
@@ -73,7 +75,7 @@ namespace AptDealzBuyer.Droid.DependencService
                     .SetContentIntent(pendingIntent)
                     .SetContentTitle(title)
                     .SetContentText(message)
-                    .SetSmallIcon(Resource.Drawable.iconLogo);
+                    .SetSmallIcon(Resource.Drawable.icon);
 
                 var notificationsound = MainActivity.DefaultNotificationSoundURI;
                 if (notificationsound != null)

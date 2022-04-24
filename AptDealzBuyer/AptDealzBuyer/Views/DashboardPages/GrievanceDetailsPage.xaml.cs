@@ -30,12 +30,22 @@ namespace AptDealzBuyer.Views.DashboardPages
                 if (DeviceInfo.Platform == DevicePlatform.Android)
                     txtMessage.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
 
+                if (!Common.EmptyFiels(Common.NotificationCount))
+                {
+                    lblNotificationCount.Text = Common.NotificationCount;
+                    frmNotification.IsVisible = true;
+                }
+                else
+                {
+                    frmNotification.IsVisible = false;
+                    lblNotificationCount.Text = string.Empty;
+                }
                 MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount);
                 MessagingCenter.Subscribe<string>(this, Constraints.Str_NotificationCount, (count) =>
                 {
                     if (!Common.EmptyFiels(Common.NotificationCount))
                     {
-                        lblNotificationCount.Text = count;
+                        lblNotificationCount.Text = Common.NotificationCount;
                         frmNotification.IsVisible = true;
                     }
                     else
@@ -58,7 +68,6 @@ namespace AptDealzBuyer.Views.DashboardPages
             GC.Collect();
             GC.SuppressFinalize(this);
         }
-
         protected override void OnDisappearing()
         {
             base.OnDisappearing();

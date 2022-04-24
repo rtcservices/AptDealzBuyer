@@ -113,6 +113,7 @@
                                 Grid.Row="0"
                                 HorizontalOptions="FillAndExpand"
                                 LineBreakMode="WordWrap"
+                                x:Name="lblDeactivateText"
                                 Style="{StaticResource lblLight}"
                                 Text=""
                                 VerticalOptions="FillAndExpand" />

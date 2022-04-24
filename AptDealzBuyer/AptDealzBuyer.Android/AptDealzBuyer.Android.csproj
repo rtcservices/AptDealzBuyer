@@ -68,6 +68,7 @@
     <AndroidCreatePackagePerAbi>false</AndroidCreatePackagePerAbi>
     <AndroidPackageFormat>apk</AndroidPackageFormat>
     <AndroidUseAapt2>true</AndroidUseAapt2>
+    <AndroidEnableMultiDex>false</AndroidEnableMultiDex>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Android" />
@@ -181,6 +182,7 @@
     <Compile Include="DependencService\OpenWriteSettings.cs" />
     <Compile Include="DependencService\PhoneDialer.cs" />
     <Compile Include="DependencService\RingtoneManagerService.cs" />
+    <Compile Include="FirebaseJobService.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="MainApplication.cs" />
     <Compile Include="MyFirebaseIIDService.cs" />

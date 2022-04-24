@@ -65,7 +65,8 @@ namespace AptDealzBuyer.Views.DashboardPages
                 BindProperties();
                 this.mRequirement = new Requirement();
 
-                MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount); MessagingCenter.Subscribe<string>(this, Constraints.Str_NotificationCount, (count) =>
+                MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount); 
+                MessagingCenter.Subscribe<string>(this, Constraints.Str_NotificationCount, (count) =>
                    {
                        if (!Common.EmptyFiels(Common.NotificationCount))
                        {
@@ -336,6 +337,7 @@ namespace AptDealzBuyer.Views.DashboardPages
                 CapitalizeWord();
                 dpExpectedDeliveryDate.NullableDate = null;
                 dpExpectedDeliveryDate.MinimumDate = DateTime.Today;
+                dpExpectedDeliveryDate.MaximumDate = DateTime.Today.AddDays(30);
             }
             catch (Exception ex)
             {

@@ -24,7 +24,7 @@ namespace AptDealzBuyer.Views.MainTabbedPages
             {
                 if (!Common.EmptyFiels(Common.NotificationCount))
                 {
-                    lblNotificationCount.Text = count;
+                    lblNotificationCount.Text = Common.NotificationCount;
                     frmNotification.IsVisible = true;
                 }
                 else
@@ -33,6 +33,19 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                     lblNotificationCount.Text = string.Empty;
                 }
             });
+        }
+        protected override void OnBindingContextChanged()
+        {
+            if (!Common.EmptyFiels(Common.NotificationCount))
+            {
+                lblNotificationCount.Text = Common.NotificationCount;
+                frmNotification.IsVisible = true;
+            }
+            else
+            {
+                frmNotification.IsVisible = false;
+                lblNotificationCount.Text = string.Empty;
+            }
         }
         #endregion
 
@@ -58,8 +71,31 @@ namespace AptDealzBuyer.Views.MainTabbedPages
                     new HomeMenu { MenuId = 12, MenuImage = Constraints.Img_FAQHelp,              UiName = "FAQ & Help",                  MenuName = Constraints.Str_FAQHelp              },
                     new HomeMenu { MenuId = 13, MenuImage = Constraints.Img_WeSupport,            UiName = "We Support",                  MenuName = Constraints.Str_WeSupport            },
                 };
-
+                if (!Common.EmptyFiels(Common.NotificationCount))
+                {
+                    lblNotificationCount.Text = Common.NotificationCount;
+                    frmNotification.IsVisible = true;
+                }
+                else
+                {
+                    frmNotification.IsVisible = false;
+                    lblNotificationCount.Text = string.Empty;
+                }
                 flvMenus.FlowItemsSource = HomeMenus.ToList();
+                if(App.Current.Resources["BaseURL"].ToString().Contains("https://aptdealzstaging1api.azurewebsites.net"))
+                {
+                    lblStag.IsVisible = true;
+                    lblStag.Text = "Stagging";
+                }
+                else if (App.Current.Resources["BaseURL"].ToString().Contains("https://aptdealzapidev.azurewebsites.net"))
+                {
+                    lblStag.IsVisible = true;
+                    lblStag.Text = "Dev";
+                }
+                else
+                {
+                    lblStag.IsVisible = false;
+                }
             }
             catch (Exception ex)
             {

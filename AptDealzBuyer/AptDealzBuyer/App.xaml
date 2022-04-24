@@ -96,7 +96,7 @@
 
         <Style x:Key="lblNotification" TargetType="Label">
             <Setter Property="TextColor" Value="{AppThemeBinding Dark={StaticResource appColor6}, Light={StaticResource appColor6}}" />
-            <Setter Property="FontSize" Value="13" />
+            <Setter Property="FontSize" Value="11" />
             <Setter Property="VerticalTextAlignment" Value="Center" />
             <Setter Property="VerticalOptions" Value="FillAndExpand" />
             <Setter Property="HorizontalTextAlignment" Value="Center" />
@@ -164,7 +164,7 @@
             <Setter Property="VerticalOptions" Value="StartAndExpand" />
             <Setter Property="HorizontalOptions" Value="CenterAndExpand" />
             <Setter Property="HeightRequest" Value="20" />
-            <Setter Property="WidthRequest" Value="20" />
+            <Setter Property="WidthRequest" Value="100" />
         </Style>
         <!--#endregion-->
 

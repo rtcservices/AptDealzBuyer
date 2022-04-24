@@ -16,20 +16,48 @@ namespace AptDealzBuyer.Views.MasterData
             try
             {
                 BindNavigation();
-
-                var backgroundWorker = new BackgroundWorker();
-                backgroundWorker.DoWork += delegate
+                GetNotificationCount();
+                MessagingCenter.Unsubscribe<string>(this, Constraints.NotificationReceived);
+                MessagingCenter.Subscribe<string>(this, Constraints.NotificationReceived, (response) =>
                 {
-                    if (App.stoppableTimer == null)
+                    //GetNotificationCount();
+                    if (!string.IsNullOrWhiteSpace(Common.NotificationCount))
                     {
-                        App.stoppableTimer = new StoppableTimer(TimeSpan.FromMinutes(1), () =>
+                        try
                         {
-                            GetNotificationCount();
-                        });
+                            var cnt = Convert.ToInt32(Common.NotificationCount) + 1;
+                            Common.NotificationCount = cnt.ToString();
+                        }
+                        catch
+                        {
+                        }
                     }
-                    App.stoppableTimer.Start();
-                };
-                backgroundWorker.RunWorkerAsync();
+                    MessagingCenter.Send<string>(Common.NotificationCount, Constraints.Str_NotificationCount);
+                });
+
+                //var backgroundWorker = new BackgroundWorker();
+                //backgroundWorker.DoWork += delegate
+                //{
+                //    if (App.stoppableTimer == null)
+                //    {
+                //        App.stoppableTimer = new StoppableTimer(TimeSpan.FromMinutes(1), () =>
+                //        {
+                //            GetNotificationCount();
+                //        });
+                //    }
+                //    App.stoppableTimer.Start();
+                //};
+                //backgroundWorker.RunWorkerAsync();
+                //if (App.stoppableTimer == null)
+                //{
+                //    App.stoppableTimer = new StoppableTimer(TimeSpan.FromMinutes(1), () =>
+                //    {
+                //        GetNotificationCount();
+                //    });
+                //}
+                //App.stoppableTimer.Start();
+
+
             }
             catch (Exception ex)
             {
@@ -84,7 +112,7 @@ namespace AptDealzBuyer.Views.MasterData
             }
             catch (Exception ex)
             {
-                Common.DisplayErrorMessage("MasterDataPage/GetNotificationCount: " + ex.Message);
+              //  Common.DisplayErrorMessage("MasterDataPage/GetNotificationCount: " + ex.Message);
             }
         }
     }

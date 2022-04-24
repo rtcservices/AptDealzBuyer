@@ -62,6 +62,7 @@
         public const string RP_PaidResponse = "PaidResponse";
         public const string RP_RevealPayNow = "RevealPayNow";
         public const string RP_PaidRevealResponse = "PaidRevealResponse";
+        public const string NotificationReceived = "NotificationReceived";
         #endregion
 
         #region [ Images ]

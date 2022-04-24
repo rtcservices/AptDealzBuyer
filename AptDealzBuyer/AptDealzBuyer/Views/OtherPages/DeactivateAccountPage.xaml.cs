@@ -1,4 +1,7 @@
-﻿using AptDealzBuyer.Repository;
+﻿using Acr.UserDialogs;
+using AptDealzBuyer.API;
+using AptDealzBuyer.Model.Reponse;
+using AptDealzBuyer.Repository;
 using AptDealzBuyer.Utility;
 using System;
 using Xamarin.Essentials;
@@ -18,11 +21,23 @@ namespace AptDealzBuyer.Views.OtherPages
             if (DeviceInfo.Platform == DevicePlatform.Android)
                 txtReason.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
 
-            MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount); MessagingCenter.Subscribe<string>(this, Constraints.Str_NotificationCount, (count) =>
+            if (!Common.EmptyFiels(Common.NotificationCount))
+            {
+                lblNotificationCount.Text = Common.NotificationCount;
+                frmNotification.IsVisible = true;
+            }
+            else
+            {
+                frmNotification.IsVisible = false;
+                lblNotificationCount.Text = string.Empty;
+            }
+            GetDeactivateTerms();
+            MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount); 
+            MessagingCenter.Subscribe<string>(this, Constraints.Str_NotificationCount, (count) =>
             {
                 if (!Common.EmptyFiels(Common.NotificationCount))
                 {
-                    lblNotificationCount.Text = count;
+                    lblNotificationCount.Text = Common.NotificationCount;
                     frmNotification.IsVisible = true;
                 }
                 else
@@ -45,6 +60,30 @@ namespace AptDealzBuyer.Views.OtherPages
         {
             base.OnDisappearing();
             Dispose();
+        }
+
+        private async void GetDeactivateTerms()
+        {
+            try
+            {
+                UserDialogs.Instance.ShowLoading(Constraints.Loading);
+                AppSettingsAPI appSettingsAPI = new AppSettingsAPI();
+                var mResponse = await appSettingsAPI.GetDeactivateTermsBuyerApp();
+                UserDialogs.Instance.HideLoading();
+
+                if (mResponse != null && mResponse.Succeeded)
+                {
+                    var deactivateTerms = (string)mResponse.Data;
+                    if (deactivateTerms != null)
+                    {
+                        lblDeactivateText.Text = deactivateTerms;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.DisplayErrorMessage("Deactivate Terms: " + ex.Message);
+            }
         }
         #endregion
 
@@ -113,5 +152,7 @@ namespace AptDealzBuyer.Views.OtherPages
             Common.MasterData.Detail = new NavigationPage(new MainTabbedPages.MainTabbedPage(Constraints.Str_Home));
         }
         #endregion
+
+
     }
 }

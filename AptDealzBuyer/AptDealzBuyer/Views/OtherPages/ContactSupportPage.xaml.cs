@@ -55,12 +55,32 @@ namespace AptDealzBuyer.Views.OtherPages
                 if (DeviceInfo.Platform == DevicePlatform.Android)
                     txtMessage.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
 
-                MessagingCenter.Unsubscribe<string>(this, Constraints.Str_NotificationCount);
-                MessagingCenter.Subscribe<string>(this, Constraints.Str_NotificationCount, (count) =>
+                if (!Common.EmptyFiels(Common.NotificationCount))
+                {
+                    lblNotificationCount.Text = Common.NotificationCount;
+                    frmNotification.IsVisible = true;
+
+                    tempCount = Common.NotificationCount;
+                }
+                else
+                {
+                    frmNotification.IsVisible = false;
+                    lblNotificationCount.Text = string.Empty;
+                }
+
+               
+                Common.TempNotificationCount = tempCount;
+                var backgroundWorker = new BackgroundWorker();
+                backgroundWorker.DoWork += async delegate
+                {
+                    await GetMessages();
+                };
+                MessagingCenter.Unsubscribe<string>(this, Constraints.NotificationReceived);
+                MessagingCenter.Subscribe<string>(this, Constraints.NotificationReceived, async (count) =>
                 {
                     if (!Common.EmptyFiels(Common.NotificationCount))
                     {
-                        lblNotificationCount.Text = count;
+                        lblNotificationCount.Text = Common.NotificationCount;
                         frmNotification.IsVisible = true;
 
                         tempCount = Common.NotificationCount;
@@ -70,35 +90,11 @@ namespace AptDealzBuyer.Views.OtherPages
                         frmNotification.IsVisible = false;
                         lblNotificationCount.Text = string.Empty;
                     }
+                    await GetMessages();
+                    //backgroundWorker.RunWorkerAsync();
                 });
 
-                Common.TempNotificationCount = tempCount;
-
-                var backgroundWorker = new BackgroundWorker();
-                backgroundWorker.DoWork += async delegate
-                 {
-                     await GetMessages();
-
-                     if (App.chatStoppableTimer != null)
-                     {
-                         App.chatStoppableTimer.Stop();
-                         App.chatStoppableTimer = null;
-                     }
-
-                     if (App.chatStoppableTimer == null)
-                     {
-                         App.chatStoppableTimer = new StoppableTimer(TimeSpan.FromSeconds(1), async () =>
-                         {
-                             if (Common.PreviousNotificationCount != Common.NotificationCount)
-                             {
-                                 Common.PreviousNotificationCount = Common.NotificationCount;
-                                 await GetMessages();
-                             }
-                         });
-                     }
-                     App.chatStoppableTimer.Start();
-                 };
-                backgroundWorker.RunWorkerAsync();
+                
             }
             catch (Exception ex)
             {
@@ -118,25 +114,6 @@ namespace AptDealzBuyer.Views.OtherPages
         {
             base.OnDisappearing();
             Dispose();
-
-            if (App.chatStoppableTimer != null)
-            {
-                App.chatStoppableTimer.Stop();
-                App.chatStoppableTimer = null;
-            }
-
-            if (App.chatStoppableTimer == null)
-            {
-                App.chatStoppableTimer = new StoppableTimer(TimeSpan.FromSeconds(1), async () =>
-                {
-                    if (Common.PreviousNotificationCount != Common.NotificationCount)
-                    {
-                        Common.PreviousNotificationCount = Common.NotificationCount;
-                        await GetMessages();
-                    }
-                });
-            }
-            App.chatStoppableTimer.Start();
         }
 
         protected async override void OnAppearing()

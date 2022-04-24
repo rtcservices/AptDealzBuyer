@@ -99,6 +99,8 @@
         #endregion
 
         #region [ AppSettings API ]
+        public const string GetDeactivateTermsBuyerApp = "api/v{0}/AppSettings/GetDeactivateTermsBuyerApp";
+
         public const string GetPrivacyPolicyTermsAndConditions = "api/v{0}/AppSettings/GetPrivacyPolicyTermsAndConditions";
         public const string GetFAQ = "api/v{0}/AppSettings/GetFAQ";
         public const string GetAppPromoBar = "api/v{0}/AppSettings/GetAppPromoBar";
