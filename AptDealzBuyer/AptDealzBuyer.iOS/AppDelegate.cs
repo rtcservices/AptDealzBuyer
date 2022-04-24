@@ -70,8 +70,10 @@ namespace AptDealzBuyer.iOS
         /// <param name="deviceToken"></param>
         public override void RegisteredForRemoteNotifications(UIApplication application, NSData deviceToken)
         {
+
             try
             {
+                Firebase.Auth.Auth.DefaultInstance.SetApnsToken(deviceToken, Firebase.Auth.AuthApnsTokenType.Production); // Production if you are ready to release your app, otherwise, use Sandbox.
                 FirebasePushNotificationManager.DidRegisterRemoteNotifications(deviceToken);
             }
             catch (Exception ex)
@@ -96,6 +98,23 @@ namespace AptDealzBuyer.iOS
                 App.Current.MainPage.DisplayAlert("Exception-FailedToRegisterForRemoteNotifications", ex.Message, "Ok");
             }
         }
+        public override bool OpenUrl(UIApplication app, NSUrl url, NSDictionary options)
+        {
+            return false;
+            try
+            {
+                var openUrlOptions = new UIApplicationOpenUrlOptions(options);
+                return OpenUrl(app, url, openUrlOptions.SourceApplication, openUrlOptions.Annotation);
+            }
+            catch
+            {
+                if (Firebase.Auth.Auth.DefaultInstance.CanHandleUrl(url))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
 
         /// <summary>
         /// Code Added By BK 10-13-2021
@@ -107,13 +126,15 @@ namespace AptDealzBuyer.iOS
         {
             try
             {
-                FirebasePushNotificationManager.DidReceiveMessage(userInfo);
-                completionHandler(UIBackgroundFetchResult.NewData);
-                ProcessNotification(userInfo);
-                Device.BeginInvokeOnMainThread(() =>
+                if (Firebase.Auth.Auth.DefaultInstance.CanHandleNotification(userInfo))
                 {
-                    MessagingCenter.Send<string>(string.Empty, Constraints.NotificationReceived);
-                });
+                    completionHandler(UIBackgroundFetchResult.NoData);
+                    return;
+                }
+
+                //FirebasePushNotificationManager.DidReceiveMessage(userInfo);
+                //completionHandler(UIBackgroundFetchResult.NewData);
+                //ProcessNotification(userInfo);
             }
             catch (Exception ex)
             {
