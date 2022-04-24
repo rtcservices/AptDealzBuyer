@@ -123,7 +123,7 @@ namespace AptDealzBuyer.iOS
             {
                 if (Messaging.SharedInstance != null)
                     Messaging.SharedInstance.ApnsToken = deviceToken;
-                Firebase.Auth.Auth.DefaultInstance.SetApnsToken(deviceToken, Firebase.Auth.AuthApnsTokenType.Sandbox); // Production if you are ready to release your app, otherwise, use Sandbox.
+                Firebase.Auth.Auth.DefaultInstance.SetApnsToken(deviceToken, Firebase.Auth.AuthApnsTokenType.Production); // Production if you are ready to release your app, otherwise, use Sandbox.
                 FirebasePushNotificationManager.DidRegisterRemoteNotifications(deviceToken);
             }
             catch (Exception ex)
