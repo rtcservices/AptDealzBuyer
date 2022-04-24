@@ -3,6 +3,7 @@ using AptDealzBuyer.iOS.Service;
 using AptDealzBuyer.Utility;
 using DLToolkit.Forms.Controls;
 using FFImageLoading.Forms.Platform;
+using Firebase.CloudMessaging;
 using Foundation;
 using Plugin.FirebasePushNotification;
 using System;
@@ -15,7 +16,7 @@ using Xamarin.Forms;
 namespace AptDealzBuyer.iOS
 {
     [Register("AppDelegate")]
-    public partial class AppDelegate : global::Xamarin.Forms.Platform.iOS.FormsApplicationDelegate
+    public partial class AppDelegate : global::Xamarin.Forms.Platform.iOS.FormsApplicationDelegate, IUNUserNotificationCenterDelegate, IMessagingDelegate
     {
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
@@ -28,12 +29,19 @@ namespace AptDealzBuyer.iOS
                 ZXing.Net.Mobile.Forms.iOS.Platform.Init();
                 Rg.Plugins.Popup.Popup.Init();
                 CarouselView.FormsPlugin.iOS.CarouselViewRenderer.Init();
-                Firebase.Core.App.Configure();
 
                 Plugin.LocalNotification.NotificationCenter.AskPermission();
-
                 LoadApplication(new App());
 
+                RegisterForRemoteNotifications();
+
+               // Messaging.SharedInstance.Delegate = this;
+                if (UNUserNotificationCenter.Current != null)
+                {
+                    UNUserNotificationCenter.Current.Delegate = new UserNotificationCenterDelegate();
+                }
+
+                Firebase.Core.App.Configure();
                 FirebasePushNotificationManager.Initialize(options, new NotificationUserCategory[]
                 {
                      new NotificationUserCategory("message",new List<NotificationUserAction>
@@ -47,12 +55,12 @@ namespace AptDealzBuyer.iOS
                      })
                 });
 
-                FirebasePushNotificationManager.Initialize(options, true);
+                //FirebasePushNotificationManager.Initialize(options, true);
                 DependencyService.Register<IFirebaseAuthenticator, FirebaseAuthenticator>();
 
                 // Added by BK 10-14-2021
                 FirebasePushNotificationManager.CurrentNotificationPresentationOption = UNNotificationPresentationOptions.Sound | UNNotificationPresentationOptions.Alert | UNNotificationPresentationOptions.Badge;
-                UNUserNotificationCenter.Current.Delegate = new UserNotificationCenterDelegate();
+                //UNUserNotificationCenter.Current.Delegate = new UserNotificationCenterDelegate();
 
                 return base.FinishedLaunching(app, options);
             }
@@ -64,6 +72,46 @@ namespace AptDealzBuyer.iOS
         }
 
         /// <summary>
+        /// Code added by Jino on 24/04/2022
+        /// </summary>
+        private void RegisterForRemoteNotifications()
+        {
+
+            // Register your app for remote notifications.
+
+            if (UIDevice.CurrentDevice.CheckSystemVersion(10, 0))
+            {
+
+                // For iOS 10 display notification (sent via APNS)
+
+                UNUserNotificationCenter.Current.Delegate = this;
+
+                var authOptions = UNAuthorizationOptions.Alert | UNAuthorizationOptions.Badge | UNAuthorizationOptions.Sound;
+
+                UNUserNotificationCenter.Current.RequestAuthorization(authOptions, async (granted, error) =>
+
+                {
+                    Console.WriteLine($"Permission  {granted}");
+                    await System.Threading.Tasks.Task.Delay(500);
+                });
+
+            }
+
+            else
+            {
+
+                // iOS 9 or before
+                var allNotificationTypes = UIUserNotificationType.Alert | UIUserNotificationType.Badge | UIUserNotificationType.Sound;
+
+                var settings = UIUserNotificationSettings.GetSettingsForTypes(allNotificationTypes, null);
+
+                UIApplication.SharedApplication.RegisterUserNotificationSettings(settings);
+            }
+
+            UIApplication.SharedApplication.RegisterForRemoteNotifications();
+
+        }
+        /// <summary>
         /// Code Added By BK 10-13-2021
         /// </summary>
         /// <param name="application"></param>
@@ -73,7 +121,9 @@ namespace AptDealzBuyer.iOS
 
             try
             {
-                Firebase.Auth.Auth.DefaultInstance.SetApnsToken(deviceToken, Firebase.Auth.AuthApnsTokenType.Production); // Production if you are ready to release your app, otherwise, use Sandbox.
+                if (Messaging.SharedInstance != null)
+                    Messaging.SharedInstance.ApnsToken = deviceToken;
+                Firebase.Auth.Auth.DefaultInstance.SetApnsToken(deviceToken, Firebase.Auth.AuthApnsTokenType.Sandbox); // Production if you are ready to release your app, otherwise, use Sandbox.
                 FirebasePushNotificationManager.DidRegisterRemoteNotifications(deviceToken);
             }
             catch (Exception ex)
@@ -142,6 +192,16 @@ namespace AptDealzBuyer.iOS
             }
         }
 
+        [Export("messaging:didReceiveRegistrationToken")]
+
+        public void DidReceiveRegistrationToken(string fcmToken)
+        {
+            Settings.fcm_token = fcmToken;
+                Xamarin.Forms.Application.Current.Properties["Fcmtocken"] = Messaging.SharedInstance.FcmToken ?? "";
+                Xamarin.Forms.Application.Current.SavePropertiesAsync();
+            System.Diagnostics.Debug.WriteLine($"######Token######  :  {fcmToken}");
+            Console.WriteLine(fcmToken);
+        }
         /// <summary>
         /// Code Added By BK 10-14-2021
         /// </summary>

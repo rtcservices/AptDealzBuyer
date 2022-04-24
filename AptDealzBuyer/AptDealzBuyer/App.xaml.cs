@@ -103,6 +103,7 @@ namespace AptDealzBuyer
                 CrossFirebasePushNotification.Current.OnNotificationReceived += (s, p) =>
                 {
                     System.Diagnostics.Debug.WriteLine("Received");
+                    MessagingCenter.Send<string>(string.Empty, Constraints.NotificationReceived);
                     //if (Settings.IsNotification)
                     //{
                     //    if (Common.mBuyerDetail != null && !Common.EmptyFiels(Common.mBuyerDetail.BuyerId) && !Common.EmptyFiels(Common.Token))
@@ -111,16 +112,27 @@ namespace AptDealzBuyer
                     //    }
                     //    else
                     //    {
-                            MainPage = new Views.SplashScreen.Spalshscreen();
+                    //   MainPage = new Views.SplashScreen.Spalshscreen();
                     //    }
                     //}
-
                     //App.Current.MainPage.DisplayAlert("Alert3", "App > OnNotificationReceived" + Settings.IsNotification, "ok");
                 };
 
                 CrossFirebasePushNotification.Current.OnNotificationOpened += (s, p) =>
                 {
                     Settings.IsNotification = true;
+                    if (Settings.IsNotification)
+                    {
+                        if (Common.mBuyerDetail != null && !Common.EmptyFiels(Common.mBuyerDetail.BuyerId) && !Common.EmptyFiels(Common.Token))
+                        {
+                            MainPage = new MasterDataPage();
+                        }
+                        else
+                        {
+                            MainPage = new Views.SplashScreen.Spalshscreen();
+                        }
+                    }
+                    Settings.IsNotification = false;
                     //App.Current.MainPage.DisplayAlert("Alert4", "App > OnNotificationOpened" + Settings.IsNotification, "ok");
                 };
 
