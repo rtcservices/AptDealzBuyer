@@ -197,8 +197,8 @@ namespace AptDealzBuyer.iOS
         public void DidReceiveRegistrationToken(string fcmToken)
         {
             Settings.fcm_token = fcmToken;
-                Xamarin.Forms.Application.Current.Properties["Fcmtocken"] = Messaging.SharedInstance.FcmToken ?? "";
-                Xamarin.Forms.Application.Current.SavePropertiesAsync();
+            //Xamarin.Forms.Application.Current.Properties["Fcmtocken"] = Messaging.SharedInstance.FcmToken ?? "";
+            Xamarin.Forms.Application.Current.SavePropertiesAsync();
             System.Diagnostics.Debug.WriteLine($"######Token######  :  {fcmToken}");
             Console.WriteLine(fcmToken);
         }
