@@ -40,9 +40,9 @@
         public const string Str_Right = "✓";
         public const string Str_Wrong = "✕";
 
-        public const string RP_MerchantId = "It5hmU5HcU7hvf";
-        public const string RP_UserName = "rzp_live_2qVFfyxWrnY5My";
-        public const string RP_Password = "2HQUZcva71BDl5GciQP3boJ2";
+        //public const string RP_MerchantId = "It5hmU5HcU7hvf";
+        //public const string RP_UserName = "rzp_live_2qVFfyxWrnY5My";
+        //public const string RP_Password = "2HQUZcva71BDl5GciQP3boJ2";
 
         //#if DEBUG
         //        #region [ Production RazorPay ]
@@ -52,9 +52,9 @@
         //        #endregion
         //        #else
         //            #region [ Dev RazorPay ]
-        //public const string RP_MerchantId = "It5hmU5HcU7hvf";
-        //public const string RP_UserName = "rzp_test_gcFbU9S9mYhR8c";
-        //public const string RP_Password = "mlyzbMv2eEuS2xhmdOWypFBm";
+        public const string RP_MerchantId = "It5hmU5HcU7hvf";
+        public const string RP_UserName = "rzp_test_gcFbU9S9mYhR8c";
+        public const string RP_Password = "mlyzbMv2eEuS2xhmdOWypFBm";
         //            #endregion
         //        #endif
 
