@@ -2,11 +2,15 @@
 using AptDealzBuyer.Services;
 using AptDealzBuyer.Utility;
 using AptDealzBuyer.Views.MasterData;
+using Microsoft.AppCenter;
+using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Crashes;
 using Plugin.FirebasePushNotification;
 using Plugin.LocalNotification;
 using System;
 using Xamarin.Essentials;
 using Xamarin.Forms;
+using Device = Xamarin.Forms.Device;
 
 namespace AptDealzBuyer
 {
@@ -17,6 +21,9 @@ namespace AptDealzBuyer
         public static int longitude = 0;
         public static StoppableTimer stoppableTimer;
         public static StoppableTimer chatStoppableTimer;
+        const string androidKey = "930ab777-d871-4828-9a03-347d1c0dcb05";
+        const string iosKey = "fd938b2b-3dad-4a34-8de0-b1e5ef94ce84";
+        const string LogTag = "AppCenterQuotesouk";
         #endregion 
 
         #region [ Constructor ]
@@ -31,6 +38,9 @@ namespace AptDealzBuyer
                     "FastRenderers_Experimental",
                     "CollectionView_Experimental"
                 });
+                Crashes.SendingErrorReport += SendingErrorReportHandler;
+                Crashes.SentErrorReport += SentErrorReportHandler;
+                Crashes.FailedToSendErrorReport += FailedToSendErrorReportHandler;
 
                 InitializeComponent();
 
@@ -184,11 +194,95 @@ namespace AptDealzBuyer
                 Common.DisplayErrorMessage("App/PushNotificationForiOS: " + ex.Message);
             }
         }
-
-        protected override void OnStart()
+        static void SendingErrorReportHandler(object sender, SendingErrorReportEventArgs e)
         {
+            AppCenterLog.Info(LogTag, "Sending error report");
+
+            var args = e as SendingErrorReportEventArgs;
+            ErrorReport report = args.Report;
+
+            //test some values
+            if (report.StackTrace != null)
+            {
+                AppCenterLog.Info(LogTag, report.StackTrace.ToString());
+            }
+            else if (report.AndroidDetails != null)
+            {
+                AppCenterLog.Info(LogTag, report.AndroidDetails.ThreadName);
+            }
         }
 
+        static void SentErrorReportHandler(object sender, SentErrorReportEventArgs e)
+        {
+            AppCenterLog.Info(LogTag, "Sent error report");
+
+            var args = e as SentErrorReportEventArgs;
+            ErrorReport report = args.Report;
+
+            //test some values
+            if (report.StackTrace != null)
+            {
+                AppCenterLog.Info(LogTag, report.StackTrace.ToString());
+            }
+            else
+            {
+                AppCenterLog.Info(LogTag, "No system exception was found");
+            }
+
+            if (report.AndroidDetails != null)
+            {
+                AppCenterLog.Info(LogTag, report.AndroidDetails.ThreadName);
+            }
+        }
+
+        static void FailedToSendErrorReportHandler(object sender, FailedToSendErrorReportEventArgs e)
+        {
+            AppCenterLog.Info(LogTag, "Failed to send error report");
+
+            var args = e as FailedToSendErrorReportEventArgs;
+            ErrorReport report = args.Report;
+
+            //test some values
+            if (report.StackTrace != null)
+            {
+                AppCenterLog.Info(LogTag, report.StackTrace.ToString());
+            }
+            else if (report.AndroidDetails != null)
+            {
+                AppCenterLog.Info(LogTag, report.AndroidDetails.ThreadName);
+            }
+
+            if (e.Exception != null)
+            {
+                AppCenterLog.Info(LogTag, "There is an exception associated with the failure");
+            }
+        }
+        protected override void OnStart()
+        {
+            AppCenter.LogLevel = LogLevel.Verbose;
+            Crashes.ShouldProcessErrorReport = ShouldProcess;
+            //Crashes.ShouldAwaitUserConfirmation = ConfirmationHandler;
+            //Crashes.GetErrorAttachments = GetErrorAttachments;
+            AppCenter.Start($"android={androidKey};ios={iosKey}", typeof(Analytics), typeof(Crashes));
+
+            AppCenter.GetInstallIdAsync().ContinueWith(installId =>
+            {
+                AppCenterLog.Info(LogTag, "AppCenter.InstallId=" + installId.Result);
+            });
+            Crashes.HasCrashedInLastSessionAsync().ContinueWith(hasCrashed =>
+            {
+                AppCenterLog.Info(LogTag, "Crashes.HasCrashedInLastSession=" + hasCrashed.Result);
+            });
+            Crashes.GetLastSessionCrashReportAsync().ContinueWith(report =>
+            {
+                AppCenterLog.Info(LogTag, "Crashes.LastSessionCrashReport.StackTrace=" + report.Result?.StackTrace);
+            });
+        }
+        bool ShouldProcess(ErrorReport report)
+        {
+            AppCenterLog.Info(LogTag, "Determining whether to process error report");
+            return true;
+        }
         protected override void OnSleep()
         {
             if (App.stoppableTimer != null)

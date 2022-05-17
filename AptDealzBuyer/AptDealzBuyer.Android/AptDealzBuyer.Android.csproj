@@ -66,7 +66,7 @@
     <AndroidSigningStorePass>zar$859Tek#quotesBuy452</AndroidSigningStorePass>
     <AndroidSigningKeyPass>zar$859Tek#quotesBuy452</AndroidSigningKeyPass>
     <AndroidCreatePackagePerAbi>false</AndroidCreatePackagePerAbi>
-    <AndroidPackageFormat>apk</AndroidPackageFormat>
+    <AndroidPackageFormat>aab</AndroidPackageFormat>
     <AndroidUseAapt2>true</AndroidUseAapt2>
     <AndroidEnableMultiDex>false</AndroidEnableMultiDex>
   </PropertyGroup>
@@ -94,6 +94,15 @@
     </PackageReference>
     <PackageReference Include="dotMorten.Xamarin.Forms.AutoSuggestBox">
       <Version>1.1.1</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.AppCenter">
+      <Version>4.5.1</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.AppCenter.Analytics">
+      <Version>4.5.1</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.AppCenter.Crashes">
+      <Version>4.5.1</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.1</Version>

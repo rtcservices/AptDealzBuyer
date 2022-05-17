@@ -96,24 +96,60 @@
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Contents.json">
       <Visible>false</Visible>
     </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\appstore.png" />
-    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\icon40-1.png" />
-    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\icon60-1.png" />
-    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\icon58-1.png" />
-    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\icon87-1.png" />
-    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\icon80-1.png" />
-    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\icon120-1.png" />
-    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\icon120.png" />
-    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\icon180-1.png" />
-    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\icon20-1.png" />
-    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\icon40.png" />
-    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\icon29-1.png" />
-    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\icon58.png" />
-    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\icon40-2.png" />
-    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\icon80.png" />
-    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\icon76-1.png" />
-    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\icon152-1.png" />
-    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\icon167-1.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\appstore.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\icon40-1.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\icon60-1.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\icon58-1.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\icon87-1.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\icon80-1.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\icon120-1.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\icon120.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\icon180-1.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\icon20-1.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\icon40.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\icon29-1.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\icon58.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\icon40-2.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\icon80.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\icon76-1.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\icon152-1.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\icon167-1.png">
+      <Visible>false</Visible>
+    </ImageAsset>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -135,6 +171,15 @@
     </PackageReference>
     <PackageReference Include="dotMorten.Xamarin.Forms.AutoSuggestBox">
       <Version>1.1.1</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.AppCenter">
+      <Version>4.5.1</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.AppCenter.Analytics">
+      <Version>4.5.1</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.AppCenter.Crashes">
+      <Version>4.5.1</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.1</Version>
